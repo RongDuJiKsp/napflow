@@ -4,10 +4,12 @@ import nextTs from 'eslint-config-next/typescript'
 import reactHooks from 'eslint-plugin-react-hooks'
 import { globalIgnores } from 'eslint/config'
 import { combine } from '@antfu/eslint-config'
+import base from '../../eslint.config.mjs'
 
-export default combine([
+export default combine(base, [
   ...nextVitals,
-  ...nextTs, {
+  ...nextTs,
+  {
     rules: reactHooks.configs.recommended.rules,
     plugins: {
       'react-hooks': reactHooks,

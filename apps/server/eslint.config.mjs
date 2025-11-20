@@ -1,7 +1,8 @@
 // @ts-check
 import { globalIgnores } from 'eslint/config'
 import { combine } from '@antfu/eslint-config'
-export default combine([
+import base from '../../eslint.config.mjs'
+export default combine(base, [
     // Override default ignores of eslint-config-next.
   globalIgnores([
     'node-modules/',
