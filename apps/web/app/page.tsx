@@ -1,8 +1,7 @@
-export default function Home() {
-  return (
-    <div>
+import HelloWorld from './components/HelloWorld'
 
-      hello world
-    </div>
-  )
+export default function Home() {
+  return <>
+    <HelloWorld/>
+  </>
 }
