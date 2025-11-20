@@ -4,9 +4,9 @@ import {
   node, stylistic, unicorn,
 } from '@antfu/eslint-config'
 import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
 import sonar from 'eslint-plugin-sonarjs'
 import oxlint from 'eslint-plugin-oxlint'
+import { globalIgnores } from 'eslint/config'
 
 export default combine(
   stylistic({
@@ -76,12 +76,6 @@ export default combine(
     },
   },
   {
-    rules: reactHooks.configs.recommended.rules,
-    plugins: {
-      'react-hooks': reactHooks,
-    },
-  },
-  {
     rules: {
       ...sonar.configs.recommended.rules,
       'sonarjs/cognitive-complexity': 'off',
@@ -140,4 +134,7 @@ export default combine(
     },
   },
   oxlint.configs['flat/recommended'],
+  globalIgnores([
+    'node-modules/',
+  ]),
 )
