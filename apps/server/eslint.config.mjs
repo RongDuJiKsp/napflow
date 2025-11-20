@@ -6,5 +6,6 @@ export default combine(base, [
     // Override default ignores of eslint-config-next.
   globalIgnores([
     'node-modules/',
+    'dist/',
   ]),
 ])
