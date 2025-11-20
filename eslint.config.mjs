@@ -1,7 +1,4 @@
-import { globalIgnores } from 'eslint/config'
-import nextVitals from 'eslint-config-next/core-web-vitals'
-import nextTs from 'eslint-config-next/typescript'
-
+// @ts-check
 import {
   GLOB_TESTS, typescript as antfuTypescript, combine, javascript,
   node, stylistic, unicorn,
@@ -143,14 +140,4 @@ export default combine(
     },
   },
   oxlint.configs['flat/recommended'],
-  ...nextVitals,
-  ...nextTs,
-    // Override default ignores of eslint-config-next.
-  globalIgnores([
-    '.next/**',
-    'out/**',
-    'build/**',
-    'next-env.d.ts',
-    'node-modules/**',
-  ]),
 )
