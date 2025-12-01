@@ -1,0 +1,28 @@
+model User {
+    email      String      @id //email为主键，使用email和密码登录
+    nickname   String //用于展示的用户名
+    password   String //使用bcrypt的加盐密码
+    userGroup  UserGroup[] //一个用户可以属于多个用户组，一个接口只能允许包含某个用户组的用户通过
+    //创建和更新时间
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+    //禁用（软删除）标志
+    disabledAt DateTime?
+
+    @@map("users")
+}
+
+enum UserGroupTypes {
+    Admin
+    User
+}
+
+model UserGroup {
+    ofUser    String
+    groupType UserGroupTypes
+    createdAt DateTime       @default(now())
+    user      User           @relation(fields: [ofUser], references: [email])
+
+    @@id([ofUser, groupType])
+    @@map("user_groups")
+}

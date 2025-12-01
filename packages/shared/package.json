@@ -1,11 +1,6 @@
 {
   "name": "shared",
-  "version": "1.0.0",
-  "description": "",
   "scripts": {
-"lint": "npx eslint --fix"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "lint": "npx eslint --fix"
+  }
 }
