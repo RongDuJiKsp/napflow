@@ -8,6 +8,6 @@ export class UserGroupGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const account = jwtHeaderAccount(ctx.switchToHttp().getRequest<Request>().headers)
     const userGroup = this.reflector.get(AllowUserGroup, ctx.getHandler())
-    return account.userGroup.includes(userGroup)
+    return account.userGroup.map(u => u.groupType).includes(userGroup)
   }
 }
