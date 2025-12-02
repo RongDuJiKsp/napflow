@@ -7,5 +7,6 @@ export default combine(base, [
   globalIgnores([
     'node-modules/',
     'dist/',
+    'src/prisma/generated',
   ]),
 ])

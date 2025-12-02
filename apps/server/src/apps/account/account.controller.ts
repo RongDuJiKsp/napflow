@@ -1,30 +1,21 @@
 import { ZodBody } from '@/src/decorator/zod'
-import type { PrismaService } from '@/src/prisma/prisma-service'
 import { jwtSignAccount } from '@/src/utils/account'
 import { Controller, Post } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
 import type { LoginReqType } from '@shared/data-transfer/account/account'
 import { LoginReq, LoginResp, type LoginRespType } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
-import bcryptjs from 'bcryptjs'
+import type { AccountService } from './account.service'
+
 @Controller('account')
 export class AccountController {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private accountService: AccountService) {}
   @Post('login')
   @ZodSerializerDto(LoginResp)
   async login(@ZodBody({ zod: LoginReq }) req: LoginReqType): Promise<LoginRespType> {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        email: req.email,
-      },
-      include: {
-        userGroup: { select: { groupType: true } },
-      },
-    })
+    const user = await this.accountService.getAccountWithVertify(req.email, req.password)
     if(!user)
-      return Resp.error('user not found', Code.BadRequest)
-    if(!await bcryptjs.compare(req.password, user.password))
-      return Resp.error('password error', Code.BadRequest)
+      return Resp.error('用户不存在或密码错误', Code.NotFound)
 
     return Resp.ok({
       token: jwtSignAccount(user),
