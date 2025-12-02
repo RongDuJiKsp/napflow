@@ -14,7 +14,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:gen": "npx prisma generate --schema=./src/prisma",
+    "prisma:gen": "npx prisma generate",
     "prisma:gensql":"npx prisma migrate diff --from-empty  --to-schema=./src/prisma -o ./src/prisma/generated/create.sql"
   },
   "dependencies": {
