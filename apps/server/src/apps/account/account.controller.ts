@@ -18,13 +18,13 @@ export class AccountController {
         email: req.email,
       },
       include: {
-        userGroup: { select: { groupType: true, createdAt: true } },
+        userGroup: { select: { groupType: true } },
       },
     })
     if(!user)
-      return Resp.error('user not found', Code.NotFound)
+      return Resp.error('user not found', Code.BadRequest)
     if(!await bcryptjs.compare(req.password, user.password))
-      return Resp.error('password error', Code.NotFound)
+      return Resp.error('password error', Code.BadRequest)
 
     return Resp.ok({
       token: jwtSignAccount(user),

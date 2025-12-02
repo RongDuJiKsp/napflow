@@ -20,6 +20,15 @@ export const Account = z.object({
   userGroup: z.array(
     z.object({
       groupType: z.string(),
+    }),
+  ),
+})
+export type AccountType = z.infer<typeof Account>
+
+export const AccountInfo = Account.extend({
+  userGroup: z.array(
+    z.object({
+      groupType: z.string(),
       createdAt: z.date(),
     }),
   ),
@@ -27,4 +36,4 @@ export const Account = z.object({
   updatedAt: z.date(),
   disabledAt: z.date().nullable(), // 注意 定义POJO时 使用nullable而不是optional
 })
-export type AccountType = z.infer<typeof Account>
+export type AccountInfoType = z.infer<typeof AccountInfo>
