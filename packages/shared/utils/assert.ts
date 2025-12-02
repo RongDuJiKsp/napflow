@@ -11,6 +11,12 @@ export class ValueAssertError extends Error {
     this.name = 'ValueAssertError'
   }
 }
+export class ValueNotFoundError extends Error {
+  constructor(name: string) {
+    super(`ValueNotFoundError: value ${name} is not found`)
+    this.name = 'ValueNotFoundError'
+  }
+}
 /**
  * 断言 value 是否有效
  * @param value 要断言的值
@@ -24,4 +30,8 @@ export const assertValue = <Value, Vaild extends ((val: Value) => boolean) | und
   if (hasError)
     throw errorFac ? errorFac(value) : new ValueAssertError(value)
   return value as Vaild extends undefined ? NonNullable<Value> : Value
+}
+
+export const assertExist = <Value>(value: Value, valueName?: string): NonNullable<Value> => {
+  return assertValue(value, undefined, () => valueName ? new ValueNotFoundError(valueName) : new ValueAssertError(value))
 }
