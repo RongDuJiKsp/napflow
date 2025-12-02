@@ -2,8 +2,7 @@
   "name": "server",
   "scripts": {
     "build": "nest build && pnpm copy",
-    "copy:cfg": "npx cpx '{run.sh,.env.production*,.env,src/prisma/generated/create.sql}' ./dist",
-    "copy": "pnpm copy:cfg",
+    "copy": "node copy-resource.js",
     "start": "npx cross-env NODE_ENV=development nest start",
     "start:dev": "pnpm start --watch",
     "start:debug": "pnpm start --debug --watch",
@@ -14,7 +13,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:gen": "npx prisma generate",
+    "prisma:gen": "npx prisma generate --schema=./src/prisma",
     "prisma:gensql":"npx prisma migrate diff --from-empty  --to-schema=./src/prisma -o ./src/prisma/generated/create.sql"
   },
   "dependencies": {
