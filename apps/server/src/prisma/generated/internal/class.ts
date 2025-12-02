@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.1",
   "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
   "activeProvider": "mysql",
-  "inlineSchema": "model User {\n  email      String      @id //email为主键，使用email和密码登录\n  nickname   String //用于展示的用户名\n  password   String //使用bcrypt的加盐密码\n  userGroup  UserGroup[]\n  //创建和更新时间\n  createdAt  DateTime    @default(now())\n  updatedAt  DateTime    @updatedAt\n  //禁用（软删除）标志\n  disabledAt DateTime?\n\n  @@map(\"users\")\n}\n\nenum UserGroupTypes {\n  Admin\n  User\n}\n\nmodel UserGroup {\n  ofUser    String\n  groupType UserGroupTypes\n  createdAt DateTime       @default(now())\n  user      User           @relation(fields: [ofUser], references: [email])\n\n  @@id([ofUser, groupType])\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n",
+  "inlineSchema": "model User {\n  email      String      @id //email为主键，使用email和密码登录\n  nickname   String //用于展示的用户名\n  password   String //使用bcrypt的加盐密码\n  userGroup  UserGroup[] //一个用户可以属于多个用户组，一个接口只能允许包含某个用户组的用户通过\n  //创建和更新时间\n  createdAt  DateTime    @default(now())\n  updatedAt  DateTime    @updatedAt\n  //禁用（软删除）标志\n  disabledAt DateTime?\n\n  @@map(\"users\")\n}\n\nenum UserGroupTypes {\n  Admin\n  User\n}\n\nmodel UserGroup {\n  ofUser    String\n  groupType UserGroupTypes\n  createdAt DateTime       @default(now())\n  user      User           @relation(fields: [ofUser], references: [email])\n\n  @@id([ofUser, groupType])\n  @@map(\"user_groups\")\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated\"\n  moduleFormat = \"cjs\"\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nickname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userGroup\",\"kind\":\"object\",\"type\":\"UserGroup\",\"relationName\":\"UserToUserGroup\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"disabledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"},\"UserGroup\":{\"fields\":[{\"name\":\"ofUser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"groupType\",\"kind\":\"enum\",\"type\":\"UserGroupTypes\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserGroup\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nickname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userGroup\",\"kind\":\"object\",\"type\":\"UserGroup\",\"relationName\":\"UserToUserGroup\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"disabledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"},\"UserGroup\":{\"fields\":[{\"name\":\"ofUser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"groupType\",\"kind\":\"enum\",\"type\":\"UserGroupTypes\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserGroup\"}],\"dbName\":\"user_groups\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -37,10 +37,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.mysql.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.mysql.js"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.mysql.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.mysql.wasm-base64.js")
     return await decodeBase64AsWasm(wasm)
   }
 }

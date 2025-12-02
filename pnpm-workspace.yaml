@@ -4,5 +4,7 @@ packages:
 
 onlyBuiltDependencies:
   - '@nestjs/core'
+  - '@prisma/engines'
+  - prisma
   - sharp
   - unrs-resolver
