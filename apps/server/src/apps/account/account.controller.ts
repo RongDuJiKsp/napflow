@@ -1,15 +1,15 @@
 import { ZodBody } from '@/src/decorator/zod'
-import { jwtSignAccount } from '@/src/utils/account'
 import { Controller, Post } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
 import type { LoginReqType } from '@shared/data-transfer/account/account'
 import { LoginReq, LoginResp, type LoginRespType } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import type { AccountService } from './account.service'
+import type { JwtService } from './jwt.service'
 
 @Controller('account')
 export class AccountController {
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, private jwtService: JwtService) {}
   @Post('login')
   @ZodSerializerDto(LoginResp)
   async login(@ZodBody({ zod: LoginReq }) req: LoginReqType): Promise<LoginRespType> {
@@ -18,7 +18,7 @@ export class AccountController {
       return Resp.error('用户不存在或密码错误', Code.NotFound)
 
     return Resp.ok({
-      token: jwtSignAccount(user),
+      token: this.jwtService.account.jwtSign(user),
     })
   }
 }
