@@ -1,12 +1,12 @@
 import { UserGroupTypes } from '@/src/prisma/generated/enums'
-import type { PrismaService } from '@/src/prisma/prisma-service'
-import { Injectable } from '@nestjs/common'
+import { PrismaService } from '@/src/prisma/prisma.service'
+import { Inject, Injectable } from '@nestjs/common'
 import bcryptjs from 'bcryptjs'
-import type { AppConfigService } from '../app-config/app-config.service'
+import { AppConfigService } from '../app-config/app-config.service'
 
 @Injectable()
 export class AccountService {
-  constructor(private prismaService: PrismaService, private configService: AppConfigService) {}
+  constructor(@Inject(PrismaService) private readonly prismaService: PrismaService, @Inject(AppConfigService) private readonly configService: AppConfigService) {}
   async getAccount(email: string) {
     return await this.prismaService.user.findFirst({
       where: {

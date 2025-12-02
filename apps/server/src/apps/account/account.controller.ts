@@ -1,15 +1,18 @@
 import { ZodBody } from '@/src/decorator/zod'
-import { Controller, Post } from '@nestjs/common'
+import { Controller, Inject, Post } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
 import type { LoginReqType } from '@shared/data-transfer/account/account'
-import { LoginReq, LoginResp, type LoginRespType } from '@shared/data-transfer/account/account'
+import type { LoginRespType } from '@shared/data-transfer/account/account'
+import { LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
-import type { AccountService } from './account.service'
-import type { JwtService } from './jwt.service'
+import { AccountService } from './account.service'
+import { JwtService } from './jwt.service'
 
 @Controller('account')
 export class AccountController {
-  constructor(private accountService: AccountService, private jwtService: JwtService) {}
+  constructor(@Inject(AccountService) private readonly accountService: AccountService,
+    @Inject(JwtService) private readonly jwtService: JwtService) {}
+
   @Post('login')
   @ZodSerializerDto(LoginResp)
   async login(@ZodBody({ zod: LoginReq }) req: LoginReqType): Promise<LoginRespType> {

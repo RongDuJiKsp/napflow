@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import jwt from 'jsonwebtoken'
 import type zod from 'zod'
-import type { AppConfigService } from '../app-config/app-config.service'
+import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountType } from '@shared/data-transfer/account/account'
 import { Account } from '@shared/data-transfer/account/account'
+import { ConfigService } from '@nestjs/config'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
 export class VaildJwtError extends Error {
@@ -37,7 +38,7 @@ export class JwtOperator<T extends JwtPayload> {
 export class JwtService {
   account: JwtOperator<AccountType>
 
-  constructor(private readonly configService: AppConfigService) {
+  constructor(@Inject(AppConfigService) private readonly configService: AppConfigService) {
     this.account = new JwtOperator(this.configService.JWT_SECRET_KEY, Account)
   }
 

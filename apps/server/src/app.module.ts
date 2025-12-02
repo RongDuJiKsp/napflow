@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config'
 import { NODE_ENV } from './config/env'
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
-import { PrismaService } from './prisma/prisma-service'
 import { UserGroupGuard } from './middleware/guard/account'
 import { AccountModule } from './apps/account/account.module'
 import { AppConfigModule } from './apps/app-config/app-config.module'
+import { PrismaModule } from './prisma/prisma.module'
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import { AppConfigModule } from './apps/app-config/app-config.module'
     }),
     // 随后加载应用配置模块
     AppConfigModule,
+    PrismaModule,
     // ---------------------- 应用模块 ----------------------
     AccountModule,
   ],
@@ -38,7 +39,6 @@ import { AppConfigModule } from './apps/app-config/app-config.module'
       provide: APP_INTERCEPTOR,
       useClass: ZodSerializerInterceptor,
     },
-    PrismaService,
     {
       provide: APP_GUARD,
       useClass: UserGroupGuard,

@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common'
-import type { ConfigService } from '@nestjs/config'
+import { Inject, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { assertValue } from '@shared/utils/assert'
 import * as crypto from 'node:crypto'
 @Injectable()
@@ -16,7 +16,7 @@ export class AppConfigService {
   // secret 配置
   JWT_SECRET_KEY: string
 
-  constructor(private configService: ConfigService) {
+  constructor(@Inject(ConfigService) private readonly configService: ConfigService) {
     this.HOST_NAME = configService.get<string>('HOST_NAME') ?? '127.0.0.1'
     this.PORT = configService.get<string>('PORT') ?? '3000'
     this.ACC_ROOT_EMAIL = assertValue(configService.get<string>('ACC_ROOT_EMAIL'))
