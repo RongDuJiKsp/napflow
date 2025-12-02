@@ -1,12 +1,28 @@
+import type { Provider } from '@nestjs/common'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { NODE_ENV } from './config/env'
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
 import { UserGroupGuard } from './middleware/guard/account'
 import { AccountModule } from './apps/account/account.module'
 import { AppConfigModule } from './apps/app-config/app-config.module'
 import { PrismaModule } from './prisma/prisma.module'
+import { ZodErrExceptionFilter } from './middleware/exception-filter/zod'
+const zodProviders: Provider[] = [
+  {
+    provide: APP_PIPE,
+    useClass: ZodValidationPipe,
+  },
+  {
+    provide: APP_INTERCEPTOR,
+    useClass: ZodSerializerInterceptor,
+  },
+  {
+    provide: APP_FILTER,
+    useClass: ZodErrExceptionFilter,
+  },
+]
 
 @Module({
   imports: [
@@ -32,17 +48,10 @@ import { PrismaModule } from './prisma/prisma.module'
   ],
   providers: [
     {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ZodSerializerInterceptor,
-    },
-    {
       provide: APP_GUARD,
       useClass: UserGroupGuard,
     },
+    ...zodProviders,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import * as crypto from 'node:crypto'
-import z from 'zod'
+import z, { ZodError } from 'zod'
 export const AppConfigEnvShema = z.object({
   // 服务配置
   HOST_NAME: z.string().default('localhost'),
@@ -17,7 +17,19 @@ export const AppConfigEnvShema = z.object({
 @Injectable()
 export class AppConfigService {
   envs: z.infer<typeof AppConfigEnvShema>
+
+  private readonly logger = new Logger(AppConfigService.name)
   constructor() {
-    this.envs = AppConfigEnvShema.parse(process.env)
+    // init env
+    try{
+      this.envs = AppConfigEnvShema.parse(process.env)
+    }
+    catch (e) {
+      this.logger.fatal('解析App环境变量配置时发生异常')
+      if(e instanceof ZodError)
+        this.logger.fatal(`\n${z.prettifyError(e)}`)
+
+      throw e
+    }
   }
 }

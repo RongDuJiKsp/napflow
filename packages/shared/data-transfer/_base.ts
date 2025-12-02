@@ -8,32 +8,32 @@ export enum Code {
 }
 export const defineZodResp = <T>(schema: z.ZodType<T>) =>
   z.object({
-    code: z.number(),
-    msg: z.string().optional(),
+    statusCode: z.number(),
+    message: z.string().optional(),
     data: schema.optional(),
   })
 
 export type BaseRespType<T> = {
-  code: Code;
-  msg?: string;
+  statusCode: Code;
+  message?: string;
   data?: T;
 }
 export class Resp {
-  static ok<T>(data: T, code = Code.Ok, msg = 'Success'): BaseRespType<T> {
+  static ok<T>(data: T, statusCode = Code.Ok, message = 'Success'): BaseRespType<T> {
     return {
-      code,
-      msg,
+      statusCode,
+      message,
       data,
     }
   }
 
   static error(
-    msg: string = 'Server Error',
-    code: Code = Code.ServerError,
+    message: string = 'Server Error',
+    statusCode: Code = Code.ServerError,
   ): BaseRespType<any> {
     return {
-      code,
-      msg,
+      statusCode,
+      message,
     }
   }
 }
