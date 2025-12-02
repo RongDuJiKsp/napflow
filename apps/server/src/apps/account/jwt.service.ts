@@ -4,7 +4,6 @@ import type zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountType } from '@shared/data-transfer/account/account'
 import { Account } from '@shared/data-transfer/account/account'
-import { ConfigService } from '@nestjs/config'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
 export class VaildJwtError extends Error {
@@ -39,7 +38,7 @@ export class JwtService {
   account: JwtOperator<AccountType>
 
   constructor(@Inject(AppConfigService) private readonly configService: AppConfigService) {
-    this.account = new JwtOperator(this.configService.JWT_SECRET_KEY, Account)
+    this.account = new JwtOperator(this.configService.envs.JWT_SECRET_KEY, Account)
   }
 
   jwtHeader<U extends JwtPayload = JwtPayload>(header: Headers, options?: jwt.VerifyOptions): U {
@@ -47,6 +46,6 @@ export class JwtService {
     if(!authHeader)
       throw new VaildJwtError('Authorization header is missing')
 
-    return jwt.verify(authHeader, this.configService.JWT_SECRET_KEY, options) as U
+    return jwt.verify(authHeader, this.configService.envs.JWT_SECRET_KEY, options) as U
   }
 }

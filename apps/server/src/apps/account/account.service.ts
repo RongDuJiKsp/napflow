@@ -57,10 +57,10 @@ export class AccountService {
   }
 
   async checkAndCreateRootAccount() {
-    const rootAccount = await this.getAccount(this.configService.ACC_ROOT_EMAIL)
+    const rootAccount = await this.getAccount(this.configService.envs.ACC_ROOT_EMAIL)
     if(rootAccount)
       return rootAccount
-    const user = await this.createBlankAccount(this.configService.ACC_ROOT_EMAIL, this.configService.ACC_ROOT_NICKNAME, this.configService.ACC_ROOT_PASSWORD)
+    const user = await this.createBlankAccount(this.configService.envs.ACC_ROOT_EMAIL, this.configService.envs.ACC_ROOT_NICKNAME, this.configService.envs.ACC_ROOT_PASSWORD)
     if(!user)
       throw new AccountError('创建根账户失败')
     // 为根账户创建管理员和用户组
