@@ -40,4 +40,12 @@ export class JwtService {
   constructor(private readonly configService: AppConfigService) {
     this.account = new JwtOperator(this.configService.JWT_SECRET_KEY, Account)
   }
+
+  jwtHeader<U extends JwtPayload = JwtPayload>(header: Headers, options?: jwt.VerifyOptions): U {
+    const authHeader = header.get('Authorization')?.split(' ')[1]
+    if(!authHeader)
+      throw new VaildJwtError('Authorization header is missing')
+
+    return jwt.verify(authHeader, this.configService.JWT_SECRET_KEY, options) as U
+  }
 }
