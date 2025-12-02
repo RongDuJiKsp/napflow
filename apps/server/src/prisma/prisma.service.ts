@@ -5,7 +5,7 @@ import { AppConfigService } from '../apps/app-config/app-config.service'
 @Injectable()
 export class PrismaService extends PrismaClient {
   constructor(@Inject(AppConfigService) private readonly configService: AppConfigService) {
-    const adapter = new PrismaMariaDb({}, { database: configService.envs.MYSQL_DATABASE_URL })
+    const adapter = new PrismaMariaDb({ ...configService.sqlConnConfig, database: configService.envs.MYSQL_DATABASE })
     super({ adapter })
   }
 }

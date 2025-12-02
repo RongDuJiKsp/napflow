@@ -6,7 +6,10 @@ export const AppConfigEnvShema = z.object({
   HOST_NAME: z.string().default('localhost'),
   PORT: z.string().default('3000'),
   // 数据库服务配置
-  MYSQL_DATABASE_URL: z.string(),
+  MYSQL_USERNAME: z.string(),
+  MYSQL_PWD: z.string(),
+  MYSQL_HOSTPORT: z.string().default('localhost:3306'),
+  MYSQL_DATABASE: z.string().default('napflow_db'),
   // 默认账户配置
   ACC_ROOT_EMAIL: z.string(),
   ACC_ROOT_NICKNAME: z.string(),
@@ -30,6 +33,20 @@ export class AppConfigService {
         this.logger.fatal(`\n${z.prettifyError(e)}`)
 
       throw e
+    }
+  }
+
+  get MYSQL_CONNECT_URL() {
+    return `mysql://${this.envs.MYSQL_USERNAME}:${this.envs.MYSQL_PWD}@${this.envs.MYSQL_HOSTPORT}/${this.envs.MYSQL_DATABASE}`
+  }
+
+  get sqlConnConfig() {
+    const [host, portString] = this.envs.MYSQL_HOSTPORT.split(':')
+    return {
+      host,
+      port: Number(portString),
+      user: this.envs.MYSQL_USERNAME,
+      password: this.envs.ACC_ROOT_PASSWORD,
     }
   }
 }

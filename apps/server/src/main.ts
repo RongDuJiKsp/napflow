@@ -3,7 +3,8 @@ import { AppModule } from './app.module'
 import { Logger } from '@nestjs/common'
 import { NODE_ENV } from './config/env'
 import { AppConfigService } from './apps/app-config/app-config.service'
-
+import { AccountService } from './apps/account/account.service'
+import mysql from 'mysql2/promise'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const logger = new Logger('Bootstrap')
@@ -19,16 +20,25 @@ async function bootstrap() {
     ACC_ROOT_PASSWORD: configServer.envs.ACC_ROOT_PASSWORD,
     JWT_SECRET_KEY: configServer.envs.JWT_SECRET_KEY,
   })
+  logger.log('上游服务配置：')
+  console.table({
+    MYSQL_CONNECT_URL: configServer.MYSQL_CONNECT_URL,
+  })
 
+  // 初始化数据库
+
+  const conn = await mysql.createConnection({
+    ...configServer.sqlConnConfig,
+  })
+  await conn.execute(`CREATE DATABASE IF NOT EXISTS ${configServer.envs.MYSQL_DATABASE}`)
+  await conn.end()
+  const accountService = app.get<AccountService>(AccountService)
+  accountService.checkAndCreateRootAccount()
   // 启动服务
   const hostname = configServer.envs.HOST_NAME
   const port = configServer.envs.PORT
-  await app.listen(
-    port,
-    hostname,
-    () => {
-      logger.log(`Server is running on ${hostname}:${port}`)
-    },
-  )
+  await app.listen(port, hostname, () => {
+    logger.log(`Server is running on ${hostname}:${port}`)
+  })
 }
 bootstrap()
