@@ -4,7 +4,6 @@ import { Logger } from '@nestjs/common'
 import { NODE_ENV } from './config/env'
 import { AppConfigService } from './apps/app-config/app-config.service'
 import { AccountService } from './apps/account/account.service'
-import mysql from 'mysql2/promise'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const logger = new Logger('Bootstrap')
@@ -26,12 +25,6 @@ async function bootstrap() {
   })
 
   // 初始化数据库
-
-  const conn = await mysql.createConnection({
-    ...configServer.sqlConnConfig,
-  })
-  await conn.execute(`CREATE DATABASE IF NOT EXISTS ${configServer.envs.MYSQL_DATABASE}`)
-  await conn.end()
   const accountService = app.get<AccountService>(AccountService)
   accountService.checkAndCreateRootAccount()
   // 启动服务
