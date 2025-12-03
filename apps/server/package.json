@@ -1,8 +1,7 @@
 {
   "name": "server",
   "scripts": {
-    "build": "nest build && pnpm copy",
-    "copy": "node copy-resource.js",
+    "build": "nest build",
     "start": "npx cross-env NODE_ENV=development nest start",
     "start:dev": "pnpm start --watch",
     "start:debug": "pnpm start --debug --watch",
