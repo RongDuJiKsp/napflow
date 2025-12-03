@@ -23,7 +23,7 @@ export default function SettingsLayout({
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="flex">
             {/* 左侧导航栏 */}
-            <div className="w-64 bg-gradient-to-b from-purple-50 to-pink-50 border-r border-purple-100 h-[90vh]">
+            <div className="w-64 bg-gradient-to-b from-purple-50 to-pink-50 border-r border-purple-100">
               <div className="p-6">
                 <h1 className="text-2xl font-bold text-purple-700 mb-8">设置</h1>
                 <nav className="space-y-2">
@@ -49,7 +49,7 @@ export default function SettingsLayout({
             </div>
 
             {/* 右侧内容区域 */}
-            <div className="flex-1 p-8">
+            <div className="flex-1 p-8 h-[90vh] overflow-y-auto">
               {children}
             </div>
           </div>

@@ -142,13 +142,7 @@ export default function WorkspaceSettings() {
                     placeholder="设置初始密码"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-purple-700 mb-2">角色</label>
-                  <select className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700">
-                    <option value="user">普通用户</option>
-                    <option value="admin">管理员</option>
-                  </select>
-                </div>
+                
               </div>
 
               <button className="mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg">
