@@ -1,12 +1,14 @@
 import { ZodBody } from '@/src/decorator/zod'
-import { Controller, Inject, Post } from '@nestjs/common'
+import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
-import type { LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountDisableReqType, AccountDisableRespType, AccountInfoListRespType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { AccountDisableReq, AccountDisableResp, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
+import { AllowUserGroup } from '@/src/decorator/account'
+import { UserGroupTypes } from '@/src/prisma/generated/enums'
 
 @Controller('account')
 export class AccountController {
@@ -19,9 +21,50 @@ export class AccountController {
     const user = await this.accountService.getAccountWithVertify(req.email, req.password)
     if(!user)
       return Resp.error('用户不存在或密码错误', Code.NotFound)
+    if(user.disabledAt)
+      return Resp.error('用户已被禁用', Code.NotFound)
 
     return Resp.ok({
       token: this.jwtService.account.jwtSign(user),
     })
+  }
+
+  @Get('account')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(AccountInfoListResp)
+  async getAccount(@Query('isDisabled', ParseBoolPipe) isDisabled?: boolean, @Query('roles', ParseArrayPipe) roles?: string[]): Promise<AccountInfoListRespType> {
+    const accounts = await this.accountService.queryAccounts(AccountInfoListQuery.parse({
+      isDisabled,
+      roles,
+    }))
+    return Resp.ok(accounts)
+  }
+
+  @Post('upgrade')
+  @AllowUserGroup(UserGroupTypes.Admin)
+  @ZodSerializerDto(AccountUpDownGradeResp)
+  async upgradeAccount(@ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType): Promise<AccountUpDownGradeRespType> {
+    if(req.groupType.includes(UserGroupTypes.User))
+      return Resp.error('不能对User组进行升降级', Code.BadRequest)
+    const res = await this.accountService.upgradeAccount(req.email, req.groupType)
+    return Resp.ok({ effectLines: res.count })
+  }
+
+  @Post('downgrade')
+  @AllowUserGroup(UserGroupTypes.Admin)
+  @ZodSerializerDto(AccountUpDownGradeResp)
+  async downgradeAccount(@ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType): Promise<AccountUpDownGradeRespType> {
+    if(req.groupType.includes(UserGroupTypes.User))
+      return Resp.error('不能对User组进行升降级', Code.BadRequest)
+    const res = await this.accountService.downgradeAccount(req.email, req.groupType)
+    return Resp.ok({ effectLines: res.count })
+  }
+
+  @Post('disable')
+  @AllowUserGroup(UserGroupTypes.Admin)
+  @ZodSerializerDto(AccountDisableResp)
+  async disableAccount(@ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType): Promise<AccountDisableRespType> {
+    await this.accountService.disableAccount(req.email)
+    return Resp.ok(undefined)
   }
 }

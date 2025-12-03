@@ -3,6 +3,8 @@ import { PrismaService } from '@/src/prisma/prisma.service'
 import { Inject, Injectable } from '@nestjs/common'
 import bcryptjs from 'bcryptjs'
 import { AppConfigService } from '../app-config/app-config.service'
+import type { AccountInfoListQueryType } from '@shared/data-transfer/account/account'
+import type { UserWhereInput } from '@/src/prisma/generated/models'
 
 @Injectable()
 export class AccountService {
@@ -71,6 +73,64 @@ export class AccountService {
       ],
     })
     return user
+  }
+
+  async queryAccounts(query: AccountInfoListQueryType) {
+    const userQuery: UserWhereInput[] = []
+
+    if(query.isDisabled === true)
+      userQuery.push({ disabledAt: { not: null } })
+    else if(query.isDisabled === false)
+      userQuery.push({ disabledAt: null })
+
+    return await this.prismaService.user.findMany({
+      where: {
+        userGroup: {
+          some: {
+            groupType: {
+              in: query.groups,
+            },
+          },
+        },
+        AND: userQuery,
+      },
+      include: {
+        userGroup: { select: { groupType: true, createdAt: true } },
+      },
+    })
+  }
+
+  async downgradeAccount(email: string, groupType: UserGroupTypes[]) {
+    if(groupType.includes(UserGroupTypes.User))
+      throw new AccountError('不能降级User组')
+    return await this.prismaService.userGroup.deleteMany({
+      where: {
+        ofUser: email,
+        groupType: {
+          in: groupType,
+        },
+      },
+    })
+  }
+
+  async upgradeAccount(email: string, groupType: UserGroupTypes[]) {
+    return await this.prismaService.userGroup.createMany({
+      data: groupType.map(groupType => ({
+        ofUser: email,
+        groupType,
+      })),
+    })
+  }
+
+  async disableAccount(email: string) {
+    return await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        disabledAt: new Date(),
+      },
+    })
   }
 }
 export class AccountError extends Error {
