@@ -46,7 +46,7 @@ export class AppConfigService {
       host,
       port: Number(portString),
       user: this.envs.MYSQL_USERNAME,
-      password: this.envs.ACC_ROOT_PASSWORD,
+      password: this.envs.MYSQL_PWD,
     }
   }
 }
