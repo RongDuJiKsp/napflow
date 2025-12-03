@@ -1,2 +1,14 @@
-import { EnvAssertError, assertValue } from '@shared/utils/assert'
-export const STRENGTH_PASSWORD_LENGTH = assertValue(Number(process.env.STRENGTH_PASSWORD_LENGTH ?? '8'), val => !Number.isNaN(val) && val > 0, val => new EnvAssertError('STRENGTH_PASSWORD_LENGTH', `${val} must be number and greater than 0`))
+import z from 'zod'
+
+const ZodConstantsVaild = z.object({
+  STRENGTH_PASSWORD_LENGTH: z
+    .string()
+    .default('8')
+    .transform(val => Number(val))
+    .pipe(z.number().nonnegative().int()),
+})
+
+const { STRENGTH_PASSWORD_LENGTH } = ZodConstantsVaild.parse({
+  STRENGTH_PASSWORD_LENGTH: process.env.STRENGTH_PASSWORD_LENGTH,
+})
+export { STRENGTH_PASSWORD_LENGTH }
