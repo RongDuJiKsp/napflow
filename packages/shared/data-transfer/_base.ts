@@ -37,3 +37,8 @@ export class Resp {
     }
   }
 }
+
+export const NullResp = defineZodResp(
+  z.undefined().optional(),
+)
+export type NullRespType = z.infer<typeof NullResp>

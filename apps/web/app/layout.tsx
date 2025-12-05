@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import type { PropsWithChildren } from 'react'
+import AppProvider from './components/app/AppProvider'
 
 export const metadata: Metadata = {
   title: 'NapFlow WebUI',
@@ -13,7 +14,9 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body>
-        {children}
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>
     </html>
   )

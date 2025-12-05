@@ -2,12 +2,12 @@ import type { LoginReqType } from '@shared/data-transfer/account/account'
 import { LoginReq } from '@shared/data-transfer/account/account'
 import { useCallback, useState } from 'react'
 import { useAreaChange } from '@components/_base/input/hooks/use-area-change'
-import { notification } from 'antd'
+import { App } from 'antd'
 import z from 'zod'
 import { useLogin } from './use-login'
 
 export const useLoginWindow = () => {
-  const [notificationApi] = notification.useNotification()
+  const { notification } = App.useApp()
 
   const { login } = useLogin()
   const [input, setInput] = useState<LoginReqType>({ email: '', password: '' })
@@ -17,14 +17,14 @@ export const useLoginWindow = () => {
   const handleSubmit = useCallback(async () => {
     const form = LoginReq.safeParse(input)
     if(!form.success) {
-      notificationApi.error({
+      notification.error({
         title: 'Validation Error',
         description: z.prettifyError(form.error),
       })
       return
     }
     await login(input)
-  }, [input, login, notificationApi])
+  }, [input, login, notification])
 
   return {
     input,

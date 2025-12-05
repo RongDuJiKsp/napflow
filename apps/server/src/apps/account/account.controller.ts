@@ -1,9 +1,10 @@
 import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
-import { Code, Resp } from '@shared/data-transfer/_base'
-import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType, NullRespType } from '@shared/data-transfer/account/account'
+import type { NullRespType } from '@shared/data-transfer/_base'
+import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp, NullResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
@@ -73,6 +74,10 @@ export class AccountController {
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(NullResp)
   async changePassword(@ZodBody({ zod: AccountChangePasswordReq }) req: AccountChangePasswordReqType, @JwtBody({ zod: Account }) account: AccountType): Promise<NullRespType> {
+    const userFull = await this.accountService.getAccountWithVertify(account.email, req.originPassword)
+    if(!userFull)
+      return Resp.error('原密码错误', Code.BadRequest)
+
     await this.accountService.changePassword(account.email, req.password)
     return Resp.ok(undefined)
   }
