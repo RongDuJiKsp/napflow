@@ -9,19 +9,20 @@ import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 
 export const useLogin = () => {
+  const [messageApi] = message.useMessage()
   const router = useRouter()
   const login = useCallback(
     async (data: LoginReqType) => {
       const resp = await jsonQ.Post<LoginRespType>('/account/login', data)
       if (resp.statusCode !== Code.Ok || !resp.data) {
-        message.error(resp.message)
+        messageApi.error(resp.message)
         return
       }
       localStorage.setItem('auth-token', resp.data?.token)
-      message.success('登录成功')
+      messageApi.success('登录成功')
       router.replace('/')
     },
-    [router],
+    [router, messageApi],
   )
   return {
     login,
