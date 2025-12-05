@@ -132,6 +132,40 @@ export class AccountService {
       },
     })
   }
+
+  async enableAccount(email: string) {
+    return await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        disabledAt: null,
+      },
+    })
+  }
+
+  async changePassword(email: string, password: string) {
+    const hashedPassword = await bcryptjs.hash(password, 10)
+    return await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    })
+  }
+
+  async changeNickname(email: string, nickname: string) {
+    return await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        nickname,
+      },
+    })
+  }
 }
 export class AccountError extends Error {
   constructor(message: string) {

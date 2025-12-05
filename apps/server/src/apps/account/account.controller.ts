@@ -1,14 +1,15 @@
 import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
-import type { AccountDisableReqType, AccountDisableRespType, AccountInfoListRespType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType, NullRespType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { AccountDisableReq, AccountDisableResp, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp, NullResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
 import { AllowUserGroup } from '@/src/decorator/account'
 import { UserGroupTypes } from '@/src/prisma/generated/enums'
+import { JwtBody } from '@/src/decorator/jwt'
 
 @Controller('account')
 export class AccountController {
@@ -62,9 +63,25 @@ export class AccountController {
 
   @Post('disable')
   @AllowUserGroup(UserGroupTypes.Admin)
-  @ZodSerializerDto(AccountDisableResp)
-  async disableAccount(@ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType): Promise<AccountDisableRespType> {
+  @ZodSerializerDto(NullResp)
+  async disableAccount(@ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType): Promise<NullRespType> {
     await this.accountService.disableAccount(req.email)
+    return Resp.ok(undefined)
+  }
+
+  @Post('change-password')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(NullResp)
+  async changePassword(@ZodBody({ zod: AccountChangePasswordReq }) req: AccountChangePasswordReqType, @JwtBody({ zod: Account }) account: AccountType): Promise<NullRespType> {
+    await this.accountService.changePassword(account.email, req.password)
+    return Resp.ok(undefined)
+  }
+
+  @Post('change-nickname')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(NullResp)
+  async changeNickname(@ZodBody({ zod: AccountChangeNicknameReq }) req: AccountChangeNicknameReqType, @JwtBody({ zod: Account }) account: AccountType): Promise<NullRespType> {
+    await this.accountService.changeNickname(account.email, req.nickname)
     return Resp.ok(undefined)
   }
 }

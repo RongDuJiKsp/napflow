@@ -70,7 +70,17 @@ export const AccountDisableReq = z.object({
 })
 export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 
-export const AccountDisableResp = defineZodResp(
+export const AccountChangePasswordReq = z.object({
+  password: z.string(),
+})
+export type AccountChangePasswordReqType = z.infer<typeof AccountChangePasswordReq>
+
+export const AccountChangeNicknameReq = z.object({
+  nickname: z.string(),
+})
+export type AccountChangeNicknameReqType = z.infer<typeof AccountChangeNicknameReq>
+
+export const NullResp = defineZodResp(
   z.undefined().optional(),
 )
-export type AccountDisableRespType = z.infer<typeof AccountDisableResp>
+export type NullRespType = z.infer<typeof NullResp>
