@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react'
-import EnsureAuthToken from '../components/account/context/EnsureAuthToken'
+import EnsureAuthToken from '../components/account/context-provider/EnsureAuthToken'
 
 export default function Page({ children }: PropsWithChildren) {
   return (

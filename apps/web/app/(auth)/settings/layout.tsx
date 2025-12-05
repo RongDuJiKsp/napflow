@@ -3,6 +3,7 @@
 import { RiGlobalLine, RiTeamLine, RiUserSettingsLine } from '@remixicon/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { twMerge } from 'tailwind-merge'
 
 export default function SettingsLayout({
   children,
@@ -33,11 +34,10 @@ export default function SettingsLayout({
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${
-                          isActive
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
-                            : 'text-purple-700 hover:bg-purple-50 hover:text-purple-600'
-                        }`}
+                        className={twMerge('flex items-center px-4 py-3 rounded-lg transition-all duration-200',
+                          isActive && 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md',
+                          !isActive && 'text-purple-700 hover:bg-purple-50 hover:text-purple-600',
+                        )}
                       >
                         <item.icon className="w-5 h-5 mr-3" />
                         <span className="font-medium">{item.label}</span>
