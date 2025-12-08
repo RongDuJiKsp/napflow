@@ -5,6 +5,8 @@ packages:
 onlyBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/engines'
+  - bcrypt
+  - core-js
   - prisma
   - sharp
   - unrs-resolver

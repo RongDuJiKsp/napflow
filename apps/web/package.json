@@ -20,8 +20,8 @@
     "lexical": "^0.38.2",
     "lodash-es": "^4.17.21",
     "next": "16.0.7",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "reactflow": "^11.11.4",
     "tailwind-merge": "^3.4.0",
     "zustand": "^5.0.8"
