@@ -3,7 +3,7 @@
 import { RiUserLine } from '@remixicon/react'
 import { memo } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
-import { useUpdateNickname } from './hooks/use-update-userinfo'
+import { useUpdateNickname } from '../hooks/use-update-userinfo'
 import InputWrapper from '../../_base/input/InputWrapper'
 
 const UserInfoSettingWindow = () => {

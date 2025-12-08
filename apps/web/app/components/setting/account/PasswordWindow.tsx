@@ -4,7 +4,7 @@ import { RiLockLine } from '@remixicon/react'
 import { memo } from 'react'
 import Password from '@/app/components/_base/input/Password'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
-import { useUpdatePassword } from './hooks/use-update-password'
+import { useUpdatePassword } from '../hooks/use-update-password'
 const PasswordSettingWindow = () => {
   const { handleChangeOldPassword, handleChangeNewPassword, handleChangeConfirmPassword, handleSubmit, formValue } = useUpdatePassword()
   return (
