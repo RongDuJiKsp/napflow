@@ -28,6 +28,7 @@ export const AccountInfo = Account.extend({
 export type AccountInfoType = z.infer<typeof AccountInfo>
 // req resp
 
+// @/account/login
 export const LoginReq = z.object({
   email: z.string(),
   password: z.string(),
@@ -41,6 +42,7 @@ export const LoginResp = defineZodResp(
 )
 export type LoginRespType = z.infer<typeof LoginResp>
 
+// @/account/account
 export const AccountInfoListQuery = z.object({
   isDisabled: z.boolean().optional(), // 用户是否被禁用
   groups: z.array(UserRoleType).optional(), // 用户组
@@ -52,6 +54,13 @@ export const AccountInfoListResp = defineZodResp(
 )
 export type AccountInfoListRespType = z.infer<typeof AccountInfoListResp>
 
+// @/account/cur-account
+export const CurAccountInfoResp = defineZodResp(
+  AccountInfo,
+)
+export type CurAccountInfoRespType = z.infer<typeof CurAccountInfoResp>
+
+// @/account/upgrade @/account/downgrade
 export const AccountUpDownGradeReq = z.object({
   email: z.string(),
   groupType: z.array(UserRoleType),
@@ -65,17 +74,20 @@ export const AccountUpDownGradeResp = defineZodResp(
 )
 export type AccountUpDownGradeRespType = z.infer<typeof AccountUpDownGradeResp>
 
+// @/account/disable
 export const AccountDisableReq = z.object({
   email: z.string(),
 })
 export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 
+// @/account/change-password
 export const AccountChangePasswordReq = z.object({
   originPassword: z.string(),
   password: z.string(),
 })
 export type AccountChangePasswordReqType = z.infer<typeof AccountChangePasswordReq>
 
+// @/account/change-nickname
 export const AccountChangeNicknameReq = z.object({
   nickname: z.string(),
 })

@@ -2,9 +2,9 @@ import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
-import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, CurAccountInfoRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, CurAccountInfoResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
@@ -40,6 +40,16 @@ export class AccountController {
       roles,
     }))
     return Resp.ok(accounts)
+  }
+
+  @Get('cur-account')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(CurAccountInfoResp)
+  async getCurAccount(@JwtBody({ zod: Account }) account: AccountType): Promise<CurAccountInfoRespType> {
+    const curAccount = await this.accountService.getAccount(account.email)
+    if(!curAccount)
+      throw new Error('签发了token的用户不存在')
+    return Resp.ok(curAccount)
   }
 
   @Post('upgrade')

@@ -2,12 +2,14 @@
 import { RiAddLine, RiForbidLine } from '@remixicon/react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
 import { memo } from 'react'
+import { useAccountAddOperators } from '../hooks/use-account-operators'
 
 const CreateAccountWindow = () => {
-  const isAdmin = true
+  const { enableFeature } = useAccountAddOperators()
+
   return (<>
     {/* 遮罩层 */}
-    {!isAdmin && (
+    {!enableFeature && (
       <div className="relative bg-linear-to-br from-pink-50 to-purple-50 rounded-2xl shadow-lg p-6 border border-pink-100">
         <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center">
           <div className="text-center text-gray-600">
@@ -19,7 +21,7 @@ const CreateAccountWindow = () => {
       </div>
     )}
     {/* 展示层 */}
-    {isAdmin && (
+    {enableFeature && (
       <SettingItemContainer title='账户管理' Icon={RiAddLine} extra={'管理员权限'} extraClassName='text-green-600 bg-green-100'>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

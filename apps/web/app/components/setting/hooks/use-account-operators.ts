@@ -1,4 +1,5 @@
 import { useAreaChange } from '@/app/components/_base/input/hooks/use-area-change'
+import { useCurAccountQuery } from '@/app/hooks/query/use-cur-account-query'
 import { jsonQ } from '@/utils/net'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
@@ -74,5 +75,14 @@ export const useAccountOperators = () => {
     handleUpgrade,
     handleDownGrade,
     handleDisable,
+  }
+}
+
+export const useAccountAddOperators = () => {
+  const { data } = useCurAccountQuery()
+  const enableFeature = data?.userGroup.map(a => a.groupType).includes('Admin')
+
+  return {
+    enableFeature,
   }
 }

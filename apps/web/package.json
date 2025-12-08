@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.90.2",
     "alova": "^3.4.0",
     "antd": "^6.0.0",
+    "dayjs": "^1.11.19",
     "immer": "^11.0.0",
     "lexical": "^0.38.2",
     "lodash-es": "^4.17.21",

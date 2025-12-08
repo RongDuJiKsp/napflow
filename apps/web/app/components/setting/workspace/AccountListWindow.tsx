@@ -1,16 +1,24 @@
 'use client'
 
-import { mockAccounts } from '@/app/components/setting/workspace/mockData'
 import { RiForbidLine, RiMailLine, RiTimeLine, RiUserLine } from '@remixicon/react'
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
+import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
+import { dateFmt } from '@/utils/date'
 
 const AccountSettingWindow = () => {
+  const { data } = useAccountsQuery()
+  const accounts = useMemo(() => data?.map(account => ({
+    ...account,
+    id: account.email,
+    isDisabled: account.disabledAt !== null,
+    isAdmin: account.userGroup.map(x => x.groupType).includes('Admin'),
+  })), [data])
   return (
-    <SettingItemContainer title='账户列表' Icon={RiUserLine} extra={` 共 ${mockAccounts.length} 个账户`}>
+    <SettingItemContainer title='账户列表' Icon={RiUserLine} extra={` 共 ${accounts?.length ?? 'loading'} 个账户`}>
 
       <div className="space-y-4">
-        {mockAccounts.map(account => (
+        {accounts?.map(account => (
           <div
             key={account.id}
             className={`bg-white rounded-lg p-4 border transition-all duration-200 ${
@@ -48,12 +56,12 @@ const AccountSettingWindow = () => {
               <div className="text-right">
                 <div className="flex items-center text-sm text-gray-600 mb-1">
                   <RiTimeLine className="w-4 h-4 mr-1" />
-                  <span>创建: {account.createdAt}</span>
+                  <span>创建: {dateFmt(account.createdAt)}</span>
                 </div>
                 {account.isDisabled && account.disabledAt && (
                   <div className="flex items-center text-sm text-red-600">
                     <RiForbidLine className="w-4 h-4 mr-1" />
-                    <span>禁用: {account.disabledAt}</span>
+                    <span>禁用: {dateFmt(account.disabledAt)}</span>
                   </div>
                 )}
               </div>
