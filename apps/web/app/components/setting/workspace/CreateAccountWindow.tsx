@@ -1,8 +1,9 @@
 'use client'
 import { RiAddLine, RiForbidLine } from '@remixicon/react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
+import { memo } from 'react'
 
-export const CreayeateAccountWindow = () => {
+const CreateAccountWindow = () => {
   const isAdmin = true
   return (<>
     {/* 遮罩层 */}
@@ -59,3 +60,4 @@ export const CreayeateAccountWindow = () => {
       </SettingItemContainer>
     )}</>)
 }
+export default memo(CreateAccountWindow)

@@ -1,5 +1,5 @@
 import AccountListWindow from '@/app/components/setting/workspace/AccountListWindow'
-import { CreayeateAccountWindow } from '@/app/components/setting/workspace/CreateAccountWindow'
+import CreateAccountWindow from '@/app/components/setting/workspace/CreateAccountWindow'
 
 export default function WorkspaceSettings() {
   return (
@@ -11,7 +11,7 @@ export default function WorkspaceSettings() {
         <AccountListWindow/>
 
         {/* 账户管理 */}
-        <CreayeateAccountWindow/>
+        <CreateAccountWindow/>
       </div>
     </div>
   )

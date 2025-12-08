@@ -12,7 +12,7 @@ const ChangePasswordForm = z.object({
 })
 
 type ChangePasswordFormType = z.infer<typeof ChangePasswordForm>
-export const usePasswordWindow = () => {
+export const useUpdatePassword = () => {
   const { message, notification } = App.useApp()
 
   const [formValue, setFormValue] = useState<ChangePasswordFormType>({
