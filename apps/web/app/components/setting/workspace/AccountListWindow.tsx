@@ -1,51 +1,55 @@
 'use client'
-import { Dialog, Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { RiForbidLine, RiMailLine, RiMore2Fill, RiTimeLine, RiUserLine } from '@remixicon/react'
+import {
+  Dialog,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from '@headlessui/react'
+import {
+  RiForbidLine,
+  RiMailLine,
+  RiMore2Fill,
+  RiTimeLine,
+  RiUserLine,
+} from '@remixicon/react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
 import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
 import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
+import { twMerge } from 'tailwind-merge'
 
 type ModalOperation = {
-  sourceUser: string,
-  onClose: () => void
-
+  sourceUser: string;
+  onClose: () => void;
 }
 const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleUpgrade } = useAccountActions()
 
-  return (
-    <Dialog open={!!sourceUser} onClose={onClose}>
-
-    </Dialog>
-  )
+  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
 }
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDownGrade } = useAccountActions()
-  return (
-    <Dialog open={!!sourceUser} onClose={onClose}>
-
-    </Dialog>
-  )
+  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
 }
 const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDisable } = useAccountActions()
-  return (
-    <Dialog open={!!sourceUser} onClose={onClose}>
-
-    </Dialog>
-  )
+  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
 }
 
 const AccountSettingWindow = () => {
   const { data } = useAccountsQuery()
-  const accounts = useMemo(() => data?.map(account => ({
-    ...account,
-    id: account.email,
-    isDisabled: account.disabledAt !== null,
-    isAdmin: account.userGroup.map(x => x.groupType).includes('Admin'),
-  })), [data])
+  const accounts = useMemo(
+    () =>
+      data?.map(account => ({
+        ...account,
+        id: account.email,
+        isDisabled: account.disabledAt !== null,
+        isAdmin: account.userGroup.map(x => x.groupType).includes('Admin'),
+      })),
+    [data],
+  )
   const [upgradeSelectedAccount, setUpgradleSelectedAccount] = useState('')
   const [downGradeSelectedAccount, setDownGradeSelectedAccount] = useState('')
   const [disableSelectedAccount, setDisableSelectedAccount] = useState('')
@@ -58,8 +62,11 @@ const AccountSettingWindow = () => {
 
   return (
     <>
-      <SettingItemContainer title='账户列表' Icon={RiUserLine} extra={` 共 ${accounts?.length ?? 'loading'} 个账户`}>
-
+      <SettingItemContainer
+        title="账户列表"
+        Icon={RiUserLine}
+        extra={` 共 ${accounts?.length ?? 'loading'} 个账户`}
+      >
         <div className="space-y-4">
           {accounts?.map(account => (
             <div
@@ -77,7 +84,9 @@ const AccountSettingWindow = () => {
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-800">{account.nickname}</span>
+                      <span className="font-semibold text-gray-800">
+                        {account.nickname}
+                      </span>
                       {account.isAdmin && (
                         <span className="text-xs bg-purple-500 text-white px-2 py-1 rounded-full">
                           管理员
@@ -109,48 +118,72 @@ const AccountSettingWindow = () => {
                       </div>
                     )}
                   </div>
-                  <Popover className="relative">
-                    <PopoverButton className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-                      <RiMore2Fill className="w-4 h-4 text-gray-500" />
-                    </PopoverButton>
-                    <PopoverPanel className="absolute right-0 top-full mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-                      <div className="py-1">
-                        {!account.isAdmin && (
-                          <button
-                            onClick={() => setUpgradleSelectedAccount(account.email)}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            账户升级
-                          </button>
-                        )}
-                        {account.isAdmin && (
-                          <button
-                            onClick={() => setDownGradeSelectedAccount(account.email)}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            账户降级
-                          </button>
-                        )}
-                        {!account.isDisabled && (
-                          <button
-                            onClick={() => setDisableSelectedAccount(account.email)}
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                          >
-                            禁用账户
-                          </button>
-                        )}
+                  <Menu>
+                    <MenuButton>
+                      <div className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
+                        <RiMore2Fill className="w-4 h-4 text-gray-500" />
                       </div>
-                    </PopoverPanel>
-                  </Popover>
+                    </MenuButton>
+                    <MenuItems
+                      anchor="bottom"
+                      className="mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 z-10"
+                    >
+                      <MenuItem>
+                        <button
+                          onClick={() =>
+                            setUpgradleSelectedAccount(account.email)
+                          }
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  cursor-pointer"
+                        >
+                          账户升级
+                        </button>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          onClick={() =>
+                            setDownGradeSelectedAccount(account.email)
+                          }
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  cursor-pointer"
+                        >
+                          账户降级
+                        </button>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          onClick={() =>
+                            setDisableSelectedAccount(account.email)
+                          }
+                          className={twMerge(
+                            'w-full text-left px-4 py-2 text-sm',
+                            !account.isDisabled
+                              && ' text-red-600 hover:bg-red-50  cursor-pointer',
+                            account.isDisabled
+                              && 'text-gray-300 cursor-not-allowed',
+                          )}
+                        >
+                          禁用账户
+                        </button>
+                      </MenuItem>
+                    </MenuItems>
+                  </Menu>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </SettingItemContainer>
-      <AccountUpgradeDialog sourceUser={upgradeSelectedAccount} onClose={closeAll}/>
-      <AccountDowngradeDialog sourceUser={downGradeSelectedAccount} onClose={closeAll}/>
-      <AccountDisableDialog sourceUser={disableSelectedAccount} onClose={closeAll}/>
+      <AccountUpgradeDialog
+        sourceUser={upgradeSelectedAccount}
+        onClose={closeAll}
+      />
+      <AccountDowngradeDialog
+        sourceUser={downGradeSelectedAccount}
+        onClose={closeAll}
+      />
+      <AccountDisableDialog
+        sourceUser={disableSelectedAccount}
+        onClose={closeAll}
+      />
     </>
   )
 }
