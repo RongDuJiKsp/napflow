@@ -4,7 +4,7 @@ import type zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountType } from '@shared/data-transfer/account/account'
 import { Account } from '@shared/data-transfer/account/account'
-import { Request } from 'express'
+import type { Request } from 'express'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
 export class VaildJwtError extends Error {
