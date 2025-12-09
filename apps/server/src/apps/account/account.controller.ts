@@ -34,7 +34,7 @@ export class AccountController {
   @Get('account')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(AccountInfoListResp)
-  async getAccount(@Query('isDisabled', ParseBoolPipe) isDisabled?: boolean, @Query('roles', ParseArrayPipe) roles?: string[]): Promise<AccountInfoListRespType> {
+  async getAccount(@Query('isDisabled', new ParseBoolPipe({ optional: true })) isDisabled?: boolean, @Query('roles', new ParseArrayPipe({ optional: true })) roles?: string[]): Promise<AccountInfoListRespType> {
     const accounts = await this.accountService.queryAccounts(AccountInfoListQuery.parse({
       isDisabled,
       roles,
