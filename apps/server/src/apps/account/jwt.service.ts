@@ -4,6 +4,7 @@ import type zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountType } from '@shared/data-transfer/account/account'
 import { Account } from '@shared/data-transfer/account/account'
+import { Request } from 'express'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
 export class VaildJwtError extends Error {
@@ -24,8 +25,8 @@ export class JwtOperator<T extends JwtPayload> {
     return this.zod.parse(jwt.verify(token, this.secret, options))
   }
 
-  jwtHeader(header: Headers, options?: jwt.VerifyOptions) {
-    const authHeader = header.get('Authorization')?.split(' ')[1]
+  jwtHttpRequest(req: Request, options?: jwt.VerifyOptions) {
+    const authHeader = req.get('Authorization')?.split(' ')[1]
     if(!authHeader)
       throw new VaildJwtError('Authorization header is missing')
 
@@ -41,8 +42,8 @@ export class JwtService {
     this.account = new JwtOperator(this.configService.envs.JWT_SECRET_KEY, Account)
   }
 
-  jwtHeader<U extends JwtPayload = JwtPayload>(header: Headers, options?: jwt.VerifyOptions): U {
-    const authHeader = header.get('Authorization')?.split(' ')[1]
+  jwtHttpRequest<U extends JwtPayload = JwtPayload>(req: Request, options?: jwt.VerifyOptions): U {
+    const authHeader = req.get('Authorization')?.split(' ')[1]
     if(!authHeader)
       throw new VaildJwtError('Authorization header is missing')
 

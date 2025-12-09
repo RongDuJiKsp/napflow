@@ -11,7 +11,7 @@ export class UserGroupGuard implements CanActivate {
     const userGroup = this.reflector.get(AllowUserGroup, ctx.getHandler())
     if(!userGroup)
       return true
-    const account = this.jwtService.account.jwtHeader(ctx.switchToHttp().getRequest<Request>().headers)
+    const account = this.jwtService.account.jwtHttpRequest(ctx.switchToHttp().getRequest())
     return account.userGroup.map(u => u.groupType).includes(userGroup)
   }
 }
