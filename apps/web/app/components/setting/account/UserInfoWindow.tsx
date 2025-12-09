@@ -7,7 +7,11 @@ import { useUpdateNickname } from '../hooks/use-update-userinfo'
 import InputWrapper from '../../_base/input/InputWrapper'
 
 const UserInfoSettingWindow = () => {
-  const { formValue, handleChangeNickname, handleSubmit } = useUpdateNickname()
+  const {
+    formValue,
+    handleChangeNickname,
+    handleSubmit,
+  } = useUpdateNickname()
   return (
     <SettingItemContainer title='个人信息' Icon={RiUserLine}>
       <div className="mb-4">

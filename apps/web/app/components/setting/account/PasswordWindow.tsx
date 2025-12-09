@@ -6,7 +6,13 @@ import Password from '@/app/components/_base/input/Password'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
 import { useUpdatePassword } from '../hooks/use-update-password'
 const PasswordSettingWindow = () => {
-  const { handleChangeOldPassword, handleChangeNewPassword, handleChangeConfirmPassword, handleSubmit, formValue } = useUpdatePassword()
+  const {
+    handleChangeOldPassword,
+    handleChangeNewPassword,
+    handleChangeConfirmPassword,
+    handleSubmit,
+    formValue,
+  } = useUpdatePassword()
   return (
     <SettingItemContainer title='密码设置' Icon={RiLockLine}>
       <div className="space-y-4">
