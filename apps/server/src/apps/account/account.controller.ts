@@ -2,9 +2,9 @@ import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
-import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, CurAccountInfoRespType, LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountCreateReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, CurAccountInfoRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, CurAccountInfoResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountCreateReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, CurAccountInfoResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
@@ -77,6 +77,14 @@ export class AccountController {
   @ZodSerializerDto(NullResp)
   async disableAccount(@ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType): Promise<NullRespType> {
     await this.accountService.disableAccount(req.email)
+    return Resp.ok(undefined)
+  }
+
+  @Post('create')
+  @AllowUserGroup(UserGroupTypes.Admin)
+  @ZodSerializerDto(NullResp)
+  async createAccount(@ZodBody({ zod: AccountCreateReq }) req: AccountCreateReqType): Promise<NullRespType> {
+    await this.accountService.createCustomAccount(req.email, req.nickname, req.password)
     return Resp.ok(undefined)
   }
 

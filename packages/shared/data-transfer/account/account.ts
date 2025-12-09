@@ -80,6 +80,14 @@ export const AccountDisableReq = z.object({
 })
 export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 
+// @/account/create
+export const AccountCreateReq = z.object({
+  email: z.string(),
+  password: z.string(),
+  nickname: z.string(),
+})
+export type AccountCreateReqType = z.infer<typeof AccountCreateReq>
+
 // @/account/change-password
 export const AccountChangePasswordReq = z.object({
   originPassword: z.string(),
