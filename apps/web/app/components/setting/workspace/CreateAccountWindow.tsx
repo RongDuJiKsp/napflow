@@ -19,15 +19,17 @@ const CreateAccountWindow = () => {
   return (<>
     {/* 遮罩层 */}
     {!enableFeature && (
-      <div className="relative bg-linear-to-br from-pink-50 to-purple-50 rounded-2xl shadow-lg p-6 border border-pink-100">
-        <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center">
+      <SettingItemContainer title='账户管理' Icon={RiAddLine}>
+
+        <div className="inset-0 backdrop-blur-sm rounded-2xl z-10 flex items-center justify-center my-5">
           <div className="text-center text-gray-600">
             <RiForbidLine className="w-12 h-12 mx-auto mb-3 text-gray-400" />
             <p className="font-semibold">权限不足</p>
             <p className="text-sm">只有管理员可以管理账户</p>
           </div>
         </div>
-      </div>
+      </SettingItemContainer>
+
     )}
     {/* 展示层 */}
     {enableFeature && (
