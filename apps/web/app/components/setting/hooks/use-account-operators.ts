@@ -1,9 +1,9 @@
-import { useAreaChange } from '@/app/components/_base/input/hooks/use-area-change'
+import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { useAccountMeta } from '@/app/hooks/account/use-account-meta'
 import { jsonQ } from '@/utils/net'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
-import type { AccountCreateReqType, AccountDisableReqType, AccountUpDownGradeReqType } from '@shared/data-transfer/account/account'
+import type { AccountCreateReqType, AccountUpDownGradeReqType } from '@shared/data-transfer/account/account'
 import { AccountCreateReq, AccountDisableReq, AccountUpDownGradeReq } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
 import { useCallback, useState } from 'react'
@@ -12,15 +12,9 @@ import z from 'zod'
 export const useAccountActions = () => {
   const { isAdmin: enableFeature } = useAccountMeta()
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue] = useState<AccountUpDownGradeReqType & AccountDisableReqType>({
-    email: '',
-    groupType: [],
-  })
-  const handleChangeEmail = useAreaChange(setFormValue, 'email')
-  const handleChangeGroupType = useAreaChange(setFormValue, 'groupType')
 
-  const handleUpgrade = useCallback(async () => {
-    const validated = AccountUpDownGradeReq.safeParse(formValue)
+  const handleUpgrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
+    const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
     if(!validated.success) {
       notification.error({
         title: '账号升级提交失败',
@@ -34,9 +28,9 @@ export const useAccountActions = () => {
       return
     }
     message.success('升级账号成功')
-  }, [formValue, notification, message])
-  const handleDownGrade = useCallback(async () => {
-    const validated = AccountUpDownGradeReq.safeParse(formValue)
+  }, [notification, message])
+  const handleDownGrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
+    const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
     if(!validated.success) {
       notification.error({
         title: '账号降级提交失败',
@@ -50,10 +44,10 @@ export const useAccountActions = () => {
       return
     }
     message.success('降级账号成功')
-  }, [formValue, notification, message])
+  }, [notification, message])
 
-  const handleDisable = useCallback(async () => {
-    const validated = AccountDisableReq.safeParse(formValue)
+  const handleDisable = useCallback(async (email: string) => {
+    const validated = AccountDisableReq.safeParse({ email })
     if(!validated.success) {
       notification.error({
         title: '账号禁用提交失败',
@@ -67,13 +61,10 @@ export const useAccountActions = () => {
       return
     }
     message.success('禁用账号成功')
-  }, [formValue, notification, message])
+  }, [notification, message])
 
   return {
     enableFeature,
-    formValue,
-    handleChangeEmail,
-    handleChangeGroupType,
     handleUpgrade,
     handleDownGrade,
     handleDisable,

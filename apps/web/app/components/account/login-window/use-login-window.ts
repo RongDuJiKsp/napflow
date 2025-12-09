@@ -1,7 +1,7 @@
 import type { LoginReqType } from '@shared/data-transfer/account/account'
 import { LoginReq } from '@shared/data-transfer/account/account'
 import { useCallback, useState } from 'react'
-import { useAreaChange } from '@components/_base/input/hooks/use-area-change'
+import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { App } from 'antd'
 import z from 'zod'
 import { useLogin } from './use-login'

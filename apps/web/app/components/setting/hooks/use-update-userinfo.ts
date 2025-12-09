@@ -1,4 +1,4 @@
-import { useAreaChange } from '@/app/components/_base/input/hooks/use-area-change'
+import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
