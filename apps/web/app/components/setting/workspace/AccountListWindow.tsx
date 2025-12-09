@@ -1,6 +1,6 @@
 'use client'
-import { Dialog } from '@headlessui/react'
-import { RiForbidLine, RiMailLine, RiTimeLine, RiUserLine } from '@remixicon/react'
+import { Dialog, Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import { RiForbidLine, RiMailLine, RiMore2Fill, RiTimeLine, RiUserLine } from '@remixicon/react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
 import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
@@ -96,17 +96,52 @@ const AccountSettingWindow = () => {
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <div className="flex items-center text-sm text-gray-600 mb-1">
-                    <RiTimeLine className="w-4 h-4 mr-1" />
-                    <span>创建: {dateFmt(account.createdAt)}</span>
-                  </div>
-                  {account.isDisabled && account.disabledAt && (
-                    <div className="flex items-center text-sm text-red-600">
-                      <RiForbidLine className="w-4 h-4 mr-1" />
-                      <span>禁用: {dateFmt(account.disabledAt)}</span>
+                <div className="flex items-center space-x-4">
+                  <div className="text-right">
+                    <div className="flex items-center text-sm text-gray-600 mb-1">
+                      <RiTimeLine className="w-4 h-4 mr-1" />
+                      <span>创建: {dateFmt(account.createdAt)}</span>
                     </div>
-                  )}
+                    {account.isDisabled && account.disabledAt && (
+                      <div className="flex items-center text-sm text-red-600">
+                        <RiForbidLine className="w-4 h-4 mr-1" />
+                        <span>禁用: {dateFmt(account.disabledAt)}</span>
+                      </div>
+                    )}
+                  </div>
+                  <Popover className="relative">
+                    <PopoverButton className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                      <RiMore2Fill className="w-4 h-4 text-gray-500" />
+                    </PopoverButton>
+                    <PopoverPanel className="absolute right-0 top-full mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                      <div className="py-1">
+                        {!account.isAdmin && (
+                          <button
+                            onClick={() => setUpgradleSelectedAccount(account.email)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            账户升级
+                          </button>
+                        )}
+                        {account.isAdmin && (
+                          <button
+                            onClick={() => setDownGradeSelectedAccount(account.email)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            账户降级
+                          </button>
+                        )}
+                        {!account.isDisabled && (
+                          <button
+                            onClick={() => setDisableSelectedAccount(account.email)}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                          >
+                            禁用账户
+                          </button>
+                        )}
+                      </div>
+                    </PopoverPanel>
+                  </Popover>
                 </div>
               </div>
             </div>
