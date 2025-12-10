@@ -9,7 +9,6 @@ import {
   MenuItems,
 } from '@headlessui/react'
 import {
-  RiAdminLine,
   RiArrowUpLine,
   RiCloseLine,
   RiForbidLine,
@@ -25,37 +24,23 @@ import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
 import { twMerge } from 'tailwind-merge'
 import { Select, Space, Tooltip } from 'antd'
-import type { ComponentWithClass } from '@/utils/type'
-import type { DefaultOptionType } from 'antd/es/select'
-import type { UserRoleTypeType } from '@shared/data-transfer/account/account'
+import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
+import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
 
 type ModalOperation = {
   sourceUser: string;
   onClose: () => void;
 }
 
-type UpDownGradeOptions = {
-  icon: ComponentWithClass;
-  value: UserRoleTypeType;
-  disabled?: boolean;
-  tooltip?: string;
-} & DefaultOptionType
-
-const UpDownGradeOptionsValue: UpDownGradeOptions[] = [
-  { value: 'Admin', label: '管理员', icon: RiAdminLine },
-  { value: 'User', label: '普通用户', icon: RiUserLine, disabled: true, tooltip: '普通身份不能被升降级' },
-]
-
 const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
-  const { handleUpgrade } = useAccountActions()
-  const [selectedGroups, setSelectedGroups] = useState<UserRoleTypeType[]>([])
+  const { filterdOptions } = useUpgradeOptions(sourceUser)
 
-  const handleConfirm = () => {
-    if (selectedGroups.length > 0) {
-      handleUpgrade(sourceUser, selectedGroups)
-      onClose()
-    }
-  }
+  const { handleUpgrade } = useAccountActions()
+  const {
+    selectedGroups,
+    setSelectedGroups,
+    handleConfirm,
+  } = useUpDownGradeDialog(sourceUser, onClose, handleUpgrade)
 
   return (
     <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
@@ -96,7 +81,7 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                 mode="multiple"
                 value={selectedGroups}
                 onChange={setSelectedGroups}
-                options={UpDownGradeOptionsValue}
+                options={filterdOptions}
                 placeholder="请选择要添加的权限组"
                 className="w-full rounded-lg border-gray-200 hover:border-blue-400 focus:border-blue-500 focus:ring-blue-500/20"
                 optionRender={opt => (
@@ -135,15 +120,13 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   )
 }
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
+  const { filterdOptions } = useDownGradeOptions(sourceUser)
   const { handleDownGrade } = useAccountActions()
-  const [selectedGroups, setSelectedGroups] = useState<UserRoleTypeType[]>([])
-
-  const handleConfirm = () => {
-    if (selectedGroups.length > 0) {
-      handleDownGrade(sourceUser, selectedGroups)
-      onClose()
-    }
-  }
+  const {
+    selectedGroups,
+    setSelectedGroups,
+    handleConfirm,
+  } = useUpDownGradeDialog(sourceUser, onClose, handleDownGrade)
 
   return (
     <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
@@ -184,7 +167,7 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                 mode="multiple"
                 value={selectedGroups}
                 onChange={setSelectedGroups}
-                options={UpDownGradeOptionsValue}
+                options={filterdOptions}
                 placeholder="请选择要移除的权限组"
                 className="w-full rounded-lg border-gray-200 hover:border-amber-400 focus:border-amber-500 focus:ring-amber-500/20"
                 optionRender={opt => (
