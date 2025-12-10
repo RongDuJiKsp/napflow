@@ -81,7 +81,7 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
           </div>
 
           {/* Content */}
-          <div className="px-6 py-6">
+          <div className="px-6 py-6 mb-14">
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">
                 为用户 <span className="font-medium text-gray-900">{sourceUser}</span> 选择要升级的权限组：
@@ -136,15 +136,164 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
 }
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDownGrade } = useAccountActions()
-  return <Dialog open={!!sourceUser} onClose={onClose}>
+  const [selectedGroups, setSelectedGroups] = useState<UserRoleTypeType[]>([])
 
-  </Dialog>
+  const handleConfirm = () => {
+    if (selectedGroups.length > 0) {
+      handleDownGrade(sourceUser, selectedGroups)
+      onClose()
+    }
+  }
+
+  return (
+    <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="mx-auto max-w-md w-full rounded-2xl bg-white shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-linear-to-r from-amber-500 to-orange-500 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <RiArrowUpLine className="w-6 h-6 text-white rotate-180" />
+                <DialogTitle className="text-lg font-semibold text-white">
+                  账户降级
+                </DialogTitle>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+              >
+                <RiCloseLine className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-6 mb-14">
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">
+                为用户 <span className="font-medium text-gray-900">{sourceUser}</span> 选择要降级的权限组：
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                选择权限组
+              </label>
+              <Select
+                mode="multiple"
+                value={selectedGroups}
+                onChange={setSelectedGroups}
+                options={UpDownGradeOptionsValue}
+                placeholder="请选择要移除的权限组"
+                className="w-full rounded-lg border-gray-200 hover:border-amber-400 focus:border-amber-500 focus:ring-amber-500/20"
+                optionRender={opt => (
+                  <Tooltip title={opt.data.tooltip}>
+                    <Space>
+                      <opt.data.icon />
+                      <span>{opt.data.label}</span>
+                    </Space>
+                  </Tooltip>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleConfirm}
+                disabled={selectedGroups.length === 0}
+                className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-amber-500 to-orange-500 rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                确认降级
+              </button>
+            </div>
+          </div>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  )
 }
 const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDisable } = useAccountActions()
-  return <Dialog open={!!sourceUser} onClose={onClose}>
 
-  </Dialog>
+  const handleConfirm = () => {
+    handleDisable(sourceUser)
+    onClose()
+  }
+
+  return (
+    <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="mx-auto max-w-md w-full rounded-2xl bg-white shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-linear-to-r from-red-500 to-pink-500 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <RiForbidLine className="w-6 h-6 text-white" />
+                <DialogTitle className="text-lg font-semibold text-white">
+                  禁用账户
+                </DialogTitle>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+              >
+                <RiCloseLine className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-6">
+            <div className="mb-6">
+              <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4">
+                <RiForbidLine className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+                确认禁用账户
+              </h3>
+              <p className="text-sm text-gray-600 text-center mb-4">
+                您确定要禁用用户 <span className="font-medium text-gray-900">{sourceUser}</span> 吗？
+              </p>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-xs text-amber-800">
+                  <strong>注意：</strong>账户被禁用后，用户将无法登录系统。此操作不可撤销。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-red-500 to-pink-500 rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200"
+              >
+                确认禁用
+              </button>
+            </div>
+          </div>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  )
 }
 
 const AccountSettingWindow = () => {
