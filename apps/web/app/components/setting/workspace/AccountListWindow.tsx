@@ -27,15 +27,21 @@ type ModalOperation = {
 const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleUpgrade } = useAccountActions()
 
-  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
+  return <Dialog open={!!sourceUser} onClose={onClose}>
+    
+  </Dialog>
 }
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDownGrade } = useAccountActions()
-  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
+  return <Dialog open={!!sourceUser} onClose={onClose}>
+
+  </Dialog>
 }
 const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDisable } = useAccountActions()
-  return <Dialog open={!!sourceUser} onClose={onClose}></Dialog>
+  return <Dialog open={!!sourceUser} onClose={onClose}>
+
+  </Dialog>
 }
 
 const AccountSettingWindow = () => {
@@ -120,50 +126,92 @@ const AccountSettingWindow = () => {
                   </div>
                   <Menu>
                     <MenuButton>
-                      <div className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer">
-                        <RiMore2Fill className="w-4 h-4 text-gray-500" />
+                      <div className="p-2 rounded-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-200 cursor-pointer group">
+                        <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600 transition-colors duration-200" />
                       </div>
                     </MenuButton>
                     <MenuItems
                       anchor="bottom"
-                      className="mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 z-10"
+                      className="mt-2 w-40 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100/50 z-50 overflow-hidden transition-all duration-200 ease-out"
                     >
-                      <MenuItem>
-                        <button
-                          onClick={() =>
-                            setUpgradleSelectedAccount(account.email)
-                          }
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  cursor-pointer"
-                        >
-                          账户升级
-                        </button>
-                      </MenuItem>
-                      <MenuItem>
-                        <button
-                          onClick={() =>
-                            setDownGradeSelectedAccount(account.email)
-                          }
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  cursor-pointer"
-                        >
-                          账户降级
-                        </button>
-                      </MenuItem>
-                      <MenuItem>
-                        <button
-                          onClick={() =>
-                            setDisableSelectedAccount(account.email)
-                          }
-                          className={twMerge(
-                            'w-full text-left px-4 py-2 text-sm',
-                            !account.isDisabled
-                              && ' text-red-600 hover:bg-red-50  cursor-pointer',
-                            account.isDisabled
-                              && 'text-gray-300 cursor-not-allowed',
-                          )}
-                        >
-                          禁用账户
-                        </button>
-                      </MenuItem>
+                      <div className="py-2">
+                        <MenuItem>
+                          <button
+                            onClick={() =>
+                              !account.isDisabled
+                              && setUpgradleSelectedAccount(account.email)
+                            }
+                            className={twMerge(
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              !account.isDisabled
+                                && 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 cursor-pointer group',
+                              account.isDisabled
+                                && 'text-gray-300 cursor-not-allowed',
+                            )}
+                          >
+                            <div
+                              className={twMerge(
+                                'w-5 h-5 rounded-full transition-all duration-200',
+                                !account.isDisabled
+                                  && 'bg-gradient-to-r from-blue-400 to-indigo-400 group-hover:from-blue-500 group-hover:to-indigo-500',
+                                account.isDisabled && 'bg-gray-300',
+                              )}
+                            ></div>
+                            <span className="font-medium">账户升级</span>
+                          </button>
+                        </MenuItem>
+                        <MenuItem>
+                          <button
+                            onClick={() =>
+                              !account.isDisabled
+                              && setDownGradeSelectedAccount(account.email)
+                            }
+                            className={twMerge(
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              !account.isDisabled
+                                && 'text-gray-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700 cursor-pointer group',
+                              account.isDisabled
+                                && 'text-gray-300 cursor-not-allowed',
+                            )}
+                          >
+                            <div
+                              className={twMerge(
+                                'w-5 h-5 rounded-full transition-all duration-200',
+                                !account.isDisabled
+                                  && 'bg-gradient-to-r from-amber-400 to-orange-400 group-hover:from-amber-500 group-hover:to-orange-500',
+                                account.isDisabled && 'bg-gray-300',
+                              )}
+                            ></div>
+                            <span className="font-medium">账户降级</span>
+                          </button>
+                        </MenuItem>
+                        <div className="mx-3 my-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+                        <MenuItem>
+                          <button
+                            onClick={() =>
+                              !account.isDisabled
+                              && setDisableSelectedAccount(account.email)
+                            }
+                            className={twMerge(
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              !account.isDisabled
+                                && ' text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 cursor-pointer group',
+                              account.isDisabled
+                                && 'text-gray-300 cursor-not-allowed',
+                            )}
+                          >
+                            <div
+                              className={twMerge(
+                                'w-5 h-5 rounded-full transition-all duration-200',
+                                !account.isDisabled
+                                  && 'bg-gradient-to-r from-red-400 to-pink-400 group-hover:from-red-500 group-hover:to-pink-500',
+                                account.isDisabled && 'bg-gray-300',
+                              )}
+                            ></div>
+                            <span className="font-medium">禁用账户</span>
+                          </button>
+                        </MenuItem>
+                      </div>
                     </MenuItems>
                   </Menu>
                 </div>
