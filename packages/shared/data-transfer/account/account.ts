@@ -5,7 +5,7 @@ export const UserRoleType = z.enum(['Admin', 'User'])
 export type UserRoleTypeType = z.infer<typeof UserRoleType>
 
 export const Account = z.object({
-  email: z.string(),
+  email: z.email(),
   nickname: z.string(),
   userGroup: z.array(
     z.object({
@@ -31,7 +31,7 @@ export type AccountInfoType = z.infer<typeof AccountInfo>
 
 // @/account/login
 export const LoginReq = z.object({
-  email: z.string(),
+  email: z.email(),
   password: z.string(),
 })
 export type LoginReqType = z.infer<typeof LoginReq>
@@ -55,15 +55,21 @@ export const AccountInfoListResp = defineZodResp(
 )
 export type AccountInfoListRespType = z.infer<typeof AccountInfoListResp>
 
-// @/account/cur-account
-export const CurAccountInfoResp = defineZodResp(
-  AccountInfo,
+// @/account/account-info
+export const AccountInfoReq = z.object({
+  email: z.email(),
+})
+export type AccountInfoReqType = z.infer<typeof AccountInfoReq>
+
+// @/account/cur-account @/account/account-info
+export const AccountInfoResp = defineZodResp(
+  AccountInfo.nullable(),
 )
-export type CurAccountInfoRespType = z.infer<typeof CurAccountInfoResp>
+export type AccountInfoRespType = z.infer<typeof AccountInfoResp>
 
 // @/account/upgrade @/account/downgrade
 export const AccountUpDownGradeReq = z.object({
-  email: z.string(),
+  email: z.email(),
   groupType: z.array(UserRoleType),
 })
 export type AccountUpDownGradeReqType = z.infer<typeof AccountUpDownGradeReq>
@@ -77,13 +83,13 @@ export type AccountUpDownGradeRespType = z.infer<typeof AccountUpDownGradeResp>
 
 // @/account/disable
 export const AccountDisableReq = z.object({
-  email: z.string(),
+  email: z.email(),
 })
 export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 
 // @/account/create
 export const AccountCreateReq = z.object({
-  email: z.string(),
+  email: z.email(),
   password: z.string(),
   nickname: z.string(),
 })

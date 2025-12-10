@@ -2,9 +2,9 @@ import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
-import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountCreateReqType, AccountDisableReqType, AccountInfoListRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, CurAccountInfoRespType, LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountCreateReqType, AccountDisableReqType, AccountInfoListRespType, AccountInfoReqType, AccountInfoRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountCreateReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountUpDownGradeReq, AccountUpDownGradeResp, CurAccountInfoResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountCreateReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountInfoReq, AccountInfoResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
@@ -44,11 +44,19 @@ export class AccountController {
 
   @Get('cur-account')
   @AllowUserGroup(UserGroupTypes.User)
-  @ZodSerializerDto(CurAccountInfoResp)
-  async getCurAccount(@JwtBody({ zod: Account }) account: AccountType): Promise<CurAccountInfoRespType> {
+  @ZodSerializerDto(AccountInfoResp)
+  async getCurAccount(@JwtBody({ zod: Account }) account: AccountType): Promise<AccountInfoRespType> {
     const curAccount = await this.accountService.getAccount(account.email)
     if(!curAccount)
       throw new Error('签发了token的用户不存在')
+    return Resp.ok(curAccount)
+  }
+
+  @Get('account-info')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(AccountInfoResp)
+  async getAccountInfo(@ZodBody({ zod: AccountInfoReq }) accReq: AccountInfoReqType): Promise<AccountInfoRespType> {
+    const curAccount = await this.accountService.getAccount(accReq.email)
     return Resp.ok(curAccount)
   }
 
