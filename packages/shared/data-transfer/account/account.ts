@@ -55,12 +55,6 @@ export const AccountInfoListResp = defineZodResp(
 )
 export type AccountInfoListRespType = z.infer<typeof AccountInfoListResp>
 
-// @/account/account-info
-export const AccountInfoReq = z.object({
-  email: z.email(),
-})
-export type AccountInfoReqType = z.infer<typeof AccountInfoReq>
-
 // @/account/cur-account @/account/account-info
 export const AccountInfoResp = defineZodResp(
   AccountInfo.nullable(),

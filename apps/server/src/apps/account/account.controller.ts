@@ -2,9 +2,9 @@ import { ZodBody } from '@/src/decorator/zod'
 import { Controller, Get, Inject, ParseArrayPipe, ParseBoolPipe, Post, Query } from '@nestjs/common'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
-import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountCreateReqType, AccountDisableReqType, AccountInfoListRespType, AccountInfoReqType, AccountInfoRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
+import type { AccountChangeNicknameReqType, AccountChangePasswordReqType, AccountCreateReqType, AccountDisableReqType, AccountInfoListRespType, AccountInfoRespType, AccountType, AccountUpDownGradeReqType, AccountUpDownGradeRespType, LoginReqType } from '@shared/data-transfer/account/account'
 import type { LoginRespType } from '@shared/data-transfer/account/account'
-import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountCreateReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountInfoReq, AccountInfoResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
+import { Account, AccountChangeNicknameReq, AccountChangePasswordReq, AccountCreateReq, AccountDisableReq, AccountInfoListQuery, AccountInfoListResp, AccountInfoResp, AccountUpDownGradeReq, AccountUpDownGradeResp, LoginReq, LoginResp } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
@@ -55,8 +55,8 @@ export class AccountController {
   @Get('account-info')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(AccountInfoResp)
-  async getAccountInfo(@ZodBody({ zod: AccountInfoReq }) accReq: AccountInfoReqType): Promise<AccountInfoRespType> {
-    const curAccount = await this.accountService.getAccount(accReq.email)
+  async getAccountInfo(@Query('email') email: string): Promise<AccountInfoRespType> {
+    const curAccount = await this.accountService.getAccount(email)
     return Resp.ok(curAccount)
   }
 
