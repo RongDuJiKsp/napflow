@@ -1,9 +1,10 @@
+import type { ComponentWithClass } from '@/utils/type'
 import type { PropsWithChildren } from 'react'
 import { memo } from 'react'
 import { twMerge } from 'tailwind-merge'
 type SettingContainerProps = PropsWithChildren<{
   title: string;
-  Icon: React.ComponentType<{ className?: string }>;
+  Icon: ComponentWithClass
   extra?: string;
   containerClassName?: string;
   iconClassName?: string;

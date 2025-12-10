@@ -1,12 +1,17 @@
 'use client'
 import {
   Dialog,
+  DialogPanel,
+  DialogTitle,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
 } from '@headlessui/react'
 import {
+  RiAdminLine,
+  RiArrowUpLine,
+  RiCloseLine,
   RiForbidLine,
   RiMailLine,
   RiMore2Fill,
@@ -19,17 +24,115 @@ import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
 import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
 import { twMerge } from 'tailwind-merge'
+import { Select, Space, Tooltip } from 'antd'
+import type { ComponentWithClass } from '@/utils/type'
+import type { DefaultOptionType } from 'antd/es/select'
+import type { UserRoleTypeType } from '@shared/data-transfer/account/account'
 
 type ModalOperation = {
   sourceUser: string;
   onClose: () => void;
 }
+
+type UpDownGradeOptions = {
+  icon: ComponentWithClass;
+  value: UserRoleTypeType;
+  disabled?: boolean;
+  tooltip?: string;
+} & DefaultOptionType
+
+const UpDownGradeOptionsValue: UpDownGradeOptions[] = [
+  { value: 'Admin', label: '管理员', icon: RiAdminLine },
+  { value: 'User', label: '普通用户', icon: RiUserLine, disabled: true, tooltip: '普通身份不能被升降级' },
+]
+
 const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleUpgrade } = useAccountActions()
+  const [selectedGroups, setSelectedGroups] = useState<UserRoleTypeType[]>([])
 
-  return <Dialog open={!!sourceUser} onClose={onClose}>
-    
-  </Dialog>
+  const handleConfirm = () => {
+    if (selectedGroups.length > 0) {
+      handleUpgrade(sourceUser, selectedGroups)
+      onClose()
+    }
+  }
+
+  return (
+    <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="mx-auto max-w-md w-full rounded-2xl bg-white shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-linear-to-r from-blue-500 to-indigo-500 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <RiArrowUpLine className="w-6 h-6 text-white" />
+                <DialogTitle className="text-lg font-semibold text-white">
+                  账户升级
+                </DialogTitle>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+              >
+                <RiCloseLine className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-6">
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">
+                为用户 <span className="font-medium text-gray-900">{sourceUser}</span> 选择要升级的权限组：
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                选择权限组
+              </label>
+              <Select
+                mode="multiple"
+                value={selectedGroups}
+                onChange={setSelectedGroups}
+                options={UpDownGradeOptionsValue}
+                placeholder="请选择要添加的权限组"
+                className="w-full rounded-lg border-gray-200 hover:border-blue-400 focus:border-blue-500 focus:ring-blue-500/20"
+                optionRender={opt => (
+                  <Tooltip title={opt.data.tooltip}>
+                    <Space>
+                      <opt.data.icon />
+                      <span>{opt.data.label}</span>
+                    </Space>
+                  </Tooltip>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleConfirm}
+                disabled={selectedGroups.length === 0}
+                className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-500 to-indigo-500 rounded-lg hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                确认升级
+              </button>
+            </div>
+          </div>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  )
 }
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { handleDownGrade } = useAccountActions()
@@ -126,13 +229,13 @@ const AccountSettingWindow = () => {
                   </div>
                   <Menu>
                     <MenuButton>
-                      <div className="p-2 rounded-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-200 cursor-pointer group">
-                        <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600 transition-colors duration-200" />
+                      <div className="p-2 rounded-full hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer group">
+                        <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600" />
                       </div>
                     </MenuButton>
                     <MenuItems
                       anchor="bottom"
-                      className="mt-2 w-40 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100/50 z-50 overflow-hidden transition-all duration-200 ease-out"
+                      className="mt-2 w-40 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100/50 z-50 overflow-hidden"
                     >
                       <div className="py-2">
                         <MenuItem>
@@ -142,18 +245,18 @@ const AccountSettingWindow = () => {
                               && setUpgradleSelectedAccount(account.email)
                             }
                             className={twMerge(
-                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
                               !account.isDisabled
-                                && 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 cursor-pointer group',
+                                && 'text-gray-700 hover:bg-linear-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 cursor-pointer group',
                               account.isDisabled
                                 && 'text-gray-300 cursor-not-allowed',
                             )}
                           >
                             <div
                               className={twMerge(
-                                'w-5 h-5 rounded-full transition-all duration-200',
+                                'w-5 h-5 rounded-full',
                                 !account.isDisabled
-                                  && 'bg-gradient-to-r from-blue-400 to-indigo-400 group-hover:from-blue-500 group-hover:to-indigo-500',
+                                  && 'bg-linear-to-r from-blue-400 to-indigo-400 group-hover:from-blue-500 group-hover:to-indigo-500',
                                 account.isDisabled && 'bg-gray-300',
                               )}
                             ></div>
@@ -167,25 +270,25 @@ const AccountSettingWindow = () => {
                               && setDownGradeSelectedAccount(account.email)
                             }
                             className={twMerge(
-                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
                               !account.isDisabled
-                                && 'text-gray-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700 cursor-pointer group',
+                                && 'text-gray-700 hover:bg-linear-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700 cursor-pointer group',
                               account.isDisabled
                                 && 'text-gray-300 cursor-not-allowed',
                             )}
                           >
                             <div
                               className={twMerge(
-                                'w-5 h-5 rounded-full transition-all duration-200',
+                                'w-5 h-5 rounded-full',
                                 !account.isDisabled
-                                  && 'bg-gradient-to-r from-amber-400 to-orange-400 group-hover:from-amber-500 group-hover:to-orange-500',
+                                  && 'bg-linear-to-r from-amber-400 to-orange-400 group-hover:from-amber-500 group-hover:to-orange-500',
                                 account.isDisabled && 'bg-gray-300',
                               )}
                             ></div>
                             <span className="font-medium">账户降级</span>
                           </button>
                         </MenuItem>
-                        <div className="mx-3 my-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+                        <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                         <MenuItem>
                           <button
                             onClick={() =>
@@ -193,18 +296,18 @@ const AccountSettingWindow = () => {
                               && setDisableSelectedAccount(account.email)
                             }
                             className={twMerge(
-                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3 transition-all duration-150 ease-in-out',
+                              'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
                               !account.isDisabled
-                                && ' text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 cursor-pointer group',
+                                && ' text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 cursor-pointer group',
                               account.isDisabled
                                 && 'text-gray-300 cursor-not-allowed',
                             )}
                           >
                             <div
                               className={twMerge(
-                                'w-5 h-5 rounded-full transition-all duration-200',
+                                'w-5 h-5 rounded-full',
                                 !account.isDisabled
-                                  && 'bg-gradient-to-r from-red-400 to-pink-400 group-hover:from-red-500 group-hover:to-pink-500',
+                                  && 'bg-linear-to-r from-red-400 to-pink-400 group-hover:from-red-500 group-hover:to-pink-500',
                                 account.isDisabled && 'bg-gray-300',
                               )}
                             ></div>

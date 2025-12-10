@@ -2,6 +2,7 @@ import z from 'zod'
 import { defineZodResp } from '../_base'
 // base
 export const UserRoleType = z.enum(['Admin', 'User'])
+export type UserRoleTypeType = z.infer<typeof UserRoleType>
 
 export const Account = z.object({
   email: z.string(),
