@@ -23,7 +23,16 @@ export const useUpgradeOptions = (targetUser: string) => {
     if(!data)
       return UpDownGradeOptionsValueBase
 
-    return UpDownGradeOptionsValueBase.map(item => item)
+    return UpDownGradeOptionsValueBase.map((item) => {
+      if(item.disabled)
+        return item
+      const has = data.userGroup.some(group => group.groupType === item.value)
+      return {
+        ...item,
+        disabled: has,
+        tooltip: has ? '当前用户已经是该身份' : undefined,
+      }
+    })
   }, [data])
   return { filterdOptions }
 }
@@ -34,7 +43,16 @@ export const useDownGradeOptions = (targetUser: string) => {
     if(!data)
       return UpDownGradeOptionsValueBase
 
-    return UpDownGradeOptionsValueBase.map(item => item)
+    return UpDownGradeOptionsValueBase.map((item) => {
+      if(item.disabled)
+        return item
+      const notHave = !data.userGroup.some(group => group.groupType === item.value)
+      return {
+        ...item,
+        disabled: notHave,
+        tooltip: notHave ? '当前用户不是该身份' : undefined,
+      }
+    })
   }, [data])
   return { filterdOptions }
 }
