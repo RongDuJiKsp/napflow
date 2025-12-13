@@ -99,7 +99,8 @@ export const WorkflowAppScalarFieldEnum = {
   appId: 'appId',
   appName: 'appName',
   appDescription: 'appDescription',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  createdBy: 'createdBy'
 } as const
 
 export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[keyof typeof WorkflowAppScalarFieldEnum]
@@ -107,6 +108,9 @@ export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[key
 
 export const WorkflowAppPublishScalarFieldEnum = {
   version: 'version',
+  desptions: 'desptions',
+  publishAt: 'publishAt',
+  publishBy: 'publishBy',
   ofAppId: 'ofAppId'
 } as const
 
@@ -157,7 +161,8 @@ export type UserGroupOrderByRelevanceFieldEnum = (typeof UserGroupOrderByRelevan
 export const WorkflowAppOrderByRelevanceFieldEnum = {
   appId: 'appId',
   appName: 'appName',
-  appDescription: 'appDescription'
+  appDescription: 'appDescription',
+  createdBy: 'createdBy'
 } as const
 
 export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppOrderByRelevanceFieldEnum]
@@ -165,6 +170,8 @@ export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRel
 
 export const WorkflowAppPublishOrderByRelevanceFieldEnum = {
   version: 'version',
+  desptions: 'desptions',
+  publishBy: 'publishBy',
   ofAppId: 'ofAppId'
 } as const
 

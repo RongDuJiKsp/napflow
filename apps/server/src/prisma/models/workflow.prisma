@@ -3,6 +3,7 @@ model WorkflowApp {
     appName             String
     appDescription      String
     createdAt           DateTime             @default(now())
+    createdBy           String
     workflowAppPublishs WorkflowAppPublish[]
     workflowAppDatas    WorkflowAppData[]
 
@@ -10,11 +11,14 @@ model WorkflowApp {
 }
 
 model WorkflowAppPublish {
-    version String           @default("draft")
+    version   String           @default("draft")
+    desptions String?
+    publishAt DateTime?         @default(now())
+    publishBy String?
     //relations
-    ofAppId String
-    ofApp   WorkflowApp      @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
-    ofData  WorkflowAppData?
+    ofAppId   String
+    ofApp     WorkflowApp      @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
+    ofData    WorkflowAppData?
 
     @@id([version, ofAppId])
     @@map("app_publishs")

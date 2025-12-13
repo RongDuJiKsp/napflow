@@ -19,7 +19,7 @@ export type BaseRespType<T> = {
   data?: T;
 }
 export class Resp {
-  static ok<T>(data: T, statusCode = Code.Ok, message = 'Success'): BaseRespType<T> {
+  static ok<T>(data?: T, statusCode = Code.Ok, message = 'Success'): BaseRespType<T> {
     return {
       statusCode,
       message,
