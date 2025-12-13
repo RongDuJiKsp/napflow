@@ -30,6 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.3",
     "nestjs-zod": "^5.0.1",
+    "node-napcat-ts": "^0.4.20",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
