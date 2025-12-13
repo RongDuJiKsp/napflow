@@ -1,0 +1,18 @@
+model WorkflowApp {
+    appId          String           @id @default(uuid())
+    appName        String
+    appDescription String
+    createdAt      DateTime         @default(now())
+    extraData      WorkflowAppData?
+
+    @@map("apps")
+}
+
+model WorkflowAppData {
+    //relations
+    ofAppId String      @id
+    ofApp   WorkflowApp @relation(fields: [ofAppId], references: [appId])
+    // areas
+
+    @@map("app_datas")
+}

@@ -52,7 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  UserGroup: 'UserGroup'
+  UserGroup: 'UserGroup',
+  WorkflowApp: 'WorkflowApp',
+  WorkflowAppData: 'WorkflowAppData'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,6 +94,23 @@ export const UserGroupScalarFieldEnum = {
 export type UserGroupScalarFieldEnum = (typeof UserGroupScalarFieldEnum)[keyof typeof UserGroupScalarFieldEnum]
 
 
+export const WorkflowAppScalarFieldEnum = {
+  appId: 'appId',
+  appName: 'appName',
+  appDescription: 'appDescription',
+  createdAt: 'createdAt'
+} as const
+
+export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[keyof typeof WorkflowAppScalarFieldEnum]
+
+
+export const WorkflowAppDataScalarFieldEnum = {
+  ofAppId: 'ofAppId'
+} as const
+
+export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -122,4 +141,20 @@ export const UserGroupOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserGroupOrderByRelevanceFieldEnum = (typeof UserGroupOrderByRelevanceFieldEnum)[keyof typeof UserGroupOrderByRelevanceFieldEnum]
+
+
+export const WorkflowAppOrderByRelevanceFieldEnum = {
+  appId: 'appId',
+  appName: 'appName',
+  appDescription: 'appDescription'
+} as const
+
+export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppOrderByRelevanceFieldEnum]
+
+
+export const WorkflowAppDataOrderByRelevanceFieldEnum = {
+  ofAppId: 'ofAppId'
+} as const
+
+export type WorkflowAppDataOrderByRelevanceFieldEnum = (typeof WorkflowAppDataOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppDataOrderByRelevanceFieldEnum]
 

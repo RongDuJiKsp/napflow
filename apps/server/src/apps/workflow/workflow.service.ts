@@ -6,5 +6,8 @@ export class WorkflowService {
 
   }
   
+  async createWorkflowApp(appName:string,appDesc:string){
+    
+  }
   
 }

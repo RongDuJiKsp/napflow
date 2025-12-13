@@ -47,3 +47,13 @@ export type User = Prisma.UserModel
  * 
  */
 export type UserGroup = Prisma.UserGroupModel
+/**
+ * Model WorkflowApp
+ * 
+ */
+export type WorkflowApp = Prisma.WorkflowAppModel
+/**
+ * Model WorkflowAppData
+ * 
+ */
+export type WorkflowAppData = Prisma.WorkflowAppDataModel

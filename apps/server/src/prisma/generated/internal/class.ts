@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.1",
   "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
   "activeProvider": "mysql",
-  "inlineSchema": "model User {\n  email      String      @id //email为主键，使用email和密码登录\n  nickname   String //用于展示的用户名\n  password   String //使用bcrypt的加盐密码\n  userGroup  UserGroup[] //一个用户可以属于多个用户组，一个接口只能允许包含某个用户组的用户通过\n  //创建和更新时间\n  createdAt  DateTime    @default(now())\n  updatedAt  DateTime    @updatedAt\n  //禁用（软删除）标志\n  disabledAt DateTime?\n\n  @@map(\"users\")\n}\n\nenum UserGroupTypes {\n  Admin\n  User\n}\n\nmodel UserGroup {\n  ofUser    String\n  groupType UserGroupTypes\n  createdAt DateTime       @default(now())\n  user      User           @relation(fields: [ofUser], references: [email])\n\n  @@id([ofUser, groupType])\n  @@map(\"user_groups\")\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated\"\n  moduleFormat = \"cjs\"\n}\n",
+  "inlineSchema": "model User {\n  email      String      @id //email为主键，使用email和密码登录\n  nickname   String //用于展示的用户名\n  password   String //使用bcrypt的加盐密码\n  userGroup  UserGroup[] //一个用户可以属于多个用户组，一个接口只能允许包含某个用户组的用户通过\n  //创建和更新时间\n  createdAt  DateTime    @default(now())\n  updatedAt  DateTime    @updatedAt\n  //禁用（软删除）标志\n  disabledAt DateTime?\n\n  @@map(\"users\")\n}\n\nenum UserGroupTypes {\n  Admin\n  User\n}\n\nmodel UserGroup {\n  ofUser    String\n  groupType UserGroupTypes\n  createdAt DateTime       @default(now())\n  user      User           @relation(fields: [ofUser], references: [email])\n\n  @@id([ofUser, groupType])\n  @@map(\"user_groups\")\n}\n\nmodel WorkflowApp {\n  appId          String           @id @default(uuid())\n  appName        String\n  appDescription String\n  createdAt      DateTime         @default(now())\n  extraData      WorkflowAppData?\n\n  @@map(\"apps\")\n}\n\nmodel WorkflowAppData {\n  //relations\n  ofAppId String      @id\n  ofApp   WorkflowApp @relation(fields: [ofAppId], references: [appId])\n  // areas\n\n  @@map(\"app_datas\")\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated\"\n  moduleFormat = \"cjs\"\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nickname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userGroup\",\"kind\":\"object\",\"type\":\"UserGroup\",\"relationName\":\"UserToUserGroup\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"disabledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"},\"UserGroup\":{\"fields\":[{\"name\":\"ofUser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"groupType\",\"kind\":\"enum\",\"type\":\"UserGroupTypes\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserGroup\"}],\"dbName\":\"user_groups\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nickname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userGroup\",\"kind\":\"object\",\"type\":\"UserGroup\",\"relationName\":\"UserToUserGroup\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"disabledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"},\"UserGroup\":{\"fields\":[{\"name\":\"ofUser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"groupType\",\"kind\":\"enum\",\"type\":\"UserGroupTypes\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserGroup\"}],\"dbName\":\"user_groups\"},\"WorkflowApp\":{\"fields\":[{\"name\":\"appId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"appName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"appDescription\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"extraData\",\"kind\":\"object\",\"type\":\"WorkflowAppData\",\"relationName\":\"WorkflowAppToWorkflowAppData\"}],\"dbName\":\"apps\"},\"WorkflowAppData\":{\"fields\":[{\"name\":\"ofAppId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ofApp\",\"kind\":\"object\",\"type\":\"WorkflowApp\",\"relationName\":\"WorkflowAppToWorkflowAppData\"}],\"dbName\":\"app_datas\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,26 @@ export interface PrismaClient<
     * ```
     */
   get userGroup(): Prisma.UserGroupDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.workflowApp`: Exposes CRUD operations for the **WorkflowApp** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkflowApps
+    * const workflowApps = await prisma.workflowApp.findMany()
+    * ```
+    */
+  get workflowApp(): Prisma.WorkflowAppDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.workflowAppData`: Exposes CRUD operations for the **WorkflowAppData** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkflowAppData
+    * const workflowAppData = await prisma.workflowAppData.findMany()
+    * ```
+    */
+  get workflowAppData(): Prisma.WorkflowAppDataDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

@@ -385,7 +385,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  UserGroup: 'UserGroup'
+  UserGroup: 'UserGroup',
+  WorkflowApp: 'WorkflowApp',
+  WorkflowAppData: 'WorkflowAppData'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userGroup"
+    modelProps: "user" | "userGroup" | "workflowApp" | "workflowAppData"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -537,6 +539,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorkflowApp: {
+      payload: Prisma.$WorkflowAppPayload<ExtArgs>
+      fields: Prisma.WorkflowAppFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkflowAppFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkflowAppFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkflowAppFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkflowAppFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        findMany: {
+          args: Prisma.WorkflowAppFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>[]
+        }
+        create: {
+          args: Prisma.WorkflowAppCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        createMany: {
+          args: Prisma.WorkflowAppCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WorkflowAppDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        update: {
+          args: Prisma.WorkflowAppUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkflowAppDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkflowAppUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WorkflowAppUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkflowAppAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkflowApp>
+        }
+        groupBy: {
+          args: Prisma.WorkflowAppGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkflowAppCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorkflowAppData: {
+      payload: Prisma.$WorkflowAppDataPayload<ExtArgs>
+      fields: Prisma.WorkflowAppDataFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkflowAppDataFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkflowAppDataFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkflowAppDataFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkflowAppDataFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        findMany: {
+          args: Prisma.WorkflowAppDataFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>[]
+        }
+        create: {
+          args: Prisma.WorkflowAppDataCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        createMany: {
+          args: Prisma.WorkflowAppDataCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WorkflowAppDataDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        update: {
+          args: Prisma.WorkflowAppDataUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkflowAppDataDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkflowAppDataUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WorkflowAppDataUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppDataPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkflowAppDataAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkflowAppData>
+        }
+        groupBy: {
+          args: Prisma.WorkflowAppDataGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppDataGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkflowAppDataCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppDataCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -597,6 +731,23 @@ export const UserGroupScalarFieldEnum = {
 export type UserGroupScalarFieldEnum = (typeof UserGroupScalarFieldEnum)[keyof typeof UserGroupScalarFieldEnum]
 
 
+export const WorkflowAppScalarFieldEnum = {
+  appId: 'appId',
+  appName: 'appName',
+  appDescription: 'appDescription',
+  createdAt: 'createdAt'
+} as const
+
+export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[keyof typeof WorkflowAppScalarFieldEnum]
+
+
+export const WorkflowAppDataScalarFieldEnum = {
+  ofAppId: 'ofAppId'
+} as const
+
+export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -627,6 +778,22 @@ export const UserGroupOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserGroupOrderByRelevanceFieldEnum = (typeof UserGroupOrderByRelevanceFieldEnum)[keyof typeof UserGroupOrderByRelevanceFieldEnum]
+
+
+export const WorkflowAppOrderByRelevanceFieldEnum = {
+  appId: 'appId',
+  appName: 'appName',
+  appDescription: 'appDescription'
+} as const
+
+export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppOrderByRelevanceFieldEnum]
+
+
+export const WorkflowAppDataOrderByRelevanceFieldEnum = {
+  ofAppId: 'ofAppId'
+} as const
+
+export type WorkflowAppDataOrderByRelevanceFieldEnum = (typeof WorkflowAppDataOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppDataOrderByRelevanceFieldEnum]
 
 
 
@@ -743,6 +910,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   userGroup?: Prisma.UserGroupOmit
+  workflowApp?: Prisma.WorkflowAppOmit
+  workflowAppData?: Prisma.WorkflowAppDataOmit
 }
 
 /* Types for Logging */
