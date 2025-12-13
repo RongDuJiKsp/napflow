@@ -7,10 +7,14 @@ export class WorkflowService {
     @Inject(PrismaService) private readonly prismaService: PrismaService,
   ) {}
 
-  async createWorkflowApp(appName: string, appDesc: string) {
+  async createApp(appName: string, appDesc: string) {
     return await this.prismaService.workflowApp.create({
       data: { appName, appDescription: appDesc },
     })
+  }
+
+  async deleteApp(appId: string) {
+    return await this.prismaService.workflowApp.delete({ where: { appId } })
   }
 
   async getApp(appId: string) {
@@ -20,10 +24,10 @@ export class WorkflowService {
   }
 
   async loadDraft(appId: string) {
-    return await this.prismaService.workflowAppData.findFirst({ where: { ofAppId: appId } })
+    return await this.prismaService.workflowAppData.findFirst({ where: { ofAppId: appId, ofPublishVersion: 'draft' } })
   }
 
-  async syncData(appId: string, data: WorkflowAppDataType) {
-    return await this.prismaService.workflowAppData.update({ where: { ofAppId: appId }, data })
+  async syncData(dataId: string, data: WorkflowAppDataType) {
+    return await this.prismaService.workflowAppData.update({ where: { dataId }, data })
   }
 }

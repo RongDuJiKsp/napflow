@@ -181,6 +181,7 @@ export type WorkflowAppDataOrderByWithRelationInput = {
 
 export type WorkflowAppDataWhereUniqueInput = Prisma.AtLeast<{
   dataId?: string
+  ofPublishVersion_ofAppId?: Prisma.WorkflowAppDataOfPublishVersionOfAppIdCompoundUniqueInput
   AND?: Prisma.WorkflowAppDataWhereInput | Prisma.WorkflowAppDataWhereInput[]
   OR?: Prisma.WorkflowAppDataWhereInput[]
   NOT?: Prisma.WorkflowAppDataWhereInput | Prisma.WorkflowAppDataWhereInput[]
@@ -188,7 +189,7 @@ export type WorkflowAppDataWhereUniqueInput = Prisma.AtLeast<{
   ofPublishVersion?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofApp?: Prisma.XOR<Prisma.WorkflowAppScalarRelationFilter, Prisma.WorkflowAppWhereInput>
   ofPublish?: Prisma.XOR<Prisma.WorkflowAppPublishScalarRelationFilter, Prisma.WorkflowAppPublishWhereInput>
-}, "dataId">
+}, "dataId" | "ofPublishVersion_ofAppId">
 
 export type WorkflowAppDataOrderByWithAggregationInput = {
   dataId?: Prisma.SortOrder
@@ -211,7 +212,7 @@ export type WorkflowAppDataScalarWhereWithAggregatesInput = {
 export type WorkflowAppDataCreateInput = {
   dataId?: string
   ofApp: Prisma.WorkflowAppCreateNestedOneWithoutWorkflowAppDatasInput
-  ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutWorkflowAppDatasInput
+  ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutOfDataInput
 }
 
 export type WorkflowAppDataUncheckedCreateInput = {
@@ -223,7 +224,7 @@ export type WorkflowAppDataUncheckedCreateInput = {
 export type WorkflowAppDataUpdateInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
   ofApp?: Prisma.WorkflowAppUpdateOneRequiredWithoutWorkflowAppDatasNestedInput
-  ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutWorkflowAppDatasNestedInput
+  ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutOfDataNestedInput
 }
 
 export type WorkflowAppDataUncheckedUpdateInput = {
@@ -258,10 +259,20 @@ export type WorkflowAppDataOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type WorkflowAppDataNullableScalarRelationFilter = {
+  is?: Prisma.WorkflowAppDataWhereInput | null
+  isNot?: Prisma.WorkflowAppDataWhereInput | null
+}
+
 export type WorkflowAppDataOrderByRelevanceInput = {
   fields: Prisma.WorkflowAppDataOrderByRelevanceFieldEnum | Prisma.WorkflowAppDataOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type WorkflowAppDataOfPublishVersionOfAppIdCompoundUniqueInput = {
+  ofPublishVersion: string
+  ofAppId: string
 }
 
 export type WorkflowAppDataCountOrderByAggregateInput = {
@@ -324,51 +335,41 @@ export type WorkflowAppDataUncheckedUpdateManyWithoutOfAppNestedInput = {
   deleteMany?: Prisma.WorkflowAppDataScalarWhereInput | Prisma.WorkflowAppDataScalarWhereInput[]
 }
 
-export type WorkflowAppDataCreateNestedManyWithoutOfPublishInput = {
-  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput> | Prisma.WorkflowAppDataCreateWithoutOfPublishInput[] | Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput[]
-  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput | Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput[]
-  createMany?: Prisma.WorkflowAppDataCreateManyOfPublishInputEnvelope
-  connect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
+export type WorkflowAppDataCreateNestedOneWithoutOfPublishInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
+  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput
+  connect?: Prisma.WorkflowAppDataWhereUniqueInput
 }
 
-export type WorkflowAppDataUncheckedCreateNestedManyWithoutOfPublishInput = {
-  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput> | Prisma.WorkflowAppDataCreateWithoutOfPublishInput[] | Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput[]
-  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput | Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput[]
-  createMany?: Prisma.WorkflowAppDataCreateManyOfPublishInputEnvelope
-  connect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
+export type WorkflowAppDataUncheckedCreateNestedOneWithoutOfPublishInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
+  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput
+  connect?: Prisma.WorkflowAppDataWhereUniqueInput
 }
 
-export type WorkflowAppDataUpdateManyWithoutOfPublishNestedInput = {
-  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput> | Prisma.WorkflowAppDataCreateWithoutOfPublishInput[] | Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput[]
-  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput | Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput[]
-  upsert?: Prisma.WorkflowAppDataUpsertWithWhereUniqueWithoutOfPublishInput | Prisma.WorkflowAppDataUpsertWithWhereUniqueWithoutOfPublishInput[]
-  createMany?: Prisma.WorkflowAppDataCreateManyOfPublishInputEnvelope
-  set?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  disconnect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  delete?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  connect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  update?: Prisma.WorkflowAppDataUpdateWithWhereUniqueWithoutOfPublishInput | Prisma.WorkflowAppDataUpdateWithWhereUniqueWithoutOfPublishInput[]
-  updateMany?: Prisma.WorkflowAppDataUpdateManyWithWhereWithoutOfPublishInput | Prisma.WorkflowAppDataUpdateManyWithWhereWithoutOfPublishInput[]
-  deleteMany?: Prisma.WorkflowAppDataScalarWhereInput | Prisma.WorkflowAppDataScalarWhereInput[]
+export type WorkflowAppDataUpdateOneWithoutOfPublishNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
+  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput
+  upsert?: Prisma.WorkflowAppDataUpsertWithoutOfPublishInput
+  disconnect?: Prisma.WorkflowAppDataWhereInput | boolean
+  delete?: Prisma.WorkflowAppDataWhereInput | boolean
+  connect?: Prisma.WorkflowAppDataWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowAppDataUpdateToOneWithWhereWithoutOfPublishInput, Prisma.WorkflowAppDataUpdateWithoutOfPublishInput>, Prisma.WorkflowAppDataUncheckedUpdateWithoutOfPublishInput>
 }
 
-export type WorkflowAppDataUncheckedUpdateManyWithoutOfPublishNestedInput = {
-  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput> | Prisma.WorkflowAppDataCreateWithoutOfPublishInput[] | Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput[]
-  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput | Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput[]
-  upsert?: Prisma.WorkflowAppDataUpsertWithWhereUniqueWithoutOfPublishInput | Prisma.WorkflowAppDataUpsertWithWhereUniqueWithoutOfPublishInput[]
-  createMany?: Prisma.WorkflowAppDataCreateManyOfPublishInputEnvelope
-  set?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  disconnect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  delete?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  connect?: Prisma.WorkflowAppDataWhereUniqueInput | Prisma.WorkflowAppDataWhereUniqueInput[]
-  update?: Prisma.WorkflowAppDataUpdateWithWhereUniqueWithoutOfPublishInput | Prisma.WorkflowAppDataUpdateWithWhereUniqueWithoutOfPublishInput[]
-  updateMany?: Prisma.WorkflowAppDataUpdateManyWithWhereWithoutOfPublishInput | Prisma.WorkflowAppDataUpdateManyWithWhereWithoutOfPublishInput[]
-  deleteMany?: Prisma.WorkflowAppDataScalarWhereInput | Prisma.WorkflowAppDataScalarWhereInput[]
+export type WorkflowAppDataUncheckedUpdateOneWithoutOfPublishNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
+  connectOrCreate?: Prisma.WorkflowAppDataCreateOrConnectWithoutOfPublishInput
+  upsert?: Prisma.WorkflowAppDataUpsertWithoutOfPublishInput
+  disconnect?: Prisma.WorkflowAppDataWhereInput | boolean
+  delete?: Prisma.WorkflowAppDataWhereInput | boolean
+  connect?: Prisma.WorkflowAppDataWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowAppDataUpdateToOneWithWhereWithoutOfPublishInput, Prisma.WorkflowAppDataUpdateWithoutOfPublishInput>, Prisma.WorkflowAppDataUncheckedUpdateWithoutOfPublishInput>
 }
 
 export type WorkflowAppDataCreateWithoutOfAppInput = {
   dataId?: string
-  ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutWorkflowAppDatasInput
+  ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutOfDataInput
 }
 
 export type WorkflowAppDataUncheckedCreateWithoutOfAppInput = {
@@ -425,49 +426,15 @@ export type WorkflowAppDataCreateOrConnectWithoutOfPublishInput = {
   create: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
 }
 
-export type WorkflowAppDataCreateManyOfPublishInputEnvelope = {
-  data: Prisma.WorkflowAppDataCreateManyOfPublishInput | Prisma.WorkflowAppDataCreateManyOfPublishInput[]
-  skipDuplicates?: boolean
-}
-
-export type WorkflowAppDataUpsertWithWhereUniqueWithoutOfPublishInput = {
-  where: Prisma.WorkflowAppDataWhereUniqueInput
+export type WorkflowAppDataUpsertWithoutOfPublishInput = {
   update: Prisma.XOR<Prisma.WorkflowAppDataUpdateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedUpdateWithoutOfPublishInput>
   create: Prisma.XOR<Prisma.WorkflowAppDataCreateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedCreateWithoutOfPublishInput>
+  where?: Prisma.WorkflowAppDataWhereInput
 }
 
-export type WorkflowAppDataUpdateWithWhereUniqueWithoutOfPublishInput = {
-  where: Prisma.WorkflowAppDataWhereUniqueInput
+export type WorkflowAppDataUpdateToOneWithWhereWithoutOfPublishInput = {
+  where?: Prisma.WorkflowAppDataWhereInput
   data: Prisma.XOR<Prisma.WorkflowAppDataUpdateWithoutOfPublishInput, Prisma.WorkflowAppDataUncheckedUpdateWithoutOfPublishInput>
-}
-
-export type WorkflowAppDataUpdateManyWithWhereWithoutOfPublishInput = {
-  where: Prisma.WorkflowAppDataScalarWhereInput
-  data: Prisma.XOR<Prisma.WorkflowAppDataUpdateManyMutationInput, Prisma.WorkflowAppDataUncheckedUpdateManyWithoutOfPublishInput>
-}
-
-export type WorkflowAppDataCreateManyOfAppInput = {
-  dataId?: string
-  ofPublishVersion: string
-}
-
-export type WorkflowAppDataUpdateWithoutOfAppInput = {
-  dataId?: Prisma.StringFieldUpdateOperationsInput | string
-  ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutWorkflowAppDatasNestedInput
-}
-
-export type WorkflowAppDataUncheckedUpdateWithoutOfAppInput = {
-  dataId?: Prisma.StringFieldUpdateOperationsInput | string
-  ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type WorkflowAppDataUncheckedUpdateManyWithoutOfAppInput = {
-  dataId?: Prisma.StringFieldUpdateOperationsInput | string
-  ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type WorkflowAppDataCreateManyOfPublishInput = {
-  dataId?: string
 }
 
 export type WorkflowAppDataUpdateWithoutOfPublishInput = {
@@ -479,8 +446,24 @@ export type WorkflowAppDataUncheckedUpdateWithoutOfPublishInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type WorkflowAppDataUncheckedUpdateManyWithoutOfPublishInput = {
+export type WorkflowAppDataCreateManyOfAppInput = {
+  dataId?: string
+  ofPublishVersion: string
+}
+
+export type WorkflowAppDataUpdateWithoutOfAppInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutOfDataNestedInput
+}
+
+export type WorkflowAppDataUncheckedUpdateWithoutOfAppInput = {
+  dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type WorkflowAppDataUncheckedUpdateManyWithoutOfAppInput = {
+  dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 

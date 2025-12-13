@@ -10,23 +10,25 @@ model WorkflowApp {
 }
 
 model WorkflowAppPublish {
-    version          String            @default("draft")
+    version String           @default("draft")
     //relations
-    ofAppId          String
-    ofApp            WorkflowApp?      @relation(fields: [ofAppId], references: [appId])
-    workflowAppDatas WorkflowAppData[]
+    ofAppId String
+    ofApp   WorkflowApp      @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
+    ofData  WorkflowAppData?
 
     @@id([version, ofAppId])
+    @@map("app_publishs")
 }
 
 model WorkflowAppData {
     dataId           String             @id @default(uuid())
     //relations
     ofAppId          String
-    ofApp            WorkflowApp        @relation(fields: [ofAppId], references: [appId])
+    ofApp            WorkflowApp        @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
     ofPublishVersion String
-    ofPublish        WorkflowAppPublish @relation(fields: [ofPublishVersion, ofAppId], references: [version, ofAppId])
+    ofPublish        WorkflowAppPublish @relation(fields: [ofPublishVersion, ofAppId], references: [version, ofAppId], onDelete: Cascade)
     //areas
 
+    @@unique([ofPublishVersion, ofAppId])
     @@map("app_datas")
 }

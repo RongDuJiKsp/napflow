@@ -304,11 +304,6 @@ export type WorkflowAppMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type WorkflowAppNullableScalarRelationFilter = {
-  is?: Prisma.WorkflowAppWhereInput | null
-  isNot?: Prisma.WorkflowAppWhereInput | null
-}
-
 export type WorkflowAppScalarRelationFilter = {
   is?: Prisma.WorkflowAppWhereInput
   isNot?: Prisma.WorkflowAppWhereInput
@@ -320,12 +315,10 @@ export type WorkflowAppCreateNestedOneWithoutWorkflowAppPublishsInput = {
   connect?: Prisma.WorkflowAppWhereUniqueInput
 }
 
-export type WorkflowAppUpdateOneWithoutWorkflowAppPublishsNestedInput = {
+export type WorkflowAppUpdateOneRequiredWithoutWorkflowAppPublishsNestedInput = {
   create?: Prisma.XOR<Prisma.WorkflowAppCreateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput>
   connectOrCreate?: Prisma.WorkflowAppCreateOrConnectWithoutWorkflowAppPublishsInput
   upsert?: Prisma.WorkflowAppUpsertWithoutWorkflowAppPublishsInput
-  disconnect?: Prisma.WorkflowAppWhereInput | boolean
-  delete?: Prisma.WorkflowAppWhereInput | boolean
   connect?: Prisma.WorkflowAppWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowAppUpdateToOneWithWhereWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUpdateWithoutWorkflowAppPublishsInput>, Prisma.WorkflowAppUncheckedUpdateWithoutWorkflowAppPublishsInput>
 }
