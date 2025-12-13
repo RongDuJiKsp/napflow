@@ -12,11 +12,23 @@ import { AllowUserGroup } from '@/src/decorator/account'
 import { UserGroupTypes } from '@/src/prisma/generated/enums'
 import { JwtBody } from '@/src/decorator/jwt'
 
+/**
+ * @route `/account`
+ * @description 处理账号相关操作（登录、查询、创建、禁用、升降级、修改昵称/密码）。
+ */
 @Controller('account')
 export class AccountController {
   constructor(@Inject(AccountService) private readonly accountService: AccountService,
     @Inject(JwtService) private readonly jwtService: JwtService) {}
 
+  /**
+    * @route `/account/login`
+    * @method POST
+    * @role Public（无需登录）
+    * @reqbody 使用 Zod 验证的 `LoginReq`（包含 `email` 和 `password`）
+    * @resp `LoginResp`（包含 `token`）
+    * @description 登录并返回 JWT
+   */
   @Post('login')
   @ZodSerializerDto(LoginResp)
   async login(@ZodBody({ zod: LoginReq }) req: LoginReqType): Promise<LoginRespType> {
@@ -31,6 +43,15 @@ export class AccountController {
     })
   }
 
+  /**
+   * @route `/account/account`
+   * @method GET
+   * @role User
+   * @query `isDisabled` (boolean, optional), `roles` (string[], optional)
+   * @reqbody 无
+   * @resp `AccountInfoListResp`（账号列表）
+   * @description 返回账号列表，支持按是否禁用和角色筛选
+   */
   @Get('account')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(AccountInfoListResp)
@@ -42,6 +63,15 @@ export class AccountController {
     return Resp.ok(accounts)
   }
 
+  /**
+   * @route `/account/cur-account`
+   * @method GET
+   * @role User
+   * @inject `@JwtBody` -> `Account`（当前用户）
+   * @reqbody 无
+   * @resp `AccountInfoResp`（当前用户详情）
+   * @description 返回当前登录用户的详情
+   */
   @Get('cur-account')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(AccountInfoResp)
@@ -52,6 +82,15 @@ export class AccountController {
     return Resp.ok(curAccount)
   }
 
+  /**
+   * @route `/account/account-info`
+   * @method GET
+   * @role User
+   * @query `email` (string)
+   * @reqbody 无
+   * @resp `AccountInfoResp`（指定用户详情）
+   * @description 根据 email 返回指定用户信息
+   */
   @Get('account-info')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(AccountInfoResp)
@@ -60,6 +99,14 @@ export class AccountController {
     return Resp.ok(curAccount)
   }
 
+  /**
+   * @route `/account/upgrade`
+   * @method POST
+   * @role Admin
+   * @reqbody `AccountUpDownGradeReq`（包含 `email` 与 `groupType`，且不可包含 `User` 组）
+   * @resp `AccountUpDownGradeResp`（包含影响行数）
+   * @description 提升目标账号的用户组
+   */
   @Post('upgrade')
   @AllowUserGroup(UserGroupTypes.Admin)
   @ZodSerializerDto(AccountUpDownGradeResp)
@@ -70,6 +117,14 @@ export class AccountController {
     return Resp.ok({ effectLines: res.count })
   }
 
+  /**
+   * @route `/account/downgrade`
+   * @method POST
+   * @role Admin
+   * @reqbody `AccountUpDownGradeReq`（包含 `email` 与 `groupType`，且不可包含 `User` 组）
+   * @resp `AccountUpDownGradeResp`（包含影响行数）
+   * @description 降低目标账号的用户组
+   */
   @Post('downgrade')
   @AllowUserGroup(UserGroupTypes.Admin)
   @ZodSerializerDto(AccountUpDownGradeResp)
@@ -80,6 +135,14 @@ export class AccountController {
     return Resp.ok({ effectLines: res.count })
   }
 
+  /**
+   * @route `/account/disable`
+   * @method POST
+   * @role Admin
+   * @reqbody `AccountDisableReq`（包含 `email`）
+   * @resp `NullResp`（无内容）
+   * @description 禁用指定账号
+   */
   @Post('disable')
   @AllowUserGroup(UserGroupTypes.Admin)
   @ZodSerializerDto(NullResp)
@@ -88,6 +151,14 @@ export class AccountController {
     return Resp.ok(undefined)
   }
 
+  /**
+   * @route `/account/create`
+   * @method POST
+   * @role Admin
+   * @reqbody `AccountCreateReq`（包含 `email`, `nickname`, `password`）
+   * @resp `NullResp`（无内容）
+   * @description 创建自定义账号
+   */
   @Post('create')
   @AllowUserGroup(UserGroupTypes.Admin)
   @ZodSerializerDto(NullResp)
@@ -96,6 +167,14 @@ export class AccountController {
     return Resp.ok(undefined)
   }
 
+  /**
+   * @route `/account/change-password`
+   * @method POST
+   * @role User
+   * @reqbody `AccountChangePasswordReq`（包含 `originPassword` 与 `password`）
+   * @resp `NullResp`（无内容）
+   * @description 修改当前登录用户的密码，需校验原密码
+   */
   @Post('change-password')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(NullResp)
@@ -108,6 +187,14 @@ export class AccountController {
     return Resp.ok(undefined)
   }
 
+  /**
+   * @route `/account/change-nickname`
+   * @method POST
+   * @role User
+   * @reqbody `AccountChangeNicknameReq`（包含 `nickname`）
+   * @resp `NullResp`（无内容）
+   * @description 修改当前登录用户的昵称
+   */
   @Post('change-nickname')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(NullResp)
