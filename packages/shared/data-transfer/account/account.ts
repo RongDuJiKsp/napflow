@@ -5,11 +5,9 @@ import { AccountInfo, UserRoleType } from './base'
 // req resp
 
 // @/account/login
-export const LoginReq = AccountInfo.and(
-  z.object({
-    password: z.string(),
-  }),
-)
+export const LoginReq = AccountInfo.extend({
+  password: z.string(),
+})
 export type LoginReqType = z.infer<typeof LoginReq>
 
 export const LoginResp = defineZodResp(
@@ -34,11 +32,9 @@ export const AccountInfoResp = defineZodResp(AccountInfo.nullable())
 export type AccountInfoRespType = z.infer<typeof AccountInfoResp>
 
 // @/account/upgrade @/account/downgrade
-export const AccountUpDownGradeReq = AccountInfo.pick({ email: true }).and(
-  z.object({
-    groupType: z.array(UserRoleType),
-  }),
-)
+export const AccountUpDownGradeReq = AccountInfo.pick({ email: true }).extend({
+  groupType: z.array(UserRoleType),
+})
 export type AccountUpDownGradeReqType = z.infer<typeof AccountUpDownGradeReq>
 
 export const AccountUpDownGradeResp = defineZodResp(
@@ -56,7 +52,7 @@ export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 export const AccountCreateReq = AccountInfo.pick({
   email: true,
   nickname: true,
-}).and(z.object({ password: z.string() }))
+}).extend({ password: z.string() })
 export type AccountCreateReqType = z.infer<typeof AccountCreateReq>
 
 // @/account/change-password
