@@ -1,39 +1,15 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-// base
-export const UserRoleType = z.enum(['Admin', 'User'])
-export type UserRoleTypeType = z.infer<typeof UserRoleType>
+import { AccountInfo, UserRoleType } from './base'
 
-export const Account = z.object({
-  email: z.email(),
-  nickname: z.string(),
-  userGroup: z.array(
-    z.object({
-      groupType: UserRoleType,
-    }),
-  ),
-})
-export type AccountType = z.infer<typeof Account>
-
-export const AccountInfo = Account.extend({
-  userGroup: z.array(
-    z.object({
-      groupType: UserRoleType,
-      createdAt: z.date(),
-    }),
-  ),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  disabledAt: z.date().nullable(), // 注意 定义POJO时 使用nullable而不是optional
-})
-export type AccountInfoType = z.infer<typeof AccountInfo>
 // req resp
 
 // @/account/login
-export const LoginReq = z.object({
-  email: z.email(),
-  password: z.string(),
-})
+export const LoginReq = AccountInfo.and(
+  z.object({
+    password: z.string(),
+  }),
+)
 export type LoginReqType = z.infer<typeof LoginReq>
 
 export const LoginResp = defineZodResp(
@@ -50,22 +26,19 @@ export const AccountInfoListQuery = z.object({
 })
 export type AccountInfoListQueryType = z.infer<typeof AccountInfoListQuery>
 
-export const AccountInfoListResp = defineZodResp(
-  z.array(AccountInfo),
-)
+export const AccountInfoListResp = defineZodResp(z.array(AccountInfo))
 export type AccountInfoListRespType = z.infer<typeof AccountInfoListResp>
 
 // @/account/cur-account @/account/account-info
-export const AccountInfoResp = defineZodResp(
-  AccountInfo.nullable(),
-)
+export const AccountInfoResp = defineZodResp(AccountInfo.nullable())
 export type AccountInfoRespType = z.infer<typeof AccountInfoResp>
 
 // @/account/upgrade @/account/downgrade
-export const AccountUpDownGradeReq = z.object({
-  email: z.email(),
-  groupType: z.array(UserRoleType),
-})
+export const AccountUpDownGradeReq = AccountInfo.pick({ email: true }).and(
+  z.object({
+    groupType: z.array(UserRoleType),
+  }),
+)
 export type AccountUpDownGradeReqType = z.infer<typeof AccountUpDownGradeReq>
 
 export const AccountUpDownGradeResp = defineZodResp(
@@ -76,17 +49,14 @@ export const AccountUpDownGradeResp = defineZodResp(
 export type AccountUpDownGradeRespType = z.infer<typeof AccountUpDownGradeResp>
 
 // @/account/disable
-export const AccountDisableReq = z.object({
-  email: z.email(),
-})
+export const AccountDisableReq = AccountInfo.pick({ email: true })
 export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
 
 // @/account/create
-export const AccountCreateReq = z.object({
-  email: z.email(),
-  password: z.string(),
-  nickname: z.string(),
-})
+export const AccountCreateReq = AccountInfo.pick({
+  email: true,
+  nickname: true,
+}).and(z.object({ password: z.string() }))
 export type AccountCreateReqType = z.infer<typeof AccountCreateReq>
 
 // @/account/change-password
@@ -94,10 +64,12 @@ export const AccountChangePasswordReq = z.object({
   originPassword: z.string(),
   password: z.string(),
 })
-export type AccountChangePasswordReqType = z.infer<typeof AccountChangePasswordReq>
+export type AccountChangePasswordReqType = z.infer<
+  typeof AccountChangePasswordReq
+>
 
 // @/account/change-nickname
-export const AccountChangeNicknameReq = z.object({
-  nickname: z.string(),
-})
-export type AccountChangeNicknameReqType = z.infer<typeof AccountChangeNicknameReq>
+export const AccountChangeNicknameReq = AccountInfo.pick({ nickname: true })
+export type AccountChangeNicknameReqType = z.infer<
+  typeof AccountChangeNicknameReq
+>

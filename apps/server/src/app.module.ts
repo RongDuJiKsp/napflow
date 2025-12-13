@@ -9,6 +9,7 @@ import { AccountModule } from './apps/account/account.module'
 import { AppConfigModule } from './apps/app-config/app-config.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { ZodErrExceptionFilter } from './middleware/exception-filter/zod'
+import { WorkflowModule } from './apps/workflow/workflow.module'
 const zodProviders: Provider[] = [
   {
     provide: APP_PIPE,
@@ -45,6 +46,7 @@ const zodProviders: Provider[] = [
     PrismaModule,
     // ---------------------- 应用模块 ----------------------
     AccountModule,
+    WorkflowModule,
   ],
   providers: [
     {
