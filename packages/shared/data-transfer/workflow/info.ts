@@ -6,7 +6,7 @@ import { defineZodResp } from '../_base'
 export const CreateWorkflowReq = WorkflowApp.pick({ appName: true, appDescription: true })
 export type CreateWorkflowReqType = z.infer<typeof CreateWorkflowReq>
 
-// @/workflow/app
+// @/workflow/:appId
 export const GetAppResp = defineZodResp(WorkflowApp)
 export type GetAppRespType = z.infer<typeof GetAppResp>
 
@@ -14,6 +14,6 @@ export type GetAppRespType = z.infer<typeof GetAppResp>
 export const GetAppsResp = defineZodResp(z.array(WorkflowApp))
 export type GetAppsRespType = z.infer<typeof GetAppsResp>
 
-// @/workflow/loadDraft
+// @/workflow/:appId/draft
 export const LoadDraftResp = defineZodResp(WorkflowAppData)
 export type LoadDraftRespType = z.infer<typeof LoadDraftResp>
