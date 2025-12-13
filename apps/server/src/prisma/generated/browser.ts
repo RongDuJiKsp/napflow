@@ -37,3 +37,8 @@ export type WorkflowApp = Prisma.WorkflowAppModel
  * 
  */
 export type WorkflowAppData = Prisma.WorkflowAppDataModel
+/**
+ * Model WorkflowAppPublishMeta
+ * 
+ */
+export type WorkflowAppPublishMeta = Prisma.WorkflowAppPublishMetaModel

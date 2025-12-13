@@ -1,18 +1,31 @@
 model WorkflowApp {
-    appId          String           @id @default(uuid())
-    appName        String
-    appDescription String
-    createdAt      DateTime         @default(now())
-    extraData      WorkflowAppData?
+    appId            String            @id @default(uuid())
+    appName          String
+    appDescription   String
+    createdAt        DateTime          @default(now())
+    workflowAppDatas WorkflowAppData[]
 
     @@map("apps")
 }
 
 model WorkflowAppData {
+    dataId      String                  @id @default(uuid())
     //relations
-    ofAppId String      @id
-    ofApp   WorkflowApp @relation(fields: [ofAppId], references: [appId])
-    // areas
+    ofAppId     String
+    ofApp       WorkflowApp             @relation(fields: [ofAppId], references: [appId])
+    // meta areas
+    publishMeta WorkflowAppPublishMeta?
+    //areas
 
     @@map("app_datas")
+}
+
+model WorkflowAppPublishMeta {
+    version  String
+    //relations
+    ofDataId String
+    ofData   WorkflowAppData @relation(fields: [ofDataId], references: [dataId])
+
+    @@id([version, ofDataId])
+    @@unique([ofDataId])
 }

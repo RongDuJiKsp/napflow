@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   UserGroup: 'UserGroup',
   WorkflowApp: 'WorkflowApp',
-  WorkflowAppData: 'WorkflowAppData'
+  WorkflowAppData: 'WorkflowAppData',
+  WorkflowAppPublishMeta: 'WorkflowAppPublishMeta'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userGroup" | "workflowApp" | "workflowAppData"
+    modelProps: "user" | "userGroup" | "workflowApp" | "workflowAppData" | "workflowAppPublishMeta"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -671,6 +672,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorkflowAppPublishMeta: {
+      payload: Prisma.$WorkflowAppPublishMetaPayload<ExtArgs>
+      fields: Prisma.WorkflowAppPublishMetaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkflowAppPublishMetaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkflowAppPublishMetaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkflowAppPublishMetaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkflowAppPublishMetaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        findMany: {
+          args: Prisma.WorkflowAppPublishMetaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>[]
+        }
+        create: {
+          args: Prisma.WorkflowAppPublishMetaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        createMany: {
+          args: Prisma.WorkflowAppPublishMetaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.WorkflowAppPublishMetaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        update: {
+          args: Prisma.WorkflowAppPublishMetaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkflowAppPublishMetaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkflowAppPublishMetaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.WorkflowAppPublishMetaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkflowAppPublishMetaPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkflowAppPublishMetaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkflowAppPublishMeta>
+        }
+        groupBy: {
+          args: Prisma.WorkflowAppPublishMetaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppPublishMetaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkflowAppPublishMetaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkflowAppPublishMetaCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -742,10 +809,19 @@ export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[key
 
 
 export const WorkflowAppDataScalarFieldEnum = {
+  dataId: 'dataId',
   ofAppId: 'ofAppId'
 } as const
 
 export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
+
+
+export const WorkflowAppPublishMetaScalarFieldEnum = {
+  version: 'version',
+  ofDataId: 'ofDataId'
+} as const
+
+export type WorkflowAppPublishMetaScalarFieldEnum = (typeof WorkflowAppPublishMetaScalarFieldEnum)[keyof typeof WorkflowAppPublishMetaScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -790,10 +866,19 @@ export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRel
 
 
 export const WorkflowAppDataOrderByRelevanceFieldEnum = {
+  dataId: 'dataId',
   ofAppId: 'ofAppId'
 } as const
 
 export type WorkflowAppDataOrderByRelevanceFieldEnum = (typeof WorkflowAppDataOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppDataOrderByRelevanceFieldEnum]
+
+
+export const WorkflowAppPublishMetaOrderByRelevanceFieldEnum = {
+  version: 'version',
+  ofDataId: 'ofDataId'
+} as const
+
+export type WorkflowAppPublishMetaOrderByRelevanceFieldEnum = (typeof WorkflowAppPublishMetaOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppPublishMetaOrderByRelevanceFieldEnum]
 
 
 
@@ -912,6 +997,7 @@ export type GlobalOmitConfig = {
   userGroup?: Prisma.UserGroupOmit
   workflowApp?: Prisma.WorkflowAppOmit
   workflowAppData?: Prisma.WorkflowAppDataOmit
+  workflowAppPublishMeta?: Prisma.WorkflowAppPublishMetaOmit
 }
 
 /* Types for Logging */
