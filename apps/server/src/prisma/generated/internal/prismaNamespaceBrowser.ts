@@ -54,8 +54,8 @@ export const ModelName = {
   User: 'User',
   UserGroup: 'UserGroup',
   WorkflowApp: 'WorkflowApp',
-  WorkflowAppData: 'WorkflowAppData',
-  WorkflowAppPublishMeta: 'WorkflowAppPublishMeta'
+  WorkflowAppPublish: 'WorkflowAppPublish',
+  WorkflowAppData: 'WorkflowAppData'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -105,20 +105,21 @@ export const WorkflowAppScalarFieldEnum = {
 export type WorkflowAppScalarFieldEnum = (typeof WorkflowAppScalarFieldEnum)[keyof typeof WorkflowAppScalarFieldEnum]
 
 
-export const WorkflowAppDataScalarFieldEnum = {
-  dataId: 'dataId',
+export const WorkflowAppPublishScalarFieldEnum = {
+  version: 'version',
   ofAppId: 'ofAppId'
 } as const
 
-export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
+export type WorkflowAppPublishScalarFieldEnum = (typeof WorkflowAppPublishScalarFieldEnum)[keyof typeof WorkflowAppPublishScalarFieldEnum]
 
 
-export const WorkflowAppPublishMetaScalarFieldEnum = {
-  version: 'version',
-  ofDataId: 'ofDataId'
+export const WorkflowAppDataScalarFieldEnum = {
+  dataId: 'dataId',
+  ofAppId: 'ofAppId',
+  ofPublishVersion: 'ofPublishVersion'
 } as const
 
-export type WorkflowAppPublishMetaScalarFieldEnum = (typeof WorkflowAppPublishMetaScalarFieldEnum)[keyof typeof WorkflowAppPublishMetaScalarFieldEnum]
+export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -162,18 +163,19 @@ export const WorkflowAppOrderByRelevanceFieldEnum = {
 export type WorkflowAppOrderByRelevanceFieldEnum = (typeof WorkflowAppOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppOrderByRelevanceFieldEnum]
 
 
-export const WorkflowAppDataOrderByRelevanceFieldEnum = {
-  dataId: 'dataId',
+export const WorkflowAppPublishOrderByRelevanceFieldEnum = {
+  version: 'version',
   ofAppId: 'ofAppId'
 } as const
 
-export type WorkflowAppDataOrderByRelevanceFieldEnum = (typeof WorkflowAppDataOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppDataOrderByRelevanceFieldEnum]
+export type WorkflowAppPublishOrderByRelevanceFieldEnum = (typeof WorkflowAppPublishOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppPublishOrderByRelevanceFieldEnum]
 
 
-export const WorkflowAppPublishMetaOrderByRelevanceFieldEnum = {
-  version: 'version',
-  ofDataId: 'ofDataId'
+export const WorkflowAppDataOrderByRelevanceFieldEnum = {
+  dataId: 'dataId',
+  ofAppId: 'ofAppId',
+  ofPublishVersion: 'ofPublishVersion'
 } as const
 
-export type WorkflowAppPublishMetaOrderByRelevanceFieldEnum = (typeof WorkflowAppPublishMetaOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppPublishMetaOrderByRelevanceFieldEnum]
+export type WorkflowAppDataOrderByRelevanceFieldEnum = (typeof WorkflowAppDataOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppDataOrderByRelevanceFieldEnum]
 

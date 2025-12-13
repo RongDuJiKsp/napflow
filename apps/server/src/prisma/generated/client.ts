@@ -53,12 +53,12 @@ export type UserGroup = Prisma.UserGroupModel
  */
 export type WorkflowApp = Prisma.WorkflowAppModel
 /**
+ * Model WorkflowAppPublish
+ * 
+ */
+export type WorkflowAppPublish = Prisma.WorkflowAppPublishModel
+/**
  * Model WorkflowAppData
  * 
  */
 export type WorkflowAppData = Prisma.WorkflowAppDataModel
-/**
- * Model WorkflowAppPublishMeta
- * 
- */
-export type WorkflowAppPublishMeta = Prisma.WorkflowAppPublishMetaModel

@@ -174,6 +174,7 @@ export type WorkflowAppWhereInput = {
   appName?: Prisma.StringFilter<"WorkflowApp"> | string
   appDescription?: Prisma.StringFilter<"WorkflowApp"> | string
   createdAt?: Prisma.DateTimeFilter<"WorkflowApp"> | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishListRelationFilter
   workflowAppDatas?: Prisma.WorkflowAppDataListRelationFilter
 }
 
@@ -182,6 +183,7 @@ export type WorkflowAppOrderByWithRelationInput = {
   appName?: Prisma.SortOrder
   appDescription?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  workflowAppPublishs?: Prisma.WorkflowAppPublishOrderByRelationAggregateInput
   workflowAppDatas?: Prisma.WorkflowAppDataOrderByRelationAggregateInput
   _relevance?: Prisma.WorkflowAppOrderByRelevanceInput
 }
@@ -194,6 +196,7 @@ export type WorkflowAppWhereUniqueInput = Prisma.AtLeast<{
   appName?: Prisma.StringFilter<"WorkflowApp"> | string
   appDescription?: Prisma.StringFilter<"WorkflowApp"> | string
   createdAt?: Prisma.DateTimeFilter<"WorkflowApp"> | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishListRelationFilter
   workflowAppDatas?: Prisma.WorkflowAppDataListRelationFilter
 }, "appId">
 
@@ -222,6 +225,7 @@ export type WorkflowAppCreateInput = {
   appName: string
   appDescription: string
   createdAt?: Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishCreateNestedManyWithoutOfAppInput
   workflowAppDatas?: Prisma.WorkflowAppDataCreateNestedManyWithoutOfAppInput
 }
 
@@ -230,6 +234,7 @@ export type WorkflowAppUncheckedCreateInput = {
   appName: string
   appDescription: string
   createdAt?: Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUncheckedCreateNestedManyWithoutOfAppInput
   workflowAppDatas?: Prisma.WorkflowAppDataUncheckedCreateNestedManyWithoutOfAppInput
 }
 
@@ -238,6 +243,7 @@ export type WorkflowAppUpdateInput = {
   appName?: Prisma.StringFieldUpdateOperationsInput | string
   appDescription?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUpdateManyWithoutOfAppNestedInput
   workflowAppDatas?: Prisma.WorkflowAppDataUpdateManyWithoutOfAppNestedInput
 }
 
@@ -246,6 +252,7 @@ export type WorkflowAppUncheckedUpdateInput = {
   appName?: Prisma.StringFieldUpdateOperationsInput | string
   appDescription?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUncheckedUpdateManyWithoutOfAppNestedInput
   workflowAppDatas?: Prisma.WorkflowAppDataUncheckedUpdateManyWithoutOfAppNestedInput
 }
 
@@ -297,9 +304,30 @@ export type WorkflowAppMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type WorkflowAppNullableScalarRelationFilter = {
+  is?: Prisma.WorkflowAppWhereInput | null
+  isNot?: Prisma.WorkflowAppWhereInput | null
+}
+
 export type WorkflowAppScalarRelationFilter = {
   is?: Prisma.WorkflowAppWhereInput
   isNot?: Prisma.WorkflowAppWhereInput
+}
+
+export type WorkflowAppCreateNestedOneWithoutWorkflowAppPublishsInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppCreateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput>
+  connectOrCreate?: Prisma.WorkflowAppCreateOrConnectWithoutWorkflowAppPublishsInput
+  connect?: Prisma.WorkflowAppWhereUniqueInput
+}
+
+export type WorkflowAppUpdateOneWithoutWorkflowAppPublishsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkflowAppCreateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput>
+  connectOrCreate?: Prisma.WorkflowAppCreateOrConnectWithoutWorkflowAppPublishsInput
+  upsert?: Prisma.WorkflowAppUpsertWithoutWorkflowAppPublishsInput
+  disconnect?: Prisma.WorkflowAppWhereInput | boolean
+  delete?: Prisma.WorkflowAppWhereInput | boolean
+  connect?: Prisma.WorkflowAppWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowAppUpdateToOneWithWhereWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUpdateWithoutWorkflowAppPublishsInput>, Prisma.WorkflowAppUncheckedUpdateWithoutWorkflowAppPublishsInput>
 }
 
 export type WorkflowAppCreateNestedOneWithoutWorkflowAppDatasInput = {
@@ -316,11 +344,60 @@ export type WorkflowAppUpdateOneRequiredWithoutWorkflowAppDatasNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowAppUpdateToOneWithWhereWithoutWorkflowAppDatasInput, Prisma.WorkflowAppUpdateWithoutWorkflowAppDatasInput>, Prisma.WorkflowAppUncheckedUpdateWithoutWorkflowAppDatasInput>
 }
 
+export type WorkflowAppCreateWithoutWorkflowAppPublishsInput = {
+  appId?: string
+  appName: string
+  appDescription: string
+  createdAt?: Date | string
+  workflowAppDatas?: Prisma.WorkflowAppDataCreateNestedManyWithoutOfAppInput
+}
+
+export type WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput = {
+  appId?: string
+  appName: string
+  appDescription: string
+  createdAt?: Date | string
+  workflowAppDatas?: Prisma.WorkflowAppDataUncheckedCreateNestedManyWithoutOfAppInput
+}
+
+export type WorkflowAppCreateOrConnectWithoutWorkflowAppPublishsInput = {
+  where: Prisma.WorkflowAppWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkflowAppCreateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput>
+}
+
+export type WorkflowAppUpsertWithoutWorkflowAppPublishsInput = {
+  update: Prisma.XOR<Prisma.WorkflowAppUpdateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedUpdateWithoutWorkflowAppPublishsInput>
+  create: Prisma.XOR<Prisma.WorkflowAppCreateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedCreateWithoutWorkflowAppPublishsInput>
+  where?: Prisma.WorkflowAppWhereInput
+}
+
+export type WorkflowAppUpdateToOneWithWhereWithoutWorkflowAppPublishsInput = {
+  where?: Prisma.WorkflowAppWhereInput
+  data: Prisma.XOR<Prisma.WorkflowAppUpdateWithoutWorkflowAppPublishsInput, Prisma.WorkflowAppUncheckedUpdateWithoutWorkflowAppPublishsInput>
+}
+
+export type WorkflowAppUpdateWithoutWorkflowAppPublishsInput = {
+  appId?: Prisma.StringFieldUpdateOperationsInput | string
+  appName?: Prisma.StringFieldUpdateOperationsInput | string
+  appDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppDatas?: Prisma.WorkflowAppDataUpdateManyWithoutOfAppNestedInput
+}
+
+export type WorkflowAppUncheckedUpdateWithoutWorkflowAppPublishsInput = {
+  appId?: Prisma.StringFieldUpdateOperationsInput | string
+  appName?: Prisma.StringFieldUpdateOperationsInput | string
+  appDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppDatas?: Prisma.WorkflowAppDataUncheckedUpdateManyWithoutOfAppNestedInput
+}
+
 export type WorkflowAppCreateWithoutWorkflowAppDatasInput = {
   appId?: string
   appName: string
   appDescription: string
   createdAt?: Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishCreateNestedManyWithoutOfAppInput
 }
 
 export type WorkflowAppUncheckedCreateWithoutWorkflowAppDatasInput = {
@@ -328,6 +405,7 @@ export type WorkflowAppUncheckedCreateWithoutWorkflowAppDatasInput = {
   appName: string
   appDescription: string
   createdAt?: Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUncheckedCreateNestedManyWithoutOfAppInput
 }
 
 export type WorkflowAppCreateOrConnectWithoutWorkflowAppDatasInput = {
@@ -351,6 +429,7 @@ export type WorkflowAppUpdateWithoutWorkflowAppDatasInput = {
   appName?: Prisma.StringFieldUpdateOperationsInput | string
   appDescription?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUpdateManyWithoutOfAppNestedInput
 }
 
 export type WorkflowAppUncheckedUpdateWithoutWorkflowAppDatasInput = {
@@ -358,6 +437,7 @@ export type WorkflowAppUncheckedUpdateWithoutWorkflowAppDatasInput = {
   appName?: Prisma.StringFieldUpdateOperationsInput | string
   appDescription?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowAppPublishs?: Prisma.WorkflowAppPublishUncheckedUpdateManyWithoutOfAppNestedInput
 }
 
 
@@ -366,10 +446,12 @@ export type WorkflowAppUncheckedUpdateWithoutWorkflowAppDatasInput = {
  */
 
 export type WorkflowAppCountOutputType = {
+  workflowAppPublishs: number
   workflowAppDatas: number
 }
 
 export type WorkflowAppCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workflowAppPublishs?: boolean | WorkflowAppCountOutputTypeCountWorkflowAppPublishsArgs
   workflowAppDatas?: boolean | WorkflowAppCountOutputTypeCountWorkflowAppDatasArgs
 }
 
@@ -386,6 +468,13 @@ export type WorkflowAppCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * WorkflowAppCountOutputType without action
  */
+export type WorkflowAppCountOutputTypeCountWorkflowAppPublishsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkflowAppPublishWhereInput
+}
+
+/**
+ * WorkflowAppCountOutputType without action
+ */
 export type WorkflowAppCountOutputTypeCountWorkflowAppDatasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WorkflowAppDataWhereInput
 }
@@ -396,6 +485,7 @@ export type WorkflowAppSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   appName?: boolean
   appDescription?: boolean
   createdAt?: boolean
+  workflowAppPublishs?: boolean | Prisma.WorkflowApp$workflowAppPublishsArgs<ExtArgs>
   workflowAppDatas?: boolean | Prisma.WorkflowApp$workflowAppDatasArgs<ExtArgs>
   _count?: boolean | Prisma.WorkflowAppCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workflowApp"]>
@@ -411,6 +501,7 @@ export type WorkflowAppSelectScalar = {
 
 export type WorkflowAppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"appId" | "appName" | "appDescription" | "createdAt", ExtArgs["result"]["workflowApp"]>
 export type WorkflowAppInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workflowAppPublishs?: boolean | Prisma.WorkflowApp$workflowAppPublishsArgs<ExtArgs>
   workflowAppDatas?: boolean | Prisma.WorkflowApp$workflowAppDatasArgs<ExtArgs>
   _count?: boolean | Prisma.WorkflowAppCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -418,6 +509,7 @@ export type WorkflowAppInclude<ExtArgs extends runtime.Types.Extensions.Internal
 export type $WorkflowAppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorkflowApp"
   objects: {
+    workflowAppPublishs: Prisma.$WorkflowAppPublishPayload<ExtArgs>[]
     workflowAppDatas: Prisma.$WorkflowAppDataPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -765,6 +857,7 @@ readonly fields: WorkflowAppFieldRefs;
  */
 export interface Prisma__WorkflowAppClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  workflowAppPublishs<T extends Prisma.WorkflowApp$workflowAppPublishsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowApp$workflowAppPublishsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowAppPublishPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workflowAppDatas<T extends Prisma.WorkflowApp$workflowAppDatasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowApp$workflowAppDatasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowAppDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1139,6 +1232,30 @@ export type WorkflowAppDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many WorkflowApps to delete.
    */
   limit?: number
+}
+
+/**
+ * WorkflowApp.workflowAppPublishs
+ */
+export type WorkflowApp$workflowAppPublishsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkflowAppPublish
+   */
+  select?: Prisma.WorkflowAppPublishSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkflowAppPublish
+   */
+  omit?: Prisma.WorkflowAppPublishOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowAppPublishInclude<ExtArgs> | null
+  where?: Prisma.WorkflowAppPublishWhereInput
+  orderBy?: Prisma.WorkflowAppPublishOrderByWithRelationInput | Prisma.WorkflowAppPublishOrderByWithRelationInput[]
+  cursor?: Prisma.WorkflowAppPublishWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkflowAppPublishScalarFieldEnum | Prisma.WorkflowAppPublishScalarFieldEnum[]
 }
 
 /**

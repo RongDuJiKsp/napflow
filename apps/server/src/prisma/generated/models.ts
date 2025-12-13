@@ -11,6 +11,6 @@
 export type * from './models/User.js'
 export type * from './models/UserGroup.js'
 export type * from './models/WorkflowApp.js'
+export type * from './models/WorkflowAppPublish.js'
 export type * from './models/WorkflowAppData.js'
-export type * from './models/WorkflowAppPublishMeta.js'
 export type * from './commonInputTypes.js'

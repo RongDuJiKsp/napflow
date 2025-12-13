@@ -8,13 +8,9 @@ export class WorkflowService {
   ) {}
 
   async createWorkflowApp(appName: string, appDesc: string) {
-    const app = await this.prismaService.workflowApp.create({
+    return await this.prismaService.workflowApp.create({
       data: { appName, appDescription: appDesc },
     })
-    const extraData = await this.prismaService.workflowAppData.create({
-      data: { ofAppId: app.appId },
-    })
-    return { ...app, extraData }
   }
 
   async getApp(appId: string) {
@@ -23,7 +19,7 @@ export class WorkflowService {
     })
   }
 
-  async loadData(appId: string) {
+  async loadDraft(appId: string) {
     return await this.prismaService.workflowAppData.findFirst({ where: { ofAppId: appId } })
   }
 

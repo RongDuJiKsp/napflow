@@ -3,14 +3,15 @@
   - users
   - user_groups
   - apps
+  - WorkflowAppPublish
   - app_datas
-  - WorkflowAppPublishMeta
 
-[*] Changed the `WorkflowAppPublishMeta` table
-  [+] Added foreign key on columns (ofDataId)
+[*] Changed the `WorkflowAppPublish` table
+  [+] Added foreign key on columns (ofAppId)
 
 [*] Changed the `app_datas` table
   [+] Added foreign key on columns (ofAppId)
+  [+] Added foreign key on columns (ofPublishVersion, ofAppId)
 
 [*] Changed the `user_groups` table
   [+] Added foreign key on columns (ofUser)
