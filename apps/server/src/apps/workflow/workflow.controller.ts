@@ -66,16 +66,6 @@ export class WorkflowController {
     return Resp.ok(app)
   }
 
-  @Get(':appId')
-  @AllowUserGroup(UserGroupTypes.User)
-  @ZodSerializerDto(GetAppResp)
-  async getSingleApp(@Param('appId') appId: string): Promise<GetAppRespType> {
-    const app = await this.workflowService.getApp(appId)
-    if (!app) return Resp.error('App Not Found', Code.NotFound)
-
-    return Resp.ok(app)
-  }
-
   @Get(':appId/draft')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(LoadDraftResp)
@@ -91,5 +81,15 @@ export class WorkflowController {
   async syncDraft(@Param('appId') appId: string, @JwtBody({ zod: WorkflowAppData }) data: WorkflowAppDataType): Promise<NullRespType> {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
+  }
+
+  @Get(':appId')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(GetAppResp)
+  async getSingleApp(@Param('appId') appId: string): Promise<GetAppRespType> {
+    const app = await this.workflowService.getApp(appId)
+    if (!app) return Resp.error('App Not Found', Code.NotFound)
+
+    return Resp.ok(app)
   }
 }
