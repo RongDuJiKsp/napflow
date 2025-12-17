@@ -11,14 +11,14 @@ model WorkflowApp {
 }
 
 model WorkflowAppPublish {
-    version   String           @default("draft")
-    desptions String?
-    publishAt DateTime?         @default(now())
-    publishBy String?
+    version     String           @default("draft")
+    description String?
+    publishAt   DateTime?        @default(now())
+    publishBy   String?
     //relations
-    ofAppId   String
-    ofApp     WorkflowApp      @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
-    ofData    WorkflowAppData?
+    ofAppId     String
+    ofApp       WorkflowApp      @relation(fields: [ofAppId], references: [appId], onDelete: Cascade)
+    ofData      WorkflowAppData?
 
     @@id([version, ofAppId])
     @@map("app_publishs")

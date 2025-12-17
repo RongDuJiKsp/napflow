@@ -11,7 +11,10 @@ export class WorkflowDataService {
   ) {}
 
   async createDraft(appId: string) {
-    // 创建data的publish
+    // 判断draft是否已经创建了 创建了就返回null
+    if(await this.prismaService.workflowAppPublish.count({ where: { ofAppId: appId, version: DRAFT_VERSION_KEY } }))
+      return null
+    // 创建data的draft
     await this.prismaService.workflowAppPublish.create({
       data: { ofAppId: appId, version: DRAFT_VERSION_KEY },
     })
@@ -20,11 +23,25 @@ export class WorkflowDataService {
     })
   }
 
+  async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppDataType) {
+    // 判断publish是否重复
+    if(await this.prismaService.workflowAppPublish.count({ where: { ofAppId: appId, version } }))
+      return null
+
+    // 创建data的publish
+    await this.prismaService.workflowAppPublish.create({
+      data: { ofAppId: appId, version, description },
+    })
+    return await this.prismaService.workflowAppData.create({
+      data: { ...latestDraft, ofAppId: appId, ofPublishVersion: version, dataId: undefined },
+    })
+  }
+
   // 所有对data联表读写都在这
   async syncData(dataId: string, data: WorkflowAppDataType) {
     return await this.prismaService.workflowAppData.update({
       where: { dataId },
-      data,
+      data: { ...data, dataId: undefined }, // dataId是主键，不能更新
     })
   }
 
@@ -44,9 +61,17 @@ export class WorkflowDataService {
     })
     let dataId = appData?.dataId
     if (!dataId) {
-      const newDraft = await this.createDraft(appId)
+      const newDraft = (await this.createDraft(appId))!
       dataId = newDraft.dataId
     }
     return await this.syncData(dataId, data)
+  }
+
+  async publishDraft(appId: string, version: string, description: string) {
+    // 首先复制一份draft
+    const latestDraft = await this.loadDraft(appId)
+    if (!latestDraft) return null
+    // 创建publish
+    return await this.createPublish(appId, version, description, latestDraft)
   }
 }
