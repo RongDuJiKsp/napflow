@@ -29,12 +29,13 @@ export class WorkflowDataService {
       return null
 
     // 创建data的publish
-    await this.prismaService.workflowAppPublish.create({
+    const meta = await this.prismaService.workflowAppPublish.create({
       data: { ofAppId: appId, version, description },
     })
-    return await this.prismaService.workflowAppData.create({
+    await this.prismaService.workflowAppData.create({
       data: { ...latestDraft, ofAppId: appId, ofPublishVersion: version, dataId: undefined },
     })
+    return meta
   }
 
   // 所有对data联表读写都在这

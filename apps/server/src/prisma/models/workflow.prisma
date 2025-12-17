@@ -13,7 +13,7 @@ model WorkflowApp {
 model WorkflowAppPublish {
     version     String           @default("draft")
     description String?
-    publishAt   DateTime?        @default(now())
+    publishAt   DateTime        @default(now())
     publishBy   String?
     //relations
     ofAppId     String

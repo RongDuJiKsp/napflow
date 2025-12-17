@@ -16,19 +16,22 @@ import type {
   GetAppRespType,
   GetAppsRespType,
   LoadDraftRespType,
+  WorkflowPublishReqType,
+  WorkflowPublishRespType,
 } from '@shared/data-transfer/workflow/info'
 import {
   CreateWorkflowReq,
   GetAppResp,
   GetAppsResp,
   LoadDraftResp,
+  WorkflowPublishReq,
+  WorkflowPublishResp,
 } from '@shared/data-transfer/workflow/info'
 import { WorkflowService } from './workflow.service'
 import { ZodSerializerDto } from 'nestjs-zod'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
-import { JwtBody } from '@/src/decorator/jwt'
 import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
 import { WorkflowAppData } from '@shared/data-transfer/workflow/base'
 @Controller('workflow')
@@ -78,9 +81,18 @@ export class WorkflowController {
   @Post(':appId/sync')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(NullResp)
-  async syncDraft(@Param('appId') appId: string, @JwtBody({ zod: WorkflowAppData }) data: WorkflowAppDataType): Promise<NullRespType> {
+  async syncDraft(@Param('appId') appId: string, @ZodBody({ zod: WorkflowAppData }) data: WorkflowAppDataType): Promise<NullRespType> {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
+  }
+
+  @Post(':appId/publish')
+  @AllowUserGroup(UserGroupTypes.User)
+  @ZodSerializerDto(WorkflowPublishResp)
+  async publishDraft(@Param('appId') appId: string, @ZodBody({ zod: WorkflowPublishReq }) data: WorkflowPublishReqType): Promise<WorkflowPublishRespType> {
+    const publishMeta = await this.workflowDataService.publishDraft(appId, data.version, data.description)
+    if (!publishMeta) return Resp.error('Publish Failed: 版本已存在', Code.BadRequest)
+    return Resp.ok(publishMeta)
   }
 
   @Get(':appId')
