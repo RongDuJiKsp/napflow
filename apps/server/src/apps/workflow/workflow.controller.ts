@@ -38,7 +38,8 @@ import { WorkflowAppData } from '@shared/data-transfer/workflow/base'
 export class WorkflowController {
   constructor(
     @Inject(WorkflowService) private readonly workflowService: WorkflowService,
-    @Inject(WorkflowDataService) private readonly workflowDataService: WorkflowDataService,
+    @Inject(WorkflowDataService)
+    private readonly workflowDataService: WorkflowDataService,
   ) {}
 
   @Post('create')
@@ -81,7 +82,10 @@ export class WorkflowController {
   @Post(':appId/sync')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(NullResp)
-  async syncDraft(@Param('appId') appId: string, @ZodBody({ zod: WorkflowAppData }) data: WorkflowAppDataType): Promise<NullRespType> {
+  async syncDraft(
+    @Param('appId') appId: string,
+    @ZodBody({ zod: WorkflowAppData }) data: WorkflowAppDataType,
+  ): Promise<NullRespType> {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
   }
@@ -89,9 +93,17 @@ export class WorkflowController {
   @Post(':appId/publish')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(WorkflowPublishResp)
-  async publishDraft(@Param('appId') appId: string, @ZodBody({ zod: WorkflowPublishReq }) data: WorkflowPublishReqType): Promise<WorkflowPublishRespType> {
-    const publishMeta = await this.workflowDataService.publishDraft(appId, data.version, data.description)
-    if (!publishMeta) return Resp.error('Publish Failed: 版本已存在', Code.BadRequest)
+  async publishDraft(
+    @Param('appId') appId: string,
+    @ZodBody({ zod: WorkflowPublishReq }) data: WorkflowPublishReqType,
+  ): Promise<WorkflowPublishRespType> {
+    const publishMeta = await this.workflowDataService.publishDraft(
+      appId,
+      data.version,
+      data.description,
+    )
+    if (!publishMeta)
+      return Resp.error('Publish Failed: 版本已存在', Code.BadRequest)
     return Resp.ok(publishMeta)
   }
 
