@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common'
 import jwt from 'jsonwebtoken'
 import type zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
-import type { AccountType } from '@shared/data-transfer/account/account'
-import { Account } from '@shared/data-transfer/account/account'
+import type { AccountType } from '@shared/data-transfer/account/base'
+import { Account } from '@shared/data-transfer/account/base'
 import type { Request } from 'express'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
