@@ -40,6 +40,8 @@ export type WorkflowAppDataCountAggregateOutputType = {
   dataId: number
   ofAppId: number
   ofPublishVersion: number
+  nodes: number
+  edges: number
   _all: number
 }
 
@@ -60,6 +62,8 @@ export type WorkflowAppDataCountAggregateInputType = {
   dataId?: true
   ofAppId?: true
   ofPublishVersion?: true
+  nodes?: true
+  edges?: true
   _all?: true
 }
 
@@ -139,6 +143,8 @@ export type WorkflowAppDataGroupByOutputType = {
   dataId: string
   ofAppId: string
   ofPublishVersion: string
+  nodes: runtime.JsonValue | null
+  edges: runtime.JsonValue | null
   _count: WorkflowAppDataCountAggregateOutputType | null
   _min: WorkflowAppDataMinAggregateOutputType | null
   _max: WorkflowAppDataMaxAggregateOutputType | null
@@ -166,6 +172,8 @@ export type WorkflowAppDataWhereInput = {
   dataId?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofAppId?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofPublishVersion?: Prisma.StringFilter<"WorkflowAppData"> | string
+  nodes?: Prisma.JsonNullableFilter<"WorkflowAppData">
+  edges?: Prisma.JsonNullableFilter<"WorkflowAppData">
   ofApp?: Prisma.XOR<Prisma.WorkflowAppScalarRelationFilter, Prisma.WorkflowAppWhereInput>
   ofPublish?: Prisma.XOR<Prisma.WorkflowAppPublishScalarRelationFilter, Prisma.WorkflowAppPublishWhereInput>
 }
@@ -174,6 +182,8 @@ export type WorkflowAppDataOrderByWithRelationInput = {
   dataId?: Prisma.SortOrder
   ofAppId?: Prisma.SortOrder
   ofPublishVersion?: Prisma.SortOrder
+  nodes?: Prisma.SortOrderInput | Prisma.SortOrder
+  edges?: Prisma.SortOrderInput | Prisma.SortOrder
   ofApp?: Prisma.WorkflowAppOrderByWithRelationInput
   ofPublish?: Prisma.WorkflowAppPublishOrderByWithRelationInput
   _relevance?: Prisma.WorkflowAppDataOrderByRelevanceInput
@@ -187,6 +197,8 @@ export type WorkflowAppDataWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.WorkflowAppDataWhereInput | Prisma.WorkflowAppDataWhereInput[]
   ofAppId?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofPublishVersion?: Prisma.StringFilter<"WorkflowAppData"> | string
+  nodes?: Prisma.JsonNullableFilter<"WorkflowAppData">
+  edges?: Prisma.JsonNullableFilter<"WorkflowAppData">
   ofApp?: Prisma.XOR<Prisma.WorkflowAppScalarRelationFilter, Prisma.WorkflowAppWhereInput>
   ofPublish?: Prisma.XOR<Prisma.WorkflowAppPublishScalarRelationFilter, Prisma.WorkflowAppPublishWhereInput>
 }, "dataId" | "ofPublishVersion_ofAppId">
@@ -195,6 +207,8 @@ export type WorkflowAppDataOrderByWithAggregationInput = {
   dataId?: Prisma.SortOrder
   ofAppId?: Prisma.SortOrder
   ofPublishVersion?: Prisma.SortOrder
+  nodes?: Prisma.SortOrderInput | Prisma.SortOrder
+  edges?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.WorkflowAppDataCountOrderByAggregateInput
   _max?: Prisma.WorkflowAppDataMaxOrderByAggregateInput
   _min?: Prisma.WorkflowAppDataMinOrderByAggregateInput
@@ -207,10 +221,14 @@ export type WorkflowAppDataScalarWhereWithAggregatesInput = {
   dataId?: Prisma.StringWithAggregatesFilter<"WorkflowAppData"> | string
   ofAppId?: Prisma.StringWithAggregatesFilter<"WorkflowAppData"> | string
   ofPublishVersion?: Prisma.StringWithAggregatesFilter<"WorkflowAppData"> | string
+  nodes?: Prisma.JsonNullableWithAggregatesFilter<"WorkflowAppData">
+  edges?: Prisma.JsonNullableWithAggregatesFilter<"WorkflowAppData">
 }
 
 export type WorkflowAppDataCreateInput = {
   dataId?: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofApp: Prisma.WorkflowAppCreateNestedOneWithoutWorkflowAppDatasInput
   ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutOfDataInput
 }
@@ -219,10 +237,14 @@ export type WorkflowAppDataUncheckedCreateInput = {
   dataId?: string
   ofAppId: string
   ofPublishVersion: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataUpdateInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofApp?: Prisma.WorkflowAppUpdateOneRequiredWithoutWorkflowAppDatasNestedInput
   ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutOfDataNestedInput
 }
@@ -231,22 +253,30 @@ export type WorkflowAppDataUncheckedUpdateInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
   ofAppId?: Prisma.StringFieldUpdateOperationsInput | string
   ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataCreateManyInput = {
   dataId?: string
   ofAppId: string
   ofPublishVersion: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataUpdateManyMutationInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataUncheckedUpdateManyInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
   ofAppId?: Prisma.StringFieldUpdateOperationsInput | string
   ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataListRelationFilter = {
@@ -279,6 +309,8 @@ export type WorkflowAppDataCountOrderByAggregateInput = {
   dataId?: Prisma.SortOrder
   ofAppId?: Prisma.SortOrder
   ofPublishVersion?: Prisma.SortOrder
+  nodes?: Prisma.SortOrder
+  edges?: Prisma.SortOrder
 }
 
 export type WorkflowAppDataMaxOrderByAggregateInput = {
@@ -369,12 +401,16 @@ export type WorkflowAppDataUncheckedUpdateOneWithoutOfPublishNestedInput = {
 
 export type WorkflowAppDataCreateWithoutOfAppInput = {
   dataId?: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofPublish: Prisma.WorkflowAppPublishCreateNestedOneWithoutOfDataInput
 }
 
 export type WorkflowAppDataUncheckedCreateWithoutOfAppInput = {
   dataId?: string
   ofPublishVersion: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataCreateOrConnectWithoutOfAppInput = {
@@ -410,15 +446,21 @@ export type WorkflowAppDataScalarWhereInput = {
   dataId?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofAppId?: Prisma.StringFilter<"WorkflowAppData"> | string
   ofPublishVersion?: Prisma.StringFilter<"WorkflowAppData"> | string
+  nodes?: Prisma.JsonNullableFilter<"WorkflowAppData">
+  edges?: Prisma.JsonNullableFilter<"WorkflowAppData">
 }
 
 export type WorkflowAppDataCreateWithoutOfPublishInput = {
   dataId?: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofApp: Prisma.WorkflowAppCreateNestedOneWithoutWorkflowAppDatasInput
 }
 
 export type WorkflowAppDataUncheckedCreateWithoutOfPublishInput = {
   dataId?: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataCreateOrConnectWithoutOfPublishInput = {
@@ -439,31 +481,43 @@ export type WorkflowAppDataUpdateToOneWithWhereWithoutOfPublishInput = {
 
 export type WorkflowAppDataUpdateWithoutOfPublishInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofApp?: Prisma.WorkflowAppUpdateOneRequiredWithoutWorkflowAppDatasNestedInput
 }
 
 export type WorkflowAppDataUncheckedUpdateWithoutOfPublishInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataCreateManyOfAppInput = {
   dataId?: string
   ofPublishVersion: string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataUpdateWithoutOfAppInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ofPublish?: Prisma.WorkflowAppPublishUpdateOneRequiredWithoutOfDataNestedInput
 }
 
 export type WorkflowAppDataUncheckedUpdateWithoutOfAppInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
   ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type WorkflowAppDataUncheckedUpdateManyWithoutOfAppInput = {
   dataId?: Prisma.StringFieldUpdateOperationsInput | string
   ofPublishVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  nodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  edges?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -472,6 +526,8 @@ export type WorkflowAppDataSelect<ExtArgs extends runtime.Types.Extensions.Inter
   dataId?: boolean
   ofAppId?: boolean
   ofPublishVersion?: boolean
+  nodes?: boolean
+  edges?: boolean
   ofApp?: boolean | Prisma.WorkflowAppDefaultArgs<ExtArgs>
   ofPublish?: boolean | Prisma.WorkflowAppPublishDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workflowAppData"]>
@@ -482,9 +538,11 @@ export type WorkflowAppDataSelectScalar = {
   dataId?: boolean
   ofAppId?: boolean
   ofPublishVersion?: boolean
+  nodes?: boolean
+  edges?: boolean
 }
 
-export type WorkflowAppDataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"dataId" | "ofAppId" | "ofPublishVersion", ExtArgs["result"]["workflowAppData"]>
+export type WorkflowAppDataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"dataId" | "ofAppId" | "ofPublishVersion" | "nodes" | "edges", ExtArgs["result"]["workflowAppData"]>
 export type WorkflowAppDataInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ofApp?: boolean | Prisma.WorkflowAppDefaultArgs<ExtArgs>
   ofPublish?: boolean | Prisma.WorkflowAppPublishDefaultArgs<ExtArgs>
@@ -500,6 +558,8 @@ export type $WorkflowAppDataPayload<ExtArgs extends runtime.Types.Extensions.Int
     dataId: string
     ofAppId: string
     ofPublishVersion: string
+    nodes: runtime.JsonValue | null
+    edges: runtime.JsonValue | null
   }, ExtArgs["result"]["workflowAppData"]>
   composites: {}
 }
@@ -874,6 +934,8 @@ export interface WorkflowAppDataFieldRefs {
   readonly dataId: Prisma.FieldRef<"WorkflowAppData", 'String'>
   readonly ofAppId: Prisma.FieldRef<"WorkflowAppData", 'String'>
   readonly ofPublishVersion: Prisma.FieldRef<"WorkflowAppData", 'String'>
+  readonly nodes: Prisma.FieldRef<"WorkflowAppData", 'Json'>
+  readonly edges: Prisma.FieldRef<"WorkflowAppData", 'Json'>
 }
     
 

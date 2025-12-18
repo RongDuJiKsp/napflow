@@ -823,7 +823,9 @@ export type WorkflowAppPublishScalarFieldEnum = (typeof WorkflowAppPublishScalar
 export const WorkflowAppDataScalarFieldEnum = {
   dataId: 'dataId',
   ofAppId: 'ofAppId',
-  ofPublishVersion: 'ofPublishVersion'
+  ofPublishVersion: 'ofPublishVersion',
+  nodes: 'nodes',
+  edges: 'edges'
 } as const
 
 export type WorkflowAppDataScalarFieldEnum = (typeof WorkflowAppDataScalarFieldEnum)[keyof typeof WorkflowAppDataScalarFieldEnum]
@@ -835,6 +837,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -881,6 +891,23 @@ export const WorkflowAppPublishOrderByRelevanceFieldEnum = {
 export type WorkflowAppPublishOrderByRelevanceFieldEnum = (typeof WorkflowAppPublishOrderByRelevanceFieldEnum)[keyof typeof WorkflowAppPublishOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
 export const WorkflowAppDataOrderByRelevanceFieldEnum = {
   dataId: 'dataId',
   ofAppId: 'ofAppId',
@@ -914,6 +941,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'UserGroupTypes'
  */
 export type EnumUserGroupTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserGroupTypes'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

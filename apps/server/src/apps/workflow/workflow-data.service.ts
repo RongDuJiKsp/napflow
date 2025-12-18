@@ -1,8 +1,10 @@
+import type { WorkflowAppDataModel } from '@/src/prisma/generated/models'
 import { PrismaService } from '@/src/prisma/prisma.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
 
 const DRAFT_VERSION_KEY = 'draft'
+
+type WorkflowAppDataUpdate = Partial<WorkflowAppDataModel>
 
 @Injectable()
 export class WorkflowDataService {
@@ -23,7 +25,7 @@ export class WorkflowDataService {
     })
   }
 
-  async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppDataType) {
+  async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppDataUpdate) {
     // 判断publish是否重复
     if(await this.prismaService.workflowAppPublish.count({ where: { ofAppId: appId, version } }))
       return null
@@ -39,7 +41,7 @@ export class WorkflowDataService {
   }
 
   // 所有对data联表读写都在这
-  async syncData(dataId: string, data: WorkflowAppDataType) {
+  async syncData(dataId: string, data: WorkflowAppDataUpdate) {
     return await this.prismaService.workflowAppData.update({
       where: { dataId },
       data: { ...data, dataId: undefined }, // dataId是主键，不能更新
@@ -55,7 +57,7 @@ export class WorkflowDataService {
     return draftData
   }
 
-  async syncDraft(appId: string, data: WorkflowAppDataType) {
+  async syncDraft(appId: string, data: WorkflowAppDataUpdate) {
     const appData = await this.prismaService.workflowAppData.findFirst({
       select: { dataId: true },
       where: { ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY },

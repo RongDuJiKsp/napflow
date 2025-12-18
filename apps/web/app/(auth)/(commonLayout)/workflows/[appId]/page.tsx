@@ -1,4 +1,4 @@
-import Editor from '@/app/components/workflow/editor'
+import { redirect } from 'next/navigation'
 
 export default async function Page({
   params,
@@ -6,9 +6,6 @@ export default async function Page({
   params: Promise<{ appId: string }>;
 }) {
   const { appId } = await params
-  return (
-    <div>
-      <Editor appId={appId}/>
-    </div>
-  )
+
+  redirect(`/workflows/${appId}/editor`)
 }

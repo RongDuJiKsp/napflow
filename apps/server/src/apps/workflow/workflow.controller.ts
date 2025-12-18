@@ -13,11 +13,7 @@ import {
 import type { AccountType } from '@shared/data-transfer/account/base'
 import type {
   CreateWorkflowReqType,
-  GetAppRespType,
-  GetAppsRespType,
-  LoadDraftRespType,
   WorkflowPublishReqType,
-  WorkflowPublishRespType,
 } from '@shared/data-transfer/workflow/info'
 import {
   CreateWorkflowReq,
@@ -29,7 +25,6 @@ import {
 } from '@shared/data-transfer/workflow/info'
 import { WorkflowService } from './workflow.service'
 import { ZodSerializerDto } from 'nestjs-zod'
-import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
 import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
@@ -48,7 +43,7 @@ export class WorkflowController {
   async createApp(
     @ZodBody({ zod: CreateWorkflowReq }) req: CreateWorkflowReqType,
     @JwtAccount() account: AccountType,
-  ): Promise<NullRespType> {
+  ) {
     await this.workflowService.createApp(
       req.appName,
       req.appDescription,
@@ -63,7 +58,7 @@ export class WorkflowController {
   async getMutiApp(
     @Query('onlySelf', new ParseBoolPipe({ optional: true })) onlySelf: boolean,
     @JwtAccount() account: AccountType,
-  ): Promise<GetAppsRespType> {
+  ) {
     const app = await this.workflowService.getApps(
       onlySelf ? account.email : undefined,
     )
@@ -73,7 +68,7 @@ export class WorkflowController {
   @Get(':appId/draft')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(LoadDraftResp)
-  async loadDraft(@Param('appId') appId: string): Promise<LoadDraftRespType> {
+  async loadDraft(@Param('appId') appId: string) {
     const app = await this.workflowDataService.loadDraft(appId)
     if (!app) return Resp.error('App Not Found', Code.NotFound)
     return Resp.ok(app)
@@ -85,7 +80,7 @@ export class WorkflowController {
   async syncDraft(
     @Param('appId') appId: string,
     @ZodBody({ zod: WorkflowAppData }) data: WorkflowAppDataType,
-  ): Promise<NullRespType> {
+  ) {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
   }
@@ -96,7 +91,7 @@ export class WorkflowController {
   async publishDraft(
     @Param('appId') appId: string,
     @ZodBody({ zod: WorkflowPublishReq }) data: WorkflowPublishReqType,
-  ): Promise<WorkflowPublishRespType> {
+  ) {
     const publishMeta = await this.workflowDataService.publishDraft(
       appId,
       data.version,
@@ -110,7 +105,7 @@ export class WorkflowController {
   @Get(':appId')
   @AllowUserGroup(UserGroupTypes.User)
   @ZodSerializerDto(GetAppResp)
-  async getSingleApp(@Param('appId') appId: string): Promise<GetAppRespType> {
+  async getSingleApp(@Param('appId') appId: string) {
     const app = await this.workflowService.getApp(appId)
     if (!app) return Resp.error('App Not Found', Code.NotFound)
 

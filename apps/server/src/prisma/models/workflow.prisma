@@ -13,7 +13,7 @@ model WorkflowApp {
 model WorkflowAppPublish {
     version     String           @default("draft")
     description String?
-    publishAt   DateTime        @default(now())
+    publishAt   DateTime         @default(now())
     publishBy   String?
     //relations
     ofAppId     String
@@ -32,6 +32,8 @@ model WorkflowAppData {
     ofPublishVersion String
     ofPublish        WorkflowAppPublish @relation(fields: [ofPublishVersion, ofAppId], references: [version, ofAppId], onDelete: Cascade)
     //areas
+    nodes            Json? //字段比较多且没有单独修改的需求 保存为Json就行
+    edges            Json?
 
     @@unique([ofPublishVersion, ofAppId])
     @@map("app_datas")

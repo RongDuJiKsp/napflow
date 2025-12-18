@@ -15,13 +15,9 @@ import type {
   AccountChangePasswordReqType,
   AccountCreateReqType,
   AccountDisableReqType,
-  AccountInfoListRespType,
-  AccountInfoRespType,
   AccountUpDownGradeReqType,
-  AccountUpDownGradeRespType,
   LoginReqType,
 } from '@shared/data-transfer/account/account'
-import type { LoginRespType } from '@shared/data-transfer/account/account'
 import {
   AccountChangeNicknameReq,
   AccountChangePasswordReq,
@@ -65,7 +61,7 @@ export class AccountController {
   @ZodSerializerDto(LoginResp)
   async login(
     @ZodBody({ zod: LoginReq }) req: LoginReqType,
-  ): Promise<LoginRespType> {
+  ) {
     const user = await this.accountService.getAccountWithVertify(
       req.email,
       req.password,
@@ -94,7 +90,7 @@ export class AccountController {
     @Query('isDisabled', new ParseBoolPipe({ optional: true }))
     isDisabled?: boolean,
     @Query('roles', new ParseArrayPipe({ optional: true })) roles?: string[],
-  ): Promise<AccountInfoListRespType> {
+  ) {
     const accounts = await this.accountService.queryAccounts(
       AccountInfoListQuery.parse({
         isDisabled,
@@ -117,7 +113,7 @@ export class AccountController {
   @ZodSerializerDto(AccountInfoResp)
   async getCurAccount(
     @JwtAccount() account: AccountType,
-  ): Promise<AccountInfoRespType> {
+  ) {
     const curAccount = await this.accountService.getAccount(account.email)
     if (!curAccount) throw new Error('签发了token的用户不存在')
     return Resp.ok(curAccount)
@@ -137,7 +133,7 @@ export class AccountController {
   @ZodSerializerDto(AccountInfoResp)
   async getAccountInfo(
     @Query('email') email: string,
-  ): Promise<AccountInfoRespType> {
+  ) {
     const curAccount = await this.accountService.getAccount(email)
     return Resp.ok(curAccount)
   }
@@ -155,7 +151,7 @@ export class AccountController {
   @ZodSerializerDto(AccountUpDownGradeResp)
   async upgradeAccount(
     @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
-  ): Promise<AccountUpDownGradeRespType> {
+  ) {
     if (req.groupType.includes(UserGroupTypes.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
     const res = await this.accountService.upgradeAccount(
@@ -178,7 +174,7 @@ export class AccountController {
   @ZodSerializerDto(AccountUpDownGradeResp)
   async downgradeAccount(
     @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
-  ): Promise<AccountUpDownGradeRespType> {
+  ) {
     if (req.groupType.includes(UserGroupTypes.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
     const res = await this.accountService.downgradeAccount(
@@ -201,7 +197,7 @@ export class AccountController {
   @ZodSerializerDto(NullResp)
   async disableAccount(
     @ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType,
-  ): Promise<NullRespType> {
+  ) {
     await this.accountService.disableAccount(req.email)
     return Resp.ok()
   }
@@ -219,7 +215,7 @@ export class AccountController {
   @ZodSerializerDto(NullResp)
   async createAccount(
     @ZodBody({ zod: AccountCreateReq }) req: AccountCreateReqType,
-  ): Promise<NullRespType> {
+  ) {
     await this.accountService.createCustomAccount(
       req.email,
       req.nickname,
@@ -243,7 +239,7 @@ export class AccountController {
     @ZodBody({ zod: AccountChangePasswordReq })
     req: AccountChangePasswordReqType,
     @JwtAccount() account: AccountType,
-  ): Promise<NullRespType> {
+  ) {
     const userFull = await this.accountService.getAccountWithVertify(
       account.email,
       req.originPassword,
