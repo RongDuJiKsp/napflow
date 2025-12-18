@@ -1,9 +1,15 @@
 'use client'
 import { memo } from 'react'
-import { useAppMeta } from './providers/hooks/use-app-meta'
+import EditorProvider from './providers/EditorProvider'
+import WorkflowView from './mainview/workflow-view'
+import NodeEditPanel from './mainview/node-edit-panel'
 
 const Editor = () => {
-  const { appId } = useAppMeta()
-  return <div>{appId}</div>
+  return <EditorProvider>
+    <div className='relative'>
+      <NodeEditPanel/>
+      <WorkflowView/>
+    </div>
+  </EditorProvider>
 }
 export default memo(Editor)
