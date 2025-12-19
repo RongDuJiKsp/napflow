@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-linear-to-br from-pink-50 to-purple-50">
       {/* 顶部导航栏 */}
       <header className="bg-white shadow-md border-b border-purple-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* 左侧Logo和导航 */}
             <div className="flex items-center">
