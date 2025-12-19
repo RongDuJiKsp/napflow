@@ -34,9 +34,9 @@ const HeaderNavigation = () => {
             className={twMerge(
               'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
               isActive(item.href)
-                && 'bg-linear-to-r from-purple-500 to-pink-500 text-white! shadow-md',
+                && 'bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md',
               !isActive(item.href)
-                && 'text-purple-700! hover:bg-purple-50 hover:text-purple-600!',
+                && 'text-purple-700 hover:bg-purple-50 hover:text-purple-600',
             )}
           >
             <item.icon className="w-4 h-4 mr-2" />
