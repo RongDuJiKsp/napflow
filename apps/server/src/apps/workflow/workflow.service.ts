@@ -1,29 +1,27 @@
-import { PrismaService } from '@/src/prisma/prisma.service'
+import { TypeOrmService } from '@/src/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import type { AccountType } from '@shared/data-transfer/account/base'
 @Injectable()
 export class WorkflowService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
+    @Inject(TypeOrmService) private readonly db: TypeOrmService,
   ) {}
 
   async createApp(appName: string, appDesc: string, createdBy: AccountType) {
-    return await this.prismaService.workflowApp.create({
-      data: { appName, appDescription: appDesc, createdBy: createdBy.email },
-    })
+    return await this.db.workflowApp.save({ appName, appDescription: appDesc, createdBy: createdBy.email })
   }
 
   async deleteApp(appId: string) {
-    return await this.prismaService.workflowApp.delete({ where: { appId } })
+    return await this.db.workflowApp.delete({ appId })
   }
 
   async getApp(appId: string) {
-    return await this.prismaService.workflowApp.findFirst({
+    return await this.db.workflowApp.findOne({
       where: { appId },
     })
   }
 
   async getApps(creator?: string) {
-    return await this.prismaService.workflowApp.findMany({ where: { createdBy: creator } })
+    return await this.db.workflowApp.find({ where: { createdBy: creator } })
   }
 }

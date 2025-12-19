@@ -1,21 +1,23 @@
-import { UserGroupTypes } from '@/src/prisma/generated/enums'
-import { PrismaService } from '@/src/prisma/prisma.service'
 import { Inject, Injectable } from '@nestjs/common'
 import bcryptjs from 'bcryptjs'
 import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountInfoListQueryType } from '@shared/data-transfer/account/account'
-import type { UserWhereInput } from '@/src/prisma/generated/models'
+import { TypeOrmService } from '@/src/db/typeorm.service'
+import type { UserEntity } from '@/src/db/models/account.entity'
+import { UserGroupTypes } from '@/src/db/models/account.entity'
+import type { FindOptionsWhere } from 'typeorm'
+import { In, IsNull, Not } from 'typeorm'
 
 @Injectable()
 export class AccountService {
-  constructor(@Inject(PrismaService) private readonly prismaService: PrismaService, @Inject(AppConfigService) private readonly configService: AppConfigService) {}
+  constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService, @Inject(AppConfigService) private readonly configService: AppConfigService) {}
   async getAccount(email: string) {
-    return await this.prismaService.user.findFirst({
+    return await this.db.user.findOne({
       where: {
         email,
       },
-      include: {
-        userGroup: { select: { groupType: true, createdAt: true } },
+      relations: {
+        userGroups: true,
       },
     })
   }
@@ -35,12 +37,10 @@ export class AccountService {
     if(await this.getAccount(email))
       return null
     const hashedPassword = await bcryptjs.hash(password, 10)
-    return await this.prismaService.user.create({
-      data: {
-        email,
-        nickname,
-        password: hashedPassword,
-      },
+    return await this.db.user.save({
+      email,
+      nickname,
+      password: hashedPassword,
     })
   }
 
@@ -49,11 +49,9 @@ export class AccountService {
     if(!user)
       return null
     // 为用户创建默认用户组
-    await this.prismaService.userGroup.create({
-      data: {
-        ofUser: user.email,
-        groupType: UserGroupTypes.User,
-      },
+    await this.db.userGroup.create({
+      ofUser: user.email,
+      groupType: UserGroupTypes.User,
     })
     return user
   }
@@ -66,36 +64,30 @@ export class AccountService {
     if(!user)
       throw new AccountError('创建根账户失败')
     // 为根账户创建管理员和用户组
-    await this.prismaService.userGroup.createMany({
-      data: [
-        { ofUser: user.email, groupType: UserGroupTypes.Admin },
-        { ofUser: user.email, groupType: UserGroupTypes.User },
-      ],
-    })
+    await this.db.userGroup.save([
+      { ofUser: user.email, groupType: UserGroupTypes.Admin },
+      { ofUser: user.email, groupType: UserGroupTypes.User },
+    ])
     return user
   }
 
   async queryAccounts(query: AccountInfoListQueryType) {
-    const userQuery: UserWhereInput[] = []
+    const userQuery: FindOptionsWhere<UserEntity> = {}
 
     if(query.isDisabled === true)
-      userQuery.push({ disabledAt: { not: null } })
+      userQuery.disabledAt = Not(IsNull())
     else if(query.isDisabled === false)
-      userQuery.push({ disabledAt: null })
+      userQuery.disabledAt = IsNull()
+    if(query.groups) {
+      userQuery.userGroups = {
+        groupType: In(query.groups),
+      }
+    }
 
-    return await this.prismaService.user.findMany({
-      where: {
-        userGroup: {
-          some: {
-            groupType: {
-              in: query.groups,
-            },
-          },
-        },
-        AND: userQuery,
-      },
-      include: {
-        userGroup: { select: { groupType: true, createdAt: true } },
+    return await this.db.user.find({
+      where: userQuery,
+      relations: {
+        userGroups: true,
       },
     })
   }
@@ -103,70 +95,37 @@ export class AccountService {
   async downgradeAccount(email: string, groupType: UserGroupTypes[]) {
     if(groupType.includes(UserGroupTypes.User))
       throw new AccountError('不能降级User组')
-    return await this.prismaService.userGroup.deleteMany({
-      where: {
-        ofUser: email,
-        groupType: {
-          in: groupType,
-        },
-      },
+    return await this.db.userGroup.delete({
+      ofUser: email,
+      groupType: In(groupType),
     })
   }
 
   async upgradeAccount(email: string, groupType: UserGroupTypes[]) {
-    return await this.prismaService.userGroup.createMany({
-      data: groupType.map(groupType => ({
-        ofUser: email,
-        groupType,
-      })),
-    })
+    return await this.db.userGroup.create(groupType.map(groupType => ({
+      ofUser: email,
+      groupType,
+    })))
   }
 
   async disableAccount(email: string) {
-    return await this.prismaService.user.update({
-      where: {
-        email,
-      },
-      data: {
-        disabledAt: new Date(),
-      },
-    })
+    return await this.db.user.softDelete({ email })
   }
 
   async enableAccount(email: string) {
-    return await this.prismaService.user.update({
-      where: {
-        email,
-      },
-      data: {
-        disabledAt: null,
-      },
-    })
+    return await this.db.user.update({ email }, { disabledAt: null })
   }
 
   async changePassword(email: string, password: string) {
     const hashedPassword = await bcryptjs.hash(password, 10)
-    return await this.prismaService.user.update({
-      where: {
-        email,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    })
+    return await this.db.user.update({ email }, { password: hashedPassword })
   }
 
   async changeNickname(email: string, nickname: string) {
-    return await this.prismaService.user.update({
-      where: {
-        email,
-      },
-      data: {
-        nickname,
-      },
-    })
+    return await this.db.user.update({ email }, { nickname })
   }
 }
+
 export class AccountError extends Error {
   constructor(message: string) {
     super(message)

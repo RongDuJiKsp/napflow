@@ -35,8 +35,8 @@ import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
-import { UserGroupTypes } from '@/src/prisma/generated/enums'
 import type { AccountType } from '@shared/data-transfer/account/base'
+import { UserGroupTypes } from '@/src/db/models/account.entity'
 
 /**
  * @route `/account`

@@ -7,9 +7,9 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
 import { UserGroupGuard } from './middleware/guard/account'
 import { AccountModule } from './apps/account/account.module'
 import { AppConfigModule } from './apps/app-config/app-config.module'
-import { PrismaModule } from './prisma/prisma.module'
 import { ZodErrExceptionFilter } from './middleware/exception-filter/zod'
 import { WorkflowModule } from './apps/workflow/workflow.module'
+import { DbModule } from './db/db.module'
 const zodProviders: Provider[] = [
   {
     provide: APP_PIPE,
@@ -43,7 +43,7 @@ const zodProviders: Provider[] = [
     }),
     // 随后加载应用配置模块
     AppConfigModule,
-    PrismaModule,
+    DbModule,
     // ---------------------- 应用模块 ----------------------
     AccountModule,
     WorkflowModule,

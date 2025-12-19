@@ -1,6 +1,5 @@
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
 import { ZodBody } from '@/src/decorator/zod'
-import { UserGroupTypes } from '@/src/prisma/generated/enums'
 import {
   Controller,
   Get,
@@ -29,6 +28,7 @@ import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
 import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
 import { WorkflowAppData } from '@shared/data-transfer/workflow/base'
+import { UserGroupTypes } from '@/src/db/models/account.entity'
 @Controller('workflow')
 export class WorkflowController {
   constructor(

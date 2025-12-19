@@ -1,55 +1,44 @@
-import type { WorkflowAppDataModel } from '@/src/prisma/generated/models'
-import { PrismaService } from '@/src/prisma/prisma.service'
+import type { WorkflowAppDataEntity } from '@/src/db/models/workflow.entity'
+import { TypeOrmService } from '@/src/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 
 const DRAFT_VERSION_KEY = 'draft'
 
-type WorkflowAppDataUpdate = Partial<WorkflowAppDataModel>
+type WorkflowAppDataUpdate = Partial<WorkflowAppDataEntity>
 
 @Injectable()
 export class WorkflowDataService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
+    @Inject(TypeOrmService) private readonly db: TypeOrmService,
   ) {}
 
   async createDraft(appId: string) {
     // 判断draft是否已经创建了 创建了就返回null
-    if(await this.prismaService.workflowAppPublish.count({ where: { ofAppId: appId, version: DRAFT_VERSION_KEY } }))
+    if(await this.db.workflowAppPublish.count({ where: { ofAppId: appId, version: DRAFT_VERSION_KEY } }))
       return null
     // 创建data的draft
-    await this.prismaService.workflowAppPublish.create({
-      data: { ofAppId: appId, version: DRAFT_VERSION_KEY },
-    })
-    return await this.prismaService.workflowAppData.create({
-      data: { ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY },
-    })
+    await this.db.workflowAppPublish.save({ ofAppId: appId, version: DRAFT_VERSION_KEY })
+    return await this.db.workflowAppData.save({ ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY })
   }
 
   async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppDataUpdate) {
     // 判断publish是否重复
-    if(await this.prismaService.workflowAppPublish.count({ where: { ofAppId: appId, version } }))
+    if(await this.db.workflowAppPublish.count({ where: { ofAppId: appId, version } }))
       return null
 
     // 创建data的publish
-    const meta = await this.prismaService.workflowAppPublish.create({
-      data: { ofAppId: appId, version, description },
-    })
-    await this.prismaService.workflowAppData.create({
-      data: { ...latestDraft, ofAppId: appId, ofPublishVersion: version, dataId: undefined },
-    })
+    const meta = await this.db.workflowAppPublish.save({ ofAppId: appId, version, description })
+    await this.db.workflowAppData.save({ ...latestDraft, ofAppId: appId, ofPublishVersion: version, dataId: undefined })
     return meta
   }
 
   // 所有对data联表读写都在这
   async syncData(dataId: string, data: WorkflowAppDataUpdate) {
-    return await this.prismaService.workflowAppData.update({
-      where: { dataId },
-      data: { ...data, dataId: undefined }, // dataId是主键，不能更新
-    })
+    return await this.db.workflowAppData.update({ dataId }, { ...data, dataId: undefined })
   }
 
   async loadDraft(appId: string) {
-    const draftData = await this.prismaService.workflowAppData.findFirst({
+    const draftData = await this.db.workflowAppData.findOne({
       where: { ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY },
     })
     if (!draftData) return await this.createDraft(appId)
@@ -58,8 +47,7 @@ export class WorkflowDataService {
   }
 
   async syncDraft(appId: string, data: WorkflowAppDataUpdate) {
-    const appData = await this.prismaService.workflowAppData.findFirst({
-      select: { dataId: true },
+    const appData = await this.db.workflowAppData.findOne({
       where: { ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY },
     })
     let dataId = appData?.dataId

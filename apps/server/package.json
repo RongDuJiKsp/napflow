@@ -11,17 +11,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:gen": "npx prisma generate --schema=./src/prisma",
-    "prisma:gensql": "npx prisma migrate diff --from-empty  --to-schema=./src/prisma -o ./src/prisma/generated/create.sql"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.9",
     "@nestjs/core": "^11.1.9",
     "@nestjs/platform-express": "^11.1.9",
-    "@prisma/adapter-mariadb": "^7.0.1",
-    "@prisma/client": "^7.2.0",
-    "@prisma/client-runtime-utils": "^7.0.1",
+    "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
@@ -32,7 +28,8 @@
     "nestjs-zod": "^5.0.1",
     "node-napcat-ts": "^0.4.20",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.28"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.14",
