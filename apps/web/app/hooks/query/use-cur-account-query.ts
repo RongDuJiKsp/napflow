@@ -1,4 +1,5 @@
 import { jsonQ } from '@/utils/net'
+import { Code } from '@shared/data-transfer/_base'
 import type { AccountInfoRespType } from '@shared/data-transfer/account/account'
 import { useQuery } from '@tanstack/react-query'
 
@@ -7,6 +8,9 @@ export const useCurAccountQuery = () => {
     queryKey: ['cur-account'],
     queryFn: async (): Promise<AccountInfoRespType['data']> => {
       const res = await jsonQ.Get<AccountInfoRespType>('/account/cur-account')
+      if (res.statusCode !== Code.Ok || !res.data)
+        throw new Error(res.message)
+
       return res.data
     },
   })

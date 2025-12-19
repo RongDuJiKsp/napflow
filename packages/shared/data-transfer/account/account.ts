@@ -5,7 +5,7 @@ import { AccountInfo, UserRoleType } from './base'
 // req resp
 
 // @/account/login
-export const LoginReq = AccountInfo.extend({
+export const LoginReq = AccountInfo.pick({ email: true }).extend({
   password: z.string(),
 })
 export type LoginReqType = z.infer<typeof LoginReq>
