@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core'
-import type { UserGroupTypes } from '../prisma/generated/enums'
 import { JwtBody } from './jwt'
+import type { UserRole } from '@shared/data-transfer/account/base'
 import { Account } from '@shared/data-transfer/account/base'
 
-export const AllowUserGroup = Reflector.createDecorator<UserGroupTypes>()
+export const AllowUserGroup = Reflector.createDecorator<UserRole>()
 export const JwtAccount = () => JwtBody({ zod: Account })

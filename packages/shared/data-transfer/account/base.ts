@@ -1,7 +1,11 @@
 import z from 'zod'
 
+export enum UserRole {
+  Admin = 'Admin',
+  User = 'User',
+}
 // base
-export const UserRoleType = z.enum(['Admin', 'User'])
+export const UserRoleType = z.enum(UserRole)
 export type UserRoleTypeType = z.infer<typeof UserRoleType>
 
 export const Account = z.object({

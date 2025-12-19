@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import type { AccountType } from '@shared/data-transfer/account/base'
+import { type AccountType, UserRole } from '@shared/data-transfer/account/base'
 import type {
   CreateWorkflowReqType,
   WorkflowPublishReqType,
@@ -28,7 +28,6 @@ import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
 import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
 import { WorkflowAppData } from '@shared/data-transfer/workflow/base'
-import { UserGroupTypes } from '@/src/db/models/account.entity'
 @Controller('workflow')
 export class WorkflowController {
   constructor(
@@ -38,7 +37,7 @@ export class WorkflowController {
   ) {}
 
   @Post('create')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(NullResp)
   async createApp(
     @ZodBody({ zod: CreateWorkflowReq }) req: CreateWorkflowReqType,
@@ -53,7 +52,7 @@ export class WorkflowController {
   }
 
   @Get('apps')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(GetAppsResp)
   async getMutiApp(
     @Query('onlySelf', new ParseBoolPipe({ optional: true })) onlySelf: boolean,
@@ -66,7 +65,7 @@ export class WorkflowController {
   }
 
   @Get(':appId/draft')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(LoadDraftResp)
   async loadDraft(@Param('appId') appId: string) {
     const app = await this.workflowDataService.loadDraft(appId)
@@ -75,7 +74,7 @@ export class WorkflowController {
   }
 
   @Post(':appId/sync')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(NullResp)
   async syncDraft(
     @Param('appId') appId: string,
@@ -86,7 +85,7 @@ export class WorkflowController {
   }
 
   @Post(':appId/publish')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(WorkflowPublishResp)
   async publishDraft(
     @Param('appId') appId: string,
@@ -103,7 +102,7 @@ export class WorkflowController {
   }
 
   @Get(':appId')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(GetAppResp)
   async getSingleApp(@Param('appId') appId: string) {
     const app = await this.workflowService.getApp(appId)

@@ -1,9 +1,5 @@
+import { UserRole } from '@shared/data-transfer/account/base'
 import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm'
-
-export enum UserGroupTypes {
-  Admin = 'Admin',
-  User = 'User',
-}
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -17,7 +13,7 @@ export class UserEntity extends BaseEntity {
   password: string
 
   @OneToMany(() => UserGroupEntity, userGroup => userGroup.user)
-  userGroups: UserGroupEntity[]
+  userGroup: UserGroupEntity[]
 
   @CreateDateColumn()
   createdAt: Date
@@ -35,12 +31,12 @@ export class UserGroupEntity extends BaseEntity {
   ofUser: string
 
   @PrimaryColumn()
-  @Column({ type: 'enum', enum: UserGroupTypes })
-  groupType: UserGroupTypes
+  @Column({ type: 'enum', enum: UserRole })
+  groupType: UserRole
 
   @CreateDateColumn()
   createdAt: Date
 
-  @ManyToOne(() => UserEntity, user => user.userGroups)
+  @ManyToOne(() => UserEntity, user => user.userGroup)
   user: UserEntity
 }

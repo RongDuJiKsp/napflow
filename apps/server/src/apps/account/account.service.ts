@@ -4,9 +4,9 @@ import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountInfoListQueryType } from '@shared/data-transfer/account/account'
 import { TypeOrmService } from '@/src/db/typeorm.service'
 import type { UserEntity } from '@/src/db/models/account.entity'
-import { UserGroupTypes } from '@/src/db/models/account.entity'
 import type { FindOptionsWhere } from 'typeorm'
 import { In, IsNull, Not } from 'typeorm'
+import { UserRole } from '@shared/data-transfer/account/base'
 
 @Injectable()
 export class AccountService {
@@ -17,7 +17,7 @@ export class AccountService {
         email,
       },
       relations: {
-        userGroups: true,
+        userGroup: true,
       },
     })
   }
@@ -49,9 +49,9 @@ export class AccountService {
     if(!user)
       return null
     // 为用户创建默认用户组
-    await this.db.userGroup.create({
+    await this.db.userGroup.save({
       ofUser: user.email,
-      groupType: UserGroupTypes.User,
+      groupType: UserRole.User,
     })
     return user
   }
@@ -65,8 +65,8 @@ export class AccountService {
       throw new AccountError('创建根账户失败')
     // 为根账户创建管理员和用户组
     await this.db.userGroup.save([
-      { ofUser: user.email, groupType: UserGroupTypes.Admin },
-      { ofUser: user.email, groupType: UserGroupTypes.User },
+      { ofUser: user.email, groupType: UserRole.Admin },
+      { ofUser: user.email, groupType: UserRole.User },
     ])
     return user
   }
@@ -79,7 +79,7 @@ export class AccountService {
     else if(query.isDisabled === false)
       userQuery.disabledAt = IsNull()
     if(query.groups) {
-      userQuery.userGroups = {
+      userQuery.userGroup = {
         groupType: In(query.groups),
       }
     }
@@ -87,13 +87,13 @@ export class AccountService {
     return await this.db.user.find({
       where: userQuery,
       relations: {
-        userGroups: true,
+        userGroup: true,
       },
     })
   }
 
-  async downgradeAccount(email: string, groupType: UserGroupTypes[]) {
-    if(groupType.includes(UserGroupTypes.User))
+  async downgradeAccount(email: string, groupType: UserRole[]) {
+    if(groupType.includes(UserRole.User))
       throw new AccountError('不能降级User组')
     return await this.db.userGroup.delete({
       ofUser: email,
@@ -101,8 +101,8 @@ export class AccountService {
     })
   }
 
-  async upgradeAccount(email: string, groupType: UserGroupTypes[]) {
-    return await this.db.userGroup.create(groupType.map(groupType => ({
+  async upgradeAccount(email: string, groupType: UserRole[]) {
+    return await this.db.userGroup.save(groupType.map(groupType => ({
       ofUser: email,
       groupType,
     })))

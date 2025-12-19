@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppConfigService } from '../apps/app-config/app-config.service'
 
@@ -6,6 +6,7 @@ import { TypeOrmService } from './typeorm.service'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
 import { WorkflowAppDataEntity, WorkflowAppEntity, WorkflowAppPublishEntity } from './models/workflow.entity'
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({

@@ -35,8 +35,7 @@ import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
-import type { AccountType } from '@shared/data-transfer/account/base'
-import { UserGroupTypes } from '@/src/db/models/account.entity'
+import { type AccountType, UserRole } from '@shared/data-transfer/account/base'
 
 /**
  * @route `/account`
@@ -84,7 +83,7 @@ export class AccountController {
    * @description 返回账号列表，支持按是否禁用和角色筛选
    */
   @Get('account')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(AccountInfoListResp)
   async getAccount(
     @Query('isDisabled', new ParseBoolPipe({ optional: true }))
@@ -109,7 +108,7 @@ export class AccountController {
    * @description 返回当前登录用户的详情
    */
   @Get('cur-account')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(AccountInfoResp)
   async getCurAccount(
     @JwtAccount() account: AccountType,
@@ -129,7 +128,7 @@ export class AccountController {
    * @description 根据 email 返回指定用户信息
    */
   @Get('account-info')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(AccountInfoResp)
   async getAccountInfo(
     @Query('email') email: string,
@@ -147,18 +146,18 @@ export class AccountController {
    * @description 提升目标账号的用户组
    */
   @Post('upgrade')
-  @AllowUserGroup(UserGroupTypes.Admin)
+  @AllowUserGroup(UserRole.Admin)
   @ZodSerializerDto(AccountUpDownGradeResp)
   async upgradeAccount(
     @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
   ) {
-    if (req.groupType.includes(UserGroupTypes.User))
+    if (req.groupType.includes(UserRole.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
     const res = await this.accountService.upgradeAccount(
       req.email,
       req.groupType,
     )
-    return Resp.ok({ effectLines: res.count })
+    return Resp.ok({ effectLines: res.length })
   }
 
   /**
@@ -170,18 +169,18 @@ export class AccountController {
    * @description 降低目标账号的用户组
    */
   @Post('downgrade')
-  @AllowUserGroup(UserGroupTypes.Admin)
+  @AllowUserGroup(UserRole.Admin)
   @ZodSerializerDto(AccountUpDownGradeResp)
   async downgradeAccount(
     @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
   ) {
-    if (req.groupType.includes(UserGroupTypes.User))
+    if (req.groupType.includes(UserRole.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
     const res = await this.accountService.downgradeAccount(
       req.email,
       req.groupType,
     )
-    return Resp.ok({ effectLines: res.count })
+    return Resp.ok({ effectLines: res.affected })
   }
 
   /**
@@ -193,7 +192,7 @@ export class AccountController {
    * @description 禁用指定账号
    */
   @Post('disable')
-  @AllowUserGroup(UserGroupTypes.Admin)
+  @AllowUserGroup(UserRole.Admin)
   @ZodSerializerDto(NullResp)
   async disableAccount(
     @ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType,
@@ -211,7 +210,7 @@ export class AccountController {
    * @description 创建自定义账号
    */
   @Post('create')
-  @AllowUserGroup(UserGroupTypes.Admin)
+  @AllowUserGroup(UserRole.Admin)
   @ZodSerializerDto(NullResp)
   async createAccount(
     @ZodBody({ zod: AccountCreateReq }) req: AccountCreateReqType,
@@ -233,7 +232,7 @@ export class AccountController {
    * @description 修改当前登录用户的密码，需校验原密码
    */
   @Post('change-password')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(NullResp)
   async changePassword(
     @ZodBody({ zod: AccountChangePasswordReq })
@@ -259,7 +258,7 @@ export class AccountController {
    * @description 修改当前登录用户的昵称
    */
   @Post('change-nickname')
-  @AllowUserGroup(UserGroupTypes.User)
+  @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(NullResp)
   async changeNickname(
     @ZodBody({ zod: AccountChangeNicknameReq })
