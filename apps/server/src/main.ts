@@ -26,7 +26,7 @@ async function bootstrap() {
 
   // 初始化数据库
   const accountService = app.get<AccountService>(AccountService)
-  accountService.checkAndCreateRootAccount()
+  await accountService.checkAndCreateRootAccount()
   // 启动服务
   const hostname = configServer.envs.HOST_NAME
   const port = configServer.envs.PORT
