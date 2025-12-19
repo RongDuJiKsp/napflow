@@ -1,20 +1,21 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
+import { NotNullColumn } from '../decorator/entity'
 
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity {
   @PrimaryColumn({ generated: 'uuid' })
   appId: string
 
-  @Column()
+  @NotNullColumn()
   appName: string
 
-  @Column()
+  @NotNullColumn()
   appDescription: string
 
   @CreateDateColumn()
   createdAt: Date
 
-  @Column()
+  @NotNullColumn()
   createdBy: string
 
   @OneToMany(() => WorkflowAppPublishEntity, publish => publish.ofApp)
@@ -32,13 +33,13 @@ export class WorkflowAppPublishEntity extends BaseEntity {
   @PrimaryColumn()
   ofAppId: string
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   description: string | null
 
   @CreateDateColumn()
   publishAt: Date
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   publishBy: string | null
 
   @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppPublishs, { onDelete: 'CASCADE' })
@@ -59,14 +60,14 @@ export class WorkflowAppDataEntity extends BaseEntity {
   @PrimaryColumn({ generated: 'uuid' })
   dataId: string
 
-  @Column()
+  @NotNullColumn()
   ofAppId: string
 
   @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppDatas, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ofAppId' })
   ofApp: WorkflowAppEntity
 
-  @Column()
+  @NotNullColumn()
   ofPublishVersion: string
 
   @ManyToOne(() => WorkflowAppPublishEntity, publish => publish.ofData, { onDelete: 'CASCADE' })
@@ -76,9 +77,9 @@ export class WorkflowAppDataEntity extends BaseEntity {
   ])
   ofPublish: WorkflowAppPublishEntity
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json' })
   nodes: object[] | null
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json' })
   edges: object[] | null
 }
