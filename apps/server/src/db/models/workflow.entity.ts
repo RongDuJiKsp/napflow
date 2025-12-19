@@ -38,7 +38,7 @@ export class WorkflowAppPublishEntity extends BaseEntity {
   @CreateDateColumn()
   publishAt: Date
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   publishBy: string | null
 
   @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppPublishs, { onDelete: 'CASCADE' })

@@ -30,8 +30,7 @@ export class UserGroupEntity extends BaseEntity {
   @PrimaryColumn()
   ofUser: string
 
-  @PrimaryColumn()
-  @Column({ type: 'enum', enum: UserRole })
+  @PrimaryColumn({ type: 'enum', enum: UserRole })
   groupType: UserRole
 
   @CreateDateColumn()
