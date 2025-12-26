@@ -58,12 +58,12 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   账户升级
                 </DialogTitle>
               </div>
-              <Button
+              <button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -144,12 +144,12 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   账户降级
                 </DialogTitle>
               </div>
-              <Button
+              <button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -229,12 +229,12 @@ const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   禁用账户
                 </DialogTitle>
               </div>
-              <Button
+              <button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -373,7 +373,7 @@ const AccountSettingWindow = () => {
                     >
                       <div className="py-2">
                         <MenuItem>
-                          <Button
+                          <button
                             onClick={() =>
                               !account.isDisabled
                               && setUpgradleSelectedAccount(account.email)
@@ -395,10 +395,10 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">账户升级</span>
-                          </Button>
+                          </button>
                         </MenuItem>
                         <MenuItem>
-                          <Button
+                          <button
                             onClick={() =>
                               !account.isDisabled
                               && setDownGradeSelectedAccount(account.email)
@@ -420,11 +420,11 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">账户降级</span>
-                          </Button>
+                          </button>
                         </MenuItem>
                         <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                         <MenuItem>
-                          <Button
+                          <button
                             onClick={() =>
                               !account.isDisabled
                               && setDisableSelectedAccount(account.email)
@@ -446,7 +446,7 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">禁用账户</span>
-                          </Button>
+                          </button>
                         </MenuItem>
                       </div>
                     </MenuItems>
