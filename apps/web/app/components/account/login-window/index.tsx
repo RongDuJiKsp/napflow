@@ -31,12 +31,12 @@ const LoginWindow = () => {
         </TextField>
 
         <div>
-          <label
+          <Label
             htmlFor="password"
             className="block text-sm font-medium text-purple-700 mb-2"
           >
             密码
-          </label>
+          </Label>
           <Password
             value={input.password}
             onValueChange={handlePasswordChange}

@@ -27,7 +27,7 @@ import { Select, Space, Tooltip } from 'antd'
 import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
 import { UserRole } from '@shared/data-transfer/account/base'
-import { Button } from '@heroui/react'
+import { Button, Label } from '@heroui/react'
 
 type ModalOperation = {
   sourceUser: string;
@@ -76,9 +76,9 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 选择权限组
-              </label>
+              </Label>
               <Select
                 mode="multiple"
                 value={selectedGroups}
@@ -162,9 +162,9 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 选择权限组
-              </label>
+              </Label>
               <Select
                 mode="multiple"
                 value={selectedGroups}

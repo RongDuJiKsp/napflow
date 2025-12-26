@@ -46,7 +46,7 @@ const CreateAccountWindow = () => {
               />
             </TextField>
             <TextField value={formValue.email} onChange={handleChangeEmail}>
-              <label className="block text-sm font-medium text-purple-700 mb-2">邮箱</label>
+              <Label className="block text-sm font-medium text-purple-700 mb-2">邮箱</Label>
               <Input
                 type="email"
                 className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
@@ -57,7 +57,7 @@ const CreateAccountWindow = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-purple-700 mb-2">密码</label>
+              <Label className="block text-sm font-medium text-purple-700 mb-2">密码</Label>
               <Password
                 className={{
                   group: ({ isFocusWithin }) =>

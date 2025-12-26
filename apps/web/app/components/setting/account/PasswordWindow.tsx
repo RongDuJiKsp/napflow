@@ -6,7 +6,7 @@ import Password from '@/app/components/_base/input/Password'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
 import { useUpdatePassword } from '../hooks/use-update-password'
 import { twMerge } from 'tailwind-merge'
-import { Button } from '@heroui/react'
+import { Button, Label } from '@heroui/react'
 const PasswordSettingWindow = () => {
   const {
     handleChangeOldPassword,
@@ -18,60 +18,63 @@ const PasswordSettingWindow = () => {
   return (
     <SettingItemContainer title='密码设置' Icon={RiLockLine}>
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-purple-700 mb-2">原始密码</label>
-          <Password
-            value={formValue.oldPassword}
-            onValueChange={handleChangeOldPassword}
-            placeholder="请输入当前密码"
-            className={{
-              group: ({ isFocusWithin }) =>
-                twMerge(
-                  'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
-                  isFocusWithin
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">原始密码</Label>
+            <Password
+              value={formValue.oldPassword}
+              onValueChange={handleChangeOldPassword}
+              placeholder="请输入当前密码"
+              className={{
+                group: ({ isFocusWithin }) =>
+                  twMerge(
+                    'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
+                    isFocusWithin
+                    && 'outline-none ring-2 border-transparent ring-purple-400',
+                  ),
+                input: 'text-gray-700',
+              }}
+            />
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">新密码</Label>
+            <Password
+              value={formValue.newPassword}
+              onValueChange={handleChangeNewPassword}
+              placeholder="请输入新密码"
+              enableComplexityCheck
+              className={{
+                group: ({ isFocusWithin }) =>
+                  twMerge(
+                    'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
+                    isFocusWithin
+                    && 'outline-none ring-2 border-transparent ring-purple-400',
+                  ),
+                input: 'text-gray-700',
+              }}
+            />
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">确认新密码</Label>
+            <Password
+              value={formValue.confirmPassword}
+              onValueChange={handleChangeConfirmPassword}
+              placeholder="请再次输入新密码"
+              className={{
+                group: ({ isFocusWithin }) =>
+                  twMerge(
+                    'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
+                    isFocusWithin
                   && 'outline-none ring-2 border-transparent ring-purple-400',
-                ),
-              input: 'text-gray-700',
-            }}
-          />
+                  ),
+                input: 'text-gray-700',
+              }}
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-purple-700 mb-2">新密码</label>
-          <Password
-            value={formValue.newPassword}
-            onValueChange={handleChangeNewPassword}
-            placeholder="请输入新密码"
-            enableComplexityCheck
-            className={{
-              group: ({ isFocusWithin }) =>
-                twMerge(
-                  'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
-                  isFocusWithin
-                  && 'outline-none ring-2 border-transparent ring-purple-400',
-                ),
-              input: 'text-gray-700',
-            }}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-purple-700 mb-2">确认新密码</label>
-          <Password
-            value={formValue.confirmPassword}
-            onValueChange={handleChangeConfirmPassword}
-            placeholder="请再次输入新密码"
-            className={{
-              group: ({ isFocusWithin }) =>
-                twMerge(
-                  'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
-                  isFocusWithin
-                  && 'outline-none ring-2 border-transparent ring-purple-400',
-                ),
-              input: 'text-gray-700',
-            }}
-          />
-        </div>
       </div>
 
       <Button
