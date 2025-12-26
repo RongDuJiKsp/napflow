@@ -1,7 +1,7 @@
 import { useAccountInfoQuery } from '@/app/hooks/query/use-account-info-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { RiAdminLine, RiUserLine } from '@remixicon/react'
-import type { UserRoleTypeType } from '@shared/data-transfer/account/base'
+import { UserRole, type UserRoleTypeType } from '@shared/data-transfer/account/base'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useMemo } from 'react'
 
@@ -13,8 +13,8 @@ type UpDownGradeOptions = {
 } & DefaultOptionType
 
 const UpDownGradeOptionsValueBase: UpDownGradeOptions[] = [
-  { value: 'Admin', label: '管理员', icon: RiAdminLine },
-  { value: 'User', label: '普通用户', icon: RiUserLine, disabled: true, tooltip: '普通身份不能被升降级' },
+  { value: UserRole.Admin, label: '管理员', icon: RiAdminLine },
+  { value: UserRole.User, label: '普通用户', icon: RiUserLine, disabled: true, tooltip: '普通身份不能被升降级' },
 ]
 
 export const useUpgradeOptions = (targetUser: string) => {

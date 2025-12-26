@@ -1,4 +1,4 @@
-import { AppParamContext } from '@/app/components/workflow/hooks/use-app-param'
+import WorkflowProvider from '@/app/components/workflow/editor/providers/WorkflowProvider'
 import type { PropsWithChildren } from 'react'
 
 export default async function Layout({ children, params}: PropsWithChildren<{
@@ -6,8 +6,8 @@ export default async function Layout({ children, params}: PropsWithChildren<{
 }>) {
   const param = await params
   return (
-    <AppParamContext.Provider value={param}>
+    <WorkflowProvider appParam={param}>
       {children}
-    </AppParamContext.Provider>
+    </WorkflowProvider>
   )
 }

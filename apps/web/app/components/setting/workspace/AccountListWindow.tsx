@@ -26,6 +26,7 @@ import { twMerge } from 'tailwind-merge'
 import { Select, Space, Tooltip } from 'antd'
 import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
+import { UserRole } from '@shared/data-transfer/account/base'
 
 type ModalOperation = {
   sourceUser: string;
@@ -287,7 +288,7 @@ const AccountSettingWindow = () => {
         ...account,
         id: account.email,
         isDisabled: account.disabledAt !== null,
-        isAdmin: account.userGroup.map(x => x.groupType).includes('Admin'),
+        isAdmin: account.userGroup.map(x => x.groupType).includes(UserRole.Admin),
       })),
     [data],
   )

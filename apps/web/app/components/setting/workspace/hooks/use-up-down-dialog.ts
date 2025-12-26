@@ -1,4 +1,4 @@
-import type { UserRoleTypeType } from '@shared/data-transfer/account/account'
+import type { UserRoleTypeType } from '@shared/data-transfer/account/base'
 import { useState } from 'react'
 
 export const useUpDownGradeDialog = (targetUser: string, onClose: () => void, action: (target: string, groups: UserRoleTypeType[]) => void | Promise<void>) => {

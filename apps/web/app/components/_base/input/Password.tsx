@@ -5,8 +5,8 @@ import { RiEyeLine, RiEyeOffLine } from '@remixicon/react'
 import { autoUpdate, offset, useFloating } from '@floating-ui/react'
 import { twMerge } from 'tailwind-merge'
 import { STRENGTH_PASSWORD_LENGTH } from '../constants'
-import type { InputWrapperProps } from './InputWrapper'
-import InputWrapper from './InputWrapper'
+import type { Input } from '@heroui/react'
+import { InputGroup, TextField } from '@heroui/react'
 const checkPasswordComplexity = (password: string | undefined) => {
   const pwdFb = password ?? ''
   const checks = {
@@ -24,12 +24,13 @@ const checkPasswordComplexity = (password: string | undefined) => {
 }
 export type PasswordProps = {
   value?: string | undefined,
+  onValueChange?: (value: string) => void,
   enableComplexityCheck?: boolean,
   onComplexityCheck?: (res: { value: string | undefined, checks: ReturnType<typeof checkPasswordComplexity> }) => void,
   eyeClassName?: string
-} & Omit<InputWrapperProps, 'value'>
+} & Omit<Input['Props'], 'value'>
 
-const Password = ({ value, enableComplexityCheck = false, onComplexityCheck, onFocus: onFocusOrigin, onBlur: onBlurOrigin, className, eyeClassName, ...props }: PasswordProps) => {
+const Password = ({ value, onValueChange, enableComplexityCheck = false, onComplexityCheck, onFocus: onFocusOrigin, onBlur: onBlurOrigin, eyeClassName, ...props }: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showComplexityTooltip, setShowComplexityTooltip] = useState(false)
 
@@ -61,34 +62,32 @@ const Password = ({ value, enableComplexityCheck = false, onComplexityCheck, onF
   const { checks, strength } = useMemo(() => checkPasswordComplexity(value), [value])
 
   return (
-    <div className="relative">
-      <InputWrapper
-        ref={el => refs.setReference(el)}
-        type={showPassword ? 'text' : 'password'}
-        value={value}
-        autoComplete="current-password"
-        className={twMerge(
-          'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-          className,
-        )}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        {...props}
-      />
+    <div>
+      <TextField value={value} onChange={onValueChange} >
+        <InputGroup ref={el => refs.setReference(el)}>
+          <InputGroup.Input
 
-      <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className={twMerge('absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 focus:outline-none', eyeClassName)}
-        aria-label={showPassword ? '隐藏密码' : '显示密码'}
-      >
-        {showPassword ? (
-          <RiEyeOffLine className="h-5 w-5" />
-        ) : (
-          <RiEyeLine className="h-5 w-5" />
-        )}
-      </button>
-
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            onFocus={onFocus}
+            onBlur={onBlur}
+            {...props} />
+          <InputGroup.Suffix>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className={twMerge('text-gray-400 hover:text-gray-600 focus:outline-none', eyeClassName)}
+              aria-label={showPassword ? '隐藏密码' : '显示密码'}
+            >
+              {showPassword ? (
+                <RiEyeOffLine className="h-5 w-5" />
+              ) : (
+                <RiEyeLine className="h-5 w-5" />
+              )}
+            </button>
+          </InputGroup.Suffix>
+        </InputGroup>
+      </TextField>
       {enableComplexityCheck && showComplexityTooltip && value && (
         <div
           ref={el => refs.setFloating(el)}

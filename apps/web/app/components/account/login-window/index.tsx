@@ -2,7 +2,7 @@
 import { memo } from 'react'
 import Password from '../../_base/input/Password'
 import { useLoginWindow } from './use-login-window'
-import InputWrapper from '../../_base/input/InputWrapper'
+import { Input, Label, TextField } from '@heroui/react'
 
 const LoginWindow = () => {
   const { input, handleEmailChange, handlePasswordChange, handleSubmit } = useLoginWindow()
@@ -11,19 +11,17 @@ const LoginWindow = () => {
       <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">登录</h2>
 
       <div className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-purple-700 mb-2">
+        <TextField value={input.email} onChange={handleEmailChange}>
+          <Label htmlFor="email" className="block text-sm font-medium text-purple-700 mb-2">
             邮箱地址
-          </label>
-          <InputWrapper
+          </Label>
+          <Input
             type="email"
             id="email"
             className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-300"
             placeholder="请输入邮箱地址"
-            value={input.email}
-            onValueChange={handleEmailChange}
           />
-        </div>
+        </TextField>
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-purple-700 mb-2">

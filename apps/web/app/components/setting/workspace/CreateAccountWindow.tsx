@@ -3,8 +3,8 @@ import { RiAddLine, RiForbidLine } from '@remixicon/react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
 import { memo } from 'react'
 import { useAccountAddOperators } from '../hooks/use-account-operators'
-import InputWrapper from '../../_base/input/InputWrapper'
 import Password from '../../_base/input/Password'
+import { Input, Label, TextField } from '@heroui/react'
 
 const CreateAccountWindow = () => {
   const {
@@ -36,26 +36,22 @@ const CreateAccountWindow = () => {
       <SettingItemContainer title='账户管理' Icon={RiAddLine} extra={'管理员权限'} extraClassName='text-green-600 bg-green-100'>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-purple-700 mb-2">昵称</label>
-              <InputWrapper
+            <TextField value={formValue.nickname} onChange={ handleChangeNickname}>
+              <Label className="block text-sm font-medium text-purple-700 mb-2">昵称</Label>
+              <Input
                 type="text"
                 className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                 placeholder="请输入用户昵称"
-                value={formValue.nickname}
-                onValueChange={handleChangeNickname}
               />
-            </div>
-            <div>
+            </TextField>
+            <TextField value={formValue.email} onChange={handleChangeEmail}>
               <label className="block text-sm font-medium text-purple-700 mb-2">邮箱</label>
-              <InputWrapper
+              <Input
                 type="email"
                 className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                 placeholder="请输入用户邮箱"
-                value={formValue.email}
-                onValueChange={handleChangeEmail}
               />
-            </div>
+            </TextField>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
