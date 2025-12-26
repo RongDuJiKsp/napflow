@@ -59,7 +59,7 @@ export class AccountService {
   async checkAndCreateRootAccount() {
     const rootAccount = await this.getAccount(this.configService.envs.ACC_ROOT_EMAIL)
     if(rootAccount)
-      return rootAccount
+      return { exist: true, acc: rootAccount }
     const user = await this.createBlankAccount(this.configService.envs.ACC_ROOT_EMAIL, this.configService.envs.ACC_ROOT_NICKNAME, this.configService.envs.ACC_ROOT_PASSWORD)
     if(!user)
       throw new AccountError('创建根账户失败')
@@ -68,7 +68,18 @@ export class AccountService {
       { ofUser: user.email, groupType: UserRole.Admin },
       { ofUser: user.email, groupType: UserRole.User },
     ])
-    return user
+    return { exist: false, acc: user }
+  }
+
+  // 将根账户与配置中的根账户同步
+  async syncRootAccount() {
+    // 当根账户不存在时创建 否则拿到账户
+    const { acc: rootAccount, exist: accExists } = await this.checkAndCreateRootAccount()
+    // 验证账户密码是否一致 不一致时更新密码
+    if(await bcryptjs.compare(this.configService.envs.ACC_ROOT_PASSWORD, rootAccount.password))
+      return { acc: rootAccount, accExists, updated: false }
+    await this.changePassword(this.configService.envs.ACC_ROOT_EMAIL, this.configService.envs.ACC_ROOT_PASSWORD)
+    return { acc: rootAccount, accExists, updated: true }
   }
 
   async queryAccounts(query: AccountInfoListQueryType) {

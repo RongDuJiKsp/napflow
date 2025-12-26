@@ -14,6 +14,7 @@ export const AppConfigEnvShema = z.object({
   ACC_ROOT_EMAIL: z.email(),
   ACC_ROOT_NICKNAME: z.string(),
   ACC_ROOT_PASSWORD: z.string(),
+  SYNC_ROOT_ACCOUNT_FLAG: z.string(),
   // secret 配置
   JWT_SECRET_KEY: z.string().default(crypto.randomBytes(32).toString('hex')),
 })

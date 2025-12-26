@@ -24,9 +24,25 @@ async function bootstrap() {
     MYSQL_CONNECT_URL: configServer.MYSQL_CONNECT_URL,
   })
 
-  // 初始化数据库
+  // 初始化数据库Root账户
   const accountService = app.get<AccountService>(AccountService)
-  await accountService.checkAndCreateRootAccount()
+  if(configServer.envs.SYNC_ROOT_ACCOUNT_FLAG) {
+    const result = await accountService.syncRootAccount()
+    if(result.accExists)
+      logger.log('Root账户已存在，跳过创建...')
+    if(result.updated)
+      logger.log('Root账户已更新')
+    else
+      logger.log('Root账户一致，跳过同步...')
+  }
+  else {
+    const result = await accountService.checkAndCreateRootAccount()
+    if(result.exist)
+      logger.log('Root账户已创建')
+    else
+      logger.log('Root账户已存在，跳过创建...')
+  }
+
   // 启动服务
   const hostname = configServer.envs.HOST_NAME
   const port = configServer.envs.PORT
