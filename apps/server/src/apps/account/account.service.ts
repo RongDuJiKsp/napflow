@@ -2,11 +2,12 @@ import { Inject, Injectable } from '@nestjs/common'
 import bcryptjs from 'bcryptjs'
 import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountInfoListQueryType } from '@shared/data-transfer/account/account'
-import { TypeOrmService } from '@/src/db/typeorm.service'
-import type { UserEntity } from '@/src/db/models/account.entity'
+import { TypeOrmService } from '@/src/apps/db/typeorm.service'
+import type { UserEntity } from '@/src/apps/db/models/account.entity'
 import type { FindOptionsWhere } from 'typeorm'
 import { In, IsNull, Not } from 'typeorm'
 import { UserRole } from '@shared/data-transfer/account/base'
+import { AccountError } from './middleware/account.filter'
 
 @Injectable()
 export class AccountService {
@@ -106,6 +107,20 @@ export class AccountService {
   async downgradeAccount(email: string, groupType: UserRole[]) {
     if(groupType.includes(UserRole.User))
       throw new AccountError('不能降级User组')
+
+    // 不能让系统没有管理员
+    const admins = await this.db.userGroup.find({
+      select: {
+        ofUser: true,
+      },
+      where: {
+        ofUser: email,
+        groupType: UserRole.Admin,
+      },
+    }).then(res => res.map(item => item.ofUser))
+    if(admins.length <= 1)
+      throw new AccountError('不能降级最后一个管理员')
+
     return await this.db.userGroup.delete({
       ofUser: email,
       groupType: In(groupType),
@@ -134,12 +149,5 @@ export class AccountService {
 
   async changeNickname(email: string, nickname: string) {
     return await this.db.user.update({ email }, { nickname })
-  }
-}
-
-export class AccountError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'AccountError'
   }
 }

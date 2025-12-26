@@ -1,6 +1,6 @@
 import { Global, Logger, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { AppConfigService } from '../apps/app-config/app-config.service'
+import { AppConfigService } from '../app-config/app-config.service'
 import mysql from 'mysql2/promise'
 import { TypeOrmService } from './typeorm.service'
 import { UserEntity, UserGroupEntity } from './models/account.entity'

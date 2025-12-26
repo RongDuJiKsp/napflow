@@ -1,29 +1,11 @@
-import type { Provider } from '@nestjs/common'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { NODE_ENV } from './config/env'
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
-import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
-import { UserGroupGuard } from './middleware/guard/account'
 import { AccountModule } from './apps/account/account.module'
 import { AppConfigModule } from './apps/app-config/app-config.module'
-import { ZodErrExceptionFilter } from './middleware/exception-filter/zod'
 import { WorkflowModule } from './apps/workflow/workflow.module'
-import { DbModule } from './db/db.module'
-const zodProviders: Provider[] = [
-  {
-    provide: APP_PIPE,
-    useClass: ZodValidationPipe,
-  },
-  {
-    provide: APP_INTERCEPTOR,
-    useClass: ZodSerializerInterceptor,
-  },
-  {
-    provide: APP_FILTER,
-    useClass: ZodErrExceptionFilter,
-  },
-]
+import { DbModule } from './apps/db/db.module'
+import { ZodModule } from './apps/zod/zod.module'
 
 @Module({
   imports: [
@@ -44,16 +26,11 @@ const zodProviders: Provider[] = [
     // 随后加载应用配置模块
     AppConfigModule,
     DbModule,
+    // ---------------------- 库Wrapper模块 ----------------------
+    ZodModule.forRoot(),
     // ---------------------- 应用模块 ----------------------
-    AccountModule,
+    AccountModule.forRoot(),
     WorkflowModule,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: UserGroupGuard,
-    },
-    ...zodProviders,
   ],
 })
 export class AppModule {}

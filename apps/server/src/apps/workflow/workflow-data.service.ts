@@ -1,5 +1,5 @@
-import type { WorkflowAppDataEntity } from '@/src/db/models/workflow.entity'
-import { TypeOrmService } from '@/src/db/typeorm.service'
+import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
+import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 
 const DRAFT_VERSION_KEY = 'draft'
