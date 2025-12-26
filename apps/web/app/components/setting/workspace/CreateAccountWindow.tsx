@@ -41,7 +41,7 @@ const CreateAccountWindow = () => {
               <Label className="block text-sm font-medium text-purple-700 mb-2">昵称</Label>
               <Input
                 type="text"
-                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-300"
                 placeholder="请输入用户昵称"
               />
             </TextField>
@@ -49,7 +49,7 @@ const CreateAccountWindow = () => {
               <Label className="block text-sm font-medium text-purple-700 mb-2">邮箱</Label>
               <Input
                 type="email"
-                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-300"
                 placeholder="请输入用户邮箱"
               />
             </TextField>
@@ -66,7 +66,7 @@ const CreateAccountWindow = () => {
                       isFocusWithin
                       && 'outline-none ring-2 border-transparent ring-purple-400',
                     ),
-                  input: 'text-gray-700',
+                  input: 'placeholder-pink-300',
                 }}
                 placeholder="设置初始密码"
                 value={formValue.password}

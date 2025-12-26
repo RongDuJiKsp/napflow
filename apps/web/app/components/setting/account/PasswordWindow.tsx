@@ -32,7 +32,7 @@ const PasswordSettingWindow = () => {
                     isFocusWithin
                     && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
-                input: 'text-gray-700',
+                input: 'placeholder-pink-300',
               }}
             />
           </div>
@@ -51,7 +51,7 @@ const PasswordSettingWindow = () => {
                     isFocusWithin
                     && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
-                input: 'text-gray-700',
+                input: 'placeholder-pink-300',
               }}
             />
           </div>
@@ -69,7 +69,7 @@ const PasswordSettingWindow = () => {
                     isFocusWithin
                   && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
-                input: 'text-gray-700',
+                input: 'placeholder-pink-300',
               }}
             />
           </div>
