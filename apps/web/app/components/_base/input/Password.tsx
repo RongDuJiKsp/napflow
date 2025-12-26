@@ -27,10 +27,15 @@ export type PasswordProps = {
   onValueChange?: (value: string) => void,
   enableComplexityCheck?: boolean,
   onComplexityCheck?: (res: { value: string | undefined, checks: ReturnType<typeof checkPasswordComplexity> }) => void,
-  eyeClassName?: string
-} & Omit<Input['Props'], 'value'>
+  className?: {
+    // 如果使用wrapperClassName之类的直接属性部分插件不给补全 所以这里用className传对象的方式拉起补全
+    group?: InputGroup['Props']['className'],
+    input?: Input['Props']['className'],
+    eye?: string,
+  }
+} & Omit<Input['Props'], 'value' | 'className'>
 
-const Password = ({ value, onValueChange, enableComplexityCheck = false, onComplexityCheck, onFocus: onFocusOrigin, onBlur: onBlurOrigin, eyeClassName, ...props }: PasswordProps) => {
+const Password = ({ value, onValueChange, enableComplexityCheck = false, onComplexityCheck, onFocus: onFocusOrigin, onBlur: onBlurOrigin, className, ...props }: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showComplexityTooltip, setShowComplexityTooltip] = useState(false)
 
@@ -64,19 +69,19 @@ const Password = ({ value, onValueChange, enableComplexityCheck = false, onCompl
   return (
     <div>
       <TextField value={value} onChange={onValueChange} >
-        <InputGroup ref={el => refs.setReference(el)}>
+        <InputGroup ref={el => refs.setReference(el)} className={className?.group} >
           <InputGroup.Input
-
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             onFocus={onFocus}
             onBlur={onBlur}
+            className={className?.input}
             {...props} />
           <InputGroup.Suffix>
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={twMerge('text-gray-400 hover:text-gray-600 focus:outline-none', eyeClassName)}
+              className={twMerge('text-gray-400 hover:text-gray-600 focus:outline-none', className?.eye)}
               aria-label={showPassword ? '隐藏密码' : '显示密码'}
             >
               {showPassword ? (

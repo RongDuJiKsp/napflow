@@ -4,7 +4,8 @@ import SettingItemContainer from '../../_base/container/SettingItemContainer'
 import { memo } from 'react'
 import { useAccountAddOperators } from '../hooks/use-account-operators'
 import Password from '../../_base/input/Password'
-import { Input, Label, TextField } from '@heroui/react'
+import { Button, Input, Label, TextField } from '@heroui/react'
+import { twMerge } from 'tailwind-merge'
 
 const CreateAccountWindow = () => {
   const {
@@ -40,7 +41,7 @@ const CreateAccountWindow = () => {
               <Label className="block text-sm font-medium text-purple-700 mb-2">昵称</Label>
               <Input
                 type="text"
-                className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                 placeholder="请输入用户昵称"
               />
             </TextField>
@@ -48,7 +49,7 @@ const CreateAccountWindow = () => {
               <label className="block text-sm font-medium text-purple-700 mb-2">邮箱</label>
               <Input
                 type="email"
-                className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                 placeholder="请输入用户邮箱"
               />
             </TextField>
@@ -58,7 +59,15 @@ const CreateAccountWindow = () => {
             <div>
               <label className="block text-sm font-medium text-purple-700 mb-2">密码</label>
               <Password
-                className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                className={{
+                  group: ({ isFocusWithin }) =>
+                    twMerge(
+                      'w-full  rounded-lg border border-pink-200 transition-all duration-200 bg-white',
+                      isFocusWithin
+                      && 'outline-none ring-2 border-transparent ring-purple-400',
+                    ),
+                  input: 'text-gray-700',
+                }}
                 placeholder="设置初始密码"
                 value={formValue.password}
                 onValueChange={handleChangePassword}
@@ -67,10 +76,10 @@ const CreateAccountWindow = () => {
 
           </div>
 
-          <button className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+          <Button className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
             onClick={handleSubmit}>
             添加账户
-          </button>
+          </Button>
         </div>
       </SettingItemContainer>
     )}</>)

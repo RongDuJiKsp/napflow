@@ -27,6 +27,7 @@ import { Select, Space, Tooltip } from 'antd'
 import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
 import { UserRole } from '@shared/data-transfer/account/base'
+import { Button } from '@heroui/react'
 
 type ModalOperation = {
   sourceUser: string;
@@ -57,12 +58,12 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   账户升级
                 </DialogTitle>
               </div>
-              <button
+              <Button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -100,19 +101,19 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
             <div className="flex justify-end space-x-3">
-              <button
+              <Button
                 onClick={onClose}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 取消
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleConfirm}
-                disabled={selectedGroups.length === 0}
+                isDisabled={selectedGroups.length === 0}
                 className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-blue-500 to-indigo-500 rounded-lg hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 确认升级
-              </button>
+              </Button>
             </div>
           </div>
         </DialogPanel>
@@ -143,12 +144,12 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   账户降级
                 </DialogTitle>
               </div>
-              <button
+              <Button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -186,19 +187,19 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
             <div className="flex justify-end space-x-3">
-              <button
+              <Button
                 onClick={onClose}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 取消
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleConfirm}
-                disabled={selectedGroups.length === 0}
+                isDisabled={selectedGroups.length === 0}
                 className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-amber-500 to-orange-500 rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 确认降级
-              </button>
+              </Button>
             </div>
           </div>
         </DialogPanel>
@@ -228,12 +229,12 @@ const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
                   禁用账户
                 </DialogTitle>
               </div>
-              <button
+              <Button
                 onClick={onClose}
                 className="text-white/80 hover:text-white transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -260,18 +261,18 @@ const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
             <div className="flex justify-end space-x-3">
-              <button
+              <Button
                 onClick={onClose}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 取消
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleConfirm}
                 className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-red-500 to-pink-500 rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200"
               >
                 确认禁用
-              </button>
+              </Button>
             </div>
           </div>
         </DialogPanel>
@@ -372,7 +373,7 @@ const AccountSettingWindow = () => {
                     >
                       <div className="py-2">
                         <MenuItem>
-                          <button
+                          <Button
                             onClick={() =>
                               !account.isDisabled
                               && setUpgradleSelectedAccount(account.email)
@@ -394,10 +395,10 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">账户升级</span>
-                          </button>
+                          </Button>
                         </MenuItem>
                         <MenuItem>
-                          <button
+                          <Button
                             onClick={() =>
                               !account.isDisabled
                               && setDownGradeSelectedAccount(account.email)
@@ -419,11 +420,11 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">账户降级</span>
-                          </button>
+                          </Button>
                         </MenuItem>
                         <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                         <MenuItem>
-                          <button
+                          <Button
                             onClick={() =>
                               !account.isDisabled
                               && setDisableSelectedAccount(account.email)
@@ -445,7 +446,7 @@ const AccountSettingWindow = () => {
                               )}
                             ></div>
                             <span className="font-medium">禁用账户</span>
-                          </button>
+                          </Button>
                         </MenuItem>
                       </div>
                     </MenuItems>
