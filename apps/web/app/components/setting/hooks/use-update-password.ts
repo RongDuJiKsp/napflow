@@ -20,17 +20,18 @@ export const useUpdatePassword = () => {
     newPassword: '',
     confirmPassword: '',
   })
-  const [errMsg, setErrMsg] = useState<string>('')
 
   const handleChangeOldPassword = useAreaChange(setFormValue, 'oldPassword')
   const handleChangeNewPassword = useAreaChange(setFormValue, 'newPassword')
   const handleChangeConfirmPassword = useAreaChange(setFormValue, 'confirmPassword')
   const handleSubmit = useCallback(async () => {
     if(formValue.newPassword !== formValue.confirmPassword) {
-      setErrMsg('新密码和确认密码不一致')
+      notification.error({
+        title: '提交失败',
+        description: '新密码和确认密码不一致',
+      })
       return
     }
-    setErrMsg('')
 
     const validated = ChangePasswordForm.safeParse(formValue)
     if(!validated.success) {
@@ -50,7 +51,6 @@ export const useUpdatePassword = () => {
 
   return {
     formValue,
-    errMsg,
     handleChangeOldPassword,
     handleChangeNewPassword,
     handleChangeConfirmPassword,

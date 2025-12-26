@@ -74,15 +74,26 @@ export const useAccountActions = () => {
 export const useAccountAddOperators = () => {
   const { isAdmin: enableFeature } = useAccountMeta()
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue] = useState<AccountCreateReqType>({
+  const [formValue, setFormValue] = useState<AccountCreateReqType & { passwordAgain: string }>({
     email: '',
     password: '',
     nickname: '',
+    passwordAgain: '',
   })
   const handleChangeEmail = useAreaChange(setFormValue, 'email')
   const handleChangePassword = useAreaChange(setFormValue, 'password')
   const handleChangeNickname = useAreaChange(setFormValue, 'nickname')
+  const handleChangePasswordAgain = useAreaChange(setFormValue, 'passwordAgain')
+
   const handleSubmit = useCallback(async () => {
+    if(formValue.password !== formValue.passwordAgain) {
+      notification.error({
+        title: '提交失败',
+        description: '新密码和确认密码不一致',
+      })
+      return
+    }
+
     const validated = AccountCreateReq.safeParse(formValue)
     if(!validated.success) {
       notification.error({
@@ -105,6 +116,7 @@ export const useAccountAddOperators = () => {
     handleChangeEmail,
     handleChangePassword,
     handleChangeNickname,
+    handleChangePasswordAgain,
     handleSubmit,
   }
 }

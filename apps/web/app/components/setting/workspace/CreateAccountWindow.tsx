@@ -14,6 +14,7 @@ const CreateAccountWindow = () => {
     handleChangeEmail,
     handleChangeNickname,
     handleChangePassword,
+    handleChangePasswordAgain,
     handleSubmit,
   } = useAccountAddOperators()
 
@@ -71,6 +72,23 @@ const CreateAccountWindow = () => {
                 placeholder="设置初始密码"
                 value={formValue.password}
                 onValueChange={handleChangePassword}
+              />
+            </div>
+            <div>
+              <Label className="block text-sm font-medium text-purple-700 mb-2">密码</Label>
+              <Password
+                className={{
+                  group: ({ isFocusWithin }) =>
+                    twMerge(
+                      'w-full  rounded-lg border border-pink-200 transition-all duration-200 bg-white',
+                      isFocusWithin
+                      && 'outline-none ring-2 border-transparent ring-purple-400',
+                    ),
+                  input: 'placeholder-pink-300',
+                }}
+                placeholder="请再次确认密码"
+                value={formValue.passwordAgain}
+                onValueChange={handleChangePasswordAgain}
               />
             </div>
 
