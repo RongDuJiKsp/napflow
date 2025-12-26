@@ -3,7 +3,7 @@ import { AppModule } from './app.module'
 import { Logger } from '@nestjs/common'
 import { NODE_ENV } from './config/env'
 import { AppConfigService } from './apps/app-config/app-config.service'
-import { AccountService } from './apps/account/account.service'
+import { AccountInitService } from './apps/account/account-init.service'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const logger = new Logger('Bootstrap')
@@ -25,23 +25,9 @@ async function bootstrap() {
   })
 
   // 初始化数据库Root账户
-  const accountService = app.get<AccountService>(AccountService)
-  if(configServer.envs.SYNC_ROOT_ACCOUNT_FLAG) {
-    const result = await accountService.syncRootAccount()
-    if(result.accExists)
-      logger.log('Root账户已存在，跳过创建...')
-    if(result.updated)
-      logger.log('Root账户已更新')
-    else
-      logger.log('Root账户一致，跳过同步...')
-  }
-  else {
-    const result = await accountService.checkAndCreateRootAccount()
-    if(result.exist)
-      logger.log('Root账户已创建')
-    else
-      logger.log('Root账户已存在，跳过创建...')
-  }
+  logger.log('检查Root账户...')
+  const accInit = app.get<AccountInitService>(AccountInitService)
+  await accInit.doInit()
 
   // 启动服务
   const hostname = configServer.envs.HOST_NAME
