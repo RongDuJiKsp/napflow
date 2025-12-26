@@ -1,7 +1,7 @@
-import { ZodErrExceptionFilter } from '@/src/apps/zod/middleware/zod'
 import { type DynamicModule, Global, Module } from '@nestjs/common'
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
+import { ZodErrExceptionFilter } from './middleware/zod.filter'
 
 @Global()
 @Module({})
