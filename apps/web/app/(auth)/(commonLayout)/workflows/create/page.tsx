@@ -1,0 +1,10 @@
+import CreateAppWindow from '@/app/components/workflow/create-app'
+export default function Page() {
+  return (
+    <div className='h-screen w-screen flex flex-col justify-center'>
+      <div className='mx-auto min-w-md'>
+        <CreateAppWindow />
+      </div>
+    </div>
+  )
+}
