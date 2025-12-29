@@ -43,3 +43,5 @@ next-env.d.ts
 #ide
 .idea
 .vscode
+.codebuddy
+.cursor
