@@ -1,18 +1,18 @@
 'use client'
 import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
-import Link from 'next/link'
 import { memo } from 'react'
+import AppCard from './app-card'
 
 const AppList = () => {
   const { data } = useAppsQuery()
+
   return (
-    <div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
       {data?.map(app => (
-        <Link key={app.appId} href={`/workflows/${app.appId}`}>
-          {app.appName}:{app.appDescription}
-        </Link>
+        <AppCard key={app.appId} app={app} />
       ))}
     </div>
   )
 }
+
 export default memo(AppList)
