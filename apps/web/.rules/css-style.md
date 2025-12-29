@@ -1,55 +1,68 @@
-样式编写风格总结
-1. 整体风格特点
-现代简约风格：使用清晰的布局、圆角设计、渐变背景
+1. 色彩系统
+主色调：紫色系（purple-*）和粉色系（pink-*）为主
 
-色彩系统：基于HeroUI设计系统，使用渐变色（linear-gradient）作为主要视觉元素
+渐变风格：大量使用线性渐变 bg-linear-to-r from-* to-*
 
-响应式设计：使用TailwindCSS的响应式类名
+语义色彩：
 
-微交互：包含hover、focus、transition等交互效果
+成功/确认：蓝色系（blue-* 到 indigo-*）
 
-2. 针对组件的样式编写规范
-布局样式
-使用flex布局为主，配合grid进行复杂布局
+警告/注意：琥珀色系（amber-* 到 orange-*）
 
-间距使用标准的TailwindCSS间距系统（space-x-, space-y-）
+危险/错误：红色系（red-* 到 pink-*）
 
-容器使用rounded-*实现圆角，常用rounded-lg、rounded-xl、rounded-2xl
+中性/禁用：灰色系（gray-*）
 
-颜色应用
-背景色：大量使用渐变背景bg-linear-to-r from-* to-*
+2. 渐变风格应用
+bg-linear-to-r from-purple-500 to-pink-500
+bg-linear-to-r from-blue-500 to-indigo-500
+bg-linear-to-r from-purple-400 to-pink-400 
+3. 布局与容器设计
+圆角设计：统一使用 rounded-lg、rounded-xl、rounded-2xl
 
-文字色：使用语义化颜色（text-gray-600、text-red-600等）
+阴影效果：shadow-lg、shadow-md、hover:shadow-lg
 
-边框色：使用border-*配合hover状态变化
+边框风格：细边框 border border-pink-200、border-gray-100
 
-交互样式
-悬停效果：使用hover:*类名，如hover:shadow-md、hover:bg-*
+背景设计：渐变背景 bg-linear-to-br from-pink-50 to-purple-50
 
-过渡动画：统一使用transition-all duration-200或transition-colors duration-200
+4. 交互状态样式
+/* 悬停效果 */
+hover:from-purple-600 hover:to-pink-600
+hover:bg-purple-50 hover:text-purple-600
 
-禁用状态：使用disabled:*类名处理禁用状态
+/* 过渡动画 */
+transition-all duration-200
+transition-colors duration-200
 
-组件结构样式
-对话框组件：使用固定定位，包含header、content、footer三部分
+/* 焦点状态 */
+focus:ring-2 focus:ring-purple-400 focus:border-transparent 
+5. 表单元素设计
+输入框：白色背景 + 粉色边框 border-pink-200 + 紫色焦点环
 
-列表项：使用卡片式设计，包含头像、标题、描述、操作按钮
+标签：紫色标签 text-purple-700 + 中等字体权重
 
-表单元素：使用统一的边框和焦点样式
+占位符：粉色占位符 placeholder-pink-300
 
-3. 样式编写最佳实践
-使用twMerge合并样式
+按钮：渐变背景 + 悬停变色效果 + 阴影增强
+
+6. 文本与排版
+标题文字：紫色 text-purple-700 + 字体权重
+
+正文内容：灰色 text-gray-700
+
+标签文字：小字号 text-sm + 中等字体权重
+
+7. 响应式设计
+使用TailwindCSS响应式类名：md:grid-cols-2、hidden md:block
+
+移动端优先的布局策略
+
+8. 样式合并策略
+统一使用 twMerge 合并样式类
 className={twMerge(
   'base-classes',
   condition && 'conditional-classes',
   anotherCondition && 'other-classes'
 )} 
-语义化颜色使用
-成功/确认：蓝色系（blue-* to indigo-*）
-
-警告/注意：琥珀色系（amber-* to orange-*）
-
-危险/错误：红色系（red-* to pink-*）
-
-中性/禁用：灰色系（gray-*）
-
+条件样式通过函数参数动态生成
