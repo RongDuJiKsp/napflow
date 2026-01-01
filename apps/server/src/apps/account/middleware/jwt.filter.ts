@@ -1,7 +1,7 @@
+import { ExpressHttpHost } from '@/src/utils/nest-middleware'
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
 import { Catch, HttpStatus, Logger } from '@nestjs/common'
 import { Code, Resp } from '@shared/data-transfer/_base'
-import type { Request, Response } from 'express'
 
 export class VaildJwtError extends Error {
   constructor(message: string) {
@@ -14,11 +14,9 @@ export class VaildJwtErrorFilter implements ExceptionFilter<VaildJwtError> {
   private readonly logger = new Logger(VaildJwtErrorFilter.name)
 
   catch(exception: VaildJwtError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp()
-    const request = ctx.getRequest<Request>()
-    const response = ctx.getResponse<Response>()
+    const ctx = new ExpressHttpHost(host)
     // 在请求阶段发生的记录为UnAuth
-    response.status(HttpStatus.UNAUTHORIZED).json(Resp.error(exception.message, Code.Unauthorized))
-    this.logger.log(`endpoint ${request.path} visited with unauth(${exception.message})`)
+    ctx.response.status(HttpStatus.UNAUTHORIZED).json(Resp.error(exception.message, Code.Unauthorized))
+    this.logger.log(`endpoint ${ctx.request.path} visited with unauth(${exception.message})`)
   }
 }
