@@ -36,7 +36,7 @@ export class AccountService {
 
   async createBlankAccount(email: string, nickname: string, password: string) {
     if(await this.getAccount(email))
-      return null
+      throw new AccountError('用户已存在')
     const hashedPassword = await bcryptjs.hash(password, 10)
     return await this.db.user.save({
       email,
@@ -47,8 +47,6 @@ export class AccountService {
 
   async createCustomAccount(email: string, nickname: string, password: string) {
     const user = await this.createBlankAccount(email, nickname, password)
-    if(!user)
-      return null
     // 为用户创建默认用户组
     await this.db.userGroup.save({
       ofUser: user.email,
@@ -114,11 +112,10 @@ export class AccountService {
         ofUser: true,
       },
       where: {
-        ofUser: email,
         groupType: UserRole.Admin,
       },
     }).then(res => res.map(item => item.ofUser))
-    if(admins.length <= 1)
+    if(admins.length <= 1 && (!admins[0] || admins[0] === email))
       throw new AccountError('不能降级最后一个管理员')
 
     return await this.db.userGroup.delete({

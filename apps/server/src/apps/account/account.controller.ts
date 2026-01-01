@@ -157,6 +157,9 @@ export class AccountController {
       req.email,
       req.groupType,
     )
+    if(!res.length)
+      return Resp.error('不存在满足条件的组')
+
     return Resp.ok({ effectLines: res.length })
   }
 
@@ -180,6 +183,9 @@ export class AccountController {
       req.email,
       req.groupType,
     )
+    if(!res.affected)
+      return Resp.error('不存在满足条件的组')
+
     return Resp.ok({ effectLines: res.affected })
   }
 
@@ -197,7 +203,10 @@ export class AccountController {
   async disableAccount(
     @ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType,
   ) {
-    await this.accountService.disableAccount(req.email)
+    const result = await this.accountService.disableAccount(req.email)
+    if(!result.affected)
+      return Resp.error('不存在满足条件的用户')
+
     return Resp.ok()
   }
 
@@ -215,11 +224,13 @@ export class AccountController {
   async createAccount(
     @ZodBody({ zod: AccountCreateReq }) req: AccountCreateReqType,
   ) {
-    await this.accountService.createCustomAccount(
+    if(!await this.accountService.createCustomAccount(
       req.email,
       req.nickname,
       req.password,
-    )
+    ))
+      return Resp.error('用户已存在')
+
     return Resp.ok()
   }
 
