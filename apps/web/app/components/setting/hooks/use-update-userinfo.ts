@@ -4,12 +4,13 @@ import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
 import { AccountChangeNicknameReq, type AccountChangeNicknameReqType } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import z from 'zod'
+import { useResetState } from 'ahooks'
 
 export const useUpdateNickname = () => {
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue] = useState<AccountChangeNicknameReqType>({
+  const [formValue, setFormValue, resetForm] = useResetState<AccountChangeNicknameReqType>({
     nickname: '',
   })
   const handleChangeNickname = useAreaChange(setFormValue, 'nickname')
@@ -28,8 +29,9 @@ export const useUpdateNickname = () => {
       message.error(res.message)
       return
     }
+    resetForm()
     message.success('修改昵称成功')
-  }, [formValue, notification, message])
+  }, [formValue, resetForm, message, notification])
 
   return {
     formValue,

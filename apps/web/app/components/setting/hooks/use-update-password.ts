@@ -2,8 +2,9 @@ import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
 import { Code, type NullRespType } from '@shared/data-transfer/_base'
 import { App } from 'antd'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import z from 'zod'
+import { useResetState } from 'ahooks'
 
 const ChangePasswordForm = z.object({
   oldPassword: z.string().min(1, '请输入旧密码'),
@@ -15,7 +16,7 @@ type ChangePasswordFormType = z.infer<typeof ChangePasswordForm>
 export const useUpdatePassword = () => {
   const { message, notification } = App.useApp()
 
-  const [formValue, setFormValue] = useState<ChangePasswordFormType>({
+  const [formValue, setFormValue, resetForm] = useResetState<ChangePasswordFormType>({
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -46,8 +47,9 @@ export const useUpdatePassword = () => {
       message.error(res.message)
       return
     }
+    resetForm()
     message.success('修改密码成功')
-  }, [formValue, notification, message])
+  }, [formValue, resetForm, message, notification])
 
   return {
     formValue,
