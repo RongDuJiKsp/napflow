@@ -19,7 +19,7 @@ export default function SettingsLayout({
   ]
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-pink-50 to-purple-50 p-6">
+    <div className="bg-linear-to-br from-pink-50 to-purple-50 p-6">
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="flex">
@@ -49,7 +49,7 @@ export default function SettingsLayout({
             </div>
 
             {/* 右侧内容区域 */}
-            <div className="flex-1 p-8 h-[90vh] overflow-y-auto">
+            <div className="flex-1 p-8 h-[85vh] overflow-y-auto">
               {children}
             </div>
           </div>

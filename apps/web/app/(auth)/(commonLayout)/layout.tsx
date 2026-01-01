@@ -5,9 +5,9 @@ import HeaderNavigation from '@/app/components/common-layout/HeaderNavigation'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-linear-to-br from-pink-50 to-purple-50">
+    <div className="bg-linear-to-br from-pink-50 to-purple-50">
       {/* 顶部导航栏 */}
-      <header className="bg-white shadow-md border-b border-purple-100">
+      <header className="bg-white shadow-md border-b border-purple-100 h-headerbar">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* 左侧Logo和导航 */}
@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* 主内容区域 */}
-      <main >
+      <main className='overflow-y-auto h-main'>
         {children}
       </main>
     </div>
