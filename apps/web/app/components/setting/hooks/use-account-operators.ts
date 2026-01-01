@@ -3,15 +3,18 @@ import { useAccountMeta } from '@/app/hooks/account/use-account-meta'
 import { jsonQ } from '@/utils/net'
 import type { NullRespType } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
-import type { AccountCreateReqType, AccountUpDownGradeReqType } from '@shared/data-transfer/account/account'
+import type { AccountUpDownGradeReqType } from '@shared/data-transfer/account/account'
 import { AccountCreateReq, AccountDisableReq, AccountUpDownGradeReq } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import z from 'zod'
+import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
+import { useResetState } from 'ahooks'
 
 export const useAccountActions = () => {
   const { isAdmin: enableFeature } = useAccountMeta()
   const { message, notification } = App.useApp()
+  const { refetch: refreshAccList } = useAccountsQuery()
 
   const handleUpgrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
     const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
@@ -27,8 +30,9 @@ export const useAccountActions = () => {
       message.error(res.message)
       return
     }
+    await refreshAccList()
     message.success('升级账号成功')
-  }, [notification, message])
+  }, [notification, message, refreshAccList])
   const handleDownGrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
     const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
     if(!validated.success) {
@@ -43,8 +47,9 @@ export const useAccountActions = () => {
       message.error(res.message)
       return
     }
+    await refreshAccList()
     message.success('降级账号成功')
-  }, [notification, message])
+  }, [refreshAccList, message, notification])
 
   const handleDisable = useCallback(async (email: string) => {
     const validated = AccountDisableReq.safeParse({ email })
@@ -60,8 +65,9 @@ export const useAccountActions = () => {
       message.error(res.message)
       return
     }
+    await refreshAccList()
     message.success('禁用账号成功')
-  }, [notification, message])
+  }, [refreshAccList, message, notification])
 
   return {
     enableFeature,
@@ -73,8 +79,9 @@ export const useAccountActions = () => {
 
 export const useAccountAddOperators = () => {
   const { isAdmin: enableFeature } = useAccountMeta()
+  const { refetch: refreshAccList } = useAccountsQuery()
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue] = useState<AccountCreateReqType & { passwordAgain: string }>({
+  const [formValue, setFormValue, resetForm] = useResetState({
     email: '',
     password: '',
     nickname: '',
@@ -108,7 +115,9 @@ export const useAccountAddOperators = () => {
       return
     }
     message.success('添加账号成功')
-  }, [formValue, notification, message])
+    resetForm()
+    await refreshAccList()
+  }, [formValue, notification, message, refreshAccList, resetForm])
 
   return {
     enableFeature,

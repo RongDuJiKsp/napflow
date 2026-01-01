@@ -72,10 +72,11 @@ const CreateAccountWindow = () => {
                 placeholder="设置初始密码"
                 value={formValue.password}
                 onValueChange={handleChangePassword}
+                enableComplexityCheck
               />
             </div>
             <div>
-              <Label className="block text-sm font-medium text-purple-700 mb-2">密码</Label>
+              <Label className="block text-sm font-medium text-purple-700 mb-2">确认密码</Label>
               <Password
                 className={{
                   group: ({ isFocusWithin }) =>
