@@ -5,14 +5,10 @@ import { AppConfigService } from '../app-config/app-config.service'
 import type { AccountType } from '@shared/data-transfer/account/base'
 import { Account } from '@shared/data-transfer/account/base'
 import type { Request } from 'express'
+import { VaildJwtError } from './middleware/jwt.filter'
 
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
-export class VaildJwtError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'VaildJwtError'
-  }
-}
+
 export class JwtOperator<T extends JwtPayload> {
   constructor(private readonly secret: string, private readonly zod: zod.ZodType<T>) {
   }

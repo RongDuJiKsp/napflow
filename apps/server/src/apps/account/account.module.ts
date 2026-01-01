@@ -7,6 +7,7 @@ import { AccountInitService } from './account-init.service'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core/constants'
 import { UserGroupGuard } from './middleware/account.guard'
 import { AccountExceptionFilter } from './middleware/account.filter'
+import { VaildJwtErrorFilter } from './middleware/jwt.filter'
 
 @Global()
 @Module({
@@ -26,7 +27,12 @@ export class AccountModule {
         {
           provide: APP_FILTER,
           useClass: AccountExceptionFilter,
-        }],
+        },
+        {
+          provide: APP_FILTER,
+          useClass: VaildJwtErrorFilter,
+        },
+      ],
       global: true,
     }
   }
