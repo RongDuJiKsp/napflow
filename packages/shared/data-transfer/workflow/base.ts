@@ -1,29 +1,30 @@
 import z from 'zod'
-import { Edge, Node } from './_import'
-export const WorkflowApp = z.object({
+import { ZodCheckEdge, ZodCheckNode } from './_import'
+
+export const ZodCheckWorkflowApp = z.object({
   appId: z.uuidv4(),
   appName: z.string(),
   appDescription: z.string(),
   createdAt: z.date(),
   createdBy: z.string(),
 })
-export type WorkflowAppType = z.infer<typeof WorkflowApp>
+export type WorkflowApp = z.infer<typeof ZodCheckWorkflowApp>
 
-export const WorkflowAppPublish = z.object({
+export const ZodCheckWorkflowAppPublish = z.object({
   version: z.string(),
   description: z.string().nullable(),
   publishAt: z.date(),
   publishBy: z.string().nullable(),
 })
-export type WorkflowAppPublishType = z.infer<typeof WorkflowAppPublish>
+export type WorkflowAppPublish = z.infer<typeof ZodCheckWorkflowAppPublish>
 
-export const WorkflowAppData = z.object({
+export const ZodCheckWorkflowAppData = z.object({
   dataId: z.string(),
   nodes: z.array(
-    Node,
+    ZodCheckNode,
   ).nullable(),
   edges: z.array(
-    Edge,
+    ZodCheckEdge,
   ).nullable(),
 })
-export type WorkflowAppDataType = z.infer<typeof WorkflowAppData>
+export type WorkflowAppData = z.infer<typeof ZodCheckWorkflowAppData>

@@ -1,28 +1,29 @@
 import z from 'zod'
-import { WorkflowApp, WorkflowAppData, WorkflowAppPublish } from './base'
+import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppPublish } from './base'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create
-export const CreateWorkflowReq = WorkflowApp.pick({ appName: true, appDescription: true })
-export type CreateWorkflowReqType = z.infer<typeof CreateWorkflowReq>
+export const ZodCheckCreateWorkflowReq = ZodCheckWorkflowApp.pick({ appName: true, appDescription: true })
+export type CreateWorkflowReq = z.infer<typeof ZodCheckCreateWorkflowReq>
 
 // @/workflow/:appId
-export const GetAppResp = defineZodResp(WorkflowApp)
-export type GetAppRespType = z.infer<typeof GetAppResp>
+export const ZodCheckGetAppResp = defineZodResp(ZodCheckWorkflowApp)
+export type GetAppResp = z.infer<typeof ZodCheckGetAppResp>
 
 // @/workflow/apps
-export const GetAppsResp = defineZodResp(z.array(WorkflowApp))
-export type GetAppsRespType = z.infer<typeof GetAppsResp>
+export const ZodCheckGetAppsResp = defineZodResp(z.array(ZodCheckWorkflowApp))
+export type GetAppsResp = z.infer<typeof ZodCheckGetAppsResp>
 
 // @/workflow/:appId/draft
-export const LoadDraftResp = defineZodResp(WorkflowAppData)
-export type LoadDraftRespType = z.infer<typeof LoadDraftResp>
+export const ZodCheckLoadDraftResp = defineZodResp(ZodCheckWorkflowAppData)
+export type LoadDraftResp = z.infer<typeof ZodCheckLoadDraftResp>
 
 // @/workflow/:appId/publish
-export const WorkflowPublishReq = z.object({
+export const ZodCheckWorkflowPublishReq = z.object({
   version: z.string(),
   description: z.string(),
 })
-export type WorkflowPublishReqType = z.infer<typeof WorkflowPublishReq>
-export const WorkflowPublishResp = defineZodResp(WorkflowAppPublish)
-export type WorkflowPublishRespType = z.infer<typeof WorkflowPublishResp>
+export type WorkflowPublishReq = z.infer<typeof ZodCheckWorkflowPublishReq>
+
+export const ZodCheckWorkflowPublishResp = defineZodResp(ZodCheckWorkflowAppPublish)
+export type WorkflowPublishResp = z.infer<typeof ZodCheckWorkflowPublishResp>

@@ -20,18 +20,18 @@ export enum BotRunningState {
   offline,
 }
 
-export const BotState = z.object({
+export const ZodCheckBotState = z.object({
   runningState: z.enum(BotRunningState), // 运行状态
   lastExitCode: z.number().optional(), // 上次退出码
   bootTime: z.date().optional(), // 启动时间
 })
-export type BotStateType = z.infer<typeof BotState>
+export type BotState = z.infer<typeof ZodCheckBotState>
 
-export const CommonBotInfo = z.object({
+export const ZodCheckCommonBotInfo = z.object({
   botId: z.string(),
   adapterTag: z.enum(AdapterTag),
   adapterDesc: z.string(),
   botDesc: z.string(),
-  state: BotState,
+  state: ZodCheckBotState,
 })
-export type CommonBotInfoType = z.infer<typeof CommonBotInfo>
+export type CommonBotInfo = z.infer<typeof ZodCheckCommonBotInfo>

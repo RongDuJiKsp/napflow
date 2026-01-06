@@ -5,24 +5,24 @@ export enum UserRole {
   User = 'User',
 }
 // base
-export const UserRoleType = z.enum(UserRole)
-export type UserRoleTypeType = z.infer<typeof UserRoleType>
+export const ZodCheckUserRoleType = z.enum(UserRole)
+export type UserRoleType = z.infer<typeof ZodCheckUserRoleType>
 
-export const Account = z.object({
+export const ZodCheckAccount = z.object({
   email: z.email(),
   nickname: z.string(),
   userGroup: z.array(
     z.object({
-      groupType: UserRoleType,
+      groupType: ZodCheckUserRoleType,
     }),
   ),
 })
-export type AccountType = z.infer<typeof Account>
+export type Account = z.infer<typeof ZodCheckAccount>
 
-export const AccountInfo = Account.extend({
+export const ZodCheckAccountInfo = ZodCheckAccount.extend({
   userGroup: z.array(
     z.object({
-      groupType: UserRoleType,
+      groupType: ZodCheckUserRoleType,
       createdAt: z.date(),
     }),
   ),
@@ -30,4 +30,4 @@ export const AccountInfo = Account.extend({
   updatedAt: z.date(),
   disabledAt: z.date().nullable(), // 注意 定义POJO时 使用nullable而不是optional
 })
-export type AccountInfoType = z.infer<typeof AccountInfo>
+export type AccountInfo = z.infer<typeof ZodCheckAccountInfo>

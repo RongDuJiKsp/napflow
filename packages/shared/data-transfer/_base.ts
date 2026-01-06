@@ -39,7 +39,7 @@ export class Resp {
   }
 }
 
-export const NullResp = defineZodResp(
+export const ZodCheckNullResp = defineZodResp(
   z.undefined().optional(),
 )
-export type NullRespType = z.infer<typeof NullResp>
+export type NullResp = z.infer<typeof ZodCheckNullResp>

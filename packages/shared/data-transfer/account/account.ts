@@ -1,71 +1,71 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { AccountInfo, UserRoleType } from './base'
+import { ZodCheckAccountInfo, ZodCheckUserRoleType } from './base'
 
 // req resp
 
 // @/account/login
-export const LoginReq = AccountInfo.pick({ email: true }).extend({
+export const ZodCheckLoginReq = ZodCheckAccountInfo.pick({ email: true }).extend({
   password: z.string(),
 })
-export type LoginReqType = z.infer<typeof LoginReq>
+export type LoginReq = z.infer<typeof ZodCheckLoginReq>
 
-export const LoginResp = defineZodResp(
+export const ZodCheckLoginResp = defineZodResp(
   z.object({
     token: z.string(),
   }),
 )
-export type LoginRespType = z.infer<typeof LoginResp>
+export type LoginResp = z.infer<typeof ZodCheckLoginResp>
 
 // @/account/account
-export const AccountInfoListQuery = z.object({
+export const ZodCheckAccountInfoListQuery = z.object({
   isDisabled: z.boolean().optional(), // 用户是否被禁用
-  groups: z.array(UserRoleType).optional(), // 用户组
+  groups: z.array(ZodCheckUserRoleType).optional(), // 用户组
 })
-export type AccountInfoListQueryType = z.infer<typeof AccountInfoListQuery>
+export type AccountInfoListQuery = z.infer<typeof ZodCheckAccountInfoListQuery>
 
-export const AccountInfoListResp = defineZodResp(z.array(AccountInfo))
-export type AccountInfoListRespType = z.infer<typeof AccountInfoListResp>
+export const ZodCheckAccountInfoListResp = defineZodResp(z.array(ZodCheckAccountInfo))
+export type AccountInfoListResp = z.infer<typeof ZodCheckAccountInfoListResp>
 
 // @/account/cur-account @/account/account-info
-export const AccountInfoResp = defineZodResp(AccountInfo.nullable())
-export type AccountInfoRespType = z.infer<typeof AccountInfoResp>
+export const ZodCheckAccountInfoResp = defineZodResp(ZodCheckAccountInfo.nullable())
+export type AccountInfoResp = z.infer<typeof ZodCheckAccountInfoResp>
 
 // @/account/upgrade @/account/downgrade
-export const AccountUpDownGradeReq = AccountInfo.pick({ email: true }).extend({
-  groupType: z.array(UserRoleType),
+export const ZodCheckAccountUpDownGradeReq = ZodCheckAccountInfo.pick({ email: true }).extend({
+  groupType: z.array(ZodCheckUserRoleType),
 })
-export type AccountUpDownGradeReqType = z.infer<typeof AccountUpDownGradeReq>
+export type AccountUpDownGradeReq = z.infer<typeof ZodCheckAccountUpDownGradeReq>
 
-export const AccountUpDownGradeResp = defineZodResp(
+export const ZodCheckAccountUpDownGradeResp = defineZodResp(
   z.object({
     effectLines: z.number(),
   }),
 )
-export type AccountUpDownGradeRespType = z.infer<typeof AccountUpDownGradeResp>
+export type AccountUpDownGradeResp = z.infer<typeof ZodCheckAccountUpDownGradeResp>
 
 // @/account/disable
-export const AccountDisableReq = AccountInfo.pick({ email: true })
-export type AccountDisableReqType = z.infer<typeof AccountDisableReq>
+export const ZodCheckAccountDisableReq = ZodCheckAccountInfo.pick({ email: true })
+export type AccountDisableReq = z.infer<typeof ZodCheckAccountDisableReq>
 
 // @/account/create
-export const AccountCreateReq = AccountInfo.pick({
+export const ZodCheckAccountCreateReq = ZodCheckAccountInfo.pick({
   email: true,
   nickname: true,
 }).extend({ password: z.string() })
-export type AccountCreateReqType = z.infer<typeof AccountCreateReq>
+export type AccountCreateReq = z.infer<typeof ZodCheckAccountCreateReq>
 
 // @/account/change-password
-export const AccountChangePasswordReq = z.object({
+export const ZodCheckAccountChangePasswordReq = z.object({
   originPassword: z.string(),
   password: z.string(),
 })
-export type AccountChangePasswordReqType = z.infer<
-  typeof AccountChangePasswordReq
+export type AccountChangePasswordReq = z.infer<
+  typeof ZodCheckAccountChangePasswordReq
 >
 
 // @/account/change-nickname
-export const AccountChangeNicknameReq = AccountInfo.pick({ nickname: true })
-export type AccountChangeNicknameReqType = z.infer<
-  typeof AccountChangeNicknameReq
+export const ZodCheckAccountChangeNicknameReq = ZodCheckAccountInfo.pick({ nickname: true })
+export type AccountChangeNicknameReq = z.infer<
+  typeof ZodCheckAccountChangeNicknameReq
 >

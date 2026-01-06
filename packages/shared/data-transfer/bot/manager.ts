@@ -1,9 +1,8 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { CommonBotInfo } from './_base'
+import { ZodCheckCommonBotInfo } from './_base'
 
-// /bots/list
-export const GetAllBotsResp = defineZodResp(z.array(
-  CommonBotInfo,
+export const ZodCheckGetAllBotsResp = defineZodResp(z.array(
+  ZodCheckCommonBotInfo,
 ))
-export type GetAllBotsRespType = z.infer<typeof GetAllBotsResp>
+export type GetAllBotsResp = z.infer<typeof ZodCheckGetAllBotsResp>
