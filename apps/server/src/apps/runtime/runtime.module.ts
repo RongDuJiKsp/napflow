@@ -3,21 +3,17 @@ import { CoreRuntimeService } from './core/coreruntime.service'
 import { ManagerService } from './manager/manager.service'
 import { ManagerController } from './manager/manager.controller'
 import { BotCoreRuntimeService } from './bot/core/bot-core-runtime.service'
-import { TypeOrmService } from '../db/typeorm.service'
+import { BotManagerService } from './bot/manager/bot-manager.service'
+import { BotManagerController } from './bot/manager/bot-manager.controller'
 
 @Module({
   providers: [
     CoreRuntimeService,
-    {
-      provide: BotCoreRuntimeService,
-      useFactory: async (db: TypeOrmService) => {
-        return await BotCoreRuntimeService.initFromDB(db)
-      },
-      inject: [TypeOrmService],
-    },
     ManagerService,
+    BotCoreRuntimeService,
+    BotManagerService,
   ],
-  exports: [CoreRuntimeService, BotCoreRuntimeService, ManagerService],
-  controllers: [ManagerController],
+  exports: [CoreRuntimeService, BotCoreRuntimeService, ManagerService, BotManagerService],
+  controllers: [ManagerController, BotManagerController],
 })
 export class RuntimeModule {}

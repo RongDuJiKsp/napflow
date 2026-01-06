@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
-import { AdapterTag } from '../../runtime/bot/adapter/_base'
+import { AdapterTag } from '@shared/data-transfer/bot/_base'
 
 // 每一个BotRecord对应配置好的机器人endpoint
 @Entity()

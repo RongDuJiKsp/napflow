@@ -1,23 +1,37 @@
-import type { TypeOrmService } from '@/src/apps/db/typeorm.service'
-import { Injectable } from '@nestjs/common'
+import { TypeOrmService } from '@/src/apps/db/typeorm.service'
+import { Inject, Injectable } from '@nestjs/common'
 import type { BotAdapterFactory, BotInstance } from '../adapter/_base'
-import { AdapterTag } from '../adapter/_base'
-import { NapcatWsFactory } from '../adapter/napcat'
+import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcat'
+import type { BotAdapterClass, BotStateType } from '@shared/data-transfer/bot/_base'
+import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 
-const initFromDBFnMap: Record<AdapterTag, BotAdapterFactory> = {
+export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
   [AdapterTag.napcatWs]: NapcatWsFactory,
+}
+export const adapterClassMeta: Record<AdapterTag, BotAdapterClass> = {
+  [AdapterTag.napcatWs]: NapcatWsAdapter,
 }
 
 @Injectable()
 export class BotCoreRuntimeService {
+  private readonly botInstanceMap = new Map<string, BotInstance>()
+
   constructor(
-    private readonly db: TypeOrmService,
-    private readonly instances: BotInstance[],
+    @Inject(TypeOrmService) private readonly db: TypeOrmService,
   ) {
   }
 
-  static async initFromDB(db: TypeOrmService): Promise<BotCoreRuntimeService> {
-    const adapters = await db.botRecord.find()
-    return new BotCoreRuntimeService(db, adapters.map(adapter => initFromDBFnMap[adapter.adapterTag](adapter)))
+  get botInstances() {
+    return Array.from(this.botInstanceMap.values())
+  }
+
+  botState(botId: string): BotStateType {
+    const botInstance = this.botInstanceMap.get(botId)
+    if (!botInstance) {
+      return {
+        runningState: BotRunningState.stopped,
+      }
+    }
+    return botInstance.runningState()
   }
 }
