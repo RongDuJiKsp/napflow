@@ -5,6 +5,7 @@ import mysql from 'mysql2/promise'
 import { TypeOrmService } from './typeorm.service'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
 import { WorkflowAppDataEntity, WorkflowAppEntity, WorkflowAppPublishEntity } from './models/workflow.entity'
+import { BotRecordEntity } from './models/bot.entity'
 
 @Global()
 @Module({
@@ -38,6 +39,7 @@ import { WorkflowAppDataEntity, WorkflowAppEntity, WorkflowAppPublishEntity } fr
     TypeOrmModule.forFeature([
       UserEntity, UserGroupEntity,
       WorkflowAppEntity, WorkflowAppPublishEntity, WorkflowAppDataEntity,
+      BotRecordEntity,
     ]),
   ],
   providers: [TypeOrmService],

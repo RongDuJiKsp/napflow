@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import type { Repository } from 'typeorm'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
 import { WorkflowAppDataEntity, WorkflowAppEntity, WorkflowAppPublishEntity } from './models/workflow.entity'
+import { BotRecordEntity } from './models/bot.entity'
 
 @Injectable()
 export class TypeOrmService {
@@ -17,6 +18,8 @@ export class TypeOrmService {
     private readonly workflowAppPublishRepository: Repository<WorkflowAppPublishEntity>,
     @InjectRepository(WorkflowAppDataEntity)
     private readonly workflowAppDataRepository: Repository<WorkflowAppDataEntity>,
+    @InjectRepository(BotRecordEntity)
+    private readonly botRecordRepository: Repository<BotRecordEntity>,
   ) {}
 
   // User 相关操作
@@ -39,5 +42,10 @@ export class TypeOrmService {
 
   get workflowAppData() {
     return this.workflowAppDataRepository
+  }
+
+  // Bot 相关操作
+  get botRecord() {
+    return this.botRecordRepository
   }
 }
