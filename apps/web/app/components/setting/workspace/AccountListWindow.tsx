@@ -26,7 +26,7 @@ import { twMerge } from 'tailwind-merge'
 import { Select, Space, Tooltip } from 'antd'
 import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
-import { UserRole } from '@shared/data-transfer/account/base'
+import { UserRole } from '@shared/common/account/base'
 import { Button, Label } from '@heroui/react'
 
 type ModalOperation = {

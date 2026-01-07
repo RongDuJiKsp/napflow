@@ -1,5 +1,5 @@
 import type { DataKV } from '@/utils/type'
-import type { NodeClassic } from '@shared/data-transfer/workflow/base'
+import type { NodeClassic } from '@shared/common/workflow/base'
 import type {
   Edge as ReactFlowEdge,
   Node as ReactFlowNode,

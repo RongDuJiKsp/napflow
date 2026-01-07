@@ -1,4 +1,4 @@
-import type { UserRoleType } from '@shared/data-transfer/account/base'
+import type { UserRoleType } from '@shared/common/account/base'
 import { useResetState } from 'ahooks'
 
 export const useUpDownGradeDialog = (targetUser: string, onClose: () => void, action: (target: string, groups: UserRoleType[]) => void | Promise<void>) => {

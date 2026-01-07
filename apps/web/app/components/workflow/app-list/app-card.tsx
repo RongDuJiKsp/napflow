@@ -1,5 +1,5 @@
 'use client'
-import type { WorkflowApp } from '@shared/data-transfer/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/base'
 import { useBoolean } from 'ahooks'
 import Link from 'next/link'
 import { memo, useCallback } from 'react'

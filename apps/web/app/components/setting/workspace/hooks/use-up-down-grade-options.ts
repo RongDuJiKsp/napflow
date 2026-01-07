@@ -1,10 +1,10 @@
 import { useAccountInfoQuery } from '@/app/hooks/query/use-account-info-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { RiAdminLine, RiUserLine } from '@remixicon/react'
-import { UserRole, type UserRoleType } from '@shared/data-transfer/account/base'
+import { UserRole, type UserRoleType } from '@shared/common/account/base'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useMemo } from 'react'
-import type { AccountInfo } from '@shared/data-transfer/account/base'
+import type { AccountInfo } from '@shared/common/account/base'
 
 type UpDownGradeOptions = {
   icon: ComponentWithClass;

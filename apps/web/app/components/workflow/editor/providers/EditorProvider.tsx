@@ -1,5 +1,5 @@
 import { jsonQ } from '@/utils/net'
-import type { WorkflowAppData } from '@shared/data-transfer/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/base'
 import { ReactFlowProvider } from '@xyflow/react'
 import { useMount } from 'ahooks'
 import type { PropsWithChildren } from 'react'

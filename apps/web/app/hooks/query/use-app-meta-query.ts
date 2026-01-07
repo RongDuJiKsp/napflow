@@ -1,6 +1,6 @@
 import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
-import type { WorkflowApp } from '@shared/data-transfer/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/base'
 import type { GetAppResp } from '@shared/data-transfer/workflow/info'
 import { useQuery } from '@tanstack/react-query'
 

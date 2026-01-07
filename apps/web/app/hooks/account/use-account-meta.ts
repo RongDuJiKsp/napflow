@@ -1,4 +1,4 @@
-import { UserRole } from '@shared/data-transfer/account/base'
+import { UserRole } from '@shared/common/account/base'
 import { useCurAccountQuery } from '../query/use-cur-account-query'
 
 export const useAccountMeta = () => {

@@ -1,7 +1,7 @@
 import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
 import type { AccountInfoResp } from '@shared/data-transfer/account/account'
-import type { AccountInfo } from '@shared/data-transfer/account/base'
+import type { AccountInfo } from '@shared/common/account/base'
 import { useQuery } from '@tanstack/react-query'
 
 export const useCurAccountQuery = () => {
