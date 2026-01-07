@@ -1,5 +1,9 @@
+import BotList from '@/app/components/bot/bot-list'
+
 export default function Page() {
   return (
-    <div>bot page</div>
+    <div>
+      <BotList/>
+    </div>
   )
 }
