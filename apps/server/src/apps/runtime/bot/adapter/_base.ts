@@ -1,5 +1,5 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
-import type { BotAdapter, BotStateType } from '@shared/data-transfer/bot/_base'
+import type { BotAdapter, BotState } from '@shared/data-transfer/bot/_base'
 
 // 可被数据库存储的Bot实例
 export type BotDBInstance = {
@@ -7,7 +7,7 @@ export type BotDBInstance = {
 }
 
 export type BotHealthCheckable = {
-  runningState: () => BotStateType
+  runningState: () => BotState
 }
 // Bot实例 设计思路： bot实例可被db存储配置 启动时从数据库运行 （BotDBInstance） ；每个bot实例可以连接到一个上游适配器
 export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable

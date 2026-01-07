@@ -8,34 +8,33 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import type { NullRespType } from '@shared/data-transfer/_base'
-import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
+import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import type {
-  AccountChangeNicknameReqType,
-  AccountChangePasswordReqType,
-  AccountCreateReqType,
-  AccountDisableReqType,
-  AccountUpDownGradeReqType,
-  LoginReqType,
-} from '@shared/data-transfer/account/account'
-import {
   AccountChangeNicknameReq,
   AccountChangePasswordReq,
   AccountCreateReq,
   AccountDisableReq,
-  AccountInfoListQuery,
-  AccountInfoListResp,
-  AccountInfoResp,
   AccountUpDownGradeReq,
-  AccountUpDownGradeResp,
   LoginReq,
-  LoginResp,
+} from '@shared/data-transfer/account/account'
+import {
+  ZodCheckAccountChangeNicknameReq,
+  ZodCheckAccountChangePasswordReq,
+  ZodCheckAccountCreateReq,
+  ZodCheckAccountDisableReq,
+  ZodCheckAccountInfoListQuery,
+  ZodCheckAccountInfoListResp,
+  ZodCheckAccountInfoResp,
+  ZodCheckAccountUpDownGradeReq,
+  ZodCheckAccountUpDownGradeResp,
+  ZodCheckLoginReq,
+  ZodCheckLoginResp,
 } from '@shared/data-transfer/account/account'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
-import { type AccountType, UserRole } from '@shared/data-transfer/account/base'
+import { type Account, UserRole } from '@shared/data-transfer/account/base'
 
 /**
  * @route `/account`
@@ -57,9 +56,9 @@ export class AccountController {
    * @description 登录并返回 JWT
    */
   @Post('login')
-  @ZodSerializerDto(LoginResp)
+  @ZodSerializerDto(ZodCheckLoginResp)
   async login(
-    @ZodBody({ zod: LoginReq }) req: LoginReqType,
+    @ZodBody({ zod: ZodCheckLoginReq }) req: LoginReq,
   ) {
     const user = await this.accountService.getAccountWithVertify(
       req.email,
@@ -84,14 +83,14 @@ export class AccountController {
    */
   @Get('account')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(AccountInfoListResp)
+  @ZodSerializerDto(ZodCheckAccountInfoListResp)
   async getAccount(
     @Query('isDisabled', new ParseBoolPipe({ optional: true }))
     isDisabled?: boolean,
     @Query('roles', new ParseArrayPipe({ optional: true })) roles?: string[],
   ) {
     const accounts = await this.accountService.queryAccounts(
-      AccountInfoListQuery.parse({
+      ZodCheckAccountInfoListQuery.parse({
         isDisabled,
         roles,
       }),
@@ -109,9 +108,9 @@ export class AccountController {
    */
   @Get('cur-account')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(AccountInfoResp)
+  @ZodSerializerDto(ZodCheckAccountInfoResp)
   async getCurAccount(
-    @JwtAccount() account: AccountType,
+    @JwtAccount() account: Account,
   ) {
     const curAccount = await this.accountService.getAccount(account.email)
     if (!curAccount) throw new Error('签发了token的用户不存在')
@@ -129,7 +128,7 @@ export class AccountController {
    */
   @Get('account-info')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(AccountInfoResp)
+  @ZodSerializerDto(ZodCheckAccountInfoResp)
   async getAccountInfo(
     @Query('email') email: string,
   ) {
@@ -147,9 +146,9 @@ export class AccountController {
    */
   @Post('upgrade')
   @AllowUserGroup(UserRole.Admin)
-  @ZodSerializerDto(AccountUpDownGradeResp)
+  @ZodSerializerDto(ZodCheckAccountUpDownGradeResp)
   async upgradeAccount(
-    @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
+    @ZodBody({ zod: ZodCheckAccountUpDownGradeReq }) req: AccountUpDownGradeReq,
   ) {
     if (req.groupType.includes(UserRole.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
@@ -173,9 +172,9 @@ export class AccountController {
    */
   @Post('downgrade')
   @AllowUserGroup(UserRole.Admin)
-  @ZodSerializerDto(AccountUpDownGradeResp)
+  @ZodSerializerDto(ZodCheckAccountUpDownGradeResp)
   async downgradeAccount(
-    @ZodBody({ zod: AccountUpDownGradeReq }) req: AccountUpDownGradeReqType,
+    @ZodBody({ zod: ZodCheckAccountUpDownGradeReq }) req: AccountUpDownGradeReq,
   ) {
     if (req.groupType.includes(UserRole.User))
       return Resp.error('不能对User组进行升降级', Code.BadRequest)
@@ -199,9 +198,9 @@ export class AccountController {
    */
   @Post('disable')
   @AllowUserGroup(UserRole.Admin)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async disableAccount(
-    @ZodBody({ zod: AccountDisableReq }) req: AccountDisableReqType,
+    @ZodBody({ zod: ZodCheckAccountDisableReq }) req: AccountDisableReq,
   ) {
     const result = await this.accountService.disableAccount(req.email)
     if(!result.affected)
@@ -220,9 +219,9 @@ export class AccountController {
    */
   @Post('create')
   @AllowUserGroup(UserRole.Admin)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async createAccount(
-    @ZodBody({ zod: AccountCreateReq }) req: AccountCreateReqType,
+    @ZodBody({ zod: ZodCheckAccountCreateReq }) req: AccountCreateReq,
   ) {
     if(!await this.accountService.createCustomAccount(
       req.email,
@@ -244,11 +243,11 @@ export class AccountController {
    */
   @Post('change-password')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async changePassword(
-    @ZodBody({ zod: AccountChangePasswordReq })
-    req: AccountChangePasswordReqType,
-    @JwtAccount() account: AccountType,
+    @ZodBody({ zod: ZodCheckAccountChangePasswordReq })
+    req: AccountChangePasswordReq,
+    @JwtAccount() account: Account,
   ) {
     const userFull = await this.accountService.getAccountWithVertify(
       account.email,
@@ -270,12 +269,12 @@ export class AccountController {
    */
   @Post('change-nickname')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async changeNickname(
-    @ZodBody({ zod: AccountChangeNicknameReq })
-    req: AccountChangeNicknameReqType,
-    @JwtAccount() account: AccountType,
-  ): Promise<NullRespType> {
+    @ZodBody({ zod: ZodCheckAccountChangeNicknameReq })
+    req: AccountChangeNicknameReq,
+    @JwtAccount() account: Account,
+  ) {
     await this.accountService.changeNickname(account.email, req.nickname)
     return Resp.ok()
   }

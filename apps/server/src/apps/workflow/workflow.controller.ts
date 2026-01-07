@@ -9,25 +9,25 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { type AccountType, UserRole } from '@shared/data-transfer/account/base'
+import { type Account, UserRole } from '@shared/data-transfer/account/base'
 import type {
-  CreateWorkflowReqType,
-  WorkflowPublishReqType,
+  CreateWorkflowReq,
+  WorkflowPublishReq,
 } from '@shared/data-transfer/workflow/info'
 import {
-  CreateWorkflowReq,
-  GetAppResp,
-  GetAppsResp,
-  LoadDraftResp,
-  WorkflowPublishReq,
-  WorkflowPublishResp,
+  ZodCheckCreateWorkflowReq,
+  ZodCheckGetAppResp,
+  ZodCheckGetAppsResp,
+  ZodCheckLoadDraftResp,
+  ZodCheckWorkflowPublishReq,
+  ZodCheckWorkflowPublishResp,
 } from '@shared/data-transfer/workflow/info'
 import { WorkflowService } from './workflow.service'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { Code, NullResp, Resp } from '@shared/data-transfer/_base'
+import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
-import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
-import { WorkflowAppData } from '@shared/data-transfer/workflow/base'
+import type { WorkflowAppData } from '@shared/data-transfer/workflow/base'
+import { ZodCheckWorkflowAppData } from '@shared/data-transfer/workflow/base'
 @Controller('workflow')
 export class WorkflowController {
   constructor(
@@ -38,10 +38,10 @@ export class WorkflowController {
 
   @Post('create')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async createApp(
-    @ZodBody({ zod: CreateWorkflowReq }) req: CreateWorkflowReqType,
-    @JwtAccount() account: AccountType,
+    @ZodBody({ zod: ZodCheckCreateWorkflowReq }) req: CreateWorkflowReq,
+    @JwtAccount() account: Account,
   ) {
     await this.workflowService.createApp(
       req.appName,
@@ -53,10 +53,10 @@ export class WorkflowController {
 
   @Get('apps')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(GetAppsResp)
+  @ZodSerializerDto(ZodCheckGetAppsResp)
   async getMutiApp(
     @Query('onlySelf', new ParseBoolPipe({ optional: true })) onlySelf: boolean,
-    @JwtAccount() account: AccountType,
+    @JwtAccount() account: Account,
   ) {
     const app = await this.workflowService.getApps(
       onlySelf ? account.email : undefined,
@@ -66,7 +66,7 @@ export class WorkflowController {
 
   @Get(':appId/draft')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(LoadDraftResp)
+  @ZodSerializerDto(ZodCheckLoadDraftResp)
   async loadDraft(@Param('appId') appId: string) {
     const app = await this.workflowDataService.loadDraft(appId)
     if (!app) return Resp.error('App Not Found', Code.NotFound)
@@ -75,10 +75,10 @@ export class WorkflowController {
 
   @Post(':appId/sync')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(NullResp)
+  @ZodSerializerDto(ZodCheckNullResp)
   async syncDraft(
     @Param('appId') appId: string,
-    @ZodBody({ zod: WorkflowAppData }) data: WorkflowAppDataType,
+    @ZodBody({ zod: ZodCheckWorkflowAppData }) data: WorkflowAppData,
   ) {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
@@ -86,10 +86,10 @@ export class WorkflowController {
 
   @Post(':appId/publish')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(WorkflowPublishResp)
+  @ZodSerializerDto(ZodCheckWorkflowPublishResp)
   async publishDraft(
     @Param('appId') appId: string,
-    @ZodBody({ zod: WorkflowPublishReq }) data: WorkflowPublishReqType,
+    @ZodBody({ zod: ZodCheckWorkflowPublishReq }) data: WorkflowPublishReq,
   ) {
     const publishMeta = await this.workflowDataService.publishDraft(
       appId,
@@ -103,7 +103,7 @@ export class WorkflowController {
 
   @Get(':appId')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(GetAppResp)
+  @ZodSerializerDto(ZodCheckGetAppResp)
   async getSingleApp(@Param('appId') appId: string) {
     const app = await this.workflowService.getApp(appId)
     if (!app) return Resp.error('App Not Found', Code.NotFound)

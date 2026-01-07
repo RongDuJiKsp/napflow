@@ -2,7 +2,7 @@ import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import type { BotAdapterFactory, BotInstance } from '../adapter/_base'
 import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcat'
-import type { BotAdapterClass, BotStateType } from '@shared/data-transfer/bot/_base'
+import type { BotAdapterClass, BotState } from '@shared/data-transfer/bot/_base'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 
 export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
@@ -25,7 +25,7 @@ export class BotCoreRuntimeService {
     return Array.from(this.botInstanceMap.values())
   }
 
-  botState(botId: string): BotStateType {
+  botState(botId: string): BotState {
     const botInstance = this.botInstanceMap.get(botId)
     if (!botInstance) {
       return {

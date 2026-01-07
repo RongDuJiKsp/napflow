@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common'
 import jwt from 'jsonwebtoken'
 import type zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
-import type { AccountType } from '@shared/data-transfer/account/base'
-import { Account } from '@shared/data-transfer/account/base'
+import type { Account } from '@shared/data-transfer/account/base'
+import { ZodCheckAccount } from '@shared/data-transfer/account/base'
 import type { Request } from 'express'
 import { VaildJwtError } from './middleware/jwt.filter'
 
@@ -32,10 +32,10 @@ export class JwtOperator<T extends JwtPayload> {
 
 @Injectable()
 export class JwtService {
-  account: JwtOperator<AccountType>
+  account: JwtOperator<Account>
 
   constructor(@Inject(AppConfigService) private readonly configService: AppConfigService) {
-    this.account = new JwtOperator(this.configService.envs.JWT_SECRET_KEY, Account)
+    this.account = new JwtOperator(this.configService.envs.JWT_SECRET_KEY, ZodCheckAccount)
   }
 
   jwtHttpRequest<U extends JwtPayload = JwtPayload>(req: Request, options?: jwt.VerifyOptions): U {

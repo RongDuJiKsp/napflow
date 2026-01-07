@@ -1,13 +1,13 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { AccountType } from '@shared/data-transfer/account/base'
+import type { Account } from '@shared/data-transfer/account/base'
 @Injectable()
 export class WorkflowService {
   constructor(
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
   ) {}
 
-  async createApp(appName: string, appDesc: string, createdBy: AccountType) {
+  async createApp(appName: string, appDesc: string, createdBy: Account) {
     return await this.db.workflowApp.save({ appName, appDescription: appDesc, createdBy: createdBy.email })
   }
 

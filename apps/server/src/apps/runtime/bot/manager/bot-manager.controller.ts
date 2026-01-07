@@ -16,7 +16,7 @@ import { AllowUserGroup } from '@/src/decorator/account'
 import { UserRole } from '@shared/data-transfer/account/base'
 import { Resp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { GetAllBotsResp } from '@shared/data-transfer/bot/manager'
+import { ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'
 
 @Controller('bots')
 export class BotManagerController {
@@ -29,7 +29,7 @@ export class BotManagerController {
 
   @Get('list')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(GetAllBotsResp)
+  @ZodSerializerDto(ZodCheckGetAllBotsResp)
   async getAllBots(
     @Query('isRunning', new ParseBoolPipe({ optional: true }))
     isRunning?: boolean,

@@ -1,6 +1,6 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { BotAdapterFactory, BotInstance } from './_base'
-import type { BotAdapter, BotStateType } from '@shared/data-transfer/bot/_base'
+import type { BotAdapter, BotState } from '@shared/data-transfer/bot/_base'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 
 export class NapcatWsAdapter implements BotInstance {
@@ -17,7 +17,7 @@ export class NapcatWsAdapter implements BotInstance {
     this.botConfigDB = db
   }
 
-  runningState(): BotStateType {
+  runningState(): BotState {
     return {
       runningState: BotRunningState.stopped,
     }

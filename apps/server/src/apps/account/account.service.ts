@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import bcryptjs from 'bcryptjs'
 import { AppConfigService } from '../app-config/app-config.service'
-import type { AccountInfoListQueryType } from '@shared/data-transfer/account/account'
+import type { AccountInfoListQuery } from '@shared/data-transfer/account/account'
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import type { UserEntity } from '@/src/apps/db/models/account.entity'
 import type { FindOptionsWhere } from 'typeorm'
@@ -81,7 +81,7 @@ export class AccountService {
     return { acc: rootAccount, accExists, updated: true }
   }
 
-  async queryAccounts(query: AccountInfoListQueryType) {
+  async queryAccounts(query: AccountInfoListQuery) {
     const userQuery: FindOptionsWhere<UserEntity> = {}
 
     if(query.isDisabled === true)
