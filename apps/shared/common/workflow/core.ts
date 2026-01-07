@@ -8,7 +8,7 @@ export const ZodCheckNode = z.looseObject({
   position: ZodCheckXYPosition,
   data: z.any(),
   type: z.enum(NodeClassic),
-})
+}).catchall(z.any())
 
 export type Node = z.infer<typeof ZodCheckNode>
 

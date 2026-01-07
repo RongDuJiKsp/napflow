@@ -11,7 +11,7 @@ export const ZodCheckCreateBotReq = z.object({
   name: z.string(),
   description: z.string(),
   adapterTag: z.enum(AdapterTag),
-  adapterConfig: z.looseObject({}),
+  adapterConfig: z.looseObject({}).catchall(z.any()),
 })
 export type CreateBotReq = z.infer<typeof ZodCheckCreateBotReq>
 

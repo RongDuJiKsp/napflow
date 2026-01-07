@@ -1,10 +1,8 @@
-import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
+import type { WorkflowAppData } from '@shared/common/workflow/base'
 
 const DRAFT_VERSION_KEY = 'draft'
-
-type WorkflowAppDataUpdate = Partial<WorkflowAppDataEntity>
 
 @Injectable()
 export class WorkflowDataService {
@@ -21,7 +19,7 @@ export class WorkflowDataService {
     return await this.db.workflowAppData.save({ ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY })
   }
 
-  async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppDataUpdate) {
+  async createPublish(appId: string, version: string, description: string, latestDraft: WorkflowAppData) {
     // 判断publish是否重复
     if(await this.db.workflowAppPublish.count({ where: { ofAppId: appId, version } }))
       return null
@@ -33,7 +31,7 @@ export class WorkflowDataService {
   }
 
   // 所有对data联表读写都在这
-  async syncData(dataId: string, data: WorkflowAppDataUpdate) {
+  async syncData(dataId: string, data: WorkflowAppData) {
     return await this.db.workflowAppData.update({ dataId }, { ...data, dataId: undefined })
   }
 
@@ -46,7 +44,7 @@ export class WorkflowDataService {
     return draftData
   }
 
-  async syncDraft(appId: string, data: WorkflowAppDataUpdate) {
+  async syncDraft(appId: string, data: WorkflowAppData) {
     const appData = await this.db.workflowAppData.findOne({
       where: { ofAppId: appId, ofPublishVersion: DRAFT_VERSION_KEY },
     })

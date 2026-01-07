@@ -1,6 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
-import type { JsonObject } from 'type-fest'
+import type { Edge, Node } from '@shared/common/workflow/core'
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity {
   @PrimaryColumn({ generated: 'uuid' })
@@ -78,8 +78,8 @@ export class WorkflowAppDataEntity extends BaseEntity {
   ofPublish: WorkflowAppPublishEntity
 
   @Column({ type: 'json' })
-  nodes: JsonObject[] | null
+  nodes: Node[] | null
 
   @Column({ type: 'json' })
-  edges: JsonObject[] | null
+  edges: Edge[] | null
 }
