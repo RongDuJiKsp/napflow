@@ -1,8 +1,8 @@
 'use client'
 import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
 import { memo } from 'react'
-import AppCard from './app-card'
-import CreateAppCard from './create-app-card'
+import AppCard from './AppCard'
+import CreateAppCard from './CreateAppCard'
 
 const AppList = () => {
   const { data } = useAppsQuery()
