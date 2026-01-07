@@ -1,7 +1,7 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import { type BotAdapterFactory, type BotInstance, BotSignal } from '../adapter/_base'
-import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcat'
+import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcatws'
 import type { BotAdapterClass, BotState } from '@shared/data-transfer/bot/_base'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'

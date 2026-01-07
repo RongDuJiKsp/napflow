@@ -4,6 +4,8 @@ import { BotSignal } from './_base'
 import type { BotAdapter, BotState } from '@shared/data-transfer/bot/_base'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 import { Logger } from '@nestjs/common'
+import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/data-transfer/bot/napcatws-adapter'
+import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
 
 export class NapcatWsAdapter implements BotInstance {
   static readonly adapterMeta: BotAdapter = {
@@ -14,10 +16,12 @@ export class NapcatWsAdapter implements BotInstance {
   readonly adapterDesc: string = NapcatWsAdapter.adapterMeta.adapterDesc
   readonly adapterTag: AdapterTag = NapcatWsAdapter.adapterMeta.adapterTag
   readonly botConfigDB: BotRecordEntity
+  private readonly botConfigSnapshot?: NapcatWsAdapterConfig
   private readonly logger: Logger
 
   constructor(db: BotRecordEntity) {
     this.botConfigDB = db
+    this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(db.adapterConfig).data // 配置有问题先init完 等bootstrap时再抛错
     this.logger = new Logger(`${NapcatWsAdapter.name}-${db.name}`)
   }
 
@@ -33,6 +37,10 @@ export class NapcatWsAdapter implements BotInstance {
 
   async bootstrap(): Promise<this> {
     this.logger.log('Bootstrap...')
+    if(!this.botConfigSnapshot) {
+      this.logger.error('Config is invalid. Stop bootstrap.')
+      throw new BotCoreRuntimeError('NapcatWsAdapter config is invalid')
+    }
     return this
   }
 }
