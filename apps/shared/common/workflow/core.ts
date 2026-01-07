@@ -1,6 +1,10 @@
 import z from 'zod'
-import { NodeClassic } from './base'
 import { ZodCheckXYPosition } from './re-export'
+
+export enum NodeClassic {
+  Component = 'component', // 组件节点,该节点作为工作流运行路径的组成部分
+  Note = 'note', // 注释节点,该节点置于组件节点之下但不跟随拖动，用于说明一部分节点 or 一块区域
+}
 
 // node和edge里面许多需要透传的data 所以使用looseObject
 export const ZodCheckNode = z.looseObject({
