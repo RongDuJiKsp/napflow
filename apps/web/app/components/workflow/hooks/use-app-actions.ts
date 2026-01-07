@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ZodCheckCreateWorkflowReq, type CreateWorkflowReq } from '@shared/data-transfer/workflow/info'
+import { type CreateWorkflowReq, ZodCheckCreateWorkflowReq } from '@shared/data-transfer/workflow/info'
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
