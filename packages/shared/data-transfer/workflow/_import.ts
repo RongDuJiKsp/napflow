@@ -1,4 +1,5 @@
 import z from 'zod'
+import { NodeClassic } from './base'
 
 export const ZodCheckXYPosition = z.object({
   x: z.number(),
@@ -6,18 +7,16 @@ export const ZodCheckXYPosition = z.object({
 })
 export type XYPosition = z.infer<typeof ZodCheckXYPosition>
 
-export const ZodCheckNodeClassic = z.enum(['component', 'note'])
-export type NodeClassic = z.infer<typeof ZodCheckNodeClassic>
-
-export const ZodCheckNode = z.object({
+// node和edge里面许多需要透传的data 所以使用looseObject
+export const ZodCheckNode = z.looseObject({
   id: z.string(),
   position: ZodCheckXYPosition,
-  data: z.object(),
-  type: ZodCheckNodeClassic,
+  data: z.looseObject({}),
+  type: z.enum(NodeClassic),
 })
 export type Node = z.infer<typeof ZodCheckNode>
 
-export const ZodCheckEdge = z.object({
+export const ZodCheckEdge = z.looseObject({
   id: z.string(),
   source: z.string(),
   target: z.string(),

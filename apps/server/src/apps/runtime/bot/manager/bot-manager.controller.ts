@@ -2,8 +2,10 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   ParseBoolPipe,
   ParseEnumPipe,
+  Post,
   Query,
 } from '@nestjs/common'
 import { BotManagerService } from './bot-manager.service'
@@ -12,11 +14,13 @@ import {
   adapterClassMeta,
 } from '../core/bot-core-runtime.service'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
-import { AllowUserGroup } from '@/src/decorator/account'
+import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
+import type { Account } from '@shared/data-transfer/account/base'
 import { UserRole } from '@shared/data-transfer/account/base'
-import { Resp } from '@shared/data-transfer/_base'
+import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'
+import { type CreateBotReq, ZodCheckCreateBotReq, ZodCheckCreateBotResp, ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'
+import { ZodBody } from '@/src/decorator/zod'
 
 @Controller('bots')
 export class BotManagerController {
@@ -54,5 +58,29 @@ export class BotManagerController {
       return true
     })
     return Resp.ok(bots)
+  }
+
+  @Post('create')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckCreateBotResp)
+  async createBot(@ZodBody({ zod: ZodCheckCreateBotReq }) req: CreateBotReq, @JwtAccount() account: Account) {
+    const botRec = await this.botManagerService.createBot(req, account)
+    return Resp.ok({ botId: botRec.recordId })
+  }
+
+  @Post(':botId/run')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async runBot(@Param('botId') botId: string) {
+    await this.botCoreRuntimeService.runBot(botId)
+    return Resp.ok()
+  }
+
+  @Post(':botId/stop')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async stopBot(@Param('botId') botId: string) {
+    await this.botCoreRuntimeService.stopBot(botId)
+    return Resp.ok()
   }
 }

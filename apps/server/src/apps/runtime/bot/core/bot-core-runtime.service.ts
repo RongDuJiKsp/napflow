@@ -1,9 +1,10 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { BotAdapterFactory, BotInstance } from '../adapter/_base'
+import { type BotAdapterFactory, type BotInstance, BotSignal } from '../adapter/_base'
 import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcat'
 import type { BotAdapterClass, BotState } from '@shared/data-transfer/bot/_base'
 import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
+import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
 
 export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
   [AdapterTag.napcatWs]: NapcatWsFactory,
@@ -33,5 +34,24 @@ export class BotCoreRuntimeService {
       }
     }
     return botInstance.runningState()
+  }
+
+  async runBot(botId: string) {
+    const botInstance = this.botInstanceMap.get(botId)
+    if(botInstance)
+      return
+
+    const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
+    if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
+
+    const adapter = await adapterFactory[botRecord.adapterTag](botRecord)
+    this.botInstanceMap.set(botId, adapter)
+  }
+
+  async stopBot(botId: string) {
+    const botInstance = this.botInstanceMap.get(botId)
+    if(!botInstance)
+      return
+    botInstance.signal(BotSignal.SIGSTOP)
   }
 }

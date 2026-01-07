@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
 import { AdapterTag } from '@shared/data-transfer/bot/_base'
 
@@ -24,4 +24,10 @@ export class BotRecordEntity {
   // 适配器配置
   @Column({ type: 'json' })
   adapterConfig: object | null
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @NotNullColumn()
+  createdBy: string
 }

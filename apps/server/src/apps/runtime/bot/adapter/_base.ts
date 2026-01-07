@@ -6,8 +6,13 @@ export type BotDBInstance = {
   readonly botConfigDB: BotRecordEntity
 }
 
+export enum BotSignal {
+  SIGSTOP,
+  SIGKILL,
+}
 export type BotHealthCheckable = {
   runningState: () => BotState
+  signal: (signal: BotSignal) => void
 }
 // Bot实例 设计思路： bot实例可被db存储配置 启动时从数据库运行 （BotDBInstance） ；每个bot实例可以连接到一个上游适配器
 export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable
