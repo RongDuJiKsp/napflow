@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { type Account, UserRole } from '@shared/data-transfer/account/base'
+import { type Account, UserRole } from '@shared/common/account/base'
 import type {
   CreateWorkflowReq,
   WorkflowPublishReq,
@@ -26,8 +26,8 @@ import { WorkflowService } from './workflow.service'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
-import type { WorkflowAppData } from '@shared/data-transfer/workflow/base'
-import { ZodCheckWorkflowAppData } from '@shared/data-transfer/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/base'
+import { ZodCheckWorkflowAppData } from '@shared/common/workflow/base'
 @Controller('workflow')
 export class WorkflowController {
   constructor(

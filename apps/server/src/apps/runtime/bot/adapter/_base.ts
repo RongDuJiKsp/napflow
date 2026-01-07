@@ -1,15 +1,11 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
-import type { BotAdapter, BotState } from '@shared/data-transfer/bot/_base'
+import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
 
 // 可被数据库存储的Bot实例
 export type BotDBInstance = {
   readonly botConfigDB: BotRecordEntity
 }
 
-export enum BotSignal {
-  SIGSTOP,
-  SIGKILL,
-}
 export type BotHealthCheckable = {
   runningState: () => BotState
   signal: (signal: BotSignal) => void

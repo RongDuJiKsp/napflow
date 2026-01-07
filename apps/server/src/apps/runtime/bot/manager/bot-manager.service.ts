@@ -1,6 +1,6 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { Account } from '@shared/data-transfer/account/base'
+import type { Account } from '@shared/common/account/base'
 import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
 
 @Injectable()

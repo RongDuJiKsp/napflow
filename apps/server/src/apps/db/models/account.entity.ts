@@ -1,4 +1,4 @@
-import { UserRole } from '@shared/data-transfer/account/base'
+import { UserRole } from '@shared/common/account/base'
 import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm'
 
 @Entity('users')

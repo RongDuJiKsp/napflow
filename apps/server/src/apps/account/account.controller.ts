@@ -34,7 +34,7 @@ import { ZodSerializerDto } from 'nestjs-zod'
 import { AccountService } from './account.service'
 import { JwtService } from './jwt.service'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
-import { type Account, UserRole } from '@shared/data-transfer/account/base'
+import { type Account, UserRole } from '@shared/common/account/base'
 
 /**
  * @route `/account`

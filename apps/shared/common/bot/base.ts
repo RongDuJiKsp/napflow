@@ -1,4 +1,3 @@
-import { BotSignal } from '@/src/apps/runtime/bot/adapter/_base'
 import z from 'zod'
 
 export enum AdapterTag {
@@ -21,6 +20,10 @@ export enum BotRunningState {
   offline, // 当bot实例已断线但未被清理时 此时为offline
   fatal, // 当bot实例发生 fatal 错误时 此时为fatal
   killed, // 当bot实例被kill时 此时为killed
+}
+export enum BotSignal {
+  SIGSTOP,
+  SIGKILL,
 }
 
 export const ZodCheckBotState = z.object({

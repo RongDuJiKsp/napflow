@@ -13,10 +13,10 @@ import {
   BotCoreRuntimeService,
   adapterClassMeta,
 } from '../core/bot-core-runtime.service'
-import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
+import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
-import type { Account } from '@shared/data-transfer/account/base'
-import { UserRole } from '@shared/data-transfer/account/base'
+import type { Account } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/base'
 import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { type CreateBotReq, ZodCheckCreateBotReq, ZodCheckCreateBotResp, ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'

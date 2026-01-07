@@ -1,11 +1,10 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { BotAdapterFactory, BotInstance } from './_base'
-import { BotSignal } from './_base'
-import type { BotAdapter, BotState } from '@shared/data-transfer/bot/_base'
-import { AdapterTag, BotRunningState } from '@shared/data-transfer/bot/_base'
 import { Logger } from '@nestjs/common'
-import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/data-transfer/bot/napcatws-adapter'
 import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
+import type { BotAdapter, BotState } from '@shared/common/bot/base'
+import { AdapterTag, BotRunningState, BotSignal } from '@shared/common/bot/base'
+import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 
 export class NapcatWsAdapter implements BotInstance {
   static readonly adapterMeta: BotAdapter = {

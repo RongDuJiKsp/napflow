@@ -1,6 +1,6 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { AdapterTag, ZodCheckCommonBotInfo } from './_base'
+import { AdapterTag, ZodCheckCommonBotInfo } from '../../common/bot/base'
 
 export const ZodCheckGetAllBotsResp = defineZodResp(z.array(
   ZodCheckCommonBotInfo,

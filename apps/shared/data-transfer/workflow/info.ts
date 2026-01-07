@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppPublish } from './base'
+import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppPublish } from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create

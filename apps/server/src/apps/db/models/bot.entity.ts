@@ -1,8 +1,8 @@
 import { CreateDateColumn, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
-import { AdapterTag } from '@shared/data-transfer/bot/_base'
-import type { CommonAdapterConfig } from '@shared/data-transfer/bot/adapter'
+import type { CommonAdapterConfig } from '@shared/common/bot/adapter'
 import type { JsonObject } from 'type-fest'
+import { AdapterTag } from '@shared/common/bot/base'
 
 // 每一个BotRecord对应配置好的机器人endpoint
 @Entity()

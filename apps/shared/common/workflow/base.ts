@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ZodCheckEdge, ZodCheckNode } from './_import'
+import { ZodCheckEdge, ZodCheckNode } from './core'
 
 export enum NodeClassic {
   Component = 'component', // 组件节点,该节点作为工作流运行路径的组成部分

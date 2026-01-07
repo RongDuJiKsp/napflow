@@ -1,6 +1,6 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { ZodCheckAccountInfo, ZodCheckUserRoleType } from './base'
+import { ZodCheckAccountInfo, ZodCheckUserRoleType } from '../../common/account/base'
 
 // req resp
 
