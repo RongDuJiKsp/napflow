@@ -1,14 +1,14 @@
 import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
-import type { AccountInfoRespType } from '@shared/data-transfer/account/account'
-import type { AccountInfoType } from '@shared/data-transfer/account/base'
+import type { AccountInfoResp } from '@shared/data-transfer/account/account'
+import type { AccountInfo } from '@shared/data-transfer/account/base'
 import { useQuery } from '@tanstack/react-query'
 
 export const useAccountInfoQuery = (accEmail: string) => {
   return useQuery({
     queryKey: ['account-info', accEmail],
-    queryFn: async (): Promise<AccountInfoType> => {
-      const res = await jsonQ.Get<AccountInfoRespType>('/account/account-info', { params: { email: accEmail } })
+    queryFn: async (): Promise<AccountInfo> => {
+      const res = await jsonQ.Get<AccountInfoResp>('/account/account-info', { params: { email: accEmail } })
       if (res.statusCode !== Code.Ok || !res.data)
         throw new Error(res.message)
       return res.data

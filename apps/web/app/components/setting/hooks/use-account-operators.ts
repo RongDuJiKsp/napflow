@@ -1,23 +1,23 @@
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { useAccountMeta } from '@/app/hooks/account/use-account-meta'
 import { jsonQ } from '@/utils/net'
-import type { NullRespType } from '@shared/data-transfer/_base'
+import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
-import type { AccountUpDownGradeReqType } from '@shared/data-transfer/account/account'
-import { AccountCreateReq, AccountDisableReq, AccountUpDownGradeReq } from '@shared/data-transfer/account/account'
+import { ZodCheckAccountCreateReq, ZodCheckAccountDisableReq, ZodCheckAccountUpDownGradeReq } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
 import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
 import { useResetState } from 'ahooks'
+import type { AccountUpDownGradeReq } from '@shared/data-transfer/account/account'
 
 export const useAccountActions = () => {
   const { isAdmin: enableFeature } = useAccountMeta()
   const { message, notification } = App.useApp()
   const { refetch: refreshAccList } = useAccountsQuery()
 
-  const handleUpgrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
-    const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
+  const handleUpgrade = useCallback(async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
+    const validated = ZodCheckAccountUpDownGradeReq.safeParse({ email, groupType })
     if(!validated.success) {
       notification.error({
         title: '账号升级提交失败',
@@ -25,7 +25,7 @@ export const useAccountActions = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/upgrade', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/upgrade', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
@@ -33,8 +33,8 @@ export const useAccountActions = () => {
     await refreshAccList()
     message.success('升级账号成功')
   }, [notification, message, refreshAccList])
-  const handleDownGrade = useCallback(async (email: string, groupType: AccountUpDownGradeReqType['groupType']) => {
-    const validated = AccountUpDownGradeReq.safeParse({ email, groupType })
+  const handleDownGrade = useCallback(async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
+    const validated = ZodCheckAccountUpDownGradeReq.safeParse({ email, groupType })
     if(!validated.success) {
       notification.error({
         title: '账号降级提交失败',
@@ -42,7 +42,7 @@ export const useAccountActions = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/downgrade', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/downgrade', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
@@ -52,7 +52,7 @@ export const useAccountActions = () => {
   }, [refreshAccList, message, notification])
 
   const handleDisable = useCallback(async (email: string) => {
-    const validated = AccountDisableReq.safeParse({ email })
+    const validated = ZodCheckAccountDisableReq.safeParse({ email })
     if(!validated.success) {
       notification.error({
         title: '账号禁用提交失败',
@@ -60,7 +60,7 @@ export const useAccountActions = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/disable', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/disable', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
@@ -101,7 +101,7 @@ export const useAccountAddOperators = () => {
       return
     }
 
-    const validated = AccountCreateReq.safeParse(formValue)
+    const validated = ZodCheckAccountCreateReq.safeParse(formValue)
     if(!validated.success) {
       notification.error({
         title: '账号添加请求提交失败',
@@ -109,7 +109,7 @@ export const useAccountAddOperators = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/create', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/create', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return

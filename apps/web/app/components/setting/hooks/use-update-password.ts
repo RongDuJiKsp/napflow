@@ -1,6 +1,6 @@
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
-import { Code, type NullRespType } from '@shared/data-transfer/_base'
+import { Code, type NullResp } from '@shared/data-transfer/_base'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
@@ -42,7 +42,7 @@ export const useUpdatePassword = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/change-password', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/change-password', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return

@@ -1,13 +1,14 @@
 import { useAccountInfoQuery } from '@/app/hooks/query/use-account-info-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { RiAdminLine, RiUserLine } from '@remixicon/react'
-import { UserRole, type UserRoleTypeType } from '@shared/data-transfer/account/base'
+import { UserRole, type UserRoleType } from '@shared/data-transfer/account/base'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useMemo } from 'react'
+import type { AccountInfo } from '@shared/data-transfer/account/base'
 
 type UpDownGradeOptions = {
   icon: ComponentWithClass;
-  value: UserRoleTypeType;
+  value: UserRoleType;
   disabled?: boolean;
   tooltip?: string;
 } & DefaultOptionType
@@ -26,7 +27,7 @@ export const useUpgradeOptions = (targetUser: string) => {
     return UpDownGradeOptionsValueBase.map((item) => {
       if(item.disabled)
         return item
-      const has = data.userGroup.some(group => group.groupType === item.value)
+      const has = data.userGroup.some((group: AccountInfo['userGroup'][number]) => group.groupType === item.value)
       return {
         ...item,
         disabled: has,
@@ -46,7 +47,7 @@ export const useDownGradeOptions = (targetUser: string) => {
     return UpDownGradeOptionsValueBase.map((item) => {
       if(item.disabled)
         return item
-      const notHave = !data.userGroup.some(group => group.groupType === item.value)
+      const notHave = !data.userGroup.some((group: AccountInfo['userGroup'][number]) => group.groupType === item.value)
       return {
         ...item,
         disabled: notHave,

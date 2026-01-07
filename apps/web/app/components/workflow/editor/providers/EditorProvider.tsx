@@ -1,5 +1,5 @@
 import { jsonQ } from '@/utils/net'
-import type { WorkflowAppDataType } from '@shared/data-transfer/workflow/base'
+import type { WorkflowAppData } from '@shared/data-transfer/workflow/base'
 import { ReactFlowProvider } from '@xyflow/react'
 import { useMount } from 'ahooks'
 import type { PropsWithChildren } from 'react'
@@ -8,10 +8,10 @@ import { useAppParam } from '../../hooks/use-app-param'
 
 const EditorProvider = ({ children }: PropsWithChildren) => {
   const { appId } = useAppParam()
-  const [remoteState, setRemoteState] = useState<WorkflowAppDataType | null>(null)
+  const [remoteState, setRemoteState] = useState<WorkflowAppData | null>(null)
 
   const loadRemoteState = useCallback(async () => {
-    const data = await jsonQ.Get<WorkflowAppDataType>(`/workflow/${appId}/draft`)
+    const data = await jsonQ.Get<WorkflowAppData>(`/workflow/${appId}/draft`)
     setRemoteState(data)
   }, [appId])
 

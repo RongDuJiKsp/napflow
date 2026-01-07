@@ -1,18 +1,18 @@
 import { useCallback, useState } from 'react'
-import { CreateWorkflowReq, type CreateWorkflowReqType } from '@shared/data-transfer/workflow/info'
+import { ZodCheckCreateWorkflowReq, type CreateWorkflowReq } from '@shared/data-transfer/workflow/info'
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
-import type { NullRespType } from '@shared/data-transfer/_base'
+import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
 import { App } from 'antd'
 import z from 'zod'
 export const useAppCreate = () => {
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue] = useState<CreateWorkflowReqType>({ appName: '', appDescription: '' })
+  const [formValue, setFormValue] = useState<CreateWorkflowReq>({ appName: '', appDescription: '' })
   const handleChangeAppName = useAreaChange(setFormValue, 'appName')
   const handleChangeAppDesp = useAreaChange(setFormValue, 'appDescription')
   const handleSubmit = useCallback(async () => {
-    const validated = CreateWorkflowReq.safeParse(formValue)
+    const validated = ZodCheckCreateWorkflowReq.safeParse(formValue)
     if(!validated.success) {
       notification.error({
         title: '提交失败',
@@ -20,7 +20,7 @@ export const useAppCreate = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/workflow/create', validated.data)
+    const res = await jsonQ.Post<NullResp>('/workflow/create', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return

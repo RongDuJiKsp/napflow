@@ -1,5 +1,5 @@
-import type { LoginReqType } from '@shared/data-transfer/account/account'
-import { LoginReq } from '@shared/data-transfer/account/account'
+import type { LoginReq } from '@shared/data-transfer/account/account'
+import { ZodCheckLoginReq } from '@shared/data-transfer/account/account'
 import { useCallback, useState } from 'react'
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { App } from 'antd'
@@ -10,12 +10,12 @@ export const useLoginWindow = () => {
   const { notification } = App.useApp()
 
   const { login } = useLogin()
-  const [input, setInput] = useState<LoginReqType>({ email: '', password: '' })
+  const [input, setInput] = useState<LoginReq>({ email: '', password: '' })
   const handleEmailChange = useAreaChange(setInput, 'email')
   const handlePasswordChange = useAreaChange(setInput, 'password')
 
   const handleSubmit = useCallback(async () => {
-    const form = LoginReq.safeParse(input)
+    const form = ZodCheckLoginReq.safeParse(input)
     if(!form.success) {
       notification.error({
         title: 'Validation Error',

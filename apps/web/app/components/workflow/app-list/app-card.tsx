@@ -1,5 +1,5 @@
 'use client'
-import type { WorkflowAppType } from '@shared/data-transfer/workflow/base'
+import type { WorkflowApp } from '@shared/data-transfer/workflow/base'
 import { useBoolean } from 'ahooks'
 import Link from 'next/link'
 import { memo, useCallback } from 'react'
@@ -13,7 +13,7 @@ const formatDate = (date: Date) => {
   }).format(date)
 }
 export type AppCardProps = {
-  app: WorkflowAppType;
+  app: WorkflowApp;
 }
 
 const AppCard = ({ app }: AppCardProps) => {

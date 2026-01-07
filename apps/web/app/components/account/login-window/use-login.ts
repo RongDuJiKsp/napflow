@@ -1,8 +1,8 @@
 import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
 import type {
-  LoginReqType,
-  LoginRespType,
+  LoginReq,
+  LoginResp,
 } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
 import { useRouter } from 'next/navigation'
@@ -12,8 +12,8 @@ export const useLogin = () => {
   const { message } = App.useApp()
   const router = useRouter()
   const login = useCallback(
-    async (data: LoginReqType) => {
-      const resp = await jsonQ.Post<LoginRespType>('/account/login', data)
+    async (data: LoginReq) => {
+      const resp = await jsonQ.Post<LoginResp>('/account/login', data)
       if (resp.statusCode !== Code.Ok || !resp.data) {
         message.error(resp.message)
         return

@@ -1,8 +1,8 @@
 import { useAreaChange } from '@/app/hooks/utils/use-area-change'
 import { jsonQ } from '@/utils/net'
-import type { NullRespType } from '@shared/data-transfer/_base'
+import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
-import { AccountChangeNicknameReq, type AccountChangeNicknameReqType } from '@shared/data-transfer/account/account'
+import { type AccountChangeNicknameReq, ZodCheckAccountChangeNicknameReq } from '@shared/data-transfer/account/account'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
@@ -10,13 +10,13 @@ import { useResetState } from 'ahooks'
 
 export const useUpdateNickname = () => {
   const { message, notification } = App.useApp()
-  const [formValue, setFormValue, resetForm] = useResetState<AccountChangeNicknameReqType>({
+  const [formValue, setFormValue, resetForm] = useResetState<AccountChangeNicknameReq>({
     nickname: '',
   })
   const handleChangeNickname = useAreaChange(setFormValue, 'nickname')
 
   const handleSubmit = useCallback(async () => {
-    const validated = AccountChangeNicknameReq.safeParse(formValue)
+    const validated = ZodCheckAccountChangeNicknameReq.safeParse(formValue)
     if(!validated.success) {
       notification.error({
         title: '提交失败',
@@ -24,7 +24,7 @@ export const useUpdateNickname = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullRespType>('/account/change-nickname', validated.data)
+    const res = await jsonQ.Post<NullResp>('/account/change-nickname', validated.data)
     if(res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
