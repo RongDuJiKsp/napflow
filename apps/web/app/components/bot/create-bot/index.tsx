@@ -67,7 +67,7 @@ const CreateBotWindow = () => {
 
         <div className="rounded-xl border border-pink-200 bg-white/70 p-4 shadow-sm">
           <div className="text-sm font-semibold text-purple-700 mb-3">
-            连接配置（Napcat WS）
+            连接配置
           </div>
 
           <AdapterConfigContecxt.Provider value={form.adapterConfig}>

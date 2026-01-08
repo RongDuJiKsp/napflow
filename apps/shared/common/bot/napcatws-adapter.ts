@@ -2,7 +2,7 @@ import z from 'zod'
 
 export const ZodCheckNapcatWsAdapterConfig = z.object({
   endpoint: z.object({
-    wsUrl: z.string(),
+    wsUrl: z.url(),
     token: z.string().optional(),
   }),
 })
