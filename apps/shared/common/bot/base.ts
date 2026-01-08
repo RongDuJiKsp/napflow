@@ -22,8 +22,8 @@ export enum BotRunningState {
   killed, // 当bot实例被kill时 此时为killed
 }
 export enum BotSignal {
-  SIGSTOP,
-  SIGKILL,
+  SIGSTOP, // 优雅退出
+  SIGKILL, // 强制退出
 }
 
 export const ZodCheckBotState = z.object({

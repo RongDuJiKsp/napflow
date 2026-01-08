@@ -1,5 +1,9 @@
+import CreateBot from '@/app/components/bot/create-bot'
+
 export default function Page() {
   return (
-    <div>Create</div>
+    <div>
+      <CreateBot />
+    </div>
   )
 }
