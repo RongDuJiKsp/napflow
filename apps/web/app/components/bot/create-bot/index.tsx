@@ -75,7 +75,7 @@ const CreateBotWindow = () => {
   return (
     <div
       className={twMerge(
-        'max-w-md mx-auto',
+        'max-w-4xl mx-auto',
         'bg-linear-to-br from-pink-50 to-purple-50',
         'rounded-2xl shadow-lg p-8 border border-pink-100',
       )}
@@ -97,55 +97,61 @@ const CreateBotWindow = () => {
             />
           </TextField>
 
-          <TextField
-            value={form.description}
-            onChange={handleDescriptionChange}
-          >
-            <Label className="block text-sm font-medium text-purple-700 mb-2">
-              机器人描述
-            </Label>
-            <TextArea
-              rows={4}
-              maxLength={200}
-              className={twMerge(
-                'resize-none overflow-hidden',
-                'w-full rounded-lg border border-pink-200',
-                'focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent',
-                'transition-all duration-200 bg-white text-gray-700 placeholder-pink-300',
-              )}
-              placeholder="简单描述一下这个机器人的用途"
-            />
-          </TextField>
-
-          <div>
-            <div className="block text-sm font-medium text-purple-700 mb-2">
-              适配器类型
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <TextField
+                value={form.description}
+                onChange={handleDescriptionChange}
+              >
+                <Label className="block text-sm font-medium text-purple-700 mb-2">
+                  机器人描述
+                </Label>
+                <TextArea
+                  rows={4}
+                  maxLength={200}
+                  className={twMerge(
+                    'resize-none overflow-hidden',
+                    'w-full rounded-lg border border-pink-200',
+                    'focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent',
+                    'transition-all duration-200 bg-white text-gray-700 placeholder-pink-300',
+                  )}
+                  placeholder="简单描述一下这个机器人的用途"
+                />
+              </TextField>
             </div>
 
-            <RadioGroup
-              value={form.adapterTag}
-              onChange={handleAdapterTagChange}
-              className="grid grid-cols-1 gap-3"
-            >
-              {adapterOptions.map(option => (
-                <AdapterRadio key={option.value} option={option} />
-              ))}
-            </RadioGroup>
-          </div>
-        </div>
+            <div className="space-y-4">
+              <div>
+                <div className="block text-sm font-medium text-purple-700 mb-2">
+                  适配器类型
+                </div>
 
-        <div className="rounded-xl border border-pink-200 bg-white/70 p-4 shadow-sm">
-          <div className="text-sm font-semibold text-purple-700 mb-3">
-            连接配置
-          </div>
+                <RadioGroup
+                  value={form.adapterTag}
+                  onChange={handleAdapterTagChange}
+                  className="grid grid-cols-1 gap-3"
+                >
+                  {adapterOptions.map(option => (
+                    <AdapterRadio key={option.value} option={option} />
+                  ))}
+                </RadioGroup>
+              </div>
 
-          <AdapterConfigContecxt.Provider value={form.adapterConfig}>
-            <AdapterConfigSetterContext.Provider
-              value={handleAdapterConfigChange}
-            >
-              <ConfigArea />
-            </AdapterConfigSetterContext.Provider>
-          </AdapterConfigContecxt.Provider>
+              <div className="rounded-xl border border-pink-200 bg-white/70 p-4 shadow-sm">
+                <div className="text-sm font-semibold text-purple-700 mb-3">
+                  连接配置
+                </div>
+
+                <AdapterConfigContecxt.Provider value={form.adapterConfig}>
+                  <AdapterConfigSetterContext.Provider
+                    value={handleAdapterConfigChange}
+                  >
+                    <ConfigArea />
+                  </AdapterConfigSetterContext.Provider>
+                </AdapterConfigContecxt.Provider>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

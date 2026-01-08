@@ -5,7 +5,7 @@ import HeaderNavigation from '@/app/components/common-layout/HeaderNavigation'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-linear-to-br from-pink-50 to-purple-50">
+    <div className="bg-linear-to-br from-pink-50/30 to-purple-50/30">
       {/* 顶部导航栏 */}
       <header className="bg-white shadow-md border-b border-purple-100 h-headerbar">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
