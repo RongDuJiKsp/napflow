@@ -8,12 +8,62 @@ import {
 import { adapterComponent } from './constances'
 import { Input, Label, TextArea, TextField } from '@heroui/react'
 import { twMerge } from 'tailwind-merge'
+import { Radio, RadioGroup } from '@headlessui/react'
+import { AdapterTag } from '@shared/common/bot/base'
+
+const adapterOptions = [
+  {
+    label: 'Napcat Ws Client',
+    desc: '通过 WebSocket 作为客户端 连接 Napcat 服务',
+    value: AdapterTag.napcatWs,
+  },
+]
+const AdapterRadio = ({
+  option,
+}: {
+  option: (typeof adapterOptions)[number];
+}) => {
+  return (
+    <Radio value={option.value}>
+      {({ checked }) => (
+        <div
+          className={twMerge(
+            'cursor-pointer rounded-xl border p-4 shadow-sm transition-all duration-200',
+            'bg-white/70',
+            checked
+              ? 'border-purple-300 ring-2 ring-purple-200'
+              : 'border-pink-200 hover:shadow-md hover:bg-purple-50',
+          )}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-sm font-semibold text-gray-800">
+                {option.label}
+              </div>
+              <div className="mt-1 text-xs text-gray-500">{option.desc}</div>
+            </div>
+
+            <div
+              className={twMerge(
+                'h-5 w-5 rounded-full border transition-all duration-200',
+                checked
+                  ? 'border-transparent bg-linear-to-r from-purple-500 to-pink-500'
+                  : 'border-pink-200 bg-white',
+              )}
+            />
+          </div>
+        </div>
+      )}
+    </Radio>
+  )
+}
 
 const CreateBotWindow = () => {
   const {
     form,
     handleNameChange,
     handleDescriptionChange,
+    handleAdapterTagChange,
     handleAdapterConfigChange,
   } = useCreateBot()
 
@@ -47,7 +97,10 @@ const CreateBotWindow = () => {
             />
           </TextField>
 
-          <TextField value={form.description} onChange={handleDescriptionChange}>
+          <TextField
+            value={form.description}
+            onChange={handleDescriptionChange}
+          >
             <Label className="block text-sm font-medium text-purple-700 mb-2">
               机器人描述
             </Label>
@@ -63,6 +116,22 @@ const CreateBotWindow = () => {
               placeholder="简单描述一下这个机器人的用途"
             />
           </TextField>
+
+          <div>
+            <div className="block text-sm font-medium text-purple-700 mb-2">
+              适配器类型
+            </div>
+
+            <RadioGroup
+              value={form.adapterTag}
+              onChange={handleAdapterTagChange}
+              className="grid grid-cols-1 gap-3"
+            >
+              {adapterOptions.map(option => (
+                <AdapterRadio key={option.value} option={option} />
+              ))}
+            </RadioGroup>
+          </div>
         </div>
 
         <div className="rounded-xl border border-pink-200 bg-white/70 p-4 shadow-sm">
@@ -71,7 +140,9 @@ const CreateBotWindow = () => {
           </div>
 
           <AdapterConfigContecxt.Provider value={form.adapterConfig}>
-            <AdapterConfigSetterContext.Provider value={handleAdapterConfigChange}>
+            <AdapterConfigSetterContext.Provider
+              value={handleAdapterConfigChange}
+            >
               <ConfigArea />
             </AdapterConfigSetterContext.Provider>
           </AdapterConfigContecxt.Provider>
