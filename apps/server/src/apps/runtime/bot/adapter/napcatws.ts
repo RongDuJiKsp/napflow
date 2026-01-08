@@ -7,13 +7,13 @@ import { AdapterTag, BotRunningState, BotSignal } from '@shared/common/bot/base'
 import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 
 export class NapcatWsAdapter implements BotInstance {
-  static readonly adapterMeta: BotAdapter = {
-    adapterTag: AdapterTag.napcatWs,
-    adapterDesc: 'Napcat Ws客户端',
+  static readonly meta: BotAdapter = {
+    tag: AdapterTag.napcatWs,
+    desc: 'Napcat Ws客户端',
   }
 
-  readonly adapterDesc: string = NapcatWsAdapter.adapterMeta.adapterDesc
-  readonly adapterTag: AdapterTag = NapcatWsAdapter.adapterMeta.adapterTag
+  readonly desc: string = NapcatWsAdapter.meta.desc
+  readonly tag: AdapterTag = NapcatWsAdapter.meta.tag
   readonly botConfigDB: BotRecordEntity
   private readonly botConfigSnapshot?: NapcatWsAdapterConfig
   private readonly logger: Logger

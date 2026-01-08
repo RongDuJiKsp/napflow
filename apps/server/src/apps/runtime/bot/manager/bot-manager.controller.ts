@@ -46,7 +46,7 @@ export class BotManagerController {
         botId: botRecord.recordId,
         adapterTag: botRecord.adapterTag,
         adapterDesc:
-          adapterClassMeta[botRecord.adapterTag].adapterMeta.adapterDesc,
+          adapterClassMeta[botRecord.adapterTag].meta.desc,
         botDesc: botRecord.description,
         state: this.botCoreRuntimeService.botState(botRecord.recordId),
       }

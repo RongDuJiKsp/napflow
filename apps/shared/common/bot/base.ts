@@ -6,11 +6,11 @@ export enum AdapterTag {
 
 // 带一些meta方便create
 export type BotAdapter = {
-  readonly adapterTag: AdapterTag
-  readonly adapterDesc: string
+  readonly tag: AdapterTag
+  readonly desc: string
 }
 export type BotAdapterClass = {
-  readonly adapterMeta: BotAdapter
+  readonly meta: BotAdapter
 }
 
 // bot状态
