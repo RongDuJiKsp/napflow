@@ -30,7 +30,7 @@ export const useCreateBot = () => {
 export const AdapterConfigContecxt = createContext({})
 export const AdapterConfigSetterContext = createContext<(config: CreateBotReq['adapterConfig']) => void>(noop)
 export const useCreateBotConfig = <T>() => {
-  return useContext(AdapterConfigContecxt) as Partial<T>
+  return useContext(AdapterConfigContecxt) as T
 }
 export const useCreateBotSetConfig = <T>() => {
   return useContext(AdapterConfigSetterContext) as (config: T) => void
