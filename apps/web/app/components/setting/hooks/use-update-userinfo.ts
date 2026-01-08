@@ -1,4 +1,4 @@
-import { useAreaChange } from '@/app/hooks/utils/use-immer'
+import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
@@ -13,7 +13,7 @@ export const useUpdateNickname = () => {
   const [formValue, setFormValue, resetForm] = useResetState<AccountChangeNicknameReq>({
     nickname: '',
   })
-  const handleChangeNickname = useAreaChange(setFormValue, 'nickname')
+  const handleChangeNickname = useAreaChangeHandler(setFormValue, 'nickname')
 
   const handleSubmit = useCallback(async () => {
     const validated = ZodCheckAccountChangeNicknameReq.safeParse(formValue)

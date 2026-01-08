@@ -1,4 +1,4 @@
-import { useAreaChange } from '@/app/hooks/utils/use-immer'
+import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { jsonQ } from '@/utils/net'
 import { Code, type NullResp } from '@shared/data-transfer/_base'
 import { App } from 'antd'
@@ -22,9 +22,9 @@ export const useUpdatePassword = () => {
     confirmPassword: '',
   })
 
-  const handleChangeOldPassword = useAreaChange(setFormValue, 'oldPassword')
-  const handleChangeNewPassword = useAreaChange(setFormValue, 'newPassword')
-  const handleChangeConfirmPassword = useAreaChange(setFormValue, 'confirmPassword')
+  const handleChangeOldPassword = useAreaChangeHandler(setFormValue, 'oldPassword')
+  const handleChangeNewPassword = useAreaChangeHandler(setFormValue, 'newPassword')
+  const handleChangeConfirmPassword = useAreaChangeHandler(setFormValue, 'confirmPassword')
   const handleSubmit = useCallback(async () => {
     if(formValue.newPassword !== formValue.confirmPassword) {
       notification.error({

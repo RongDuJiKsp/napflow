@@ -2,7 +2,7 @@ import { AdapterTag } from '@shared/common/bot/base'
 import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
 import { useResetState } from 'ahooks'
 import { defaultAdapterConfigFactory } from '../constances'
-import { useAreaChange, useImmerCallback } from '@/app/hooks/utils/use-immer'
+import { useAreaChangeDispatch, useAreaChangeHandler, useImmerCallback } from '@/app/hooks/utils/use-immer'
 import type { Dispatch, SetStateAction } from 'react'
 import { createContext, useContext } from 'react'
 import { noop } from 'lodash-es'
@@ -23,19 +23,19 @@ export const useCreateBot = () => {
     adapterTag: AdapterTag.napcatWs,
     adapterConfig: defaultAdapterConfigFactory[AdapterTag.napcatWs](),
   })
-  const handleNameChange = useAreaChange(setForm, 'name')
-  const handleDescriptionChange = useAreaChange(setForm, 'description')
+  const handleNameChange = useAreaChangeHandler(setForm, 'name')
+  const handleDescriptionChange = useAreaChangeHandler(setForm, 'description')
   const handleAdapterTagChange = useImmerCallback(setForm, (draft, tag: AdapterTag) => {
     draft.adapterTag = tag
     draft.adapterConfig = defaultAdapterConfigFactory[tag]()
   })
-  const handleAdapterConfigChange = useAreaChange(setForm, 'adapterConfig')
+  const adapterConfigChangeDispath = useAreaChangeDispatch(setForm, 'adapterConfig')
   return {
     form,
     resetForm,
     handleNameChange,
     handleDescriptionChange,
     handleAdapterTagChange,
-    handleAdapterConfigChange,
+    adapterConfigChangeDispath,
   }
 }

@@ -1,4 +1,4 @@
-import { useAreaChange } from '@/app/hooks/utils/use-immer'
+import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { useAccountMeta } from '@/app/hooks/account/use-account-meta'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
@@ -87,10 +87,10 @@ export const useAccountAddOperators = () => {
     nickname: '',
     passwordAgain: '',
   })
-  const handleChangeEmail = useAreaChange(setFormValue, 'email')
-  const handleChangePassword = useAreaChange(setFormValue, 'password')
-  const handleChangeNickname = useAreaChange(setFormValue, 'nickname')
-  const handleChangePasswordAgain = useAreaChange(setFormValue, 'passwordAgain')
+  const handleChangeEmail = useAreaChangeHandler(setFormValue, 'email')
+  const handleChangePassword = useAreaChangeHandler(setFormValue, 'password')
+  const handleChangeNickname = useAreaChangeHandler(setFormValue, 'nickname')
+  const handleChangePasswordAgain = useAreaChangeHandler(setFormValue, 'passwordAgain')
 
   const handleSubmit = useCallback(async () => {
     if(formValue.password !== formValue.passwordAgain) {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { type CreateWorkflowReq, ZodCheckCreateWorkflowReq } from '@shared/data-transfer/workflow/info'
-import { useAreaChange } from '@/app/hooks/utils/use-immer'
+import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
@@ -9,8 +9,8 @@ import z from 'zod'
 export const useAppCreate = () => {
   const { message, notification } = App.useApp()
   const [formValue, setFormValue] = useState<CreateWorkflowReq>({ appName: '', appDescription: '' })
-  const handleChangeAppName = useAreaChange(setFormValue, 'appName')
-  const handleChangeAppDesp = useAreaChange(setFormValue, 'appDescription')
+  const handleChangeAppName = useAreaChangeHandler(setFormValue, 'appName')
+  const handleChangeAppDesp = useAreaChangeHandler(setFormValue, 'appDescription')
   const handleSubmit = useCallback(async () => {
     const validated = ZodCheckCreateWorkflowReq.safeParse(formValue)
     if(!validated.success) {
