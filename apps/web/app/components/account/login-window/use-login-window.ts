@@ -1,7 +1,7 @@
 import type { LoginReq } from '@shared/data-transfer/account/account'
 import { ZodCheckLoginReq } from '@shared/data-transfer/account/account'
 import { useCallback, useState } from 'react'
-import { useAreaChange } from '@/app/hooks/utils/use-area-change'
+import { useAreaChange } from '@/app/hooks/utils/use-immer'
 import { App } from 'antd'
 import z from 'zod'
 import { useLogin } from './use-login'

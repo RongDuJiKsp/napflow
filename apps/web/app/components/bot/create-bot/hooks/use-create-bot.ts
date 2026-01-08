@@ -2,7 +2,7 @@ import { AdapterTag } from '@shared/common/bot/base'
 import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
 import { useResetState } from 'ahooks'
 import { defaultAdapterConfigFactory } from '../constances'
-import { useAreaChange } from '@/app/hooks/utils/use-area-change'
+import { useAreaChange, useImmerCallback } from '@/app/hooks/utils/use-immer'
 import { createContext, useContext } from 'react'
 import { noop } from 'lodash-es'
 
@@ -15,7 +15,10 @@ export const useCreateBot = () => {
   })
   const handleNameChange = useAreaChange(setForm, 'name')
   const handleDescriptionChange = useAreaChange(setForm, 'description')
-  const handleAdapterTagChange = useAreaChange(setForm, 'adapterTag')
+  const handleAdapterTagChange = useImmerCallback(setForm, (draft, tag: AdapterTag) => {
+    draft.adapterTag = tag
+    draft.adapterConfig = defaultAdapterConfigFactory[tag]()
+  })
   const handleAdapterConfigChange = useAreaChange(setForm, 'adapterConfig')
   return {
     form,
