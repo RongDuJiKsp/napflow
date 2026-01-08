@@ -18,7 +18,7 @@ const UserInfoSettingWindow = () => {
         <Label className="block text-sm font-medium text-purple-700 mb-2">新昵称</Label>
         <Input
           type="text"
-          className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-300"
+          className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-500"
           placeholder="请输入新昵称"
         />
       </TextField>

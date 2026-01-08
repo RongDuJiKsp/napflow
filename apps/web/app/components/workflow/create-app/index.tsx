@@ -6,8 +6,8 @@ import { twMerge } from 'tailwind-merge'
 const CreateAppWindow = () => {
   return (
     <div className={twMerge(
-      'p-6 bg-linear-to-br from-purple-50 to-pink-50',
-      'rounded-xl border border-pink-200 shadow-sm',
+      'p-8 bg-linear-to-br from-pink-50 to-purple-50',
+      'rounded-2xl border border-pink-100 shadow-lg',
       'max-w-md mx-auto',
     )}>
       <h2 className="text-xl font-semibold text-purple-700 mb-6">

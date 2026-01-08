@@ -25,7 +25,7 @@ const LoginWindow = () => {
           <Input
             type="email"
             id="email"
-            className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-300"
+            className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-500"
             placeholder="请输入邮箱地址"
           />
         </TextField>
@@ -47,7 +47,7 @@ const LoginWindow = () => {
                   isFocusWithin
                   && 'outline-none ring-2 border-transparent ring-purple-400',
                 ),
-              input: 'text-gray-700 placeholder-pink-300',
+              input: 'text-gray-700 placeholder-pink-500',
             }}
             placeholder="请输入密码"
           />
