@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react'
 import {
+  AdapterConfigContecxt,
   AdapterConfigSetterContext,
   useCreateBot,
 } from './hooks/use-create-bot'
@@ -14,9 +15,11 @@ const CreateBotWindow = () => {
   return (
     <div>
       Create
-      <AdapterConfigSetterContext.Provider value={handleAdapterConfigChange}>
-        <ConfigArea />
-      </AdapterConfigSetterContext.Provider>
+      <AdapterConfigContecxt.Provider value={form.adapterConfig}>
+        <AdapterConfigSetterContext.Provider value={handleAdapterConfigChange}>
+          <ConfigArea />
+        </AdapterConfigSetterContext.Provider>
+      </AdapterConfigContecxt.Provider>
     </div>
   )
 }

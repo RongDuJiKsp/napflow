@@ -1,4 +1,5 @@
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
+import { useCreateBotConfig, useCreateBotSetConfig } from './use-create-bot'
 
 export const defaultNapcatForm = (): NapcatWsAdapterConfig => ({
   endpoint: {
@@ -6,3 +7,9 @@ export const defaultNapcatForm = (): NapcatWsAdapterConfig => ({
     token: '',
   },
 })
+
+export const useNapcatWsConfigForm = () => {
+  const config = useCreateBotConfig<NapcatWsAdapterConfig>()
+  const setConfig = useCreateBotSetConfig<NapcatWsAdapterConfig>()
+  return { config, setConfig }
+}
