@@ -1,20 +1,22 @@
 import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { jsonQ } from '@/utils/net'
-import { Code, type NullResp } from '@shared/data-transfer/_base'
+import type { NullResp } from '@shared/data-transfer/_base'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
 import { useResetState } from 'ahooks'
+import { useSubmitZod } from '@/app/hooks/utils/use-form'
 
 const ChangePasswordForm = z.object({
   oldPassword: z.string().min(1, '请输入旧密码'),
   newPassword: z.string().min(1, '请输入新密码'),
   confirmPassword: z.string().min(1, '请输入确认密码'),
 })
-
 type ChangePasswordFormType = z.infer<typeof ChangePasswordForm>
+
+const submitForm = async (data: ChangePasswordFormType) => await jsonQ.Post<NullResp>('/account/change-password', data)
 export const useUpdatePassword = () => {
-  const { message, notification } = App.useApp()
+  const { notification } = App.useApp()
 
   const [formValue, setFormValue, resetForm] = useResetState<ChangePasswordFormType>({
     oldPassword: '',
@@ -25,6 +27,7 @@ export const useUpdatePassword = () => {
   const handleChangeOldPassword = useAreaChangeHandler(setFormValue, 'oldPassword')
   const handleChangeNewPassword = useAreaChangeHandler(setFormValue, 'newPassword')
   const handleChangeConfirmPassword = useAreaChangeHandler(setFormValue, 'confirmPassword')
+  const submitReq = useSubmitZod(formValue, ChangePasswordForm, submitForm, { successText: '修改密码成功', errorText: '提交失败' })
   const handleSubmit = useCallback(async () => {
     if(formValue.newPassword !== formValue.confirmPassword) {
       notification.error({
@@ -33,23 +36,9 @@ export const useUpdatePassword = () => {
       })
       return
     }
-
-    const validated = ChangePasswordForm.safeParse(formValue)
-    if(!validated.success) {
-      notification.error({
-        title: '提交失败',
-        description: z.prettifyError(validated.error),
-      })
-      return
-    }
-    const res = await jsonQ.Post<NullResp>('/account/change-password', validated.data)
-    if(res.statusCode !== Code.Ok) {
-      message.error(res.message)
-      return
-    }
+    await submitReq()
     resetForm()
-    message.success('修改密码成功')
-  }, [formValue, resetForm, message, notification])
+  }, [formValue, submitReq, resetForm, notification])
 
   return {
     formValue,

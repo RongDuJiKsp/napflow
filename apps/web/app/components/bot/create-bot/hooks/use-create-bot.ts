@@ -1,11 +1,14 @@
 import { AdapterTag } from '@shared/common/bot/base'
-import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
+import type { CreateBotReq, CreateBotResp } from '@shared/data-transfer/bot/manager'
+import { ZodCheckCreateBotReq }from '@shared/data-transfer/bot/manager'
 import { useResetState } from 'ahooks'
 import { defaultAdapterConfigFactory } from '../constances'
 import { useAreaChangeDispatch, useAreaChangeHandler, useImmerCallback } from '@/app/hooks/utils/use-immer'
 import type { Dispatch, SetStateAction } from 'react'
 import { createContext, useContext } from 'react'
 import { noop } from 'lodash-es'
+import { jsonQ } from '@/utils/net'
+import { useSubmitZod } from '@/app/hooks/utils/use-form'
 
 export const AdapterConfigContecxt = createContext({})
 export const AdapterConfigSetterContext = createContext<(config: CreateBotReq['adapterConfig']) => void>(noop)
@@ -15,6 +18,8 @@ export const useCreateBotConfig = <T>() => {
 export const useCreateBotSetConfig = <T>() => {
   return useContext(AdapterConfigSetterContext) as Dispatch<SetStateAction<T>>
 }
+
+const onSubmit = async (form: CreateBotReq) => await jsonQ.Post<CreateBotResp>('/bots/create', form)
 
 export const useCreateBot = () => {
   const [form, setForm, resetForm] = useResetState<CreateBotReq>({
@@ -30,6 +35,9 @@ export const useCreateBot = () => {
     draft.adapterConfig = defaultAdapterConfigFactory[tag]()
   })
   const adapterConfigChangeDispath = useAreaChangeDispatch(setForm, 'adapterConfig')
+
+  const submit = useSubmitZod(form, ZodCheckCreateBotReq, onSubmit, { afterSuccess: resetForm })
+
   return {
     form,
     resetForm,
@@ -37,5 +45,6 @@ export const useCreateBot = () => {
     handleDescriptionChange,
     handleAdapterTagChange,
     adapterConfigChangeDispath,
+    submit,
   }
 }
