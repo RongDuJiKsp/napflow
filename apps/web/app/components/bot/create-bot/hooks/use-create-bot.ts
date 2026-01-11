@@ -28,7 +28,7 @@ export const useCreateBot = () => {
   const [form, setForm, resetForm] = useResetState<CreateBotReq>({
     name: '',
     description: '',
-    commonConfig: { autoStart: false },
+    commonConfig: { },
     adapterTag: AdapterTag.napcatWs,
     adapterConfig: defaultAdapterConfigFactory[AdapterTag.napcatWs](),
   })
@@ -39,6 +39,10 @@ export const useCreateBot = () => {
     draft.adapterConfig = defaultAdapterConfigFactory[tag]()
   })
   const adapterConfigChangeDispath = useAreaChangeDispatch(setForm, 'adapterConfig')
+
+  const handleAutoStartChange = useImmerCallback(setForm, (draft, value: boolean) => {
+    draft.commonConfig.autoStart = value
+  })
 
   const submitForm = useSubmitZod(form, ZodCheckCreateBotReq, onSubmit, { afterSuccess: resetForm })
 
@@ -62,6 +66,7 @@ export const useCreateBot = () => {
     handleDescriptionChange,
     handleAdapterTagChange,
     adapterConfigChangeDispath,
+    handleAutoStartChange,
     submit,
   }
 }

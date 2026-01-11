@@ -65,6 +65,7 @@ const CreateBotWindow = () => {
     handleDescriptionChange,
     handleAdapterTagChange,
     adapterConfigChangeDispath,
+    handleAutoStartChange,
     submit,
   } = useCreateBot()
 
