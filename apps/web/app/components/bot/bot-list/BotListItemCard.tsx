@@ -62,7 +62,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
 
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">启动时间</span>
-          <span className="text-gray-900 font-medium">{item.state.bootTime && formatDate(new Date(item.state.bootTime))}</span>
+          <span className="text-gray-900 font-medium">{ formatDate(item.state.bootTime && new Date(item.state.bootTime))}</span>
         </div>
 
         {item.state.lastExitCode !== undefined && (

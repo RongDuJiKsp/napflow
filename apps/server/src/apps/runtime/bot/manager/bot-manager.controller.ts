@@ -11,7 +11,6 @@ import {
 import { BotManagerService } from './bot-manager.service'
 import {
   BotCoreRuntimeService,
-  adapterClassMeta,
 } from '../core/bot-core-runtime.service'
 import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
@@ -19,7 +18,12 @@ import type { Account } from '@shared/common/account/base'
 import { UserRole } from '@shared/common/account/base'
 import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { type CreateBotReq, ZodCheckCreateBotReq, ZodCheckCreateBotResp, ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'
+import {
+  type CreateBotReq,
+  ZodCheckCreateBotReq,
+  ZodCheckCreateBotResp,
+  ZodCheckGetAllBotsResp,
+} from '@shared/data-transfer/bot/manager'
 import { ZodBody } from '@/src/decorator/zod'
 
 @Controller('bots')
@@ -40,31 +44,24 @@ export class BotManagerController {
     @Query('adapterTag', new ParseEnumPipe(AdapterTag, { optional: true }))
     adapterTag?: AdapterTag,
   ) {
-    const botRecords = await this.botManagerService.allBots()
-    const bots = botRecords.map((botRecord) => {
-      return {
-        botId: botRecord.recordId,
-        adapterTag: botRecord.adapterTag,
-        adapterDesc:
-          adapterClassMeta[botRecord.adapterTag].meta.desc,
-        botName: botRecord.name,
-        botDesc: botRecord.description,
-        state: this.botCoreRuntimeService.botState(botRecord.recordId),
-      }
-    }).filter((bot) => {
-      if (isRunning !== undefined)
-        return bot.state.runningState === BotRunningState.running
-      if (adapterTag !== undefined)
-        return bot.adapterTag === adapterTag
-      return true
-    })
+    const bots = (await this.botManagerService.allBotsStatus()).filter(
+      (bot) => {
+        if (isRunning !== undefined)
+          return bot.state.runningState === BotRunningState.running
+        if (adapterTag !== undefined) return bot.adapterTag === adapterTag
+        return true
+      },
+    )
     return Resp.ok(bots)
   }
 
   @Post('create')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckCreateBotResp)
-  async createBot(@ZodBody({ zod: ZodCheckCreateBotReq }) req: CreateBotReq, @JwtAccount() account: Account) {
+  async createBot(
+    @ZodBody({ zod: ZodCheckCreateBotReq }) req: CreateBotReq,
+    @JwtAccount() account: Account,
+  ) {
     const botRec = await this.botManagerService.createBot(req, account)
     return Resp.ok({ botId: botRec.recordId })
   }
