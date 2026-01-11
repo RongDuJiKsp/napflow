@@ -11,6 +11,7 @@ import { jsonQ } from '@/utils/net'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
 import { App } from 'antd'
 import z from 'zod'
+import { useRouter } from 'next/navigation'
 
 export const AdapterConfigContecxt = createContext({})
 export const AdapterConfigSetterContext = createContext<(config: CreateBotReq['adapterConfig']) => void>(noop)
@@ -24,6 +25,7 @@ export const useCreateBotSetConfig = <T>() => {
 const onSubmit = async (form: CreateBotReq) => await jsonQ.Post<CreateBotResp>('/bots/create', form)
 
 export const useCreateBot = () => {
+  const router = useRouter()
   const { notification } = App.useApp()
   const [form, setForm, resetForm] = useResetState<CreateBotReq>({
     name: '',
@@ -57,7 +59,8 @@ export const useCreateBot = () => {
       return
     }
     await submitForm()
-  }, [submitForm, form, notification])
+    router.back()
+  }, [submitForm, form, notification, router])
 
   return {
     form,

@@ -1,42 +1,11 @@
 'use client'
 import type { CommonBotInfo } from '@shared/common/bot/base'
-import { BotRunningState } from '@shared/common/bot/base'
-import { memo, useCallback } from 'react'
+import { memo } from 'react'
 import { twMerge } from 'tailwind-merge'
-
-const getStatusColor = (state: BotRunningState) => {
-  switch (state) {
-    case BotRunningState.running:
-      return 'bg-linear-to-r from-blue-500 to-indigo-500'
-    case BotRunningState.stopped:
-      return 'bg-gray-400'
-    case BotRunningState.offline:
-      return 'bg-linear-to-r from-amber-500 to-orange-500'
-    case BotRunningState.fatal:
-      return 'bg-linear-to-r from-red-500 to-pink-500'
-    case BotRunningState.killed:
-      return 'bg-gray-600'
-    default:
-      return 'bg-gray-400'
-  }
-}
-
-const getStatusText = (state: BotRunningState) => {
-  switch (state) {
-    case BotRunningState.running:
-      return '运行中'
-    case BotRunningState.stopped:
-      return '已停止'
-    case BotRunningState.offline:
-      return '离线'
-    case BotRunningState.fatal:
-      return '错误'
-    case BotRunningState.killed:
-      return '已终止'
-    default:
-      return '未知'
-  }
-}
+import { useBotState } from './hooks/use-bot-state'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { RiMore2Fill } from '@remixicon/react'
+import { useBotOperate } from './hooks/use-bot-operate'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
@@ -49,22 +18,19 @@ const formatDate = (date?: Date) => {
 }
 
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
-  const handleClick = useCallback(() => {
-    // 处理点击事件，可以跳转到bot详情页
-    console.log('Bot clicked:', item.botId)
-  }, [item.botId])
+  const { stateTwBgColor, stateText, isBotCanKill, isBotCanStart, isBotCanStop } = useBotState(item)
+  const {startBot} = useBotOperate(item)
 
   return (
     <div
-      onClick={handleClick}
-      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer"
+      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer flex justify-between flex-col"
     >
       {/* 头部信息 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
           <div className={twMerge(
             'w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold',
-            getStatusColor(item.state.runningState),
+            stateTwBgColor,
           )}>
             <span className="text-sm">
               {item.adapterDesc.charAt(0).toUpperCase()}
@@ -81,9 +47,9 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
         {/* 状态标签 */}
         <div className={twMerge(
           'px-2 py-1 rounded-full text-xs font-medium text-white',
-          getStatusColor(item.state.runningState),
+          stateTwBgColor,
         )}>
-          {getStatusText(item.state.runningState)}
+          {stateText}
         </div>
       </div>
 
@@ -107,8 +73,85 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
         )}
       </div>
 
-      {/* 悬停效果 */}
-      <div className="absolute inset-0 rounded-xl bg-linear-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+      {/* 操作 */}
+      <div className='flex justify-end'>
+        <Menu>
+          <MenuButton>
+            <div className="p-2 rounded-full hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer group">
+              <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600" />
+            </div>
+          </MenuButton>
+          <MenuItems
+            anchor="bottom"
+            className="mt-2 w-40 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100/50 z-50 overflow-hidden"
+          >
+            <div className="py-2">
+              <MenuItem>
+                <button
+                  className={twMerge(
+                    'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
+                    isBotCanStart
+                  && 'text-gray-700 hover:bg-linear-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 cursor-pointer group',
+                    !isBotCanStart && 'text-gray-300 cursor-not-allowed',
+                  )}
+                  onClick={startBot}
+                >
+                  <div
+                    className={twMerge(
+                      'w-5 h-5 rounded-full',
+                      isBotCanStart
+                    && 'bg-linear-to-r from-blue-400 to-indigo-400 group-hover:from-blue-500 group-hover:to-indigo-500',
+                      !isBotCanStart && 'bg-gray-300',
+                    )}
+                  ></div>
+                  <span className="font-medium">启动Bot</span>
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  className={twMerge(
+                    'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
+                    isBotCanStop
+                  && 'text-gray-700 hover:bg-linear-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700 cursor-pointer group',
+                    !isBotCanStop && 'text-gray-300 cursor-not-allowed',
+                  )}
+                >
+                  <div
+                    className={twMerge(
+                      'w-5 h-5 rounded-full',
+                      isBotCanStop
+                    && 'bg-linear-to-r from-amber-400 to-orange-400 group-hover:from-amber-500 group-hover:to-orange-500',
+                      !isBotCanStop && 'bg-gray-300',
+                    )}
+                  ></div>
+                  <span className="font-medium">停止Bot</span>
+                </button>
+              </MenuItem>
+              <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
+              <MenuItem>
+                <button
+                  className={twMerge(
+                    'w-full text-left px-4 py-3 text-sm flex items-center space-x-3',
+                    isBotCanKill
+                  && ' text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 cursor-pointer group',
+                    !isBotCanKill && 'text-gray-300 cursor-not-allowed',
+                  )}
+                >
+                  <div
+                    className={twMerge(
+                      'w-5 h-5 rounded-full',
+                      isBotCanKill
+                    && 'bg-linear-to-r from-red-400 to-pink-400 group-hover:from-red-500 group-hover:to-pink-500',
+                      !isBotCanKill && 'bg-gray-300',
+                    )}
+                  ></div>
+                  <span className="font-medium">Kill Bot</span>
+                </button>
+              </MenuItem>
+            </div>
+          </MenuItems>
+        </Menu>
+      </div>
     </div>
   )
 }

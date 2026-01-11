@@ -132,6 +132,28 @@ const CreateBotWindow = () => {
                   <AdapterRadio key={option.value} option={option} />
                 ))}
               </RadioGroup>
+
+            </div>
+            <div className="block text-sm font-medium text-purple-700 mb-2">
+              通用设置
+            </div>
+            <div className="mt-3 flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium text-gray-800">自动启动</div>
+                <div className="text-xs text-gray-500">创建后是否自动启动机器人</div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={Boolean(form.commonConfig?.autoStart)}
+                  onChange={e => handleAutoStartChange(e.target.checked)}
+                />
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-purple-500 peer-focus:ring-2 peer-focus:ring-purple-300 transition-colors" />
+                <div className={twMerge(
+                  'absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform peer-checked:translate-x-5 transition-transform',
+                )} />
+              </label>
             </div>
           </div>
 
