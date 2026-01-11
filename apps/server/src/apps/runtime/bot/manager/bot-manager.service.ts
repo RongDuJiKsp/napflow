@@ -19,6 +19,7 @@ export class BotManagerService {
     return await this.db.botRecord.save({
       name: createReq.name,
       description: createReq.description,
+      commonAdapterConfig: createReq.commonConfig,
       adapterTag: createReq.adapterTag,
       adapterConfig: createReq.adapterConfig,
       createdBy: author.email,

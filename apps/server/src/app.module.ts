@@ -6,6 +6,7 @@ import { AppConfigModule } from './apps/app-config/app-config.module'
 import { WorkflowModule } from './apps/workflow/workflow.module'
 import { DbModule } from './apps/db/db.module'
 import { ZodModule } from './apps/zod/zod.module'
+import { RuntimeModule } from './apps/runtime/runtime.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ZodModule } from './apps/zod/zod.module'
     // ---------------------- 应用模块 ----------------------
     AccountModule.forRoot(),
     WorkflowModule,
+    RuntimeModule,
   ],
 })
 export class AppModule {}

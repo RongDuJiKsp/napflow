@@ -79,7 +79,7 @@ const NapcatWsForm = () => {
                 'transition-all duration-200 bg-white text-gray-700 placeholder-pink-500',
               )}
               placeholder="例如：1000"
-              min={0}
+              min={1000}
               step={100}
             />
           </TextField>

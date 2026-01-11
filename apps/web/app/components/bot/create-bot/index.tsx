@@ -65,6 +65,7 @@ const CreateBotWindow = () => {
     handleDescriptionChange,
     handleAdapterTagChange,
     adapterConfigChangeDispath,
+    submit,
   } = useCreateBot()
 
   const ConfigArea = useMemo(
@@ -149,6 +150,20 @@ const CreateBotWindow = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mt-6 flex justify-end">
+        <button
+          type="button"
+          onClick={() => submit()}
+          className={twMerge(
+            'inline-flex items-center gap-2 px-6 py-2 rounded-full text-white font-semibold shadow-md',
+            'bg-linear-to-r from-purple-500 to-pink-500',
+            'hover:from-purple-600 hover:to-pink-600 active:scale-95',
+            'focus:outline-none focus:ring-2 focus:ring-purple-300 transition-transform',
+          )}
+        >
+          提交
+        </button>
       </div>
     </div>
   )
