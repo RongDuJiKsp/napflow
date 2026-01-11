@@ -12,6 +12,7 @@ const NapcatWsForm = () => {
     handleEndpointTokenChange,
     handleReconnectMaxAttemptsChange,
     handleReconnectIntervalChange,
+    handleHeartBeatDurationlChange,
   } = useNapcatWsConfigForm()
 
   return (
@@ -40,7 +41,7 @@ const NapcatWsForm = () => {
             'focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent',
             'transition-all duration-200 bg-white text-gray-700 placeholder-pink-500',
           )}
-          placeholder="与NapCat服务器配置项‘token’一致"
+          placeholder="与NapCat服务端配置项‘token’一致"
         />
       </TextField>
 
@@ -83,6 +84,28 @@ const NapcatWsForm = () => {
               step={100}
             />
           </TextField>
+        </div>
+      </div>
+      <div>
+        <Label className="block text-sm font-medium text-purple-700 mb-2">
+          健康性检查
+        </Label>
+        <div className="flex gap-3">
+          <TextField
+            value={String(config.heartBeatDuration ?? '')}
+            onChange={handleHeartBeatDurationlChange}
+          >
+            <Label className="block text-xs text-gray-600 mb-1">心跳间隔（ms）</Label>
+            <Input
+              className={twMerge(
+                'w-full rounded-lg border border-pink-200',
+                'focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent',
+                'transition-all duration-200 bg-white text-gray-700 placeholder-pink-500',
+              )}
+              placeholder="与服务端‘心跳间隔’一致"
+            />
+          </TextField>
+
         </div>
       </div>
     </div>

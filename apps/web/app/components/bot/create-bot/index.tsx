@@ -140,7 +140,7 @@ const CreateBotWindow = () => {
             <div className="mt-3 flex items-center justify-between">
               <div>
                 <div className="text-sm font-medium text-gray-800">自动启动</div>
-                <div className="text-xs text-gray-500">创建后是否自动启动机器人</div>
+                <div className="text-xs text-gray-500">服务端启动后是否自动启动Bot</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
