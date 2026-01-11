@@ -13,6 +13,7 @@ export type HeartBeatSnapshot = {
 // Napcat Client 健康检查
 export class NCCHealthChecker implements Registerable {
   private readonly logger: Logger
+  readonly createAt = new Date()
 
   constructor(private readonly nc: NCWebsocket, private readonly cfg: NapcatWsAdapterConfig, private readonly ctxName: string) {
     this.logger = new Logger(this.checkerName)

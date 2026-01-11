@@ -52,6 +52,7 @@ export class NapcatWsAdapter implements BotInstance {
     return {
       runningState: this.runningStateEnum,
       upStreamState: this.healthChecker?.upstreamStatus,
+      bootTime: this.healthChecker?.createAt,
     }
   }
 
