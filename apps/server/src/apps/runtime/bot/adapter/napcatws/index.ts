@@ -3,7 +3,8 @@ import type { BotAdapterFactory, BotInstance, Registerable } from '../_base'
 import { Logger } from '@nestjs/common'
 import { BotCoreRuntimeError } from '../../../middleware/bot-core-runtime.filter'
 import type { BotAdapter, BotState } from '@shared/common/bot/base'
-import { AdapterTag, BotRunningState, BotSignal } from '@shared/common/bot/base'
+import { BotRunningState } from '@shared/common/bot/base'
+import { AdapterTag, BotSignal } from '@shared/common/bot/base'
 import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 import { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import { NCCHealthChecker } from './health-check'
@@ -41,9 +42,16 @@ export class NapcatWsAdapter implements BotInstance {
     this.logger.log(`Recv signal : ${signal}(${BotSignal[signal]})`)
   }
 
+  get runningStateEnum(): BotRunningState {
+    if(!this.healthChecker?.isConnetUpstream)
+      return BotRunningState.offline
+    return BotRunningState.running
+  }
+
   runningState(): BotState {
     return {
-      runningState: BotRunningState.stopped,
+      runningState: this.runningStateEnum,
+      upStreamState: this.healthChecker?.upstreamStatus,
     }
   }
 
@@ -66,7 +74,7 @@ export class NapcatWsAdapter implements BotInstance {
     })
     this.logger.log('SDK inited')
     // init services
-    this.healthChecker = new NCCHealthChecker(this.sdkConn, this.botName)
+    this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName)
     const services: Registerable[] = [
       this.healthChecker,
     ]

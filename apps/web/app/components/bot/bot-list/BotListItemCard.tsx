@@ -19,7 +19,7 @@ const formatDate = (date?: Date) => {
 
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
   const { stateTwBgColor, stateText, isBotCanKill, isBotCanStart, isBotCanStop } = useBotState(item)
-  const {startBot} = useBotOperate(item)
+  const { startBot } = useBotOperate(item)
 
   return (
     <div

@@ -1,18 +1,28 @@
 import type { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import type { Registerable } from '../_base'
 import { Logger } from '@nestjs/common'
+import { BotUpstreamState } from '@shared/common/bot/base'
+import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
+
+export type HeartBeatSnapshot = {
+  heartbeatAt: Date,
+  online: boolean,
+  ok: boolean,
+}
 
 // Napcat Client 健康检查
 export class NCCHealthChecker implements Registerable {
   private readonly logger: Logger
-  private readonly unsubscribes: (() => void)[] = []
-  constructor(private readonly nc: NCWebsocket, private readonly ctxName: string) {
+
+  constructor(private readonly nc: NCWebsocket, private readonly cfg: NapcatWsAdapterConfig, private readonly ctxName: string) {
     this.logger = new Logger(this.checkerName)
   }
 
   get checkerName() {
     return `${this.ctxName}-${NCCHealthChecker.name}`
   }
+
+  private unsubscribes: (() => void)[] = []
 
   register() {
     if(this.unsubscribes.length)
@@ -28,5 +38,30 @@ export class NCCHealthChecker implements Registerable {
   unregister() {
     for(const fn of this.unsubscribes)
       fn()
+    this.unsubscribes = []
+  }
+
+  private heartbeatSnapshot: HeartBeatSnapshot | null = null
+
+  selfBeat() {
+    this.heartbeatSnapshot = { heartbeatAt: new Date(), online: true, ok: true }
+  }
+
+  get isConnetUpstream() {
+    return this.heartbeatSnapshot && Date.now() - this.heartbeatSnapshot.heartbeatAt.valueOf() < this.cfg.heartBeatDuration
+  }
+
+  get upstreamStatus(): BotUpstreamState | undefined {
+    // !this.heartbeatSnapshot to make ts happy
+    if(!this.isConnetUpstream || !this.heartbeatSnapshot)
+      return undefined
+
+    if(!this.heartbeatSnapshot.ok)
+      return BotUpstreamState.fatal
+
+    if(!this.heartbeatSnapshot.online)
+      return BotUpstreamState.offline
+
+    return BotUpstreamState.ok
   }
 }
