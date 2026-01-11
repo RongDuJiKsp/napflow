@@ -94,7 +94,6 @@ const CreateBotWindow = () => {
               <Input
                 maxLength={20}
                 className="w-full rounded-lg border border-pink-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-pink-500"
-                placeholder="例如：我的小助手"
               />
             </TextField>
 
@@ -114,7 +113,6 @@ const CreateBotWindow = () => {
                   'focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent',
                   'transition-all duration-200 bg-white text-gray-700 placeholder-pink-500',
                 )}
-                placeholder="简单描述一下这个机器人的用途"
               />
             </TextField>
 

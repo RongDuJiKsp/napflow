@@ -24,9 +24,25 @@ export const useNapcatWsConfigForm = () => {
       draft.endpoint.token = value
     },
   )
+  const handleReconnectMaxAttemptsChange = useImmerCallback(
+    setConfig,
+    (draft, value: string) => {
+      draft.retryConfig = draft.retryConfig || { retryMaxTimes: 0, retryDelay: 0 }
+      draft.retryConfig.retryMaxTimes = Number(value || 0)
+    },
+  )
+  const handleReconnectIntervalChange = useImmerCallback(
+    setConfig,
+    (draft, value: string) => {
+      draft.retryConfig = draft.retryConfig || { retryMaxTimes: 0, retryDelay: 0 }
+      draft.retryConfig.retryDelay = Number(value || 0)
+    },
+  )
   return {
     config,
     handleEndpointWsUrlChange,
     handleEndpointTokenChange,
+    handleReconnectMaxAttemptsChange,
+    handleReconnectIntervalChange,
   }
 }
