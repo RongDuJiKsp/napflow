@@ -23,13 +23,18 @@ export class NCCHealthChecker implements Registerable {
   }
 
   private unsubscribes: (() => void)[] = []
+  private heartbeatSnapshot: HeartBeatSnapshot | null = null
 
   register() {
     if(this.unsubscribes.length)
       this.unregister()
     this.unsubscribes.push(
       this.nc.subscribe('meta_event.heartbeat', (ctx) => {
-        this.logger.log(ctx)
+        this.heartbeatSnapshot = {
+          heartbeatAt: new Date(),
+          online: ctx.status.online ?? false,
+          ok: ctx.status.good,
+        }
       }),
 
     )
@@ -40,8 +45,6 @@ export class NCCHealthChecker implements Registerable {
       fn()
     this.unsubscribes = []
   }
-
-  private heartbeatSnapshot: HeartBeatSnapshot | null = null
 
   selfBeat() {
     this.heartbeatSnapshot = { heartbeatAt: new Date(), online: true, ok: true }

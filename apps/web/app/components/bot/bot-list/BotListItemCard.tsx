@@ -33,12 +33,12 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
             stateTwBgColor,
           )}>
             <span className="text-sm">
-              {item.adapterDesc.charAt(0).toUpperCase()}
+              {item.botName.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="ml-3">
             <h3 className="text-base font-semibold text-purple-700 line-clamp-1">
-              {item.botDesc || '未命名Bot'}
+              {item.botName || '未命名Bot'}
             </h3>
             <p className="text-xs text-gray-500">ID: {item.botId.slice(0, 8)}...</p>
           </div>

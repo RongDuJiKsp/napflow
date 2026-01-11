@@ -45,6 +45,7 @@ export const ZodCheckCommonBotInfo = z.object({
   botId: z.string(),
   adapterTag: z.enum(AdapterTag),
   adapterDesc: z.string(),
+  botName: z.string(),
   botDesc: z.string(),
   state: ZodCheckBotState,
 })

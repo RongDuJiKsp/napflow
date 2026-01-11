@@ -85,6 +85,8 @@ export class NapcatWsAdapter implements BotInstance {
     await this.sdkConn.connect()
     this.logger.log('conn created')
 
+    this.healthChecker.selfBeat()
+
     return this
   }
 }
