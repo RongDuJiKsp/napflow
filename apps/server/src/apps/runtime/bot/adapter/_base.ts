@@ -15,3 +15,8 @@ export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable
 
 // 从record 启用一个实例的函数
 export type BotAdapterFactory = (entity: BotRecordEntity) => BotInstance | Promise<BotInstance>
+
+export type Registerable = {
+  register: () => void;
+  unregister: () => void;
+}

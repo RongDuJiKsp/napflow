@@ -54,6 +54,9 @@ importers:
       '@nestjs/typeorm':
         specifier: ^11.0.0
         version: 11.0.0(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.9)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(mysql2@3.15.3)(ts-node@10.9.2(@types/node@22.19.1)(typescript@5.9.3)))
+      '@rdjksp/node-napcat-ts':
+        specifier: ^0.4.20
+        version: 0.4.20
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
@@ -78,9 +81,6 @@ importers:
       nestjs-zod:
         specifier: ^5.0.1
         version: 5.0.1(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(rxjs@7.8.2)(zod@4.1.13)
-      node-napcat-ts:
-        specifier: ^0.4.20
-        version: 0.4.20
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -250,8 +250,6 @@ importers:
       typescript:
         specifier: ^5
         version: 5.9.3
-
-  packages/shared: {}
 
 packages:
 
@@ -1850,6 +1848,9 @@ packages:
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
+
+  '@rdjksp/node-napcat-ts@0.4.20':
+    resolution: {integrity: sha512-6FMnYk5eE65ANDNxVDgn+3hftDDOdeO+R++PS67RgRhxh+w715afIaGFU97Y/qSsr+XIii7ka/Wjaqhllki2VQ==}
 
   '@react-aria/autocomplete@3.0.0-rc.4':
     resolution: {integrity: sha512-4bMMVNaCuYDZX9HM4ZNSAImZMcL/orwhLLe818+lyzmSrvGmW9h433PZxTolb0d+FnJVfn1MDY0zEWLiyI86GA==}
@@ -5812,9 +5813,6 @@ packages:
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
 
-  node-napcat-ts@0.4.20:
-    resolution: {integrity: sha512-TD7l5e5ih9R9nA6h4LewaUXhwjCOMO6KmiBbMyI0TfDCiDYThfFBkT/25dlRBGJoWlAb0pyLCMJ0vrJw/2e7gw==}
-
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -9231,6 +9229,15 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       react-is: 18.3.1
+
+  '@rdjksp/node-napcat-ts@0.4.20':
+    dependencies:
+      isomorphic-ws: 5.0.0(ws@8.18.3)
+      nanoid: 5.1.6
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@react-aria/autocomplete@3.0.0-rc.4(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
@@ -14387,15 +14394,6 @@ snapshots:
   node-gyp-build@4.8.4: {}
 
   node-int64@0.4.0: {}
-
-  node-napcat-ts@0.4.20:
-    dependencies:
-      isomorphic-ws: 5.0.0(ws@8.18.3)
-      nanoid: 5.1.6
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   node-releases@2.0.27: {}
 
