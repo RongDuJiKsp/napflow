@@ -177,7 +177,7 @@ const CreateBotWindow = () => {
       <div className="mt-6 flex justify-end">
         <button
           type="button"
-          onClick={() => submit()}
+          onClick={submit}
           className={twMerge(
             'inline-flex items-center gap-2 px-6 py-2 rounded-full text-white font-semibold shadow-md',
             'bg-linear-to-r from-purple-500 to-pink-500',

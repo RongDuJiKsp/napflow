@@ -5,7 +5,7 @@ import type { NullResp } from '@shared/data-transfer/_base'
 import { type CreateWorkflowReq, ZodCheckCreateWorkflowReq } from '@shared/data-transfer/workflow/info'
 import { useResetState } from 'ahooks'
 
-const submitForm = async (form: CreateWorkflowReq) => await jsonQ.Post<NullResp>('workflows', form)
+const submitForm = async (form: CreateWorkflowReq) => await jsonQ.Post<NullResp>('/workflow/create', form)
 export const useCreateApp = () => {
   const [form, setForm] = useResetState<CreateWorkflowReq>({
     appName: '',
