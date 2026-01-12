@@ -1,11 +1,12 @@
 'use client'
 import type { CommonBotInfo } from '@shared/common/bot/base'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBotState } from './hooks/use-bot-state'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { RiMore2Fill } from '@remixicon/react'
 import { useBotOperate } from './hooks/use-bot-operate'
+import { useBoolean } from 'ahooks'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
@@ -20,10 +21,20 @@ const formatDate = (date?: Date) => {
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
   const { stateTwBgColor, stateText, isBotCanKill, isBotCanStart, isBotCanStop } = useBotState(item)
   const { startBot } = useBotOperate(item)
+  const [showMore, setShowMoreAction] = useBoolean(false)
+
+  const handleMouseEnter = useCallback(() => {
+    setShowMoreAction.setTrue()
+  }, [setShowMoreAction])
+  const handleMouseLeave = useCallback(() => {
+    setShowMoreAction.setFalse()
+  }, [setShowMoreAction])
 
   return (
     <div
-      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer flex justify-between flex-col"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer flex justify-between flex-col h-56"
     >
       {/* 头部信息 */}
       <div className="flex items-center justify-between mb-3">
@@ -54,23 +65,28 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
       </div>
 
       {/* 详细信息 */}
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">适配器</span>
-          <span className="text-gray-900 font-medium">{item.adapterDesc}</span>
-        </div>
+      <div className="flex flex-col gap-3 justify-start h-[4lh]">
+        <p
+          className={twMerge(
+            'text-purple-700 text-sm mb-2',
+            showMore && 'line-clamp-4',
+            !showMore && 'line-clamp-2',
+          )}
+        >
+          {item.botDesc}
+        </p>
 
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">启动时间</span>
-          <span className="text-gray-900 font-medium">{ formatDate(item.state.bootTime && new Date(item.state.bootTime))}</span>
-        </div>
-
-        {item.state.lastExitCode !== undefined && (
+        {!showMore && (<>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">退出码</span>
-            <span className="text-gray-900 font-medium">{item.state.lastExitCode}</span>
+            <span className="text-purple-600">适配器</span>
+            <span className="text-purple-800 font-medium">{item.adapterDesc}</span>
           </div>
-        )}
+
+          <div className="flex justify-between text-sm">
+            <span className="text-purple-600">启动时间</span>
+            <span className="text-purple-800 font-medium">{ formatDate(item.state.bootTime && new Date(item.state.bootTime))}</span>
+          </div>
+        </>)}
       </div>
 
       {/* 操作 */}
