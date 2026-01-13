@@ -6,7 +6,7 @@ import NodeEditPanel from './mainview/node-edit-panel'
 
 const Editor = () => {
   return <EditorProvider>
-    <div className='relative'>
+    <div id='editor-root' className='h-full'>
       <NodeEditPanel/>
       <WorkflowView/>
     </div>

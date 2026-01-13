@@ -5,6 +5,8 @@ import { useMount } from 'ahooks'
 import type { PropsWithChildren } from 'react'
 import { memo, useCallback, useState } from 'react'
 import { useAppParam } from '../../hooks/use-app-param'
+import StoreProvider from './StoreProvider'
+import '@xyflow/react/dist/style.css'
 
 const EditorProvider = ({ children }: PropsWithChildren) => {
   const { appId } = useAppParam()
@@ -26,7 +28,9 @@ const EditorProvider = ({ children }: PropsWithChildren) => {
       initialNodes={remoteState.nodes ?? []}
       initialEdges={remoteState.edges ?? []}
     >
-      {children}
+      <StoreProvider>
+        {children}
+      </StoreProvider>
     </ReactFlowProvider>
   )
 }

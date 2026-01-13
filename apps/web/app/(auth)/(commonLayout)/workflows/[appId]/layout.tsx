@@ -1,4 +1,4 @@
-import WorkflowProvider from '@/app/components/workflow/editor/providers/WorkflowProvider'
+import WorkflowProvider from '@/app/components/workflow/providers/WorkflowProvider'
 import type { PropsWithChildren } from 'react'
 
 export default async function Layout({ children, params}: PropsWithChildren<{
