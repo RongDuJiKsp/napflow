@@ -2,11 +2,12 @@
 
 import { ReactFlowProvider } from '@xyflow/react'
 import { memo, useMemo } from 'react'
-import '@xyflow/react/dist/style.css'
 import { useAppParam } from '../hooks/use-app-param'
 import StoreProvider from './providers/StoreProvider'
 import EditorMainView from './EditorMainView'
 import { useWorkflowAppDataQuery } from '@/app/hooks/query/use-workflow-app-data-query'
+import '@xyflow/react/dist/style.css'
+import 'react-contexify/dist/ReactContexify.css'
 
 const Editor = () => {
   const { appId } = useAppParam()
