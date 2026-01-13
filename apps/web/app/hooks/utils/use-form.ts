@@ -27,5 +27,6 @@ export const useSubmitZod = <Req, Res extends BaseRespType<unknown>>(data: Req, 
     }
     message.success(successText)
     afterSuccess?.()
+    return res
   }, [data, schema, message, notification, submit, successText, errorText, afterSuccess])
 }

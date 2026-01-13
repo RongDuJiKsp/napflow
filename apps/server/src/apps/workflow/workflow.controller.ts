@@ -16,6 +16,7 @@ import type {
 } from '@shared/data-transfer/workflow/info'
 import {
   ZodCheckCreateWorkflowReq,
+  ZodCheckCreateWorkflowResp,
   ZodCheckGetAppResp,
   ZodCheckGetAppsResp,
   ZodCheckLoadDraftResp,
@@ -38,17 +39,19 @@ export class WorkflowController {
 
   @Post('create')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckNullResp)
+  @ZodSerializerDto(ZodCheckCreateWorkflowResp)
   async createApp(
     @ZodBody({ zod: ZodCheckCreateWorkflowReq }) req: CreateWorkflowReq,
     @JwtAccount() account: Account,
   ) {
-    await this.workflowService.createApp(
+    const app = await this.workflowService.createApp(
       req.appName,
       req.appDescription,
       account,
     )
-    return Resp.ok()
+    return Resp.ok({
+      appId: app.appId,
+    })
   }
 
   @Get('apps')

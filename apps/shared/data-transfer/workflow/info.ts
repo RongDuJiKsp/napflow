@@ -5,6 +5,10 @@ import { defineZodResp } from '../_base'
 // @/workflow/create
 export const ZodCheckCreateWorkflowReq = ZodCheckWorkflowApp.pick({ appName: true, appDescription: true })
 export type CreateWorkflowReq = z.infer<typeof ZodCheckCreateWorkflowReq>
+export const ZodCheckCreateWorkflowResp = defineZodResp(z.object({
+  appId: z.string(),
+}))
+export type CreateWorkflowResp = z.infer<typeof ZodCheckCreateWorkflowResp>
 
 // @/workflow/:appId
 export const ZodCheckGetAppResp = defineZodResp(ZodCheckWorkflowApp)
