@@ -1,15 +1,13 @@
 import { ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
 import type { PropsWithChildren } from 'react'
 import { memo, useCallback, useEffect } from 'react'
-import NodeEditPanel from './mainview/NodeEditPanel'
 import { useContextMenu } from 'react-contexify'
-import { EDITOR_PANEL_ID } from './constants'
+import { EDITOR_PANEL_ID, nodeTypes } from './constants'
 import EditorPanelContext from './mainview/EditorPanelContext'
 import type { WorkflowEdge, WorkflowNode } from './types'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
-      <NodeEditPanel/>
       <EditorPanelContext />
       {children}
     </div>
@@ -37,6 +35,7 @@ const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode
     <EditorLayout>
       <ReactFlow
         nodes={nodes} edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange} onEdgesChange={onEdgesChange}
         onContextMenu={handleContextMenu}
       />

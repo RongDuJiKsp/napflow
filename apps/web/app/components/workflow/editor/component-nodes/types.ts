@@ -2,12 +2,11 @@ import type { WorkflowNode } from '../types'
 import type z from 'zod'
 import type { ComponentWithClass } from '@/utils/type'
 import type { ComponentType, FC } from 'react'
+import type { NodeProps } from '@xyflow/react'
 
-export type WorkflowComponent<T> = ComponentType<{ nodeId: string, data: ComponentNode<T>['data'] }>
-export type WorkflowFc<T> = FC<{ nodeId: string, data: ComponentNode<T>['data'] }>
 // component nodes
 export enum ComponentNodesEnum {
-  Trigger = 'tragger',
+  Trigger = 'trigger',
 }
 
 // data实例
@@ -16,6 +15,8 @@ export type ComponentNode<T> = WorkflowNode<{
   title: string;
   desc: string;
 } & T>
+export type WorkflowComponent<T> = ComponentType<NodeProps<ComponentNode<T>>>
+export type WorkflowFc<T> = FC<NodeProps<ComponentNode<T>>>
 
 // class
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
