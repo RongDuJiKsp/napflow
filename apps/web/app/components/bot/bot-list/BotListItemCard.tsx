@@ -9,15 +9,11 @@ import { useBotInfoOperator, useBotOperate } from './hooks/use-bot-operate'
 import { useBoolean } from 'ahooks'
 import { noop } from 'lodash-es'
 import MenuItemButton from '../../_base/button/MenuItemButton'
+import { dateFmt } from '@/utils/date'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
-  return new Intl.DateTimeFormat('zh-CN', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format()
+  return dateFmt(date)
 }
 
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
@@ -87,7 +83,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
 
           <div className="flex justify-between text-sm">
             <span className="text-purple-600">启动时间</span>
-            <span className="text-purple-800 font-medium">{ formatDate(item.state.bootTime && new Date(item.state.bootTime))}</span>
+            <span className="text-purple-800 font-medium">{ formatDate(item.state.bootTime)}</span>
           </div>
         </>)}
       </div>

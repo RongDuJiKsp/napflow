@@ -1,17 +1,11 @@
 'use client'
+import { dateFmt } from '@/utils/date'
 import type { WorkflowApp } from '@shared/common/workflow/base'
 import { useBoolean } from 'ahooks'
 import Link from 'next/link'
 import { memo, useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(date)
-}
 export type AppCardProps = {
   app: WorkflowApp;
 }
@@ -30,7 +24,7 @@ const AppCard = ({ app }: AppCardProps) => {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-6 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer h-50 flex flex-col"
+        className="group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-6 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer h-52 flex flex-col"
       >
         {/* 应用图标区域 */}
         <div className="flex items-center mb-4">
@@ -50,9 +44,9 @@ const AppCard = ({ app }: AppCardProps) => {
         {/* 应用描述 */}
         <p
           className={twMerge(
-            'text-gray-600 text-sm  flex-1',
-            showMore && 'line-clamp-4 mb-2',
-            !showMore && 'line-clamp-2 mb-4',
+            'text-gray-600 text-sm  flex-1 mb-2',
+            showMore && 'line-clamp-4',
+            !showMore && 'line-clamp-2',
           )}
         >
           {app.appDescription}
@@ -63,7 +57,7 @@ const AppCard = ({ app }: AppCardProps) => {
           <div className="border-t border-gray-100 pt-3">
             <div className="flex justify-between items-center text-xs text-gray-500">
               <span>创建者: {app.createdBy}</span>
-              <span>{formatDate(app.createdAt)}</span>
+              <span>{dateFmt(app.createdAt)}</span>
             </div>
           </div>
         )}
