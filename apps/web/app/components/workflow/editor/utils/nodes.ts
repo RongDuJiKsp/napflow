@@ -7,3 +7,4 @@ export const initNodes = (nodes: Node[]): WorkflowNode[] => {
 export const initEdges = (edges: Edge[]): WorkflowEdge[] => {
   return edges
 }
+export const genNodeId = () => `${Date.now()}@comm`
