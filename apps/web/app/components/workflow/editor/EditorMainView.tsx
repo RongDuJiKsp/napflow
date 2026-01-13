@@ -1,4 +1,3 @@
-import type { Edge, Node } from '@shared/common/workflow/core'
 import { ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
 import type { PropsWithChildren } from 'react'
 import { memo, useCallback, useEffect } from 'react'
@@ -6,6 +5,7 @@ import NodeEditPanel from './mainview/NodeEditPanel'
 import { useContextMenu } from 'react-contexify'
 import { EDITOR_PANEL_ID } from './constants'
 import EditorPanelContext from './mainview/EditorPanelContext'
+import type { WorkflowEdge, WorkflowNode } from './types'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
@@ -16,7 +16,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
   )
 }
 
-const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: Node[], remoteEdges: Edge[] }) => {
+const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode[], remoteEdges: WorkflowEdge[] }) => {
   // 本地修改时具有自己状态 远端更新时直接覆盖本地
   const [nodes, setNodes, onNodesChange] = useNodesState(remoteNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(remoteEdges)

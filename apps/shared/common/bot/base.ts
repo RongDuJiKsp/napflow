@@ -15,21 +15,21 @@ export type BotAdapterClass = {
 
 // bot状态
 export enum BotRunningState {
-  stopped, // 当bot实例不存在于内存中时 此时为stopped
-  running, // 当bot实例正在运行时 此时为running
-  offline, // 当bot实例无法和上游通信时 此时为offline
-  fatal, // 当bot实例发生 fatal 错误时 此时为fatal
-  killed, // 当bot实例被kill时 此时为killed
+  stopped = 'stopped', // 当bot实例不存在于内存中时 此时为stopped
+  running = 'running', // 当bot实例正在运行时 此时为running
+  offline = 'offline', // 当bot实例无法和上游通信时 此时为offline
+  fatal = 'fatal', // 当bot实例发生 fatal 错误时 此时为fatal
+  killed = 'killed', // 当bot实例被kill时 此时为killed
 }
 // 上游服务状态
 export enum BotUpstreamState {
-  ok, // 上游服务正常运行
-  offline, // 上游服务已经离线
-  fatal, // 上游服务自身发生异常
+  ok = 'ok', // 上游服务正常运行
+  offline = 'offline', // 上游服务已经离线
+  fatal = 'fatal', // 上游服务自身发生异常
 }
 export enum BotSignal {
-  SIGSTOP, // 优雅退出
-  SIGKILL, // 强制退出
+  SIGSTOP = 'SIGSTOP', // 优雅退出
+  SIGKILL = 'SIGKILL', // 强制退出
 }
 
 export const ZodCheckBotState = z.object({
