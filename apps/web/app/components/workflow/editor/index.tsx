@@ -1,15 +1,26 @@
 'use client'
-import { memo } from 'react'
-import EditorProvider from './providers/EditorProvider'
-import WorkflowView from './mainview/workflow-view'
-import NodeEditPanel from './mainview/node-edit-panel'
+
+import { ReactFlowProvider } from '@xyflow/react'
+import { memo, useMemo } from 'react'
+import '@xyflow/react/dist/style.css'
+import { useAppParam } from '../hooks/use-app-param'
+import StoreProvider from './providers/StoreProvider'
+import EditorMainView from './EditorMainView'
+import { useWorkflowAppDataQuery } from '@/app/hooks/query/use-workflow-app-data-query'
 
 const Editor = () => {
-  return <EditorProvider>
-    <div id='editor-root' className='h-full'>
-      <NodeEditPanel/>
-      <WorkflowView/>
-    </div>
-  </EditorProvider>
+  const { appId } = useAppParam()
+  const { data: remoteState } = useWorkflowAppDataQuery(appId)
+  const remoteNodes = useMemo(() => remoteState?.nodes ?? [], [remoteState])
+  const remoteEdges = useMemo(() => remoteState?.edges ?? [], [remoteState])
+  if (!remoteState) return <div>loading</div>
+
+  return (
+    <ReactFlowProvider>
+      <StoreProvider>
+        <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
+      </StoreProvider>
+    </ReactFlowProvider>
+  )
 }
 export default memo(Editor)
