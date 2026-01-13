@@ -1,5 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
-import { NotNullColumn } from '../decorator/entity'
+import { BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
+import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity {
@@ -33,13 +33,13 @@ export class WorkflowAppPublishEntity extends BaseEntity {
   @PrimaryColumn()
   ofAppId: string
 
-  @Column({ type: 'text' })
+  @DefaultNullColumn({ type: 'varchar' })
   description: string | null
 
   @CreateDateColumn()
   publishAt: Date
 
-  @Column({ type: 'text' })
+  @DefaultNullColumn({ type: 'varchar' })
   publishBy: string | null
 
   @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppPublishs, { onDelete: 'CASCADE' })
@@ -77,9 +77,9 @@ export class WorkflowAppDataEntity extends BaseEntity {
   ])
   ofPublish: WorkflowAppPublishEntity
 
-  @Column({ type: 'json' })
+  @DefaultNullColumn({ type: 'json' })
   nodes: Node[] | null
 
-  @Column({ type: 'json' })
+  @DefaultNullColumn({ type: 'json' })
   edges: Edge[] | null
 }
