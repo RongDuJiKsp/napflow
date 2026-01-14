@@ -5,6 +5,8 @@ import { useContextMenu } from 'react-contexify'
 import { EDITOR_PANEL_ID, nodeTypes } from './constants'
 import EditorPanelContext from './mainview/EditorPanelContext'
 import type { WorkflowEdge, WorkflowNode } from './types'
+import { useEditorStore } from './hooks/use-editor-store'
+import { useStore } from 'zustand'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
@@ -15,6 +17,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
 }
 
 const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode[], remoteEdges: WorkflowEdge[] }) => {
+  const editorStore = useEditorStore()
   // 本地修改时具有自己状态 远端更新时直接覆盖本地
   const [nodes, setNodes, onNodesChange] = useNodesState(remoteNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(remoteEdges)
@@ -30,14 +33,14 @@ const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     show({ event: e })
   }, [show])
-
+  const handleMouseMove = useStore(editorStore, state => state.handleMove)
   return (
     <EditorLayout>
       <ReactFlow
         nodes={nodes} edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange} onEdgesChange={onEdgesChange}
-        onContextMenu={handleContextMenu}
+        onContextMenu={handleContextMenu} onMouseMove={handleMouseMove}
       />
     </EditorLayout>
   )
