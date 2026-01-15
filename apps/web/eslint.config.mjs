@@ -23,4 +23,9 @@ export default combine(base, [
     'next-env.d.ts',
     'node-modules/',
   ]),
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
 ])

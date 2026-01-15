@@ -7,10 +7,12 @@ import EditorPanelContext from './mainview/editor-panel-context'
 import type { WorkflowEdge, WorkflowNode } from './types'
 import { useEditorStore } from './hooks/use-editor-store'
 import { useStore } from 'zustand'
+import { StickyNode } from './mainview/sticky-node'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
       <EditorPanelContext />
+      <StickyNode />
       {children}
     </div>
   )

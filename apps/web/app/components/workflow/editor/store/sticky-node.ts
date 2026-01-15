@@ -25,6 +25,6 @@ export const createStickyNodeStore: StateCreator<StickyNodeStoreShape> = set => 
   },
   mouseLocation: undefined,
   handleMove: (e: React.MouseEvent) => {
-    set({ mouseLocation: { x: e.clientX, y: e.clientY } })
+    set({ mouseLocation: { x: e.pageX, y: e.pageY } })
   },
 })

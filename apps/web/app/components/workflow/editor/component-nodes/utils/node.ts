@@ -10,7 +10,8 @@ export const createComponentNode = <T>(nodeClassic: ComponentNodesEnum): Compone
     data: <ComponentNode<T>['data']>{
       title: creator.label,
       desc: '',
-      ...creator.create(),
+      type: nodeClassic,
+      ...creator.create() as T,
     },
   })
 }

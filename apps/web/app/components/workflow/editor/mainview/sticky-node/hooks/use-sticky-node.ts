@@ -1,0 +1,53 @@
+import { useStore } from 'zustand'
+import { useEditorStore } from '../../../hooks/use-editor-store'
+import { nodeTypes } from '../../../constants'
+import { useMemo } from 'react'
+import type { WorkflowComponentProps } from '../../../component-nodes/types'
+import { useEventListener } from 'ahooks'
+import { useReactFlow } from '@xyflow/react'
+import type { WorkflowEdge, WorkflowNode } from '../../../types'
+import { produce } from 'immer'
+
+export const useStickyNode = () => {
+  const editorStore = useEditorStore()
+  const stickyNode = useStore(editorStore, state => state.stickyElement)
+  const stickyLocation = useStore(editorStore, state => state.mouseLocation)
+  const StickyElement = useMemo(() => stickyNode ? nodeTypes[stickyNode.type] : null, [stickyNode])
+  const stickyElementProps = useMemo((): WorkflowComponentProps<any> | null => stickyNode ? {
+    ...stickyNode,
+    draggable: true,
+    dragging: true,
+    selectable: false,
+    selected: false,
+    deletable: false,
+    isConnectable: false,
+    zIndex: 0,
+    positionAbsoluteX: stickyLocation?.x ?? 0,
+    positionAbsoluteY: stickyLocation?.y ?? 0,
+  } : null, [stickyNode, stickyLocation])
+  return {
+    stickyNode,
+    stickyLocation,
+    StickyElement,
+    stickyElementProps,
+  }
+}
+
+export const useStickyEventsRegister = () => {
+  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const editorStore = useEditorStore()
+  useEventListener('click', (e) => {
+    const { stickyElement } = editorStore.getState()
+    if (!stickyElement)
+      return
+
+    reactflow.setNodes(nodes => produce(nodes, (draft) => {
+      const { x, y } = reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY })
+      draft.push({
+        ...stickyElement,
+        position: { x, y },
+      })
+    }))
+    editorStore.setState({ stickyElement: undefined })
+  })
+}

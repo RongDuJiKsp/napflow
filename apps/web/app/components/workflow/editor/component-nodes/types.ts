@@ -15,8 +15,9 @@ export type ComponentNode<T> = WorkflowNode<{
   title: string;
   desc: string;
 } & T>
-export type WorkflowComponent<T> = ComponentType<NodeProps<ComponentNode<T>>>
-export type WorkflowFc<T> = FC<NodeProps<ComponentNode<T>>>
+export type WorkflowComponentProps<T> = NodeProps<ComponentNode<T>>
+export type WorkflowComponent<T> = ComponentType<WorkflowComponentProps<T>>
+export type WorkflowFc<T> = FC<WorkflowComponentProps<T>>
 
 // class
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
