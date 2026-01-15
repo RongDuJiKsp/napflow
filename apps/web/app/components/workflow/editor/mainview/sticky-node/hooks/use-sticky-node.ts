@@ -6,7 +6,6 @@ import type { WorkflowComponentProps } from '../../../component-nodes/types'
 import { useEventListener } from 'ahooks'
 import { useReactFlow } from '@xyflow/react'
 import type { WorkflowEdge, WorkflowNode } from '../../../types'
-import { produce } from 'immer'
 
 export const useStickyNode = () => {
   const editorStore = useEditorStore()
@@ -40,14 +39,10 @@ export const useStickyEventsRegister = () => {
     const { stickyElement } = editorStore.getState()
     if (!stickyElement)
       return
-
-    reactflow.setNodes(nodes => produce(nodes, (draft) => {
-      const { x, y } = reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY })
-      draft.push({
-        ...stickyElement,
-        position: { x, y },
-      })
-    }))
+    reactflow.addNodes({
+      ...stickyElement,
+      position: reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY }),
+    })
     editorStore.setState({ stickyElement: undefined })
   })
 }

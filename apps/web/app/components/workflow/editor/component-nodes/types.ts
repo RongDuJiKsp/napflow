@@ -10,7 +10,7 @@ export enum ComponentNodesEnum {
 }
 
 // data实例
-export type ComponentNode<T> = WorkflowNode<{
+export type ComponentNode<T = unknown> = WorkflowNode<{
   type: ComponentNodesEnum;
   title: string;
   desc: string;

@@ -21,3 +21,8 @@ export const createWorkflowNode = <T extends DataKV = DataKV>(inital: Partial<Wo
     position: { x: 0, y: 0 },
   }, inital)
 }
+export const createWorkflowEdge = (inital: Partial<WorkflowEdge>): WorkflowEdge => {
+  return merge(<WorkflowEdge>{
+    id: genEdgeId(),
+  }, inital)
+}
