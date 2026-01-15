@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { ComponentNodeCreatorMap } from './constants'
 import type { WorkflowFc } from './types'
 import { twMerge } from 'tailwind-merge'
+import { Handle, Position } from '@xyflow/react'
 
 const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging }) => {
   const creator = ComponentNodeCreatorMap[data.type]
@@ -18,6 +19,16 @@ const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging }) =
     )}>
       <creator.icon className='h-4 w-4 text-purple-600'/>
       <span className='text-sm font-medium text-gray-900'>{data.title}</span>
+      {
+        creator.prevNodes?.length && (<>
+          <Handle type="target" position={Position.Left} />
+        </>)
+      }
+      {
+        creator.nextNodes?.length && (<>
+          <Handle type="source" position={Position.Left} />
+        </>)
+      }
     </div>
   )
 }

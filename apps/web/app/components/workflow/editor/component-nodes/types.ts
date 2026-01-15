@@ -28,4 +28,6 @@ export type ComponentCreator<T = any> = {
   icon: ComponentWithClass; // 菜单图标
   nodeComponent: WorkflowComponent<T>; // 节点渲染组件
   editPanelComponent: WorkflowComponent<T>; // 编辑面板组件
+  prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
+  nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
 }
