@@ -37,14 +37,14 @@ export const useStickyEventsRegister = () => {
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
   useEventListener('click', (e) => {
-    const { stickyElement } = editorStore.getState()
+    const { stickyElement, removeStickyElement } = editorStore.getState()
     if (!stickyElement)
       return
     reactflow.addNodes({
       ...stickyElement,
       position: reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY }),
     })
-    editorStore.setState({ stickyElement: undefined })
+    removeStickyElement()
     submitSyncDraft()
   })
 }
