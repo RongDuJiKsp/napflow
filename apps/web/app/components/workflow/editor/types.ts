@@ -1,8 +1,10 @@
 import type { NodeClassic } from '@shared/common/workflow/core'
 import type {
+  NodeProps,
   Edge as ReactFlowEdge,
   Node as ReactFlowNode,
 } from '@xyflow/react'
+import type { ComponentType, FC } from 'react'
 
 export type WorkflowNodeDataExtra = {
   expanded: boolean
@@ -29,3 +31,8 @@ export type WorkflowState = {
   nodes: WorkflowNode[]
   edges: WorkflowEdge[]
 }
+
+// workflow 节点component
+export type WorkflowProps<T = unknown> = NodeProps<WorkflowNode<T>>
+export type WorkflowReactComponent<T = unknown> = ComponentType<WorkflowProps<T>>
+export type WorkflowFc<T = unknown> = FC<WorkflowProps<T>>

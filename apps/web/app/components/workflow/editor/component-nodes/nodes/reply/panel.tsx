@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import type { WorkflowFc } from '../../types'
+import type { ComponentNodeFc } from '../../types'
 import type { ReplyData } from './creator'
 
-const ReplyPanel: WorkflowFc<ReplyData> = ({ data }) => {
+const ReplyPanel: ComponentNodeFc<ReplyData> = ({ data }) => {
   return (
     <div>Reply Panel</div>
   )

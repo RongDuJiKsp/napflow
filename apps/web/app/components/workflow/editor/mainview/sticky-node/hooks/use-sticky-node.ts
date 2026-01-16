@@ -2,10 +2,9 @@ import { useStore } from 'zustand'
 import { useEditorStore } from '../../../hooks/use-editor-store'
 import { nodeTypes } from '../../../constants'
 import { useMemo } from 'react'
-import type { WorkflowComponentProps } from '../../../component-nodes/types'
 import { useEventListener } from 'ahooks'
 import { useReactFlow } from '@xyflow/react'
-import type { WorkflowEdge, WorkflowNode } from '../../../types'
+import type { WorkflowEdge, WorkflowNode, WorkflowProps } from '../../../types'
 import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 
 export const useStickyNode = () => {
@@ -13,7 +12,7 @@ export const useStickyNode = () => {
   const stickyNode = useStore(editorStore, state => state.stickyElement)
   const stickyLocation = useStore(editorStore, state => state.mouseLocation)
   const StickyElement = useMemo(() => stickyNode ? nodeTypes[stickyNode.type] : null, [stickyNode])
-  const stickyElementProps = useMemo((): WorkflowComponentProps<any> | null => stickyNode ? {
+  const stickyElementProps = useMemo((): WorkflowProps | null => stickyNode ? {
     ...stickyNode,
     draggable: true,
     dragging: true,

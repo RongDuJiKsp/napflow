@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import type { WorkflowFc } from '../../types'
+import type { ComponentNodeFc } from '../../types'
 import { type TriggerData, TriggerOn } from './creator'
 
-const TriggerNode: WorkflowFc<TriggerData> = ({ data }) => {
+const TriggerNode: ComponentNodeFc<TriggerData> = ({ data }) => {
   return (
     <div>Trigger@{data.on}/{data.on === TriggerOn.Friend ? data.userId : data.groupId}</div>
   )

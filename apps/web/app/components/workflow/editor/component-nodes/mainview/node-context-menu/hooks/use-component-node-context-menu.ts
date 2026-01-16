@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import type { ItemParams } from 'react-contexify'
-import type { WorkflowComponentProps } from '../../../types'
-type HandlerProps = ItemParams<WorkflowComponentProps>
+import type { ComponentNodeProps } from '../../../types'
+type HandlerProps = ItemParams<ComponentNodeProps>
 
 export const useComponentNodeContextMenu = () => {
   const handleDeleteItem = useCallback(({ props }: HandlerProps) => {

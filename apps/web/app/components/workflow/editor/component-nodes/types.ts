@@ -18,9 +18,9 @@ export type ComponentNodeDataExtra = {
 }
 export type ComponentNodeData<T = unknown> = ComponentNodeDataExtra & T
 export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
-export type WorkflowComponentProps<T = unknown> = NodeProps<ComponentNode<T>>
-export type WorkflowComponent<T = unknown> = ComponentType<WorkflowComponentProps<T>>
-export type WorkflowFc<T = unknown> = FC<WorkflowComponentProps<T>>
+export type ComponentNodeProps<T = unknown> = NodeProps<ComponentNode<T>>
+export type ComponentNodeReactNode<T = unknown> = ComponentType<ComponentNodeProps<T>>
+export type ComponentNodeFc<T = unknown> = FC<ComponentNodeProps<T>>
 
 // class
 export type ComponentCreator<T = unknown> = {
@@ -28,8 +28,8 @@ export type ComponentCreator<T = unknown> = {
   schema: z.ZodType; // 发布前校验的schema（平时显示在发布前检查 发布前check）
   label: string; // 丢菜单的节点名称
   icon: ComponentWithClass; // 菜单图标
-  nodeComponent: WorkflowComponent<T>; // 节点渲染组件
-  editPanelComponent: WorkflowComponent<T>; // 编辑面板组件
+  nodeComponent: ComponentNodeReactNode<T>; // 节点渲染组件
+  editPanelComponent: ComponentNodeReactNode<T>; // 编辑面板组件
   prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
   nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
 }

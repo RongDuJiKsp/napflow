@@ -1,12 +1,12 @@
 import type { MouseEvent } from 'react'
 import { memo, useCallback } from 'react'
 import { COMPONENT_NODE_PANEL_ID, ComponentNodeCreatorMap } from './constants'
-import type { WorkflowFc } from './types'
+import type { ComponentNodeFc } from './types'
 import { twMerge } from 'tailwind-merge'
 import { Handle, Position } from '@xyflow/react'
 import { useContextMenu } from 'react-contexify'
 
-const ComponentNodesNode: WorkflowFc<unknown> = (props) => {
+const ComponentNodesNode: ComponentNodeFc<unknown> = (props) => {
   const { data, selected, dragging } = props
   const creator = ComponentNodeCreatorMap[data.type]
   // NodeContextMenu
@@ -34,7 +34,7 @@ const ComponentNodesNode: WorkflowFc<unknown> = (props) => {
       </div>
       {
         data.expanded && (<div className='w-44 mt-2 min-h-3  bg-linear-to-r from-purple-50 to-pink-50 rounded-md border border-pink-200 overflow-hidden p-1'>
-          {<creator.nodeComponent {...props as any} />}
+          {<creator.nodeComponent {...props} />}
         </div>)
       }
       {
