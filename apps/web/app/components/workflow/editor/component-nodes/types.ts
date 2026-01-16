@@ -15,13 +15,12 @@ export type ComponentNode<T = unknown> = WorkflowNode<{
   title: string;
   desc: string;
 } & T>
-export type WorkflowComponentProps<T> = NodeProps<ComponentNode<T>>
-export type WorkflowComponent<T> = ComponentType<WorkflowComponentProps<T>>
-export type WorkflowFc<T> = FC<WorkflowComponentProps<T>>
+export type WorkflowComponentProps<T = unknown> = NodeProps<ComponentNode<T>>
+export type WorkflowComponent<T = unknown> = ComponentType<WorkflowComponentProps<T>>
+export type WorkflowFc<T = unknown> = FC<WorkflowComponentProps<T>>
 
 // class
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ComponentCreator<T = any> = {
+export type ComponentCreator<T = unknown> = {
   create: () => T; // 创建实例data域的默认值
   schema: z.ZodType; // 发布前校验的schema（平时显示在发布前检查 发布前check）
   label: string; // 丢菜单的节点名称

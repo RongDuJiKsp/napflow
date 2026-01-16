@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import type { ComponentNode } from '../types'
 import { ComponentNodeCreatorMap } from '../constants'
 import { useReactFlow } from '@xyflow/react'
+import { createWorkflowEdge } from '../../utils/nodes'
 
 export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow()
@@ -9,7 +10,7 @@ export const useComponentNodeOperations = () => {
     const sourceCreator = ComponentNodeCreatorMap[source.data.type]
     const targetCreator = ComponentNodeCreatorMap[target.data.type]
     if(!sourceCreator.nextNodes?.includes(target.data.type) || !targetCreator.prevNodes?.includes(source.data.type)) return
-
+    reactflow.addEdges(createWorkflowEdge({ source: source.id, target: target.id }))
   }, [reactflow])
   return { handleConnenct }
 }

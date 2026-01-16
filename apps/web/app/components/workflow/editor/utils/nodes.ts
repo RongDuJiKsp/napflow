@@ -1,28 +1,53 @@
 import type { Edge, Node } from '@shared/common/workflow/core'
 import type { WorkflowEdge, WorkflowNode } from '../types'
 import { merge } from 'lodash-es'
-import type { DataKV } from '@/utils/type'
+import type { PartialWithout } from '@/utils/type'
 
 export const initNodes = (nodes: Node[]): WorkflowNode[] => {
-  return nodes
+  return nodes.map((node) => {
+    return merge(node, {
+      data: {
+        _cacheKV: {},
+      },
+    })
+  })
 }
 export const initEdges = (edges: Edge[]): WorkflowEdge[] => {
-  return edges
+  return edges.map((edge) => {
+    return merge(edge, {
+      data: {
+        _cacheKV: {},
+      },
+    })
+  })
 }
 export const genNodeId = () => `${Date.now()}@comm`
 export const genEdgeId = () => `${Date.now()}@commedge`
 
-export const createWorkflowNode = <T extends DataKV = DataKV>(inital: Partial<WorkflowNode<T>>): WorkflowNode<T> => {
-  return merge(<WorkflowNode>{
-    id: genNodeId(),
-    data: {
-      _cacheKV: {},
+export const createWorkflowNode = <T = unknown>(
+  inital: PartialWithout<WorkflowNode<T>, 'type'>,
+): WorkflowNode<T> => {
+  return merge(
+    {
+      id: genNodeId(),
+      data: {
+        _cacheKV: {},
+      },
+      position: { x: 0, y: 0 },
     },
-    position: { x: 0, y: 0 },
-  }, inital)
+    inital,
+  )
 }
-export const createWorkflowEdge = (inital: Partial<WorkflowEdge>): WorkflowEdge => {
-  return merge(<WorkflowEdge>{
-    id: genEdgeId(),
-  }, inital)
+export const createWorkflowEdge = (
+  inital: PartialWithout<WorkflowEdge, 'source' | 'target'>,
+): WorkflowEdge => {
+  return merge(
+    {
+      id: genEdgeId(),
+      data: {
+        _cacheKV: {},
+      },
+    },
+    inital,
+  )
 }

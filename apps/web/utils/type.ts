@@ -2,5 +2,4 @@ import type React from 'react'
 
 export type ComponentWithClass = React.ComponentType<{ className?: string }>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DataKV = Record<string, any>
+export type PartialWithout<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>
