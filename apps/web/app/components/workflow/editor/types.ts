@@ -4,6 +4,10 @@ import type {
   Node as ReactFlowNode,
 } from '@xyflow/react'
 
+export type WorkflowNodeDataExtra = {
+  expanded: boolean
+}
+
 // 私有数据,要求_开头
 export type WorkflowNodeDataPrivate = {
   _cacheKV: Record<string, any>
@@ -13,7 +17,7 @@ export type WorkflowEdgeDataPrivate = {
   _cacheKV: Record<string, any>
 }
 // 重新导出Reactflow的类型
-export type WorkflowNodeData<T = unknown> = T & WorkflowNodeDataPrivate
+export type WorkflowNodeData<T = unknown> = T & WorkflowNodeDataPrivate & WorkflowNodeDataExtra
 export type WorkflowNode<T = unknown> = ReactFlowNode<WorkflowNodeData<T>, NodeClassic>
 
 export type WorkflowEdgeData<T = unknown> = T & WorkflowEdgeDataPrivate

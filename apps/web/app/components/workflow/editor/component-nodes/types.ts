@@ -11,11 +11,13 @@ export enum ComponentNodesEnum {
 }
 
 // data实例
-export type ComponentNode<T = unknown> = WorkflowNode<{
+export type ComponentNodeDataExtra = {
   type: ComponentNodesEnum;
   title: string;
   desc: string;
-} & T>
+}
+export type ComponentNodeData<T = unknown> = ComponentNodeDataExtra & T
+export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
 export type WorkflowComponentProps<T = unknown> = NodeProps<ComponentNode<T>>
 export type WorkflowComponent<T = unknown> = ComponentType<WorkflowComponentProps<T>>
 export type WorkflowFc<T = unknown> = FC<WorkflowComponentProps<T>>

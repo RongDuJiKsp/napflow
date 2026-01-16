@@ -4,7 +4,7 @@ import type { WorkflowFc } from './types'
 import { twMerge } from 'tailwind-merge'
 import { Handle, Position } from '@xyflow/react'
 
-const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging }) => {
+const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging, ...extra }) => {
   const creator = ComponentNodeCreatorMap[data.type]
   return (
     <div className={twMerge(
@@ -19,6 +19,11 @@ const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging }) =
     )}>
       <creator.icon className='h-4 w-4 text-purple-600'/>
       <span className='text-sm font-medium text-gray-900'>{data.title}</span>
+      {
+        data.expanded && (<div className='w-44 h-12 bg-linear-to-r from-purple-50 to-pink-50 rounded-xl border border-pink-200'>
+          {<creator.nodeComponent data={data as any} selected={selected} dragging={dragging} {...extra} />}
+        </div>)
+      }
       {
         !!creator.prevNodes?.length && (<>
           <Handle type="target" position={Position.Left} />
