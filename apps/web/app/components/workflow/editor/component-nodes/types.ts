@@ -21,7 +21,8 @@ export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
 export type ComponentNodeProps<T = unknown> = NodeProps<ComponentNode<T>>
 export type ComponentNodeReactNode<T = unknown> = ComponentType<ComponentNodeProps<T>>
 export type ComponentNodeFc<T = unknown> = FC<ComponentNodeProps<T>>
-
+export type ComponentPanelReactNode<T = unknown> = ComponentType<{ node: ComponentNode<T> }>
+export type ComponentPanelFc<T = unknown> = FC<{ node: ComponentNode<T> }>
 // class
 export type ComponentCreator<T = unknown> = {
   create: () => T; // 创建实例data域的默认值
@@ -29,7 +30,7 @@ export type ComponentCreator<T = unknown> = {
   label: string; // 丢菜单的节点名称
   icon: ComponentWithClass; // 菜单图标
   nodeComponent: ComponentNodeReactNode<T>; // 节点渲染组件
-  editPanelComponent: ComponentNodeReactNode<T>; // 编辑面板组件
+  editPanelComponent: ComponentPanelReactNode<T>; // 编辑面板组件
   prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
   nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
 }

@@ -12,12 +12,14 @@ import { StickyNode } from './mainview/sticky-node'
 import { useWorkflowViewOperations } from './hooks/use-workflow-view-operations'
 import NodeContextMenu from './component-nodes/mainview/node-context-menu'
 import { useStoreEdgesState, useStoreNodesState } from './hooks/use-reactflow-ext'
+import NodeEditSiderbar from './component-nodes/mainview/node-edit-siderbar'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
       <EditorPanelContextMenu />
       <NodeContextMenu />
       <StickyNode />
+      <NodeEditSiderbar />
       {children}
     </div>
   )

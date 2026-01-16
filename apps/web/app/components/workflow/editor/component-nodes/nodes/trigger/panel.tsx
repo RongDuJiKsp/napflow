@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import type { ComponentNodeFc } from '../../types'
+import type { ComponentPanelFc } from '../../types'
 import type { TriggerData } from './creator'
 
-const TriggerPanel: ComponentNodeFc<TriggerData> = () => {
+const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
   return (
     <div>
       Trigger

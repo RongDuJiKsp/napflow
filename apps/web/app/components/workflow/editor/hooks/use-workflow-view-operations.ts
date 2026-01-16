@@ -26,14 +26,25 @@ export const useWorkflowViewOperations = () => {
   const handleSingleNodeSelect = useCallback((node: WorkflowNode) => {
     const { selectNode } = editorStore.getState()
     selectNode(node.id)
+    console.log('sel')
   }, [editorStore])
 
+  const handleNodesDeselect = useCallback((nodes: WorkflowNode[]) => {
+    const { selectedNodeId, deselectNode } = editorStore.getState()
+    // 如果选中的节点在取消选中的节点中，则取消选中
+    if(nodes.find(n => n.id === selectedNodeId))
+      deselectNode()
+  }, [editorStore])
   const handleNodesChange = useCallback((changes: NodeChange<WorkflowNode>[]) => {
+    // 处理单选
     // 这里不能写成changes.filter(c => c.type === 'select' && c.selected) 因为这样无法收窄类型到NodeSelectionChange ts会犯病
     const selections = changes.filter(c => c.type === 'select').filter(c => c.selected)
     if(selections.length === 1)
       handleSingleNodeSelect(reactflow.getNode(selections[0].id)!)
-  }, [reactflow, handleSingleNodeSelect])
+    // 处理取消选择
+    const deselections = changes.filter(c => c.type === 'select').filter(c => !c.selected).map(c => reactflow.getNode(c.id)!)
+    handleNodesDeselect(deselections)
+  }, [reactflow, handleSingleNodeSelect, handleNodesDeselect])
 
   return {
     handleConnect,

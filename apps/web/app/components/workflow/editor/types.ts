@@ -36,3 +36,5 @@ export type WorkflowState = {
 export type WorkflowProps<T = unknown> = NodeProps<WorkflowNode<T>>
 export type WorkflowReactComponent<T = unknown> = ComponentType<WorkflowProps<T>>
 export type WorkflowFc<T = unknown> = FC<WorkflowProps<T>>
+export type WorkflowSimpleReactComponent = ComponentType<{ nodeId: string }>
+export type WorkflowSimpleFc = FC<{ nodeId: string }>
