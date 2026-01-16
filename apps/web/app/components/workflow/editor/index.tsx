@@ -12,10 +12,22 @@ import { initEdges, initNodes } from './utils/nodes'
 
 const Editor = () => {
   const { appId } = useAppParam()
-  const { data: remoteState } = useWorkflowAppDataQuery(appId)
+  const { data: remoteState } = useWorkflowAppDataQuery(appId, {
+    refetchInterval: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: false,
+  })
   // 将draft的Nodes转换为WorkflowNodes之类的
-  const remoteNodes = useMemo(() => remoteState?.nodes ? initNodes(remoteState.nodes) : [], [remoteState])
-  const remoteEdges = useMemo(() => remoteState?.edges ? initEdges(remoteState.edges) : [], [remoteState])
+  const remoteNodes = useMemo(
+    () => (remoteState?.nodes ? initNodes(remoteState.nodes) : []),
+    [remoteState],
+  )
+  const remoteEdges = useMemo(
+    () => (remoteState?.edges ? initEdges(remoteState.edges) : []),
+    [remoteState],
+  )
 
   if (!remoteState) return <div>loading</div>
   return (
