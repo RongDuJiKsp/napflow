@@ -7,12 +7,55 @@ import type { ComponentNode, ComponentPanelFc } from '../../types'
 import type { WorkflowNode } from '../../../types'
 import { Drawer } from 'antd'
 import { ComponentNodeCreatorMap } from '../../constants'
-
+import { twMerge } from 'tailwind-merge'
+import { useEditSiderbarMetaEdit } from './hooks/use-edit-siderbar-meta-edit'
 const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ node }) => {
+  const {
+    handleChangeTitle,
+    handleChangeDescription,
+  } = useEditSiderbarMetaEdit(node.id)
   const creator = ComponentNodeCreatorMap[node.data.type]
   return (
-    <div>
-      <creator.editPanelComponent node={node} />
+    <div className="space-y-0 p-2">
+      {/* 标题区域 */}
+      <div className="flex items-center gap-3 p-4 rounded-xl bg-linear-to-r from-purple-50 to-pink-50 border border-pink-100">
+        <div className="shrink-0 p-2 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md">
+          <creator.icon className='h-5 w-5' />
+        </div>
+        <div className="flex-1">
+          <input
+            type="text"
+            value={node.data.title}
+            onChange={e => handleChangeTitle(e.target.value)}
+            placeholder={creator.label}
+            className={twMerge(
+              'w-full text-base font-semibold text-gray-800 bg-transparent border-none',
+              'focus:outline-none focus:ring-0 placeholder:text-gray-200',
+              'transition-all duration-200',
+            )}
+          />
+        </div>
+      </div>
+
+      {/* 描述区域 - 融入分割线 */}
+      <div className="border-b border-pink-200 py-2">
+        <input
+          type="text"
+          value={node.data.desc}
+          onChange={e => handleChangeDescription(e.target.value)}
+          placeholder="输入节点描述，用于说明该节点的作用和功能"
+          className={twMerge(
+            'w-full text-sm text-gray-600 bg-transparent border-none',
+            'focus:outline-none focus:ring-0 placeholder:text-pink-200',
+            'transition-all duration-200',
+          )}
+        />
+      </div>
+
+      {/* 编辑面板内容 */}
+      <div className="mt-4">
+        <creator.editPanelComponent node={node} />
+      </div>
     </div>
   )
 }

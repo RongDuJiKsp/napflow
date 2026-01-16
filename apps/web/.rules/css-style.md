@@ -42,7 +42,7 @@ focus:ring-2 focus:ring-purple-400 focus:border-transparent
 
 标签：紫色标签 text-purple-700 + 中等字体权重
 
-占位符：粉色占位符 placeholder-pink-500
+占位符：粉色占位符 placeholder-pink-200
 
 按钮：渐变背景 + 悬停变色效果 + 阴影增强
 

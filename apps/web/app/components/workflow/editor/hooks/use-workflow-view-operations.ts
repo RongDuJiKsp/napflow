@@ -26,7 +26,6 @@ export const useWorkflowViewOperations = () => {
   const handleSingleNodeSelect = useCallback((node: WorkflowNode) => {
     const { selectNode } = editorStore.getState()
     selectNode(node.id)
-    console.log('sel')
   }, [editorStore])
 
   const handleNodesDeselect = useCallback((nodes: WorkflowNode[]) => {
