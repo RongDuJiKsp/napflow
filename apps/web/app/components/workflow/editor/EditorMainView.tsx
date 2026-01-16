@@ -1,3 +1,4 @@
+import type { OnNodesChange } from '@xyflow/react'
 import { ReactFlow } from '@xyflow/react'
 import type { PropsWithChildren } from 'react'
 import { memo, useCallback, useEffect } from 'react'
@@ -25,8 +26,8 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
 const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode[], remoteEdges: WorkflowEdge[] }) => {
   const editorStore = useEditorStore()
   // 本地修改时具有自己状态 远端更新时直接覆盖本地
-  const [nodes, setNodes, handleNodesChange] = useStoreNodesState()
-  const [edges, setEdges, handleEdgesChange] = useStoreEdgesState()
+  const [nodes, setNodes, handleNodesChangeForStore] = useStoreNodesState<WorkflowNode>()
+  const [edges, setEdges, handleEdgesChange] = useStoreEdgesState<WorkflowEdge>()
 
   useEffect(() => {
     setNodes(remoteNodes)
@@ -43,7 +44,16 @@ const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode
   // sticky node
   const handleMouseMove = useStore(editorStore, state => state.handleMove)
   // operator
-  const { handleConnect } = useWorkflowViewOperations()
+  const {
+    handleConnect,
+    handleNodesChange: handleNodesChangeForOperator,
+  } = useWorkflowViewOperations()
+
+   // merge muti changes
+  const handleNodesChange = useCallback<OnNodesChange<WorkflowNode>>((changes) => {
+    handleNodesChangeForStore(changes)
+    handleNodesChangeForOperator(changes)
+  }, [handleNodesChangeForStore, handleNodesChangeForOperator])
   return (
     <EditorLayout>
       <ReactFlow

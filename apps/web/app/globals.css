@@ -1,6 +1,7 @@
 @layer theme, base, antd, components, utilities;
 @import "tailwindcss";
 @import "@heroui/styles"; 
+@import './style/react-contexify.css';
 
 .h-headerbar{
     height: 64px;
