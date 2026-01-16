@@ -6,6 +6,7 @@ import type { WorkflowComponentProps } from '../../../component-nodes/types'
 import { useEventListener } from 'ahooks'
 import { useReactFlow } from '@xyflow/react'
 import type { WorkflowEdge, WorkflowNode } from '../../../types'
+import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 
 export const useStickyNode = () => {
   const editorStore = useEditorStore()
@@ -35,6 +36,7 @@ export const useStickyNode = () => {
 export const useStickyEventsRegister = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
+  const { submitSyncDraft } = useWorkflowDraft()
   useEventListener('click', (e) => {
     const { stickyElement } = editorStore.getState()
     if (!stickyElement)
@@ -44,5 +46,6 @@ export const useStickyEventsRegister = () => {
       position: reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY }),
     })
     editorStore.setState({ stickyElement: undefined })
+    submitSyncDraft()
   })
 }
