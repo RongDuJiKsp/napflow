@@ -1,5 +1,5 @@
 import z from 'zod'
-import { type ComponentCreator, ComponentNodesEnum } from '../types'
+import { type ComponentCreator, ComponentNodesEnum } from '../../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'

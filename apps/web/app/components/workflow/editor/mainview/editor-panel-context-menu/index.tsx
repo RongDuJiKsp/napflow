@@ -3,7 +3,7 @@ import { EDITOR_PANEL_ID } from '../../constants'
 import { memo } from 'react'
 import CreateComponentNodeSubMenu from './CreateComponentNodeSubMenu'
 
-const EditPanelContext = () => {
+const EditPanelContextMenu = () => {
   return (
     <Menu id={EDITOR_PANEL_ID}>
       <CreateComponentNodeSubMenu />
@@ -11,4 +11,4 @@ const EditPanelContext = () => {
   )
 }
 
-export default memo(EditPanelContext)
+export default memo(EditPanelContextMenu)

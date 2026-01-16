@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import type { WorkflowFc } from '../types'
+import type { WorkflowFc } from '../../types'
 import { type TriggerData, TriggerOn } from './creator'
 
 const TriggerNode: WorkflowFc<TriggerData> = ({ data }) => {

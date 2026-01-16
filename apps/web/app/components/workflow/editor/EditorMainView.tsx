@@ -3,16 +3,18 @@ import type { PropsWithChildren } from 'react'
 import { memo, useCallback, useEffect } from 'react'
 import { useContextMenu } from 'react-contexify'
 import { EDITOR_PANEL_ID, nodeTypes } from './constants'
-import EditorPanelContext from './mainview/editor-panel-context'
+import EditorPanelContextMenu from './mainview/editor-panel-context-menu'
 import type { WorkflowEdge, WorkflowNode } from './types'
 import { useEditorStore } from './hooks/use-editor-store'
 import { useStore } from 'zustand'
 import { StickyNode } from './mainview/sticky-node'
 import { useWorkflowViewOperations } from './hooks/use-workflow-view-operations'
+import NodeContextMenu from './component-nodes/mainview/node-context-menu'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id='editor-wrapper' className='h-full'>
-      <EditorPanelContext />
+      <EditorPanelContextMenu />
+      <NodeContextMenu />
       <StickyNode />
       {children}
     </div>
@@ -29,7 +31,7 @@ const EditorMainView = ({ remoteNodes, remoteEdges}: { remoteNodes: WorkflowNode
     setEdges(remoteEdges)
   }, [remoteNodes, remoteEdges, setNodes, setEdges])
 
-  // ContextMenu
+  // NodeContextMenu
   const { show } = useContextMenu({
     id: EDITOR_PANEL_ID,
   })

@@ -1,5 +1,5 @@
 import z from 'zod'
-import { type ComponentCreator, ComponentNodesEnum } from '../types'
+import { type ComponentCreator, ComponentNodesEnum } from '../../types'
 import ReplyNode from './node'
 import ReplyPanel from './panel'
 import { RiQuestionAnswerLine } from '@remixicon/react'

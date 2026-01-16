@@ -33,3 +33,5 @@ export type ComponentCreator<T = unknown> = {
   prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
   nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
 }
+
+// contextMenu
