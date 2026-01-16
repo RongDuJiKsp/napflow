@@ -7,6 +7,7 @@ import type { NodeProps } from '@xyflow/react'
 // component nodes
 export enum ComponentNodesEnum {
   Trigger = 'trigger',
+  Reply = 'reply',
 }
 
 // data实例

@@ -20,13 +20,13 @@ const ComponentNodesNode: WorkflowFc<unknown> = ({ data, selected, dragging }) =
       <creator.icon className='h-4 w-4 text-purple-600'/>
       <span className='text-sm font-medium text-gray-900'>{data.title}</span>
       {
-        creator.prevNodes?.length && (<>
+        !!creator.prevNodes?.length && (<>
           <Handle type="target" position={Position.Left} />
         </>)
       }
       {
-        creator.nextNodes?.length && (<>
-          <Handle type="source" position={Position.Left} />
+        !!creator.nextNodes?.length && (<>
+          <Handle type="source" position={Position.Right} />
         </>)
       }
     </div>

@@ -1,5 +1,5 @@
 import z from 'zod'
-import type { ComponentCreator } from '../types'
+import { type ComponentCreator, ComponentNodesEnum } from '../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'
@@ -40,4 +40,6 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
   icon: RiWebhookLine,
   nodeComponent: TriggerNode,
   editPanelComponent: TriggerPanel,
+  prevNodes: [],
+  nextNodes: [ComponentNodesEnum.Reply],
 }
