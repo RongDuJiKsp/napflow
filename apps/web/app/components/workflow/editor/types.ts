@@ -13,6 +13,7 @@ export type WorkflowNodeDataExtra = {
 // 私有数据,要求_开头
 export type WorkflowNodeDataPrivate = {
   _cacheKV: Record<string, any>
+  _beforeCreate?: boolean
 }
 
 export type WorkflowEdgeDataPrivate = {

@@ -1,3 +1,5 @@
+import { merge } from 'lodash-es'
+import type { PartialDeep }from 'type-fest'
 /*
 * 仿照classNames这个库的cn函数 用于在满足多个条件的switch
 * 返回第一个满足转为Bool为true的值
@@ -15,4 +17,7 @@ export function choose<T>(...args: (T | undefined | null | false | '')[]): T | u
       return item
   }
   return undefined
+}
+export function overwrite<T>(target: T, ...source: PartialDeep<T>[]): T {
+  return source.reduce((acc, cur) => merge(acc, cur), target)
 }
