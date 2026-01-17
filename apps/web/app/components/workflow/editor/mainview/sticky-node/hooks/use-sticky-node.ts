@@ -6,6 +6,7 @@ import { useEventListener } from 'ahooks'
 import { useReactFlow } from '@xyflow/react'
 import type { WorkflowEdge, WorkflowNode, WorkflowProps } from '../../../types'
 import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
+import { overwrite } from '@/utils/comm'
 
 export const useStickyNode = () => {
   const editorStore = useEditorStore()
@@ -40,10 +41,12 @@ export const useStickyEventsRegister = () => {
     const { stickyElement, removeStickyElement } = editorStore.getState()
     if (!stickyElement)
       return
-    reactflow.addNodes({
-      ...stickyElement,
+    reactflow.addNodes(overwrite(stickyElement, {
       position: reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY }),
-    })
+      data: {
+        _beforeCreate: false,
+      },
+    }))
     removeStickyElement()
     submitSyncDraft()
   })
