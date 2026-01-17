@@ -24,7 +24,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
         value={node.data.on}
         onChange={v => handleTriggerTargetChange(v as TriggerOn)}
       >
-        <Label>触发类型</Label>
+        <Label className="text-purple-700">触发类型</Label>
         <Select.Trigger>
           <Select.Value />
         </Select.Trigger>
@@ -41,7 +41,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
           value={node.data.userId || ''}
           onChange={handleUserIdChange}
         >
-          <Label>触发uid</Label>
+          <Label className="text-purple-700">触发uid</Label>
           <Input />
         </TextField>
       )}
@@ -51,7 +51,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
           value={node.data.groupId || ''}
           onChange={handleGroupIdChange}
         >
-          <Label>触发gid</Label>
+          <Label className="text-purple-700">触发gid</Label>
           <Input />
         </TextField>
       )}
