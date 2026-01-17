@@ -1,5 +1,5 @@
 import z from 'zod'
-import { type ComponentCreator, ComponentNodesEnum } from '../../types'
+import { type ComponentCreator, ComponentNodesEnum, VarTypes } from '../../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'
@@ -42,4 +42,10 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
   editPanelComponent: TriggerPanel,
   prevNodes: [],
   nextNodes: [ComponentNodesEnum.Reply],
+  env: [
+    { type: VarTypes.Number, name: 'trigger.uid' },
+    { type: VarTypes.Number, name: 'trigger.gid' },
+    { type: VarTypes.Number, name: 'trigger.messageid' },
+    { type: VarTypes.String, name: 'trigger.msgreadable' },
+  ],
 }

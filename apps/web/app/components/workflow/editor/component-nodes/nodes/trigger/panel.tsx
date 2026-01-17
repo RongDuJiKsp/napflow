@@ -10,6 +10,7 @@ import {
   Select,
   TextField,
 } from '@heroui/react'
+import ProviderEnv from '../../common/provider-env'
 
 const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
   const {
@@ -20,6 +21,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
 
   return (
     <div className="flex flex-col gap-4">
+      <ProviderEnv envs={node.data.vars}/>
       <Select
         value={node.data.on}
         onChange={v => handleTriggerTargetChange(v as TriggerOn)}
