@@ -11,8 +11,8 @@ export enum TriggerOn {
 
 export const TriggerDataSchema = z.object({
   on: z.enum(TriggerOn),
-  userId: z.number().optional(),
-  groupId: z.number().optional(),
+  userId: z.string().optional(),
+  groupId: z.string().optional(),
 }).superRefine((data, ctx) => {
   if (data.on === TriggerOn.Friend && !data.userId) {
     ctx.addIssue({
