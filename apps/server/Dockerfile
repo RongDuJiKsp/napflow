@@ -26,4 +26,5 @@ RUN pnpm build
 # entrypoint
 ENV HOST_NAME=0.0.0.0
 ENV PORT=8848
+EXPOSE 8848
 CMD ["pnpm", "start:prod"]
