@@ -23,7 +23,6 @@ const nextConfig: NextConfig = {
     }
     return rewrites
   },
-  output: 'standalone',
 }
 
 export default nextConfig
