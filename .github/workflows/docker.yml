@@ -33,8 +33,8 @@ jobs:
           file: apps/web/Dockerfile
           push: true
           tags: |
-            ${{ vars.IMAGE_NAME }}/web:${{ env.TAG }}
-            ${{ vars.IMAGE_NAME }}/web:latest
+            ${{ vars.IMAGE_NAME }}-web:${{ env.TAG }}
+            ${{ vars.IMAGE_NAME }}-web:latest
 
       # ---------- server ----------
       - name: Build & Push server image
@@ -44,5 +44,5 @@ jobs:
           file: apps/server/Dockerfile
           push: true
           tags: |
-            ${{ vars.IMAGE_NAME }}/server:${{ env.TAG }}
-            ${{ vars.IMAGE_NAME }}/server:latest
+            ${{ vars.IMAGE_NAME }}-server:${{ env.TAG }}
+            ${{ vars.IMAGE_NAME }}-server:latest
