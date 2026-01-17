@@ -1,7 +1,7 @@
 {
   "name": "server",
   "scripts": {
-    "build": "nest build",
+    "build": "npx nest build",
     "start": "npx cross-env NODE_ENV=development nest start",
     "start:dev": "pnpm start --watch",
     "start:debug": "pnpm start --debug --watch",
