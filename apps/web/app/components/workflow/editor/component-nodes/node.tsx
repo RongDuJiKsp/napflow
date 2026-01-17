@@ -33,7 +33,7 @@ const ComponentNodesNode: ComponentNodeFc<unknown> = (props) => {
         <span className='text-sm font-medium text-gray-900'>{data.title}</span>
       </div>
       {
-        data.expanded && (<div className='w-44 mt-2 min-h-3  bg-linear-to-r from-purple-50 to-pink-50 rounded-md border border-pink-200 overflow-hidden p-1'>
+        data.expanded && (<div className='w-52 mt-2 min-h-3  bg-linear-to-r from-purple-50 to-pink-50 rounded-md border border-pink-200 overflow-hidden p-1'>
           {<creator.nodeComponent {...props} />}
         </div>)
       }

@@ -9,12 +9,23 @@ export enum ComponentNodesEnum {
   Trigger = 'trigger',
   Reply = 'reply',
 }
-
+// node env
+export enum VarTypes {
+  String = 'string',
+  Number = 'number',
+  StringArray = 'Array<string>',
+  NumberArray = 'Array<number>',
+}
+export type Var = {
+  name: string;
+  type: VarTypes;
+}
 // data实例
 export type ComponentNodeDataExtra = {
   type: ComponentNodesEnum;
   title: string;
   desc: string;
+  vars: Var[];
 }
 export type ComponentNodeData<T = unknown> = ComponentNodeDataExtra & T
 export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
@@ -33,6 +44,7 @@ export type ComponentCreator<T = unknown> = {
   editPanelComponent: ComponentPanelReactNode<T>; // 编辑面板组件
   prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
   nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
+  env?: Var[];
 }
 
 // contextMenu

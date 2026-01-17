@@ -9,6 +9,8 @@ export const useTriggerCurd = (node: ComponentNode<TriggerData>) => {
   const handleTriggerTargetChange = useCallback((on: TriggerOn) => {
     editNode(node.id, (draft) => {
       draft.data.on = on
+      draft.data.groupId = undefined
+      draft.data.userId = undefined
     })
   }, [editNode, node.id])
 

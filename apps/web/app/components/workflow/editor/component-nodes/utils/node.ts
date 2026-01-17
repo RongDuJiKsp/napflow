@@ -11,6 +11,7 @@ export const createComponentNode = <T>(nodeClassic: ComponentNodesEnum): Compone
       title: creator.label,
       desc: '',
       type: nodeClassic,
+      vars: creator.env ?? [],
       ...creator.create() as T,
     },
   })
