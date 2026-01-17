@@ -2,7 +2,10 @@
   "name": "napflow",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
+    "image:server": "docker build -f apps/server/Dockerfile .  -t napflow/server"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
