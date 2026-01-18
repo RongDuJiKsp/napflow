@@ -2,6 +2,7 @@ import { uniqBy } from 'lodash-es'
 import type { WorkflowEdge } from '../../types'
 import type { ComponentNode, Var } from '../types'
 import { Queue } from 'datastructures-js'
+import { createContext, useContext } from 'react'
 export type VarCtx = Var & {
   source: {
     id: string;
@@ -86,6 +87,10 @@ export const getNodeEnvMap = (
   return states.envCache
 }
 
-export const useComponentNodeEnv = () => {
-  return {}
+export const NodeEnvContext = createContext<Record<string, VarCtx[]>>({})
+
+export const useComponentNodeEnv = (nodeId: string) => {
+  const varsCache = useContext(NodeEnvContext)
+  const vars = varsCache[nodeId]
+  return { vars }
 }

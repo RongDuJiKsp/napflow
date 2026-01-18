@@ -1,6 +1,6 @@
-import { useReactFlow } from '@xyflow/react'
-import { useCallback } from 'react'
-import type { WorkflowNode } from '../../types'
+import { useEdges, useNodes, useReactFlow } from '@xyflow/react'
+import { useCallback, useMemo } from 'react'
+import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { NodeClassic } from '@shared/common/workflow/core'
 import type { ComponentNode } from '../types'
 
@@ -23,4 +23,16 @@ export const useComponentNodeCurd = () => {
   return {
     getNode,
   }
+}
+
+export const useComponentNodeEdges = () => {
+  const wNodes = useNodes<WorkflowNode>()
+  const wEdges = useEdges<WorkflowEdge>()
+  const { nodes, edges } = useMemo(() => {
+    const compNodes = wNodes.filter(node => node.type === NodeClassic.Component) as ComponentNode[]
+    const compIdSet = new Set(compNodes.map(node => node.id))
+    const compEdges = wEdges.filter(edge => compIdSet.has(edge.source) && compIdSet.has(edge.target))
+    return { nodes: compNodes, edges: compEdges }
+  }, [wNodes, wEdges])
+  return { nodes, edges }
 }
