@@ -12,18 +12,18 @@ import {
 } from '@heroui/react'
 import ProviderEnv from '../../common/provider-env'
 
-const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
+const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
   const {
     handleTriggerTargetChange,
     handleUserIdChange,
     handleGroupIdChange,
-  } = useTriggerCurd(node)
+  } = useTriggerCurd(id)
 
   return (
     <div className="flex flex-col gap-4">
-      <ProviderEnv envs={node.data.vars}/>
+      <ProviderEnv envs={data.vars}/>
       <Select
-        value={node.data.on}
+        value={data.on}
         onChange={v => handleTriggerTargetChange(v as TriggerOn)}
       >
         <Label className="text-purple-700">触发类型</Label>
@@ -38,9 +38,9 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
         </Select.Popover>
       </Select>
 
-      {node.data.on === TriggerOn.Friend && (
+      {data.on === TriggerOn.Friend && (
         <TextField
-          value={node.data.userId || ''}
+          value={data.userId || ''}
           onChange={handleUserIdChange}
         >
           <Label className="text-purple-700">触发uid</Label>
@@ -48,9 +48,9 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ node }) => {
         </TextField>
       )}
 
-      {node.data.on === TriggerOn.Group && (
+      {data.on === TriggerOn.Group && (
         <TextField
-          value={node.data.groupId || ''}
+          value={data.groupId || ''}
           onChange={handleGroupIdChange}
         >
           <Label className="text-purple-700">触发gid</Label>

@@ -32,8 +32,8 @@ export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
 export type ComponentNodeProps<T = unknown> = NodeProps<ComponentNode<T>>
 export type ComponentNodeReactNode<T = unknown> = ComponentType<ComponentNodeProps<T>>
 export type ComponentNodeFc<T = unknown> = FC<ComponentNodeProps<T>>
-export type ComponentPanelReactNode<T = unknown> = ComponentType<{ node: ComponentNode<T> }>
-export type ComponentPanelFc<T = unknown> = FC<{ node: ComponentNode<T> }>
+export type ComponentPanelReactNode<T = unknown> = ComponentType<{ id: ComponentNode<T>['id'], data: ComponentNode<T>['data'] }>
+export type ComponentPanelFc<T = unknown> = FC<{ id: ComponentNode<T>['id'], data: ComponentNode<T>['data'] }>
 // class
 export type ComponentCreator<T = unknown> = {
   create: () => T; // 创建实例data域的默认值

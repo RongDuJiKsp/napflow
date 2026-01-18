@@ -9,12 +9,12 @@ import { Drawer } from 'antd'
 import { ComponentNodeCreatorMap } from '../../constants'
 import { twMerge } from 'tailwind-merge'
 import { useEditSiderbarMetaEdit } from './hooks/use-edit-siderbar-meta-edit'
-const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ node }) => {
+const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ id, data }) => {
   const {
     handleChangeTitle,
     handleChangeDescription,
-  } = useEditSiderbarMetaEdit(node.id)
-  const creator = ComponentNodeCreatorMap[node.data.type]
+  } = useEditSiderbarMetaEdit(id)
+  const creator = ComponentNodeCreatorMap[data.type]
   return (
     <div className="space-y-0 p-2">
       {/* 标题区域 */}
@@ -25,7 +25,7 @@ const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ node }) => {
         <div className="flex-1">
           <input
             type="text"
-            value={node.data.title}
+            value={data.title}
             onChange={e => handleChangeTitle(e.target.value)}
             placeholder={creator.label}
             className={twMerge(
@@ -41,7 +41,7 @@ const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ node }) => {
       <div className="border-b border-pink-200 py-2">
         <input
           type="text"
-          value={node.data.desc}
+          value={data.desc}
           onChange={e => handleChangeDescription(e.target.value)}
           placeholder="输入节点描述，用于说明该节点的作用和功能"
           className={twMerge(
@@ -54,7 +54,7 @@ const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ node }) => {
 
       {/* 编辑面板内容 */}
       <div className="mt-4">
-        <creator.editPanelComponent node={node} />
+        <creator.editPanelComponent id={id} data={data}/>
       </div>
     </div>
   )
@@ -69,7 +69,7 @@ const NodeEditSidebar = () => {
   const open = currNode?.type === NodeClassic.Component
   return (
     <Drawer open={open} mask={false} closable={false}>
-      {open && <NodeEditSidebarView node={currNode as ComponentNode} />}
+      {open && <NodeEditSidebarView id={currNode.id} data={currNode.data as ComponentNode['data']} />}
     </Drawer>
   )
 }
