@@ -61,7 +61,7 @@ export const getNodeEnvMap = (
 
     states.envCache[node.id] = [
       ...uniqBy(
-        prevNodeIdMap[node.id]?.map(id => states.envCache[id]).flat(),
+        prevNodeIdMap[node.id]?.map(id => states.envCache[id]).flat() || [],
         se => `${se.source.id}.${se.name}`,
       ),
       //  以及节点自身vars
@@ -73,7 +73,7 @@ export const getNodeEnvMap = (
             source: { id: prevNode.id, title: prevNode.data.title },
           })),
         )
-        .flat(),
+        .flat() || [],
     ]
     // 每个节点可读取的vars为前缀节点可读取的vars之和
 

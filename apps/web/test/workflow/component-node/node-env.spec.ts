@@ -1,12 +1,22 @@
 import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
-import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
+import type { ComponentNode, Var } from '@/app/components/workflow/editor/component-nodes/types'
 import { VarTypes } from '@/app/components/workflow/editor/component-nodes/types'
 import type { WorkflowEdge } from '@/app/components/workflow/editor/types'
-import type { PartialDeep } from 'type-fest'
 
-describe('正确收集节点的env', () => {
+describe('测试getNodeEnvMap能否正确收集节点的env', () => {
+  type TestNode = {
+    id: string,
+    data: {
+      title: string,
+      vars: Var[]
+    }
+  }
+  type TestEdge = {
+    source: string,
+    target: string
+  }
   test('正常收集', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: {
@@ -23,7 +33,7 @@ describe('正确收集节点的env', () => {
       },
       { id: '3', data: { title: '', vars: [] } },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [
+    const edges: TestEdge[] = [
       {
         source: '1',
         target: '3',
@@ -51,15 +61,15 @@ describe('正确收集节点的env', () => {
   })
 
   test('空节点和空边', () => {
-    const nodes: PartialDeep<ComponentNode>[] = []
-    const edges: PartialDeep<WorkflowEdge>[] = []
+    const nodes: TestNode[] = []
+    const edges: TestEdge[] = []
     expect(
       getNodeEnvMap(nodes as ComponentNode[], edges as WorkflowEdge[]),
     ).toEqual({})
   })
 
   test('只有节点没有边', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
@@ -69,7 +79,7 @@ describe('正确收集节点的env', () => {
         data: { vars: [{ name: 'b', type: VarTypes.Number }], title: '节点2' },
       },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = []
+    const edges: TestEdge[] = []
     expect(
       getNodeEnvMap(nodes as ComponentNode[], edges as WorkflowEdge[]),
     ).toEqual({
@@ -79,7 +89,7 @@ describe('正确收集节点的env', () => {
   })
 
   test('链式结构', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: {
@@ -102,7 +112,7 @@ describe('正确收集节点的env', () => {
         },
       },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [
+    const edges: TestEdge[] = [
       { source: '1', target: '2' },
       { source: '2', target: '3' },
     ]
@@ -133,7 +143,7 @@ describe('正确收集节点的env', () => {
   })
 
   test('多前置节点和多后置节点', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
@@ -150,7 +160,7 @@ describe('正确收集节点的env', () => {
       { id: '5', data: { title: '后置节点1', vars: [] } },
       { id: '6', data: { title: '后置节点2', vars: [] } },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [
+    const edges: TestEdge[] = [
       { source: '1', target: '4' },
       { source: '2', target: '4' },
       { source: '3', target: '4' },
@@ -183,7 +193,7 @@ describe('正确收集节点的env', () => {
   })
 
   test('孤立节点', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
@@ -200,7 +210,7 @@ describe('正确收集节点的env', () => {
         data: { vars: [{ name: 'c', type: VarTypes.String }], title: '节点3' },
       },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [{ source: '1', target: '3' }]
+    const edges: TestEdge[] = [{ source: '1', target: '3' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -217,7 +227,7 @@ describe('正确收集节点的env', () => {
   })
 
   test('重复变量名在不同节点', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: '1',
         data: {
@@ -232,9 +242,9 @@ describe('正确收集节点的env', () => {
           title: '节点2',
         },
       },
-      { id: '3', data: { title: '合并节点' } },
+      { id: '3', data: { title: '合并节点', vars: [] } },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [
+    const edges: TestEdge[] = [
       { source: '1', target: '3' },
       { source: '2', target: '3' },
     ]
@@ -257,7 +267,7 @@ describe('正确收集节点的env', () => {
   })
 
   test('复杂嵌套结构', () => {
-    const nodes: PartialDeep<ComponentNode>[] = [
+    const nodes: TestNode[] = [
       {
         id: 'start',
         data: {
@@ -288,7 +298,7 @@ describe('正确收集节点的env', () => {
         },
       },
     ]
-    const edges: PartialDeep<WorkflowEdge>[] = [
+    const edges: TestEdge[] = [
       { source: 'start', target: 'process1' },
       { source: 'start', target: 'process2' },
       { source: 'process1', target: 'merge' },
