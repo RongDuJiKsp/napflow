@@ -5,7 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix",
-    "test": "jest"
+    "test": "npx cross-env NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
   },
   "dependencies": {
     "@ant-design/cssinjs": "2.0.1",

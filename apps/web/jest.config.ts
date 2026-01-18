@@ -12,12 +12,14 @@ const createJestConfig = nextJest({
 })
 
 const config: Config = {
-
   moduleNameMapper: {
     '^@/shared/(.*)$': '<rootDir>/../shared/$1',
     '^@/components/(.*)$': '<rootDir>/app/components/$1',
     '^@/(.*)$': '<rootDir>/$1',
   },
+  testRegex: '.spec.ts$',
+  extensionsToTreatAsEsm: ['.ts'],
+
   // automock: false,
 
   // Stop running tests after `n` failures
@@ -208,5 +210,4 @@ const config: Config = {
   // Whether to use watchman for file crawling
   // watchman: true,
 }
-
 export default createJestConfig(config)
