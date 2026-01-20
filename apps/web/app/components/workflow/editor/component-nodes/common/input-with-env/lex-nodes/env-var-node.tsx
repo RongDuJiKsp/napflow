@@ -4,8 +4,8 @@ import type { JSX } from 'react'
 import type { LexicalNode, NodeKey } from 'lexical'
 
 type EnvVarNodeProps = {
-  envVar: VarCtx;
-  nodeMap: Record<string, VarCtx[]>;
+  envVar: string;
+  envs: VarCtx[];
 }
 
 const EnvVarNode = ({}: EnvVarNodeProps) => {

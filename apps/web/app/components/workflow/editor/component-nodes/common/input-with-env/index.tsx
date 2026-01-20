@@ -6,13 +6,15 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { useCreation } from 'ahooks'
 import { memo } from 'react'
 import { LexEnvVarNode } from './lex-nodes/env-var-node'
+import type { VarCtx } from '../../hooks/use-component-node-env'
 
 const InputWithEnv = ({
   className = {},
   isEditable,
   placeholder,
 }: {
-  className: { contentEditable?: string; placeHolder?: string };
+  envs: VarCtx[];
+  className?: { contentEditable?: string; placeHolder?: string };
   isEditable?: boolean;
   placeholder?: string;
 }) => {
