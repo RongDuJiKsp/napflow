@@ -6,13 +6,13 @@ import {
   MenuOption,
   useBasicTypeaheadTriggerMatch,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin'
-import { $createTextNode, $getSelection, $isRangeSelection } from 'lexical'
+import { $getSelection, $isRangeSelection } from 'lexical'
 import { useCallback, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
-import type { VarCtx } from '../../../hooks/use-component-node-env'
-import type { Var } from '../../../types'
+import { type VarCtx, getCommVarCtxName } from '../../../hooks/use-component-node-env'
 import { VarTypes } from '../../../types'
+import { $createEnvVarNode } from '../lex-nodes/env-var-node'
 
 // 类型颜色映射
 const typeColors = {
@@ -30,27 +30,25 @@ const typeLabels = {
   [VarTypes.NumberArray]: 'Num[]',
 }
 
-class VarOption extends MenuOption implements Var {
-  name: string
-  type: VarTypes
+class VarOption extends MenuOption {
   sourceId: string
   sourceTitle: string
+  var: VarCtx
   constructor(varCtx: VarCtx) {
     super(varCtx.source.id + varCtx.name)
-    this.name = varCtx.name
-    this.type = varCtx.type
+    this.var = varCtx
     this.sourceId = varCtx.source.id
     this.sourceTitle = varCtx.source.title
   }
 }
 // 菜单项组件
 const EnvVarMenuItem = ({
-  varCtx,
+  option,
   isSelected,
   onClick,
   onMouseEnter,
 }: {
-  varCtx: VarOption;
+  option: VarOption;
   isSelected: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
@@ -66,15 +64,15 @@ const EnvVarMenuItem = ({
       onMouseEnter={onMouseEnter}
     >
       <span className="text-sm text-gray-900 truncate flex-1">
-        {varCtx.name}
+        {option.var.name}
       </span>
       <span
         className={twMerge(
           'text-xs px-1.5 py-0.5 rounded font-medium ml-1.5 shrink-0',
-          typeColors[varCtx.type],
+          typeColors[option.var.type],
         )}
       >
-        {typeLabels[varCtx.type]}
+        {typeLabels[option.var.type]}
       </span>
     </div>
   )
@@ -104,7 +102,7 @@ const EnvVarSubMenu = ({
         return (
           <EnvVarMenuItem
             key={option.key}
-            varCtx={option}
+            option={option}
             isSelected={
               selectedIndex !== undefined && selectedIndex === optionIndex
             }
@@ -181,14 +179,13 @@ const EnvVarMenuPlugin = ({
         // 移除触发文本
         if (nodeToRemove) nodeToRemove.remove()
 
-        // 插入环境变量文本
-        const envVarText = `${triggerAt}{${selectedOption.name}}`
-        selection.insertNodes([$createTextNode(envVarText)])
+        // 插入环境变量节点
+        selection.insertNodes([$createEnvVarNode(getCommVarCtxName(selectedOption.var), envVars)])
       })
 
       closeMenu()
     },
-    [editor, triggerAt],
+    [editor, envVars],
   )
 
   const menuRenderFn = useCallback<LexicalTypeaheadMenuPluginProps['menuRenderFn']>(
