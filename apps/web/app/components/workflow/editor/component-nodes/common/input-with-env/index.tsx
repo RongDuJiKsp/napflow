@@ -7,13 +7,21 @@ import { useCreation } from 'ahooks'
 import { memo } from 'react'
 import { LexEnvVarNode } from './lex-nodes/env-var-node'
 import type { VarCtx } from '../../hooks/use-component-node-env'
+import LexicalParagraphControlledPlugin from '@/app/components/_base/lexical/plugins/LexicalControlledPlugin'
+import EnvVarSyncPlugin from './lex-plugins/EnvVarSyncPlugin'
+import EnvVarNodeReplacementPlugin from './lex-plugins/EnvVarNodeReplacementPlugin'
 
 const InputWithEnv = ({
+  value,
+  onChange,
+  envs,
   className = {},
   isEditable,
   placeholder,
 }: {
   envs: VarCtx[];
+  value: string;
+  onChange: (value: string) => void;
   className?: { contentEditable?: string; placeHolder?: string };
   isEditable?: boolean;
   placeholder?: string;
@@ -40,6 +48,9 @@ const InputWithEnv = ({
         placeholder={<div className={className.placeHolder}>{placeholder}</div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <LexicalParagraphControlledPlugin value={value} onChange={onChange}/>
+      <EnvVarSyncPlugin envVars={envs} />
+      <EnvVarNodeReplacementPlugin envVars={envs} />
     </LexicalComposer>
   )
 }

@@ -1,4 +1,4 @@
-import type { NodeKey } from 'lexical'
+import type { NodeKey, SerializedLexicalNode } from 'lexical'
 import { DecoratorNode } from 'lexical'
 import type { JSX } from 'react'
 
@@ -11,6 +11,8 @@ export abstract class LexReactNode<Props = any> {
 
   abstract decorate(): JSX.Element
 
+  abstract textContent(): string
+
   createDOM(): HTMLElement {
     return document.createElement('div')
   }
@@ -20,7 +22,11 @@ export abstract class LexReactNode<Props = any> {
   }
 }
 
-export abstract class ReactDecoratorNode<ReactNode extends LexReactNode = LexReactNode> extends DecoratorNode<JSX.Element> {
+export type SerializedLexicalReactNode<Props> = SerializedLexicalNode & {
+  reactProps: Props
+}
+
+export abstract class ReactDecoratorNode<NodeProps, ReactNode extends LexReactNode<NodeProps> = LexReactNode<NodeProps>> extends DecoratorNode<JSX.Element> {
   readonly __reactNode: ReactNode
 
   constructor(reactNode: ReactNode, nodeKey?: NodeKey) {
@@ -42,5 +48,17 @@ export abstract class ReactDecoratorNode<ReactNode extends LexReactNode = LexRea
 
   decorate(): JSX.Element {
     return this.__reactNode.decorate()
+  }
+
+  getTextContent(): string {
+    return this.__reactNode.textContent()
+  }
+
+  exportJSON(): SerializedLexicalReactNode<ReactNode['props']> {
+    return {
+      type: 'abstract-react-node',
+      version: 1,
+      reactProps: this.__reactProps,
+    }
   }
 }

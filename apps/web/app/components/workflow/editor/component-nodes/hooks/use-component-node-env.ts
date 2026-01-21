@@ -3,11 +3,15 @@ import type { WorkflowEdge } from '../../types'
 import type { ComponentNode, Var } from '../types'
 import { Queue } from 'datastructures-js'
 import { createContext, useContext } from 'react'
+export type VarCtxName = string
 export type VarCtx = Var & {
   source: {
     id: string;
     title: string;
   };
+}
+export const getCommVarCtxName = (varctx: VarCtx): VarCtxName => {
+  return `${varctx.source.id}.${varctx.name}`
 }
 export const getNodeEnvMap = (
   nodes: ComponentNode[],
