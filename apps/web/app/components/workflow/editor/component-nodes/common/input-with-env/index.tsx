@@ -10,6 +10,7 @@ import type { VarCtx } from '../../hooks/use-component-node-env'
 import LexicalParagraphControlledPlugin from '@/app/components/_base/lexical/plugins/LexicalControlledPlugin'
 import EnvVarSyncPlugin from './lex-plugins/EnvVarSyncPlugin'
 import EnvVarNodeReplacementPlugin from './lex-plugins/EnvVarNodeReplacementPlugin'
+import EnvVarMenuPlugin from './lex-plugins/EnvVarMenuPlugin'
 
 const InputWithEnv = ({
   value,
@@ -51,6 +52,7 @@ const InputWithEnv = ({
       <LexicalParagraphControlledPlugin value={value} onChange={onChange}/>
       <EnvVarSyncPlugin envVars={envs} />
       <EnvVarNodeReplacementPlugin envVars={envs} />
+      <EnvVarMenuPlugin envVars={envs} />
     </LexicalComposer>
   )
 }
