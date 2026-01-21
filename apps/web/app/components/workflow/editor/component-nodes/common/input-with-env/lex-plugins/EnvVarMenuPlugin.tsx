@@ -257,6 +257,8 @@ const EnvVarMenuPlugin = ({
       triggerFn={checkForTriggerMatch}
       options={filteredEnvVars}
       menuRenderFn={menuRenderFn}
+      // 抽屉给这玩意盖住了
+      anchorClassName='z-[9999]'
     />
   )
 }

@@ -10,9 +10,16 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
 
   return (
     <div>
-      <div>
+      <div className="flex flex-col gap-4 rounded-sm shadow-sm">
         <Label className="text-purple-700">回复内容</Label>
-        <InputWithEnv envs={vars} value={data.content} onChange={handleContentChange}/>
+        <InputWithEnv
+          className={{
+            contentEditable: 'text-md min-h-30',
+          }}
+          envs={vars}
+          value={data.content}
+          onChange={handleContentChange}
+        />
       </div>
     </div>
   )
