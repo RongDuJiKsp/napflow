@@ -19,10 +19,10 @@ type EnvVarNodeProps = {
 }
 
 const typeColors: Record<VarTypes, string> = {
-  [VarTypes.String]: 'bg-blue-100 text-blue-700',
-  [VarTypes.Number]: 'bg-green-100 text-green-700',
-  [VarTypes.StringArray]: 'bg-purple-100 text-purple-700',
-  [VarTypes.NumberArray]: 'bg-pink-100 text-pink-700',
+  [VarTypes.String]: 'text-blue-700',
+  [VarTypes.Number]: 'text-green-700',
+  [VarTypes.StringArray]: 'text-purple-700',
+  [VarTypes.NumberArray]: 'text-pink-700',
 }
 
 const typeLabels: Record<VarTypes, string> = {
@@ -41,11 +41,10 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
   return (
     <span
       className={twMerge(
-        'inline-flex items-center justify-between px-2 py-1 bg-white rounded-lg shadow-sm text-sm',
+        'inline-flex items-center justify-between px-2 py-0.5 bg-white rounded-sm shadow-sm text-xs h-[1.3lh]',
         'border',
         isValid ? 'border-pink-200' : 'border-red-200',
       )}
-      style={{ width: '15ch' }}
     >
       <span
         className={twMerge(
@@ -55,12 +54,13 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
       >
         {isValid && foundVar ? foundVar.name : envVar}
       </span>
+      &ensp;
       <span
         className={twMerge(
-          'text-xs px-1 py-0.5 rounded-full font-medium text-center shrink-0',
+          'text-xs  rounded-full text-center shrink-0',
           isValid && foundVar
             ? typeColors[foundVar.type]
-            : 'bg-red-100 text-red-700',
+            : ' text-red-700',
         )}
       >
         {isValid && foundVar ? typeLabels[foundVar.type] : '❌'}
