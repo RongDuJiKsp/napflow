@@ -21,7 +21,6 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <ProviderEnv envs={data.vars}/>
       <Select
         value={data.on}
         onChange={v => handleTriggerTargetChange(v as TriggerOn)}
@@ -57,6 +56,8 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
           <Input />
         </TextField>
       )}
+      <div className="border-b border-pink-200 py-2" />
+      <ProviderEnv envs={data.vars}/>
     </div>
   )
 }

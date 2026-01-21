@@ -27,7 +27,7 @@ const ProviderEnvs = memo(({ envs }: ProviderEnvsProps) => {
 
   return (
     <div className="mb-4">
-      <h4 className="text-sm font-medium text-purple-700 mb-3">提供上下文变量</h4>
+      <h4 className="text-sm font-medium text-purple-700 mb-3">输出变量</h4>
       <div className="space-y-2">
         {envs.map((env, index) => (
           <div
@@ -44,7 +44,6 @@ const ProviderEnvs = memo(({ envs }: ProviderEnvsProps) => {
           </div>
         ))}
       </div>
-      <div className="border-b border-pink-200 py-2" />
     </div>
   )
 })
