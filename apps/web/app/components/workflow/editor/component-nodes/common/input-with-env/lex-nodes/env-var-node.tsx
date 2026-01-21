@@ -41,7 +41,7 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
   return (
     <span
       className={twMerge(
-        'inline-flex items-center justify-between px-2 py-0.5 bg-white rounded-sm shadow-sm text-xs h-[1.3lh]',
+        'inline-flex items-center justify-between px-2 py-0.5 bg-white rounded-sm shadow-sm text-[10px] h-lh',
         'border',
         isValid ? 'border-pink-200' : 'border-red-200',
       )}
@@ -57,7 +57,7 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
       &ensp;
       <span
         className={twMerge(
-          'text-xs  rounded-full text-center shrink-0',
+          'font-medium  rounded-full text-center shrink-0',
           isValid && foundVar
             ? typeColors[foundVar.type]
             : ' text-red-700',
@@ -106,6 +106,16 @@ export class LexEnvVarNode extends ReactDecoratorNode<
       ...super.exportJSON(),
       type: this.constructor.getType(),
     }
+  }
+
+  isInline(): boolean {
+    return true
+  }
+
+  createDOM(): HTMLElement {
+    const div = super.createDOM()
+    div.classList.add('inline-flex', 'items-center', 'align-middle')
+    return div
   }
 
   $this(): LexEnvVarNode {
