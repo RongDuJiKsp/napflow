@@ -1,10 +1,10 @@
 'use client'
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import type { TriggerFn } from '@lexical/react/LexicalTypeaheadMenuPlugin'
 import {
   LexicalTypeaheadMenuPlugin,
   MenuOption,
-  useBasicTypeaheadTriggerMatch,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin'
 import { $getSelection, $isRangeSelection } from 'lexical'
 import { useCallback, useMemo, useState } from 'react'
@@ -160,9 +160,28 @@ const EnvVarMenuPlugin = ({
   }, [filteredEnvVars])
 
   // 触发匹配检查
-  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch(triggerAt, {
-    minLength: 0,
-  })
+    // 自定义触发匹配检查 - 允许在任何位置触发$
+  const checkForTriggerMatch = useCallback<TriggerFn>(
+    (text: string) => {
+      // 查找最后一个$符号的位置
+      const lastDollarIndex = text.lastIndexOf(triggerAt)
+      if (lastDollarIndex === -1) return null
+
+      // 获取$符号后的文本作为匹配字符串
+      const matchingString = text.slice(lastDollarIndex + 1)
+
+      // 检查$符号后是否有空格或其他触发字符，如果有则不匹配
+      if (matchingString.includes(' ') || matchingString.includes(triggerAt))
+        return null
+
+      return {
+        leadOffset: lastDollarIndex,
+        matchingString,
+        replaceableString: triggerAt + matchingString,
+      }
+    },
+    [triggerAt],
+  )
 
   // 选择选项回调
   const onSelectOption = useCallback<LexicalTypeaheadMenuPluginProps['onSelectOption']>(
