@@ -10,11 +10,11 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 rounded-sm shadow-sm">
+      <div className="flex flex-col gap-4">
         <Label className="text-purple-700">回复内容</Label>
         <InputWithEnv
           className={{
-            contentEditable: 'text-md min-h-30',
+            contentEditable: 'text-md min-h-30 border border-purple-500 rounded-sm focus:border-purple-700 p-2',
           }}
           envs={vars}
           value={data.content}
