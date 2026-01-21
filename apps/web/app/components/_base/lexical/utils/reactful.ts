@@ -1,4 +1,4 @@
-import type { NodeKey, SerializedLexicalNode } from 'lexical'
+import type { LexicalNode, NodeKey, SerializedLexicalNode } from 'lexical'
 import { DecoratorNode } from 'lexical'
 import type { JSX } from 'react'
 
@@ -56,7 +56,7 @@ export abstract class ReactDecoratorNode<NodeProps, ReactNode extends LexReactNo
 
   exportJSON(): SerializedLexicalReactNode<ReactNode['props']> {
     return {
-      type: 'abstract-react-node',
+      type: this.constructor.getType(),
       version: 1,
       reactProps: this.__reactProps,
     }
