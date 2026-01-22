@@ -43,6 +43,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
   prevNodes: [],
   nextNodes: [ComponentNodesEnum.Reply],
   env: [
+    { type: VarTypes.String, name: 'trigger.triggerid' },
     { type: VarTypes.Number, name: 'trigger.uid' },
     { type: VarTypes.Number, name: 'trigger.gid' },
     { type: VarTypes.Number, name: 'trigger.messageid' },
