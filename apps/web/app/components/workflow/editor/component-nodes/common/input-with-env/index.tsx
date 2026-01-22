@@ -11,6 +11,7 @@ import LexicalParagraphControlledPlugin from '@/app/components/_base/lexical/plu
 import EnvVarSyncPlugin from './lex-plugins/EnvVarSyncPlugin'
 import EnvVarNodeReplacementPlugin from './lex-plugins/EnvVarNodeReplacementPlugin'
 import EnvVarMenuPlugin from './lex-plugins/EnvVarMenuPlugin'
+import { twMerge } from 'tailwind-merge'
 
 const InputWithEnv = ({
   value,
@@ -42,13 +43,17 @@ const InputWithEnv = ({
   )
   return (
     <LexicalComposer initialConfig={initConfig}>
-      <RichTextPlugin
-        contentEditable={
-          <ContentEditable className={className.contentEditable} />
-        }
-        placeholder={<div className={className.placeHolder}>{placeholder}</div>}
-        ErrorBoundary={LexicalErrorBoundary}
-      />
+      <div className='relative'>
+        <RichTextPlugin
+          contentEditable={
+            <ContentEditable className={className.contentEditable} />
+          }
+          placeholder={<div className={twMerge('pointer-events-none absolute left-0 top-0 h-full w-full select-none flex justify-center items-center pl-1 text-gray-400', className.placeHolder)}>
+            <div className='text-sm'>{placeholder}</div>
+          </div>}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+      </div>
       <LexicalParagraphControlledPlugin value={value} onChange={onChange}/>
       <EnvVarSyncPlugin envVars={envs} />
       <EnvVarNodeReplacementPlugin envVars={envs} />

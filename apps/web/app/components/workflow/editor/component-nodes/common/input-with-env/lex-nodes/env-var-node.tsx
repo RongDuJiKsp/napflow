@@ -41,7 +41,7 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
   return (
     <span
       className={twMerge(
-        'inline-flex items-center justify-between px-1 mx-0.5 py-0.5 bg-white rounded-sm shadow-sm text-[10px] h-lh',
+        'inline-flex items-center justify-between px-1 mx-0.5 py-0.5 bg-white rounded-sm shadow-sm h-lh',
         'border',
         isValid ? 'border-pink-200' : 'border-red-200',
       )}
