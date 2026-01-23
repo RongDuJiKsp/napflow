@@ -12,7 +12,7 @@ export const $splitTextNode = (node: TextNode, regExp: RegExp) => {
   const matches: number[] = []
 
   // 创建正则表达式的副本，避免修改原始对象的状态
-  const regExpCopy = new RegExp(regExp.source, regExp.flags)
+  const regExpCopy = new RegExp(regExp.source, `${regExp.flags.includes('g') ? '' : 'g'}${regExp.flags}`)
 
   // 找到所有匹配的位置
   let match
@@ -21,10 +21,6 @@ export const $splitTextNode = (node: TextNode, regExp: RegExp) => {
     matches.push(match.index)
     // 添加匹配结束位置
     matches.push(match.index + match[0].length)
-
-    // 防止无限循环（当正则表达式没有全局标志时）
-    if (!regExpCopy.global)
-      break
   }
 
   // 去重并排序

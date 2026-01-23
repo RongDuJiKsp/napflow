@@ -11,7 +11,8 @@ import {
 import { VarTypes } from '../../../types'
 import { twMerge } from 'tailwind-merge'
 import type { JSX } from 'react'
-import type { LexicalNode, NodeKey } from 'lexical'
+import type { LexicalNode, NodeKey, TextNode } from 'lexical'
+import { $splitTextNode } from '@/app/components/_base/lexical/utils/common'
 
 type EnvVarNodeProps = {
   envVar: VarCtxName;
@@ -133,7 +134,7 @@ export class LexEnvVarNode extends ReactDecoratorNode<
 
 // 匹配规则   {{#nodeId.envVar#}}. 其中nodeId匹配 [a-zA-Z0-9_@-] envVar为 点分且首字符不以数字开头
 export const EnvVarRegex
-  = /\{\{(#[a-zA-Z0-9_@-]{1,50}(\.[a-zA-Z_][\w]{0,29}){1,10}#)\}\}/gi
+  = /\{\{(#[a-zA-Z0-9_@\-]{1,50}(\.[a-zA-Z_][\w]{0,29}){1,10}#)\}\}/i
 
 /**
  * @param envVar 变量名称 即 nodeId.foo.bar
@@ -158,6 +159,16 @@ export const $createEnvVarNodeFromRaw = (raw: string, envs: VarCtx[]) => {
   return $createEnvVarNode(varCtxName, envs)
 }
 
+export const $transformEnvVarNode = (node: TextNode, envs: VarCtx[]) => {
+  if(!EnvVarRegex.test(node.getTextContent()))
+    return
+  const splitedNodes = $splitTextNode(node, EnvVarRegex)
+  for(const splitedNode of splitedNodes) {
+    if(!EnvVarRegex.test(splitedNode.getTextContent()))
+      continue
+    splitedNode.replace($createEnvVarNodeFromRaw(splitedNode.getTextContent(), envs))
+  }
+}
 export const $isEnvVarNode = (node: LexicalNode) => {
   return node instanceof LexEnvVarNode
 }
