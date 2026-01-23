@@ -1,4 +1,4 @@
-import type { LexicalNode, NodeKey, SerializedLexicalNode } from 'lexical'
+import type { NodeKey, SerializedLexicalNode } from 'lexical'
 import { DecoratorNode } from 'lexical'
 import type { JSX } from 'react'
 
