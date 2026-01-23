@@ -1,15 +1,15 @@
 import { jsonQ } from '@/utils/net'
-import type { WorkflowAppData } from '@shared/common/workflow/base'
+import type { WorkflowAppDraft } from '@shared/common/workflow/base'
 import { Code } from '@shared/data-transfer/_base'
 import type { LoadDraftResp } from '@shared/data-transfer/workflow/info'
 import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 
-export const useWorkflowAppDataQuery = (appId: string, options?: Omit<UseQueryOptions<WorkflowAppData>, 'queryKey' | 'queryFn'>) => {
+export const useWorkflowAppDraftQuery = (appId: string, options?: Omit<UseQueryOptions<WorkflowAppDraft>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
     ...options,
     queryKey: ['workflow-app-data', appId],
-    queryFn: async (): Promise<WorkflowAppData> => {
+    queryFn: async (): Promise<WorkflowAppDraft> => {
       const res = await jsonQ.Get<LoadDraftResp>(`/workflow/${appId}/draft`)
       if (res.statusCode !== Code.Ok || !res.data)
         throw new Error(res.message)

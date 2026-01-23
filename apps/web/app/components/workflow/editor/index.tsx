@@ -5,14 +5,14 @@ import { memo, useMemo } from 'react'
 import { useAppParam } from '../hooks/use-app-param'
 import StoreProvider from './providers/StoreProvider'
 import EditorMainView from './EditorMainView'
-import { useWorkflowAppDataQuery } from '@/app/hooks/query/use-workflow-app-data-query'
+import { useWorkflowAppDraftQuery } from '@/app/hooks/query/use-workflow-app-data-query'
 import '@xyflow/react/dist/style.css'
 import 'react-contexify/dist/ReactContexify.css'
 import { initEdges, initNodes } from './utils/nodes'
 
 const Editor = () => {
   const { appId } = useAppParam()
-  const { data: remoteState } = useWorkflowAppDataQuery(appId, {
+  const { data: remoteState } = useWorkflowAppDraftQuery(appId, {
     refetchInterval: Infinity,
     refetchOnMount: false,
     refetchOnReconnect: false,

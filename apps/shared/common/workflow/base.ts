@@ -26,3 +26,10 @@ export const ZodCheckWorkflowAppData = z.object({
   ).nullable(),
 })
 export type WorkflowAppData = z.infer<typeof ZodCheckWorkflowAppData>
+
+export const ZodCheckWorkflowAppDraft = ZodCheckWorkflowAppData.pick({
+  ofAppId: true,
+  nodes: true,
+  edges: true,
+})
+export type WorkflowAppDraft = z.infer<typeof ZodCheckWorkflowAppDraft>
