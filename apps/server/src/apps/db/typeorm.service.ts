@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import type { Repository } from 'typeorm'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
-import { WorkflowAppDataEntity, WorkflowAppEntity } from './models/workflow.entity'
+import {
+  WorkflowAppDataEntity,
+  WorkflowAppEntity,
+} from './models/workflow.entity'
 import { BotRecordEntity } from './models/bot.entity'
 
 @Injectable()

@@ -17,8 +17,12 @@ export class VaildJwtErrorFilter implements ExceptionFilter<VaildJwtError> {
   catch(exception: VaildJwtError, host: ArgumentsHost) {
     const ctx = new ExpressHttpHost(host)
     // 在请求阶段发生的记录为UnAuth
-    ctx.response.status(HttpStatus.UNAUTHORIZED).json(Resp.error(exception.message, Code.Unauthorized))
-    this.logger.log(`endpoint ${ctx.request.path} visited with unauth(${exception.message})`)
+    ctx.response
+      .status(HttpStatus.UNAUTHORIZED)
+      .json(Resp.error(exception.message, Code.Unauthorized))
+    this.logger.log(
+      `endpoint ${ctx.request.path} visited with unauth(${exception.message})`,
+    )
   }
 }
 
@@ -29,6 +33,8 @@ export class JsonWebTokenErrorFilter implements ExceptionFilter<JsonWebTokenErro
   catch(exception: JsonWebTokenError, host: ArgumentsHost) {
     const ctx = new ExpressHttpHost(host)
     // 在请求阶段发生的记录为UnAuth
-    ctx.response.status(HttpStatus.UNAUTHORIZED).json(Resp.error('Token已过期', Code.Unauthorized))
+    ctx.response
+      .status(HttpStatus.UNAUTHORIZED)
+      .json(Resp.error('Token已过期', Code.Unauthorized))
   }
 }

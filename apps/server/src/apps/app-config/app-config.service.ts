@@ -25,13 +25,12 @@ export class AppConfigService {
   private readonly logger = new Logger(AppConfigService.name)
   constructor() {
     // init env
-    try{
+    try {
       this.envs = AppConfigEnvShema.parse(process.env)
     }
     catch (e) {
       this.logger.fatal('解析App环境变量配置时发生异常')
-      if(e instanceof ZodError)
-        this.logger.fatal(`\n${z.prettifyError(e)}`)
+      if (e instanceof ZodError) this.logger.fatal(`\n${z.prettifyError(e)}`)
 
       throw e
     }

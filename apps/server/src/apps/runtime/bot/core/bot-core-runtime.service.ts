@@ -18,10 +18,7 @@ export const adapterClassMeta: Record<AdapterTag, BotAdapterClass> = {
 export class BotCoreRuntimeService {
   private readonly botInstanceMap = new Map<string, BotInstance>()
 
-  constructor(
-    @Inject(TypeOrmService) private readonly db: TypeOrmService,
-  ) {
-  }
+  constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService) {}
 
   get botInstances() {
     return Array.from(this.botInstanceMap.values())
@@ -39,8 +36,7 @@ export class BotCoreRuntimeService {
 
   async runBot(botId: string) {
     const botInstance = this.botInstanceMap.get(botId)
-    if(botInstance)
-      return
+    if (botInstance) return
 
     const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
@@ -51,8 +47,7 @@ export class BotCoreRuntimeService {
 
   async stopBot(botId: string) {
     const botInstance = this.botInstanceMap.get(botId)
-    if(!botInstance)
-      return
+    if (!botInstance) return
     botInstance.signal(BotSignal.SIGSTOP)
   }
 }

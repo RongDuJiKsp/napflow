@@ -1,4 +1,13 @@
-import { BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
 @Entity('apps')
@@ -24,7 +33,7 @@ export class WorkflowAppEntity extends BaseEntity {
 
 @Entity('app_datas')
 export class WorkflowAppDataEntity extends BaseEntity {
-// meta area
+  // meta area
   @PrimaryColumn()
   version: string
 
@@ -43,7 +52,9 @@ export class WorkflowAppDataEntity extends BaseEntity {
   @UpdateDateColumn()
   lastUpdateAt: Date
 
-  @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppDatas, { onDelete: 'CASCADE' })
+  @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppDatas, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'ofAppId' })
   ofApp: WorkflowAppEntity
 

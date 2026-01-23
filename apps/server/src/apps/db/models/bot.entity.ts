@@ -7,11 +7,11 @@ import { AdapterTag } from '@shared/common/bot/base'
 // 每一个BotRecord对应配置好的机器人endpoint
 @Entity()
 export class BotRecordEntity extends BaseEntity {
-    // id
+  // id
   @PrimaryColumn({ generated: 'uuid' })
   recordId: string
 
-    // 机器人名称
+  // 机器人名称
   @NotNullColumn()
   name: string
 

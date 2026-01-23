@@ -5,7 +5,10 @@ import { BotCoreRuntimeError } from '../../../middleware/bot-core-runtime.filter
 import type { BotAdapter, BotState } from '@shared/common/bot/base'
 import { BotRunningState } from '@shared/common/bot/base'
 import { AdapterTag, BotSignal } from '@shared/common/bot/base'
-import { type NapcatWsAdapterConfig, ZodCheckNapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
+import {
+  type NapcatWsAdapterConfig,
+  ZodCheckNapcatWsAdapterConfig,
+} from '@shared/common/bot/napcatws-adapter'
 import { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import { NCCHealthChecker } from './health-check'
 
@@ -34,7 +37,9 @@ export class NapcatWsAdapter implements BotInstance {
 
   constructor(db: BotRecordEntity) {
     this.botConfigDB = db
-    this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(db.adapterConfig).data // 配置有问题先init完 等bootstrap时再抛错
+    this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(
+      db.adapterConfig,
+    ).data // 配置有问题先init完 等bootstrap时再抛错
     this.logger = new Logger(this.botName)
   }
 
@@ -43,8 +48,7 @@ export class NapcatWsAdapter implements BotInstance {
   }
 
   get runningStateEnum(): BotRunningState {
-    if(!this.healthChecker?.isConnetUpstream)
-      return BotRunningState.offline
+    if (!this.healthChecker?.isConnetUpstream) return BotRunningState.offline
     return BotRunningState.running
   }
 
@@ -59,7 +63,7 @@ export class NapcatWsAdapter implements BotInstance {
   async bootstrap(): Promise<this> {
     this.logger.log('Bootstrap...')
     const cfg = this.botConfigSnapshot
-    if(!cfg) {
+    if (!cfg) {
       this.logger.error('Config is invalid. Stop bootstrap.')
       throw new BotCoreRuntimeError('config is invalid')
     }
@@ -76,11 +80,8 @@ export class NapcatWsAdapter implements BotInstance {
     this.logger.log('SDK inited')
     // init services
     this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName)
-    const services: Registerable[] = [
-      this.healthChecker,
-    ]
-    for(const service of services)
-      service.register()
+    const services: Registerable[] = [this.healthChecker]
+    for (const service of services) service.register()
     this.logger.log('service is registered')
     // finish
     await this.sdkConn.connect()
@@ -91,4 +92,5 @@ export class NapcatWsAdapter implements BotInstance {
     return this
   }
 }
-export const NapcatWsFactory: BotAdapterFactory = async db => await new NapcatWsAdapter(db).bootstrap()
+export const NapcatWsFactory: BotAdapterFactory = async db =>
+  await new NapcatWsAdapter(db).bootstrap()

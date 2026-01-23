@@ -57,9 +57,7 @@ export class AccountController {
    */
   @Post('login')
   @ZodSerializerDto(ZodCheckLoginResp)
-  async login(
-    @ZodBody({ zod: ZodCheckLoginReq }) req: LoginReq,
-  ) {
+  async login(@ZodBody({ zod: ZodCheckLoginReq }) req: LoginReq) {
     const user = await this.accountService.getAccountWithVertify(
       req.email,
       req.password,
@@ -109,9 +107,7 @@ export class AccountController {
   @Get('cur-account')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckAccountInfoResp)
-  async getCurAccount(
-    @JwtAccount() account: Account,
-  ) {
+  async getCurAccount(@JwtAccount() account: Account) {
     const curAccount = await this.accountService.getAccount(account.email)
     if (!curAccount) throw new Error('签发了token的用户不存在')
     return Resp.ok(curAccount)
@@ -129,9 +125,7 @@ export class AccountController {
   @Get('account-info')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckAccountInfoResp)
-  async getAccountInfo(
-    @Query('email') email: string,
-  ) {
+  async getAccountInfo(@Query('email') email: string) {
     const curAccount = await this.accountService.getAccount(email)
     return Resp.ok(curAccount)
   }
@@ -156,8 +150,7 @@ export class AccountController {
       req.email,
       req.groupType,
     )
-    if(!res.length)
-      return Resp.error('不存在满足条件的组')
+    if (!res.length) return Resp.error('不存在满足条件的组')
 
     return Resp.ok({ effectLines: res.length })
   }
@@ -182,8 +175,7 @@ export class AccountController {
       req.email,
       req.groupType,
     )
-    if(!res.affected)
-      return Resp.error('不存在满足条件的组')
+    if (!res.affected) return Resp.error('不存在满足条件的组')
 
     return Resp.ok({ effectLines: res.affected })
   }
@@ -203,8 +195,7 @@ export class AccountController {
     @ZodBody({ zod: ZodCheckAccountDisableReq }) req: AccountDisableReq,
   ) {
     const result = await this.accountService.disableAccount(req.email)
-    if(!result.affected)
-      return Resp.error('不存在满足条件的用户')
+    if (!result.affected) return Resp.error('不存在满足条件的用户')
 
     return Resp.ok()
   }
@@ -223,11 +214,13 @@ export class AccountController {
   async createAccount(
     @ZodBody({ zod: ZodCheckAccountCreateReq }) req: AccountCreateReq,
   ) {
-    if(!await this.accountService.createCustomAccount(
-      req.email,
-      req.nickname,
-      req.password,
-    ))
+    if (
+      !(await this.accountService.createCustomAccount(
+        req.email,
+        req.nickname,
+        req.password,
+      ))
+    )
       return Resp.error('用户已存在')
 
     return Resp.ok()

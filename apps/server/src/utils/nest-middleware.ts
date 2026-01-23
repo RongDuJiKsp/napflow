@@ -1,8 +1,14 @@
 import type { ArgumentsHost, HttpStatus } from '@nestjs/common'
-import type { ExecutionContext, HttpArgumentsHost } from '@nestjs/common/interfaces'
+import type {
+  ExecutionContext,
+  HttpArgumentsHost,
+} from '@nestjs/common/interfaces'
 import type { Request, Response } from 'express'
 
-export class ExpressHttpHost<Req extends Request = Request, Res extends Response = Response> {
+export class ExpressHttpHost<
+  Req extends Request = Request,
+  Res extends Response = Response,
+> {
   readonly httpArgumentHost: HttpArgumentsHost
   constructor(readonly argumentHost: ArgumentsHost) {
     this.httpArgumentHost = argumentHost.switchToHttp()
@@ -22,7 +28,10 @@ export class ExpressHttpHost<Req extends Request = Request, Res extends Response
   }
 }
 
-export class ExpressExecContext<Req extends Request = Request, Res extends Response = Response> extends ExpressHttpHost<Req, Res> {
+export class ExpressExecContext<
+  Req extends Request = Request,
+  Res extends Response = Response,
+> extends ExpressHttpHost<Req, Res> {
   constructor(readonly c: ExecutionContext) {
     super(c)
   }

@@ -9,9 +9,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { BotManagerService } from './bot-manager.service'
-import {
-  BotCoreRuntimeService,
-} from '../core/bot-core-runtime.service'
+import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
 import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
 import type { Account } from '@shared/common/account/base'

@@ -13,7 +13,12 @@ import { BotManagerController } from './bot/manager/bot-manager.controller'
     BotCoreRuntimeService,
     BotManagerService,
   ],
-  exports: [CoreRuntimeService, BotCoreRuntimeService, ManagerService, BotManagerService],
+  exports: [
+    CoreRuntimeService,
+    BotCoreRuntimeService,
+    ManagerService,
+    BotManagerService,
+  ],
   controllers: [ManagerController, BotManagerController],
 })
 export class RuntimeModule {}

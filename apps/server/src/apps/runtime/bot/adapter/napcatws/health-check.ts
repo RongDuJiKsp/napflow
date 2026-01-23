@@ -5,9 +5,9 @@ import { BotUpstreamState } from '@shared/common/bot/base'
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 
 export type HeartBeatSnapshot = {
-  heartbeatAt: Date,
-  online: boolean,
-  ok: boolean,
+  heartbeatAt: Date;
+  online: boolean;
+  ok: boolean;
 }
 
 // Napcat Client 健康检查
@@ -15,7 +15,11 @@ export class NCCHealthChecker implements Registerable {
   private readonly logger: Logger
   readonly createAt = new Date()
 
-  constructor(private readonly nc: NCWebsocket, private readonly cfg: NapcatWsAdapterConfig, private readonly ctxName: string) {
+  constructor(
+    private readonly nc: NCWebsocket,
+    private readonly cfg: NapcatWsAdapterConfig,
+    private readonly ctxName: string,
+  ) {
     this.logger = new Logger(this.checkerName)
   }
 
@@ -27,8 +31,7 @@ export class NCCHealthChecker implements Registerable {
   private heartbeatSnapshot: HeartBeatSnapshot | null = null
 
   register() {
-    if(this.unsubscribes.length)
-      this.unregister()
+    if (this.unsubscribes.length) this.unregister()
     this.unsubscribes.push(
       this.nc.subscribe('meta_event.heartbeat', (ctx) => {
         this.heartbeatSnapshot = {
@@ -37,34 +40,37 @@ export class NCCHealthChecker implements Registerable {
           ok: ctx.status.good,
         }
       }),
-
     )
   }
 
   unregister() {
-    for(const fn of this.unsubscribes)
-      fn()
+    for (const fn of this.unsubscribes) fn()
     this.unsubscribes = []
   }
 
   selfBeat() {
-    this.heartbeatSnapshot = { heartbeatAt: new Date(), online: true, ok: true }
+    this.heartbeatSnapshot = {
+      heartbeatAt: new Date(),
+      online: true,
+      ok: true,
+    }
   }
 
   get isConnetUpstream() {
-    return this.heartbeatSnapshot && Date.now() - this.heartbeatSnapshot.heartbeatAt.valueOf() < this.cfg.heartBeatDuration
+    return (
+      this.heartbeatSnapshot
+      && Date.now() - this.heartbeatSnapshot.heartbeatAt.valueOf()
+        < this.cfg.heartBeatDuration
+    )
   }
 
   get upstreamStatus(): BotUpstreamState | undefined {
     // !this.heartbeatSnapshot to make ts happy
-    if(!this.isConnetUpstream || !this.heartbeatSnapshot)
-      return undefined
+    if (!this.isConnetUpstream || !this.heartbeatSnapshot) return undefined
 
-    if(!this.heartbeatSnapshot.ok)
-      return BotUpstreamState.fatal
+    if (!this.heartbeatSnapshot.ok) return BotUpstreamState.fatal
 
-    if(!this.heartbeatSnapshot.online)
-      return BotUpstreamState.offline
+    if (!this.heartbeatSnapshot.online) return BotUpstreamState.offline
 
     return BotUpstreamState.ok
   }

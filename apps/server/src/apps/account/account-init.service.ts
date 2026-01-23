@@ -7,7 +7,8 @@ export class AccountInitService {
   private readonly logger = new Logger(AccountInitService.name)
   constructor(
     @Inject(AccountService) private readonly accountService: AccountService,
-    @Inject(AppConfigService) private readonly appConfigService: AppConfigService,
+    @Inject(AppConfigService)
+    private readonly appConfigService: AppConfigService,
   ) {}
 
   async doInit() {

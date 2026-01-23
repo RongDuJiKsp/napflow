@@ -8,7 +8,9 @@ export const NotNullColumn = (options?: Omit<ColumnOptions, 'nullable'>) => {
   })
 }
 
-export const DefaultNullColumn = (options?: Omit<ColumnOptions, 'nullable' | 'default'>) => {
+export const DefaultNullColumn = (
+  options?: Omit<ColumnOptions, 'nullable' | 'default'>,
+) => {
   return Column({
     nullable: true,
     default: null,

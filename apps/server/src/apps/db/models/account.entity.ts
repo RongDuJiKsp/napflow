@@ -1,5 +1,16 @@
 import { UserRole } from '@shared/common/account/base'
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -12,7 +23,9 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string
 
-  @OneToMany(() => UserGroupEntity, userGroup => userGroup.user, { cascade: true })
+  @OneToMany(() => UserGroupEntity, userGroup => userGroup.user, {
+    cascade: true,
+  })
   userGroup: UserGroupEntity[]
 
   @CreateDateColumn()

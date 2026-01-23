@@ -3,12 +3,14 @@ import { Inject, Injectable } from '@nestjs/common'
 import type { Account } from '@shared/common/account/base'
 @Injectable()
 export class WorkflowService {
-  constructor(
-    @Inject(TypeOrmService) private readonly db: TypeOrmService,
-  ) {}
+  constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService) {}
 
   async createApp(appName: string, appDesc: string, createdBy: Account) {
-    return await this.db.workflowApp.save({ appName, appDescription: appDesc, createdBy: createdBy.email })
+    return await this.db.workflowApp.save({
+      appName,
+      appDescription: appDesc,
+      createdBy: createdBy.email,
+    })
   }
 
   async deleteApp(appId: string) {

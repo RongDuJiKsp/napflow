@@ -15,7 +15,11 @@ export class BotCoreRuntimeExceptionFilter implements ExceptionFilter<BotCoreRun
 
   catch(exception: BotCoreRuntimeError, host: ArgumentsHost) {
     const httpHost = new ExpressHttpHost(host)
-    httpHost.response.status(400).json(Resp.error(exception.message, Code.BadRequest))
-    this.logger.log(`endpoint visit ${httpHost.request.path} with BotCoreRuntime Error(${exception.message})`)
+    httpHost.response
+      .status(400)
+      .json(Resp.error(exception.message, Code.BadRequest))
+    this.logger.log(
+      `endpoint visit ${httpHost.request.path} with BotCoreRuntime Error(${exception.message})`,
+    )
   }
 }

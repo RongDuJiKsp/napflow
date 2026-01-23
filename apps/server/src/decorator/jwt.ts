@@ -8,9 +8,11 @@ import type { Request } from 'express'
 import { HttpReq } from './common'
 
 @Injectable()
-export class JwtTokenPipe<R extends JwtPayload> implements PipeTransform<Request, R> {
-  constructor(@Inject(JwtService) private readonly jwtService: JwtService) {
-  }
+export class JwtTokenPipe<R extends JwtPayload> implements PipeTransform<
+  Request,
+  R
+> {
+  constructor(@Inject(JwtService) private readonly jwtService: JwtService) {}
 
   transform(value: Request) {
     return this.jwtService.jwtHttpRequest<R>(value)
@@ -18,7 +20,8 @@ export class JwtTokenPipe<R extends JwtPayload> implements PipeTransform<Request
 }
 
 export type JwtBodyConfig = {
-  zod?: z.ZodType
+  zod?: z.ZodType;
 }
 
-export const JwtBody = ({ zod }: JwtBodyConfig) => HttpReq(JwtTokenPipe, zod ? new ZodValidationPipe(zod) : undefined)
+export const JwtBody = ({ zod }: JwtBodyConfig) =>
+  HttpReq(JwtTokenPipe, zod ? new ZodValidationPipe(zod) : undefined)

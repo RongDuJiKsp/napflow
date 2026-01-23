@@ -4,7 +4,10 @@ import { AppConfigService } from '../app-config/app-config.service'
 import mysql from 'mysql2/promise'
 import { TypeOrmService } from './typeorm.service'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
-import { WorkflowAppDataEntity, WorkflowAppEntity } from './models/workflow.entity'
+import {
+  WorkflowAppDataEntity,
+  WorkflowAppEntity,
+} from './models/workflow.entity'
 import { BotRecordEntity } from './models/bot.entity'
 
 @Global()
@@ -19,7 +22,9 @@ import { BotRecordEntity } from './models/bot.entity'
           ...configService.sqlConnConfig,
           multipleStatements: true,
         })
-        await conn.query(`CREATE DATABASE IF NOT EXISTS ${configService.envs.MYSQL_DATABASE}`)
+        await conn.query(
+          `CREATE DATABASE IF NOT EXISTS ${configService.envs.MYSQL_DATABASE}`,
+        )
         await conn.end()
 
         const { host, port, user, password } = configService.sqlConnConfig
@@ -37,8 +42,10 @@ import { BotRecordEntity } from './models/bot.entity'
       inject: [AppConfigService],
     }),
     TypeOrmModule.forFeature([
-      UserEntity, UserGroupEntity,
-      WorkflowAppEntity, WorkflowAppDataEntity,
+      UserEntity,
+      UserGroupEntity,
+      WorkflowAppEntity,
+      WorkflowAppDataEntity,
       BotRecordEntity,
     ]),
   ],
