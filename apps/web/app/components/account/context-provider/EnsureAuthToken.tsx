@@ -8,14 +8,9 @@ const EnsureAuthToken = ({ children }: PropsWithChildren) => {
 
   // Check if the user is logged in
   useEffect(() => {
-    if(!localStorage.getItem('auth-token'))
-      router.replace('/login')
+    if (!localStorage.getItem('auth-token')) router.replace('/login')
   }, [router])
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
 export default memo(EnsureAuthToken)

@@ -45,7 +45,7 @@ const LoginWindow = () => {
                 twMerge(
                   'w-full  rounded-lg border border-pink-200  transition-all duration-200 bg-white',
                   isFocusWithin
-                  && 'outline-none ring-2 border-transparent ring-purple-400',
+                    && 'outline-none ring-2 border-transparent ring-purple-400',
                 ),
               input: 'text-gray-700 placeholder-pink-500',
             }}

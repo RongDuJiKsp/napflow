@@ -8,9 +8,7 @@ const ComponentNodeEnvProvider = ({ children }: PropsWithChildren) => {
     return getNodeEnvMap(nodes, edges)
   }, [nodes, edges])
   return (
-    <NodeEnvContext.Provider value={envCtx}>
-      {children}
-    </NodeEnvContext.Provider>
+    <NodeEnvContext.Provider value={envCtx}>{children}</NodeEnvContext.Provider>
   )
 }
 

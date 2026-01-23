@@ -8,9 +8,10 @@ export const useAccountInfoQuery = (accEmail: string) => {
   return useQuery({
     queryKey: ['account-info', accEmail],
     queryFn: async (): Promise<AccountInfo> => {
-      const res = await jsonQ.Get<AccountInfoResp>('/account/account-info', { params: { email: accEmail } })
-      if (res.statusCode !== Code.Ok || !res.data)
-        throw new Error(res.message)
+      const res = await jsonQ.Get<AccountInfoResp>('/account/account-info', {
+        params: { email: accEmail },
+      })
+      if (res.statusCode !== Code.Ok || !res.data) throw new Error(res.message)
       return res.data
     },
   })

@@ -9,8 +9,7 @@ export const useCurAccountQuery = () => {
     queryKey: ['cur-account'],
     queryFn: async (): Promise<AccountInfo> => {
       const res = await jsonQ.Get<AccountInfoResp>('/account/cur-account')
-      if (res.statusCode !== Code.Ok || !res.data)
-        throw new Error(res.message)
+      if (res.statusCode !== Code.Ok || !res.data) throw new Error(res.message)
 
       return res.data
     },

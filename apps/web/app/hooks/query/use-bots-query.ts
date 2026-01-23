@@ -9,8 +9,7 @@ export const useBotsQuery = () => {
     queryKey: ['bots'],
     queryFn: async (): Promise<CommonBotInfo[]> => {
       const res = await jsonQ.Get<GetAllBotsResp>('/bots/list')
-      if (res.statusCode !== Code.Ok || !res.data)
-        throw new Error(res.message)
+      if (res.statusCode !== Code.Ok || !res.data) throw new Error(res.message)
 
       return res.data
     },

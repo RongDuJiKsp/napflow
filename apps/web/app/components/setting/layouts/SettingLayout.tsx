@@ -1,7 +1,10 @@
 import type { PropsWithChildren } from 'react'
 import { memo } from 'react'
 
-const SettingLayout = ({ title, children}: PropsWithChildren<{ title: string }>) => {
+const SettingLayout = ({
+  title,
+  children,
+}: PropsWithChildren<{ title: string }>) => {
   return (
     <div className="space-y-8">
       <div>

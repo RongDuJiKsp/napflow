@@ -4,13 +4,13 @@ import type { XYPosition } from '@shared/common/workflow/re-export'
 import type React from 'react'
 
 type StickyNodeState = {
-  stickyElement?: WorkflowNode,
-  mouseLocation?: XYPosition
+  stickyElement?: WorkflowNode;
+  mouseLocation?: XYPosition;
 }
 type StickyNodeAction = {
-  stickyNewNode: (node: WorkflowNode) => void
-  removeStickyElement: () => void
-  handleMove: (e: React.MouseEvent) => void
+  stickyNewNode: (node: WorkflowNode) => void;
+  removeStickyElement: () => void;
+  handleMove: (e: React.MouseEvent) => void;
 }
 
 export type StickyNodeStoreShape = StickyNodeState & StickyNodeAction

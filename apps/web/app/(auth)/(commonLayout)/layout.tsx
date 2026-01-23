@@ -17,18 +17,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   NapFlow
                 </h1>
               </div>
-              <HeaderNavigation/>
+              <HeaderNavigation />
             </div>
             {/* 右侧用户信息和个人中心 */}
-            <UserInfo/>
+            <UserInfo />
           </div>
         </div>
       </header>
 
       {/* 主内容区域 */}
-      <main className='overflow-y-auto h-main'>
-        {children}
-      </main>
+      <main className="overflow-y-auto h-main">{children}</main>
     </div>
   )
 }

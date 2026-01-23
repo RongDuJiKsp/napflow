@@ -16,13 +16,22 @@ export const useWorkflowDraft = () => {
     const { nodes, edges } = workflowStore.getState()
     return { nodes, edges, ofAppId: appId }
   }, [workflowStore, appId])
-  const syncRequest = useCallback(async (draft: WorkflowAppDraft) => await jsonQ.Post<NullResp>(`/workflow/${appId}/sync`, draft), [appId])
-  const submitFn = useSubmitZodFn(ZodCheckWorkflowAppDraft, syncRequest, { successText: '' })
+  const syncRequest = useCallback(
+    async (draft: WorkflowAppDraft) =>
+      await jsonQ.Post<NullResp>(`/workflow/${appId}/sync`, draft),
+    [appId],
+  )
+  const submitFn = useSubmitZodFn(ZodCheckWorkflowAppDraft, syncRequest, {
+    successText: '',
+  })
   const doSyncDraft = useCallback(async () => {
     const draft = getCurrentStateSnapshot()
     await submitFn(draft)
   }, [getCurrentStateSnapshot, submitFn])
-  const submitSyncDraft = useMemo(() => debounce(doSyncDraft, 5000), [doSyncDraft])
+  const submitSyncDraft = useMemo(
+    () => debounce(doSyncDraft, 5000),
+    [doSyncDraft],
+  )
 
   return {
     getCurrentStateSnapshot,

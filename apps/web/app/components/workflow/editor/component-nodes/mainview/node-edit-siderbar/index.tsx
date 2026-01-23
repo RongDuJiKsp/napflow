@@ -15,18 +15,14 @@ import ComponentNodeEnvProvider from '../../providers/ComponentNodeEnvProvider'
 const PanelWrapper = ({ children }: PropsWithChildren) => {
   return (
     <>
-      <ComponentNodeEnvProvider>
-        {children}
-      </ComponentNodeEnvProvider>
+      <ComponentNodeEnvProvider>{children}</ComponentNodeEnvProvider>
     </>
   )
 }
 
 const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ id, data }) => {
-  const {
-    handleChangeTitle,
-    handleChangeDescription,
-  } = useEditSiderbarMetaEdit(id)
+  const { handleChangeTitle, handleChangeDescription }
+    = useEditSiderbarMetaEdit(id)
   const creator = ComponentNodeCreatorMap[data.type]
   return (
     <PanelWrapper>
@@ -34,7 +30,7 @@ const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ id, data }) => {
         {/* 标题区域 */}
         <div className="flex items-center gap-3 p-4 rounded-xl bg-linear-to-r from-purple-50 to-pink-50 border border-pink-100">
           <div className="shrink-0 p-2 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md">
-            <creator.icon className='h-5 w-5' />
+            <creator.icon className="h-5 w-5" />
           </div>
           <div className="flex-1">
             <input
@@ -68,7 +64,7 @@ const NodeEditSidebarView: ComponentPanelFc<unknown> = ({ id, data }) => {
 
         {/* 编辑面板内容 */}
         <div className="mt-4">
-          <creator.editPanelComponent id={id} data={data}/>
+          <creator.editPanelComponent id={id} data={data} />
         </div>
       </div>
     </PanelWrapper>
@@ -84,7 +80,12 @@ const NodeEditSidebar = () => {
   const open = currNode?.type === NodeClassic.Component && !currNode.dragging
   return (
     <Drawer open={open} mask={false} closable={false}>
-      {open && <NodeEditSidebarView id={currNode.id} data={currNode.data as ComponentNode['data']} />}
+      {open && (
+        <NodeEditSidebarView
+          id={currNode.id}
+          data={currNode.data as ComponentNode['data']}
+        />
+      )}
     </Drawer>
   )
 }

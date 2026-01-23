@@ -37,9 +37,18 @@ const getStatusColor = (state: BotRunningState) => {
 
 export const useBotState = (bot: CommonBotInfo) => {
   const state = bot.state.runningState
-  const isBotCanStart = [BotRunningState.stopped, BotRunningState.killed].includes(state)
-  const isBotCanStop = [BotRunningState.running, BotRunningState.fatal].includes(state)
-  const isBotCanKill = ![BotRunningState.killed, BotRunningState.stopped].includes(state)
+  const isBotCanStart = [
+    BotRunningState.stopped,
+    BotRunningState.killed,
+  ].includes(state)
+  const isBotCanStop = [
+    BotRunningState.running,
+    BotRunningState.fatal,
+  ].includes(state)
+  const isBotCanKill = ![
+    BotRunningState.killed,
+    BotRunningState.stopped,
+  ].includes(state)
   const isBotCanForcePull = true
   const stateText = getStatusText(state)
   const stateTwBgColor = getStatusColor(state)

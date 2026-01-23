@@ -24,7 +24,10 @@ import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
 import { twMerge } from 'tailwind-merge'
 import { Select, Space, Tooltip } from 'antd'
-import { useDownGradeOptions, useUpgradeOptions } from './hooks/use-up-down-grade-options'
+import {
+  useDownGradeOptions,
+  useUpgradeOptions,
+} from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
 import { UserRole } from '@shared/common/account/base'
 import { Button, Label } from '@heroui/react'
@@ -38,11 +41,8 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { filterdOptions } = useUpgradeOptions(sourceUser)
 
   const { handleUpgrade } = useAccountActions()
-  const {
-    selectedGroups,
-    setSelectedGroups,
-    handleConfirm,
-  } = useUpDownGradeDialog(sourceUser, onClose, handleUpgrade)
+  const { selectedGroups, setSelectedGroups, handleConfirm }
+    = useUpDownGradeDialog(sourceUser, onClose, handleUpgrade)
 
   return (
     <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
@@ -71,7 +71,9 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
           <div className="px-6 py-6 mb-14">
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">
-                为用户 <span className="font-medium text-gray-900">{sourceUser}</span> 选择要升级的权限组：
+                为用户{' '}
+                <span className="font-medium text-gray-900">{sourceUser}</span>{' '}
+                选择要升级的权限组：
               </p>
             </div>
 
@@ -124,11 +126,8 @@ const AccountUpgradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
 const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
   const { filterdOptions } = useDownGradeOptions(sourceUser)
   const { handleDownGrade } = useAccountActions()
-  const {
-    selectedGroups,
-    setSelectedGroups,
-    handleConfirm,
-  } = useUpDownGradeDialog(sourceUser, onClose, handleDownGrade)
+  const { selectedGroups, setSelectedGroups, handleConfirm }
+    = useUpDownGradeDialog(sourceUser, onClose, handleDownGrade)
 
   return (
     <Dialog open={!!sourceUser} onClose={onClose} className="relative z-50">
@@ -157,7 +156,9 @@ const AccountDowngradeDialog = ({ sourceUser, onClose }: ModalOperation) => {
           <div className="px-6 py-6 mb-14">
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">
-                为用户 <span className="font-medium text-gray-900">{sourceUser}</span> 选择要降级的权限组：
+                为用户{' '}
+                <span className="font-medium text-gray-900">{sourceUser}</span>{' '}
+                选择要降级的权限组：
               </p>
             </div>
 
@@ -248,11 +249,14 @@ const AccountDisableDialog = ({ sourceUser, onClose }: ModalOperation) => {
                 确认禁用账户
               </h3>
               <p className="text-sm text-gray-600 text-center mb-4">
-                您确定要禁用用户 <span className="font-medium text-gray-900">{sourceUser}</span> 吗？
+                您确定要禁用用户{' '}
+                <span className="font-medium text-gray-900">{sourceUser}</span>{' '}
+                吗？
               </p>
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                 <p className="text-xs text-amber-800">
-                  <strong>注意：</strong>账户被禁用后，用户将无法登录系统。此操作不可撤销。
+                  <strong>注意：</strong>
+                  账户被禁用后，用户将无法登录系统。此操作不可撤销。
                 </p>
               </div>
             </div>
@@ -289,7 +293,9 @@ const AccountSettingWindow = () => {
         ...account,
         id: account.email,
         isDisabled: account.disabledAt !== null,
-        isAdmin: account.userGroup.map(x => x.groupType).includes(UserRole.Admin),
+        isAdmin: account.userGroup
+          .map(x => x.groupType)
+          .includes(UserRole.Admin),
       })),
     [data],
   )

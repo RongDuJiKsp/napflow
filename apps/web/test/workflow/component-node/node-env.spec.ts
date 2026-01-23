@@ -1,19 +1,22 @@
 import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
-import type { ComponentNode, Var } from '@/app/components/workflow/editor/component-nodes/types'
+import type {
+  ComponentNode,
+  Var,
+} from '@/app/components/workflow/editor/component-nodes/types'
 import { VarTypes } from '@/app/components/workflow/editor/component-nodes/types'
 import type { WorkflowEdge } from '@/app/components/workflow/editor/types'
 
 describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   type TestNode = {
-    id: string,
+    id: string;
     data: {
-      title: string,
-      vars: Var[]
-    }
+      title: string;
+      vars: Var[];
+    };
   }
   type TestEdge = {
-    source: string,
-    target: string
+    source: string;
+    target: string;
   }
   test('正常收集', () => {
     const nodes: TestNode[] = [

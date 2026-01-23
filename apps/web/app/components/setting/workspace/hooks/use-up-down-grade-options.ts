@@ -15,19 +15,26 @@ type UpDownGradeOptions = {
 
 const UpDownGradeOptionsValueBase: UpDownGradeOptions[] = [
   { value: UserRole.Admin, label: '管理员', icon: RiAdminLine },
-  { value: UserRole.User, label: '普通用户', icon: RiUserLine, disabled: true, tooltip: '普通身份不能被升降级' },
+  {
+    value: UserRole.User,
+    label: '普通用户',
+    icon: RiUserLine,
+    disabled: true,
+    tooltip: '普通身份不能被升降级',
+  },
 ]
 
 export const useUpgradeOptions = (targetUser: string) => {
   const { data } = useAccountInfoQuery(targetUser)
   const filterdOptions = useMemo(() => {
-    if(!data)
-      return UpDownGradeOptionsValueBase
+    if (!data) return UpDownGradeOptionsValueBase
 
     return UpDownGradeOptionsValueBase.map((item) => {
-      if(item.disabled)
-        return item
-      const has = data.userGroup.some((group: AccountInfo['userGroup'][number]) => group.groupType === item.value)
+      if (item.disabled) return item
+      const has = data.userGroup.some(
+        (group: AccountInfo['userGroup'][number]) =>
+          group.groupType === item.value,
+      )
       return {
         ...item,
         disabled: has,
@@ -41,13 +48,14 @@ export const useUpgradeOptions = (targetUser: string) => {
 export const useDownGradeOptions = (targetUser: string) => {
   const { data } = useAccountInfoQuery(targetUser)
   const filterdOptions = useMemo(() => {
-    if(!data)
-      return UpDownGradeOptionsValueBase
+    if (!data) return UpDownGradeOptionsValueBase
 
     return UpDownGradeOptionsValueBase.map((item) => {
-      if(item.disabled)
-        return item
-      const notHave = !data.userGroup.some((group: AccountInfo['userGroup'][number]) => group.groupType === item.value)
+      if (item.disabled) return item
+      const notHave = !data.userGroup.some(
+        (group: AccountInfo['userGroup'][number]) =>
+          group.groupType === item.value,
+      )
       return {
         ...item,
         disabled: notHave,

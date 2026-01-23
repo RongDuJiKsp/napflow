@@ -17,7 +17,10 @@ const NapcatWsForm = () => {
 
   return (
     <div className="space-y-4">
-      <TextField value={config.endpoint.wsUrl} onChange={handleEndpointWsUrlChange}>
+      <TextField
+        value={config.endpoint.wsUrl}
+        onChange={handleEndpointWsUrlChange}
+      >
         <Label className="block text-sm font-medium text-purple-700 mb-2">
           WebSocket 地址
         </Label>
@@ -31,7 +34,10 @@ const NapcatWsForm = () => {
         />
       </TextField>
 
-      <TextField value={config.endpoint.token ?? ''} onChange={handleEndpointTokenChange}>
+      <TextField
+        value={config.endpoint.token ?? ''}
+        onChange={handleEndpointTokenChange}
+      >
         <Label className="block text-sm font-medium text-purple-700 mb-2">
           Token（可选）
         </Label>
@@ -54,7 +60,9 @@ const NapcatWsForm = () => {
             value={String(config.retryConfig?.retryMaxTimes ?? '')}
             onChange={handleReconnectMaxAttemptsChange}
           >
-            <Label className="block text-xs text-gray-600 mb-1">最大重连次数</Label>
+            <Label className="block text-xs text-gray-600 mb-1">
+              最大重连次数
+            </Label>
             <Input
               type="number"
               className={twMerge(
@@ -71,7 +79,9 @@ const NapcatWsForm = () => {
             value={String(config.retryConfig?.retryDelay ?? '')}
             onChange={handleReconnectIntervalChange}
           >
-            <Label className="block text-xs text-gray-600 mb-1">重连间隔（ms）</Label>
+            <Label className="block text-xs text-gray-600 mb-1">
+              重连间隔（ms）
+            </Label>
             <Input
               type="number"
               className={twMerge(
@@ -95,7 +105,9 @@ const NapcatWsForm = () => {
             value={String(config.heartBeatDuration ?? '')}
             onChange={handleHeartBeatDurationlChange}
           >
-            <Label className="block text-xs text-gray-600 mb-1">心跳间隔（ms）</Label>
+            <Label className="block text-xs text-gray-600 mb-1">
+              心跳间隔（ms）
+            </Label>
             <Input
               className={twMerge(
                 'w-full rounded-lg border border-pink-200',
@@ -105,7 +117,6 @@ const NapcatWsForm = () => {
               placeholder="与服务端‘心跳间隔’一致"
             />
           </TextField>
-
         </div>
       </div>
     </div>

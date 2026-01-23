@@ -8,8 +8,7 @@ export const AppParamContext = createContext<AppParam | null>(null) // 当使用
 
 export const useAppParam = () => {
   const ctx = useContext(AppParamContext)
-  if(!ctx)
-    throw new Error('useAppParam must be used within AppParamProvider')
+  if (!ctx) throw new Error('useAppParam must be used within AppParamProvider')
 
   return ctx
 }

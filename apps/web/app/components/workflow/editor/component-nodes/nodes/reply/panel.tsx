@@ -2,11 +2,7 @@ import { memo } from 'react'
 import type { ComponentPanelFc } from '../../types'
 import type { ReplyData } from './creator'
 import { ReplyTarget } from './creator'
-import {
-  Label,
-  ListBox,
-  Select,
-} from '@heroui/react'
+import { Label, ListBox, Select } from '@heroui/react'
 import InputWithEnv from '../../common/input-with-env'
 import { useReplyCurd } from './hooks/use-reply-curd'
 
@@ -34,7 +30,9 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
           <ListBox>
             <ListBox.Item id={ReplyTarget.User}>用户（使用uid）</ListBox.Item>
             <ListBox.Item id={ReplyTarget.Group}>群组（使用pid）</ListBox.Item>
-            <ListBox.Item id={ReplyTarget.triggerSource}>触发源上下文（使用triggerid）</ListBox.Item>
+            <ListBox.Item id={ReplyTarget.triggerSource}>
+              触发源上下文（使用triggerid）
+            </ListBox.Item>
           </ListBox>
         </Select.Popover>
       </Select>
@@ -47,7 +45,8 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
             value={data.userId || ''}
             onChange={handleUserIdChange}
             className={{
-              contentEditable: 'text-md border border-purple-500 rounded-sm focus:border-purple-700 p-2',
+              contentEditable:
+                'text-md border border-purple-500 rounded-sm focus:border-purple-700 p-2',
               placeHolder: 'text-pink-200',
             }}
           />
@@ -62,7 +61,8 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
             value={data.groupId || ''}
             onChange={handleGroupIdChange}
             className={{
-              contentEditable: 'text-md  border border-purple-500 rounded-sm focus:border-purple-700 p-2',
+              contentEditable:
+                'text-md  border border-purple-500 rounded-sm focus:border-purple-700 p-2',
               placeHolder: 'text-pink-200',
             }}
           />
@@ -76,9 +76,10 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
             envs={vars}
             value={data.triggerSourceId || ''}
             onChange={handleTriggerSourceIdChange}
-            placeholder='触发器id，通常在触发器变量的trigger.triggerId'
+            placeholder="触发器id，通常在触发器变量的trigger.triggerId"
             className={{
-              contentEditable: 'text-md border border-purple-500 rounded-sm focus:border-purple-700 p-2',
+              contentEditable:
+                'text-md border border-purple-500 rounded-sm focus:border-purple-700 p-2',
               placeHolder: 'text-pink-200',
             }}
           />
@@ -91,7 +92,8 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
         <Label className="text-purple-700">回复内容</Label>
         <InputWithEnv
           className={{
-            contentEditable: 'text-md min-h-30 border border-purple-500 rounded-sm focus:border-purple-700 p-2',
+            contentEditable:
+              'text-md min-h-30 border border-purple-500 rounded-sm focus:border-purple-700 p-2',
             placeHolder: 'text-pink-200',
           }}
           envs={vars}

@@ -18,12 +18,11 @@ const typeLabels: Record<VarTypes, string> = {
 }
 
 type ProviderEnvsProps = {
-  envs: Var[]
+  envs: Var[];
 }
 
 const ProviderEnvs = memo(({ envs }: ProviderEnvsProps) => {
-  if (!envs || envs.length === 0)
-    return null
+  if (!envs || envs.length === 0) return null
 
   return (
     <div className="mb-4">
@@ -34,11 +33,15 @@ const ProviderEnvs = memo(({ envs }: ProviderEnvsProps) => {
             key={`${env.name}-${index}`}
             className="flex items-center justify-between px-2 py-1 bg-white rounded-lg border border-pink-200 shadow-sm"
           >
-            <span className="text-sm font-medium text-gray-700">{env.name}</span>
-            <span className={twMerge(
-              'text-xs px-2 py-1 rounded-full font-medium w-18 text-center',
-              typeColors[env.type],
-            )}>
+            <span className="text-sm font-medium text-gray-700">
+              {env.name}
+            </span>
+            <span
+              className={twMerge(
+                'text-xs px-2 py-1 rounded-full font-medium w-18 text-center',
+                typeColors[env.type],
+              )}
+            >
               {typeLabels[env.type]}
             </span>
           </div>

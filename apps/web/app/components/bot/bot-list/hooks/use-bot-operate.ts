@@ -12,7 +12,7 @@ export const useBotOperate = (bot: CommonBotInfo) => {
   const { refetch } = useBotsQuery()
   const startBot = useCallback(async () => {
     const res = await jsonQ.Post<NullResp>(`bots/${bot.botId}/run`)
-    if(res.statusCode !== Code.Ok) {
+    if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
     }
@@ -31,7 +31,7 @@ export const useBotInfoOperator = (bot: CommonBotInfo) => {
   }, [bot, router])
   const deleteBot = useCallback(async () => {
     const res = await jsonQ.Post<NullResp>(`bots/${bot.botId}/delete`)
-    if(res.statusCode !== Code.Ok) {
+    if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
     }

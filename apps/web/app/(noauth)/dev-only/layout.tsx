@@ -3,12 +3,7 @@ import { redirect } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
 
 export default function Layout({ children }: PropsWithChildren) {
-  if(!isDevelopment)
-    redirect('/')
+  if (!isDevelopment) redirect('/')
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }

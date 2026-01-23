@@ -3,7 +3,9 @@ import { createWorkflowNode } from '../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../constants'
 import type { ComponentNode, ComponentNodesEnum } from '../types'
 
-export const createComponentNode = <T>(nodeClassic: ComponentNodesEnum): ComponentNode<T> => {
+export const createComponentNode = <T>(
+  nodeClassic: ComponentNodesEnum,
+): ComponentNode<T> => {
   const creator = ComponentNodeCreatorMap[nodeClassic]
   return createWorkflowNode({
     type: NodeClassic.Component,
@@ -12,7 +14,7 @@ export const createComponentNode = <T>(nodeClassic: ComponentNodesEnum): Compone
       desc: '',
       type: nodeClassic,
       vars: creator.env ?? [],
-      ...creator.create() as T,
+      ...(creator.create() as T),
     },
   })
 }

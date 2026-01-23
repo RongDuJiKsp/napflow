@@ -1,11 +1,11 @@
 import type { StateCreator } from 'zustand'
 
 type NodeEditorState = {
-  selectedNodeId?: string
+  selectedNodeId?: string;
 }
 type NodeEditorAction = {
-  selectNode: (nodeId: string) => void
-  deselectNode: () => void
+  selectNode: (nodeId: string) => void;
+  deselectNode: () => void;
 }
 
 export type NodeEditorStoreShape = NodeEditorState & NodeEditorAction

@@ -36,27 +36,32 @@ const InputWithEnv = ({
         throw error
       },
       editable: isEditable,
-      nodes: [
-        LexEnvVarNode,
-      ],
+      nodes: [LexEnvVarNode],
       editorState: lexParagraph.paragraphs2EditorStateStr(value),
     }),
     [isEditable, value],
   )
   return (
     <LexicalComposer initialConfig={initConfig}>
-      <div className='relative'>
+      <div className="relative">
         <RichTextPlugin
           contentEditable={
             <ContentEditable className={className.contentEditable} />
           }
-          placeholder={<div className={twMerge('pointer-events-none absolute left-0 top-0 h-full w-full select-none flex justify-center items-center pl-1 text-gray-400', className.placeHolder)}>
-            <div className='text-sm'>{placeholder}</div>
-          </div>}
+          placeholder={
+            <div
+              className={twMerge(
+                'pointer-events-none absolute left-0 top-0 h-full w-full select-none flex justify-center items-center pl-1 text-gray-400',
+                className.placeHolder,
+              )}
+            >
+              <div className="text-sm">{placeholder}</div>
+            </div>
+          }
           ErrorBoundary={LexicalErrorBoundary}
         />
       </div>
-      <LexicalParagraphControlledPlugin value={value} onChange={onChange}/>
+      <LexicalParagraphControlledPlugin value={value} onChange={onChange} />
       <EnvVarSyncPlugin envVars={envs} />
       <EnvVarNodeReplacementPlugin envVars={envs} />
       <EnvVarMenuPlugin envVars={envs} />

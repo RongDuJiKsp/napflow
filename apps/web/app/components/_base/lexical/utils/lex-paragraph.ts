@@ -10,21 +10,25 @@ export type LexParagraphs = string
  * @param paragraphsStr 段落字符串
  * @returns 编辑器状态
  */
-const paragraphs2EditorState = (paragraphsStr: LexParagraphs): SerializedEditorState => {
+const paragraphs2EditorState = (
+  paragraphsStr: LexParagraphs,
+): SerializedEditorState => {
   const paragraph = paragraphsStr.split('\n')
   return {
     root: {
       children: paragraph.map((p) => {
         return {
-          children: [{
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text: p,
-            type: 'text',
-            version: 1,
-          }],
+          children: [
+            {
+              detail: 0,
+              format: 0,
+              mode: 'normal',
+              style: '',
+              text: p,
+              type: 'text',
+              version: 1,
+            },
+          ],
           direction: 'ltr',
           format: '',
           indent: 0,
@@ -55,7 +59,10 @@ const paragraphs2EditorStateStr = (paragraphsStr: LexParagraphs): string => {
  * @returns 编辑器文本内容
  */
 const $getParagraphTextContent = (): LexParagraphs => {
-  return $getRoot().getChildren().map(node => node.getTextContent()).join('\n')
+  return $getRoot()
+    .getChildren()
+    .map(node => node.getTextContent())
+    .join('\n')
 }
 
 /**

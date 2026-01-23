@@ -59,9 +59,7 @@ const EnvVarNode = ({ envVar, envs }: EnvVarNodeProps) => {
       <span
         className={twMerge(
           'font-medium  rounded-full text-center shrink-0',
-          isValid && foundVar
-            ? typeColors[foundVar.type]
-            : ' text-red-700',
+          isValid && foundVar ? typeColors[foundVar.type] : ' text-red-700',
         )}
       >
         {isValid && foundVar ? typeLabels[foundVar.type] : '❌'}
@@ -160,13 +158,13 @@ export const $createEnvVarNodeFromRaw = (raw: string, envs: VarCtx[]) => {
 }
 
 export const $transformEnvVarNode = (node: TextNode, envs: VarCtx[]) => {
-  if(!EnvVarRegex.test(node.getTextContent()))
-    return
+  if (!EnvVarRegex.test(node.getTextContent())) return
   const splitedNodes = $splitTextNode(node, EnvVarRegex)
-  for(const splitedNode of splitedNodes) {
-    if(!EnvVarRegex.test(splitedNode.getTextContent()))
-      continue
-    splitedNode.replace($createEnvVarNodeFromRaw(splitedNode.getTextContent(), envs))
+  for (const splitedNode of splitedNodes) {
+    if (!EnvVarRegex.test(splitedNode.getTextContent())) continue
+    splitedNode.replace(
+      $createEnvVarNodeFromRaw(splitedNode.getTextContent(), envs),
+    )
   }
 }
 export const $isEnvVarNode = (node: LexicalNode) => {

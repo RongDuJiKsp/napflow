@@ -1,6 +1,9 @@
 import type { StateCreator, StoreApi } from 'zustand'
 import { createStore } from 'zustand'
-import { type NodeEditorStoreShape, createNodeEditorStore } from '../store/node-editor'
+import {
+  type NodeEditorStoreShape,
+  createNodeEditorStore,
+} from '../store/node-editor'
 import { createContext, useContext } from 'react'
 import type { StickyNodeStoreShape } from '../store/sticky-node'
 import { createStickyNodeStore } from '../store/sticky-node'

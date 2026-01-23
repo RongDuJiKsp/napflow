@@ -9,7 +9,7 @@ export const useAppsQuery = (onlySelf?: boolean) => {
     queryKey: ['apps', onlySelf],
     queryFn: async (): Promise<WorkflowApp[]> => {
       const res = await jsonQ.Get<GetAppsResp>('/workflow/apps')
-      if(res.statusCode !== Code.Ok || !res.data)
+      if (res.statusCode !== Code.Ok || !res.data)
         throw new Error(res.message || '获取插件列表失败')
 
       return res.data

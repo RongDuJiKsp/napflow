@@ -4,9 +4,7 @@ import EnsureAuthToken from '../components/account/context-provider/EnsureAuthTo
 export default function Page({ children }: PropsWithChildren) {
   return (
     <div>
-      <EnsureAuthToken>
-        {children}
-      </EnsureAuthToken>
+      <EnsureAuthToken>{children}</EnsureAuthToken>
     </div>
   )
 }

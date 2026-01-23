@@ -4,11 +4,11 @@ import SettingLayout from '@/app/components/setting/layouts/SettingLayout'
 
 export default function AccountSettings() {
   return (
-    <SettingLayout title='账户设置'>
+    <SettingLayout title="账户设置">
       {/* 个人信息设置 */}
-      <UserInfoSettingWindow/>
+      <UserInfoSettingWindow />
       {/* 密码设置 */}
-      <PasswordSettingWindow/>
+      <PasswordSettingWindow />
     </SettingLayout>
   )
 }

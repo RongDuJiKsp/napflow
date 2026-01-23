@@ -16,11 +16,13 @@ const PasswordSettingWindow = () => {
     formValue,
   } = useUpdatePassword()
   return (
-    <SettingItemContainer title='密码设置' Icon={RiLockLine}>
+    <SettingItemContainer title="密码设置" Icon={RiLockLine}>
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="block text-sm font-medium text-purple-700 mb-2">原始密码</Label>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">
+              原始密码
+            </Label>
             <Password
               value={formValue.oldPassword}
               onValueChange={handleChangeOldPassword}
@@ -30,7 +32,7 @@ const PasswordSettingWindow = () => {
                   twMerge(
                     'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
                     isFocusWithin
-                    && 'outline-none ring-2 border-transparent ring-purple-400',
+                      && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
                 input: 'placeholder-pink-300',
               }}
@@ -38,7 +40,9 @@ const PasswordSettingWindow = () => {
           </div>
 
           <div>
-            <Label className="block text-sm font-medium text-purple-700 mb-2">新密码</Label>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">
+              新密码
+            </Label>
             <Password
               value={formValue.newPassword}
               onValueChange={handleChangeNewPassword}
@@ -49,7 +53,7 @@ const PasswordSettingWindow = () => {
                   twMerge(
                     'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
                     isFocusWithin
-                    && 'outline-none ring-2 border-transparent ring-purple-400',
+                      && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
                 input: 'placeholder-pink-300',
               }}
@@ -57,7 +61,9 @@ const PasswordSettingWindow = () => {
           </div>
 
           <div>
-            <Label className="block text-sm font-medium text-purple-700 mb-2">确认新密码</Label>
+            <Label className="block text-sm font-medium text-purple-700 mb-2">
+              确认新密码
+            </Label>
             <Password
               value={formValue.confirmPassword}
               onValueChange={handleChangeConfirmPassword}
@@ -67,19 +73,19 @@ const PasswordSettingWindow = () => {
                   twMerge(
                     'w-full rounded-lg border border-pink-200 transition-all duration-200 bg-white',
                     isFocusWithin
-                  && 'outline-none ring-2 border-transparent ring-purple-400',
+                      && 'outline-none ring-2 border-transparent ring-purple-400',
                   ),
                 input: 'placeholder-pink-300',
               }}
             />
           </div>
         </div>
-
       </div>
 
       <Button
         onClick={handleSubmit}
-        className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg">
+        className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+      >
         更新密码
       </Button>
     </SettingItemContainer>

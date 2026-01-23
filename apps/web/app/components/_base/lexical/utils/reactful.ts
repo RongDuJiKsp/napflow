@@ -23,10 +23,13 @@ export abstract class LexReactNode<Props = any> {
 }
 
 export type SerializedLexicalReactNode<Props> = SerializedLexicalNode & {
-  reactProps: Props
+  reactProps: Props;
 }
 
-export abstract class ReactDecoratorNode<NodeProps, ReactNode extends LexReactNode<NodeProps> = LexReactNode<NodeProps>> extends DecoratorNode<JSX.Element> {
+export abstract class ReactDecoratorNode<
+  NodeProps,
+  ReactNode extends LexReactNode<NodeProps> = LexReactNode<NodeProps>,
+> extends DecoratorNode<JSX.Element> {
   readonly __reactNode: ReactNode
 
   constructor(reactNode: ReactNode, nodeKey?: NodeKey) {

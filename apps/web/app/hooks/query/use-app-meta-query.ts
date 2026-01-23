@@ -9,7 +9,7 @@ export const useAppMetaQuery = (appId: string) => {
     queryKey: ['app-meta', appId],
     queryFn: async (): Promise<WorkflowApp> => {
       const res = await jsonQ.Get<GetAppResp>(`/workflow/${appId}`)
-      if(res.statusCode !== Code.Ok || !res.data)
+      if (res.statusCode !== Code.Ok || !res.data)
         throw new Error(res.message || '获取AppMeta失败')
 
       return res.data

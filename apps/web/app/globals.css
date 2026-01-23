@@ -1,11 +1,11 @@
 @layer theme, base, antd, components, utilities;
 @import "tailwindcss";
-@import "@heroui/styles"; 
-@import './style/react-contexify.css';
+@import "@heroui/styles";
+@import "./style/react-contexify.css";
 
-.h-headerbar{
-    height: 64px;
+.h-headerbar {
+  height: 64px;
 }
-.h-main{
-    height: calc(100vh - 64px);
+.h-main {
+  height: calc(100vh - 64px);
 }

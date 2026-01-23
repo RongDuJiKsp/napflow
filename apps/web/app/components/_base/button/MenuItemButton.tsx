@@ -15,13 +15,22 @@ const buttonTheme = {
     bg: 'bg-linear-to-r from-red-400 to-pink-400 group-hover:from-red-500 group-hover:to-pink-500',
   },
 }
-const MenuItemButton = ({ disabled, title, onClick, theme}: { disabled?: boolean, title: string, onClick: () => void, theme: 'common' | 'warn' | 'danger' }) => {
+const MenuItemButton = ({
+  disabled,
+  title,
+  onClick,
+  theme,
+}: {
+  disabled?: boolean;
+  title: string;
+  onClick: () => void;
+  theme: 'common' | 'warn' | 'danger';
+}) => {
   return (
     <button
       className={twMerge(
         'w-full text-left px-3 py-2 text-sm flex items-center space-x-3',
-        !disabled
-                  && buttonTheme[theme].btn,
+        !disabled && buttonTheme[theme].btn,
         disabled && 'text-gray-300 cursor-not-allowed',
       )}
       onClick={disabled ? undefined : onClick}
@@ -29,8 +38,7 @@ const MenuItemButton = ({ disabled, title, onClick, theme}: { disabled?: boolean
       <div
         className={twMerge(
           'w-4 h-4 rounded-full',
-          !disabled
-                    && buttonTheme[theme].bg,
+          !disabled && buttonTheme[theme].bg,
           disabled && 'bg-gray-300',
         )}
       ></div>

@@ -28,15 +28,15 @@ export default function Page() {
   const [render, dispatch] = useBoolean()
   const [input, setInput] = useState<string>('')
   return (
-    <div><h3>components</h3>
+    <div>
+      <h3>components</h3>
       <h4>password</h4>
-      <Password value={value} onValueChange={setValue} enableComplexityCheck/>
+      <Password value={value} onValueChange={setValue} enableComplexityCheck />
       env
       <button onClick={dispatch.setTrue}>true</button>
       <button onClick={dispatch.setFalse}>false</button>
       {input}
-      {render && (<InputWithEnv value={input} onChange={setInput} envs={envs} />)}
+      {render && <InputWithEnv value={input} onChange={setInput} envs={envs} />}
     </div>
-
   )
 }

@@ -6,9 +6,9 @@ import { TextNode } from 'lexical'
 import type { VarCtx } from '../../../hooks/use-component-node-env'
 
 /**
-* @description 将脏文本节点尝试解析为环境变量节点
+ * @description 将脏文本节点尝试解析为环境变量节点
  */
-const EnvVarNodeReplacementPlugin = ({ envVars}: { envVars: VarCtx[] }) => {
+const EnvVarNodeReplacementPlugin = ({ envVars }: { envVars: VarCtx[] }) => {
   const [editor] = useLexicalComposerContext()
   useEffect(() => {
     if (!editor.hasNode(LexEnvVarNode))

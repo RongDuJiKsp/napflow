@@ -16,7 +16,7 @@ export const useLoginWindow = () => {
 
   const handleSubmit = useCallback(async () => {
     const form = ZodCheckLoginReq.safeParse(input)
-    if(!form.success) {
+    if (!form.success) {
       notification.error({
         title: 'Validation Error',
         description: z.prettifyError(form.error),

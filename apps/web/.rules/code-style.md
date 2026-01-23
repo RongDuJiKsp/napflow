@@ -12,7 +12,7 @@ UI库优先使用HeroUI 3.0.0-beta.3，其次使用Ant Design 6.0.0
 
 ## 代码组织规则：
 
-使用路径别名：@/、@components/、@shared/*
+使用路径别名：@/、@components/、@shared/\*
 
 组件文件使用index.tsx作为入口
 
@@ -55,4 +55,3 @@ Hook文件放在hooks目录下，按功能分类
 使用Zod进行运行时类型验证
 
 充分利用TypeScript类型推断
-

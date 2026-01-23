@@ -9,7 +9,10 @@ import {
 import { useCallback, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
-import { type VarCtx, getCommVarCtxName } from '../../../hooks/use-component-node-env'
+import {
+  type VarCtx,
+  getCommVarCtxName,
+} from '../../../hooks/use-component-node-env'
 import { VarTypes } from '../../../types'
 import { $createEnvVarNode } from '../lex-nodes/env-var-node'
 
@@ -114,7 +117,9 @@ const EnvVarSubMenu = ({
   )
 }
 
-type LexicalTypeaheadMenuPluginProps = Parameters<typeof LexicalTypeaheadMenuPlugin<VarOption>>['0']
+type LexicalTypeaheadMenuPluginProps = Parameters<
+  typeof LexicalTypeaheadMenuPlugin<VarOption>
+>['0']
 
 const EnvVarMenuPlugin = ({
   envVars,
@@ -159,7 +164,7 @@ const EnvVarMenuPlugin = ({
   }, [filteredEnvVars])
 
   // 触发匹配检查
-    // 自定义触发匹配检查 - 允许在任何位置触发$
+  // 自定义触发匹配检查 - 允许在任何位置触发$
   const checkForTriggerMatch = useCallback<TriggerFn>(
     (text: string) => {
       // 查找最后一个$符号的位置
@@ -183,21 +188,23 @@ const EnvVarMenuPlugin = ({
   )
 
   // 选择选项回调
-  const onSelectOption = useCallback<LexicalTypeaheadMenuPluginProps['onSelectOption']>(
-    (
-      selectedOption,
-      nodeToRemove,
-      closeMenu,
-    ) => {
+  const onSelectOption = useCallback<
+    LexicalTypeaheadMenuPluginProps['onSelectOption']
+  >(
+    (selectedOption, nodeToRemove, closeMenu) => {
       editor.update(() => {
-        nodeToRemove?.replace($createEnvVarNode(getCommVarCtxName(selectedOption.var), envVars))
+        nodeToRemove?.replace(
+          $createEnvVarNode(getCommVarCtxName(selectedOption.var), envVars),
+        )
       })
       closeMenu()
     },
     [editor, envVars],
   )
 
-  const menuRenderFn = useCallback<LexicalTypeaheadMenuPluginProps['menuRenderFn']>(
+  const menuRenderFn = useCallback<
+    LexicalTypeaheadMenuPluginProps['menuRenderFn']
+  >(
     (
       anchorElementRef,
       { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
@@ -248,7 +255,7 @@ const EnvVarMenuPlugin = ({
       options={filteredEnvVars}
       menuRenderFn={menuRenderFn}
       // 抽屉给这玩意盖住了
-      anchorClassName='z-[9999]'
+      anchorClassName="z-[9999]"
     />
   )
 }

@@ -1,5 +1,8 @@
 import { useViewport } from '@xyflow/react'
-import { useStickyEventsRegister, useStickyNode } from './hooks/use-sticky-node'
+import {
+  useStickyEventsRegister,
+  useStickyNode,
+} from './hooks/use-sticky-node'
 
 export const StickyNode = () => {
   const { StickyElement, stickyElementProps, stickyLocation } = useStickyNode()

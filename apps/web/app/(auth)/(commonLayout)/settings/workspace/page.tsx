@@ -3,12 +3,12 @@ import CreateAccountWindow from '@/app/components/setting/workspace/CreateAccoun
 import SettingLayout from '@/app/components/setting/layouts/SettingLayout'
 export default function WorkspaceSettings() {
   return (
-    <SettingLayout title='工作区设置'>
+    <SettingLayout title="工作区设置">
       {/* 账户列表 */}
-      <AccountListWindow/>
+      <AccountListWindow />
 
       {/* 账户管理 */}
-      <CreateAccountWindow/>
+      <CreateAccountWindow />
     </SettingLayout>
   )
 }

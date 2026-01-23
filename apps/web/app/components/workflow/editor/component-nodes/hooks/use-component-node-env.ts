@@ -70,7 +70,7 @@ export const getNodeEnvMap = (
         se => `${se.source.id}.${se.name}`,
       ),
       //  以及节点自身vars
-      ...prevNodeIdMap[node.id]
+      ...(prevNodeIdMap[node.id]
         ?.map(id => nodesMap[id])
         .map((prevNode): VarCtx[] =>
           prevNode.data.vars.map(v => ({
@@ -78,7 +78,7 @@ export const getNodeEnvMap = (
             source: { id: prevNode.id, title: prevNode.data.title },
           })),
         )
-        .flat() || [],
+        .flat() || []),
     ]
     // 每个节点可读取的vars为前缀节点可读取的vars之和
 

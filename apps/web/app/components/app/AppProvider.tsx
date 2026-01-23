@@ -13,9 +13,7 @@ const AppProvider = ({ children }: PropsWithChildren) => {
       <StyleProvider layer>
         <ConfigProvider>
           <AntdRegistry>
-            <App>
-              {children}
-            </App>
+            <App>{children}</App>
           </AntdRegistry>
         </ConfigProvider>
       </StyleProvider>

@@ -3,7 +3,11 @@ import { useAccountMeta } from '@/app/hooks/account/use-account-meta'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
-import { ZodCheckAccountCreateReq, ZodCheckAccountDisableReq, ZodCheckAccountUpDownGradeReq } from '@shared/data-transfer/account/account'
+import {
+  ZodCheckAccountCreateReq,
+  ZodCheckAccountDisableReq,
+  ZodCheckAccountUpDownGradeReq,
+} from '@shared/data-transfer/account/account'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
@@ -16,58 +20,82 @@ export const useAccountActions = () => {
   const { message, notification } = App.useApp()
   const { refetch: refreshAccList } = useAccountsQuery()
 
-  const handleUpgrade = useCallback(async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
-    const validated = ZodCheckAccountUpDownGradeReq.safeParse({ email, groupType })
-    if(!validated.success) {
-      notification.error({
-        title: '账号升级提交失败',
-        description: z.prettifyError(validated.error),
+  const handleUpgrade = useCallback(
+    async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
+      const validated = ZodCheckAccountUpDownGradeReq.safeParse({
+        email,
+        groupType,
       })
-      return
-    }
-    const res = await jsonQ.Post<NullResp>('/account/upgrade', validated.data)
-    if(res.statusCode !== Code.Ok) {
-      message.error(res.message)
-      return
-    }
-    await refreshAccList()
-    message.success('升级账号成功')
-  }, [notification, message, refreshAccList])
-  const handleDownGrade = useCallback(async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
-    const validated = ZodCheckAccountUpDownGradeReq.safeParse({ email, groupType })
-    if(!validated.success) {
-      notification.error({
-        title: '账号降级提交失败',
-        description: z.prettifyError(validated.error),
+      if (!validated.success) {
+        notification.error({
+          title: '账号升级提交失败',
+          description: z.prettifyError(validated.error),
+        })
+        return
+      }
+      const res = await jsonQ.Post<NullResp>(
+        '/account/upgrade',
+        validated.data,
+      )
+      if (res.statusCode !== Code.Ok) {
+        message.error(res.message)
+        return
+      }
+      await refreshAccList()
+      message.success('升级账号成功')
+    },
+    [notification, message, refreshAccList],
+  )
+  const handleDownGrade = useCallback(
+    async (email: string, groupType: AccountUpDownGradeReq['groupType']) => {
+      const validated = ZodCheckAccountUpDownGradeReq.safeParse({
+        email,
+        groupType,
       })
-      return
-    }
-    const res = await jsonQ.Post<NullResp>('/account/downgrade', validated.data)
-    if(res.statusCode !== Code.Ok) {
-      message.error(res.message)
-      return
-    }
-    await refreshAccList()
-    message.success('降级账号成功')
-  }, [refreshAccList, message, notification])
+      if (!validated.success) {
+        notification.error({
+          title: '账号降级提交失败',
+          description: z.prettifyError(validated.error),
+        })
+        return
+      }
+      const res = await jsonQ.Post<NullResp>(
+        '/account/downgrade',
+        validated.data,
+      )
+      if (res.statusCode !== Code.Ok) {
+        message.error(res.message)
+        return
+      }
+      await refreshAccList()
+      message.success('降级账号成功')
+    },
+    [refreshAccList, message, notification],
+  )
 
-  const handleDisable = useCallback(async (email: string) => {
-    const validated = ZodCheckAccountDisableReq.safeParse({ email })
-    if(!validated.success) {
-      notification.error({
-        title: '账号禁用提交失败',
-        description: z.prettifyError(validated.error),
-      })
-      return
-    }
-    const res = await jsonQ.Post<NullResp>('/account/disable', validated.data)
-    if(res.statusCode !== Code.Ok) {
-      message.error(res.message)
-      return
-    }
-    await refreshAccList()
-    message.success('禁用账号成功')
-  }, [refreshAccList, message, notification])
+  const handleDisable = useCallback(
+    async (email: string) => {
+      const validated = ZodCheckAccountDisableReq.safeParse({ email })
+      if (!validated.success) {
+        notification.error({
+          title: '账号禁用提交失败',
+          description: z.prettifyError(validated.error),
+        })
+        return
+      }
+      const res = await jsonQ.Post<NullResp>(
+        '/account/disable',
+        validated.data,
+      )
+      if (res.statusCode !== Code.Ok) {
+        message.error(res.message)
+        return
+      }
+      await refreshAccList()
+      message.success('禁用账号成功')
+    },
+    [refreshAccList, message, notification],
+  )
 
   return {
     enableFeature,
@@ -90,10 +118,13 @@ export const useAccountAddOperators = () => {
   const handleChangeEmail = useAreaChangeHandler(setFormValue, 'email')
   const handleChangePassword = useAreaChangeHandler(setFormValue, 'password')
   const handleChangeNickname = useAreaChangeHandler(setFormValue, 'nickname')
-  const handleChangePasswordAgain = useAreaChangeHandler(setFormValue, 'passwordAgain')
+  const handleChangePasswordAgain = useAreaChangeHandler(
+    setFormValue,
+    'passwordAgain',
+  )
 
   const handleSubmit = useCallback(async () => {
-    if(formValue.password !== formValue.passwordAgain) {
+    if (formValue.password !== formValue.passwordAgain) {
       notification.error({
         title: '提交失败',
         description: '新密码和确认密码不一致',
@@ -102,7 +133,7 @@ export const useAccountAddOperators = () => {
     }
 
     const validated = ZodCheckAccountCreateReq.safeParse(formValue)
-    if(!validated.success) {
+    if (!validated.success) {
       notification.error({
         title: '账号添加请求提交失败',
         description: z.prettifyError(validated.error),
@@ -110,7 +141,7 @@ export const useAccountAddOperators = () => {
       return
     }
     const res = await jsonQ.Post<NullResp>('/account/create', validated.data)
-    if(res.statusCode !== Code.Ok) {
+    if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
     }

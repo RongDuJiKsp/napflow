@@ -15,14 +15,8 @@ export default combine(base, [
       'react-hooks': reactHooks,
     },
   },
-    // Override default ignores of eslint-config-next.
-  globalIgnores([
-    '.next/',
-    'out/',
-    'build/',
-    'next-env.d.ts',
-    'node-modules/',
-  ]),
+  // Override default ignores of eslint-config-next.
+  globalIgnores(['.next/', 'out/', 'build/', 'next-env.d.ts', 'node-modules/']),
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',

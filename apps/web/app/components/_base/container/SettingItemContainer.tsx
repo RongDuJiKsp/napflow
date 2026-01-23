@@ -4,7 +4,7 @@ import { memo } from 'react'
 import { twMerge } from 'tailwind-merge'
 type SettingContainerProps = PropsWithChildren<{
   title: string;
-  Icon: ComponentWithClass
+  Icon: ComponentWithClass;
   extra?: string;
   containerClassName?: string;
   iconClassName?: string;

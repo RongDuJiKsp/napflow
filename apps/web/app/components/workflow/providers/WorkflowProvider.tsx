@@ -5,7 +5,10 @@ import { memo } from 'react'
 import type { AppParam } from '../hooks/use-app-param'
 import { AppParamContext } from '../hooks/use-app-param'
 
-const WorkflowProvider = ({ children, appParam}: PropsWithChildren<{ appParam: AppParam }>) => {
+const WorkflowProvider = ({
+  children,
+  appParam,
+}: PropsWithChildren<{ appParam: AppParam }>) => {
   return (
     <AppParamContext.Provider value={appParam}>
       {children}

@@ -17,7 +17,14 @@ const formatDate = (date?: Date) => {
 }
 
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
-  const { stateTwBgColor, stateText, isBotCanKill, isBotCanStart, isBotCanStop, isBotCanForcePull } = useBotState(item)
+  const {
+    stateTwBgColor,
+    stateText,
+    isBotCanKill,
+    isBotCanStart,
+    isBotCanStop,
+    isBotCanForcePull,
+  } = useBotState(item)
   const { startBot } = useBotOperate(item)
   const { editBot, deleteBot } = useBotInfoOperator(item)
   const [showMore, setShowMoreAction] = useBoolean(false)
@@ -38,10 +45,12 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
       {/* 头部信息 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center">
-          <div className={twMerge(
-            'w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold',
-            stateTwBgColor,
-          )}>
+          <div
+            className={twMerge(
+              'w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold',
+              stateTwBgColor,
+            )}
+          >
             <span className="text-sm">
               {item.botName.charAt(0).toUpperCase()}
             </span>
@@ -50,15 +59,19 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
             <h3 className="text-base font-semibold text-purple-700 line-clamp-1">
               {item.botName || '未命名Bot'}
             </h3>
-            <p className="text-xs text-gray-500">ID: {item.botId.slice(0, 8)}...</p>
+            <p className="text-xs text-gray-500">
+              ID: {item.botId.slice(0, 8)}...
+            </p>
           </div>
         </div>
 
         {/* 状态标签 */}
-        <div className={twMerge(
-          'px-2 py-1 rounded-full text-xs font-medium text-white',
-          stateTwBgColor,
-        )}>
+        <div
+          className={twMerge(
+            'px-2 py-1 rounded-full text-xs font-medium text-white',
+            stateTwBgColor,
+          )}
+        >
           {stateText}
         </div>
       </div>
@@ -75,21 +88,27 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
           {item.botDesc}
         </p>
 
-        {!showMore && (<>
-          <div className="flex justify-between text-sm">
-            <span className="text-purple-600">适配器</span>
-            <span className="text-purple-800 font-medium">{item.adapterDesc}</span>
-          </div>
+        {!showMore && (
+          <>
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-600">适配器</span>
+              <span className="text-purple-800 font-medium">
+                {item.adapterDesc}
+              </span>
+            </div>
 
-          <div className="flex justify-between text-sm">
-            <span className="text-purple-600">启动时间</span>
-            <span className="text-purple-800 font-medium">{ formatDate(item.state.bootTime)}</span>
-          </div>
-        </>)}
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-600">启动时间</span>
+              <span className="text-purple-800 font-medium">
+                {formatDate(item.state.bootTime)}
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 操作 */}
-      <div className='flex justify-end'>
+      <div className="flex justify-end">
         <Menu>
           <MenuButton>
             <div className="p-2 rounded-full hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer group">
@@ -101,24 +120,48 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
             className="mt-2 w-40 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100/50 z-50 overflow-hidden"
           >
             <MenuItem>
-              <MenuItemButton title='启动Bot' theme='common' onClick={startBot} disabled={!isBotCanStart}/>
+              <MenuItemButton
+                title="启动Bot"
+                theme="common"
+                onClick={startBot}
+                disabled={!isBotCanStart}
+              />
             </MenuItem>
             <MenuItem>
-              <MenuItemButton title='停止Bot' theme='warn' onClick={noop} disabled={!isBotCanStop}/>
+              <MenuItemButton
+                title="停止Bot"
+                theme="warn"
+                onClick={noop}
+                disabled={!isBotCanStop}
+              />
             </MenuItem>
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
-              <MenuItemButton title='杀死Bot' theme='danger' onClick={noop} disabled={!isBotCanKill}/>
+              <MenuItemButton
+                title="杀死Bot"
+                theme="danger"
+                onClick={noop}
+                disabled={!isBotCanKill}
+              />
             </MenuItem>
             <MenuItem>
-              <MenuItemButton title='强拉Bot' theme='danger' onClick={noop} disabled={!isBotCanForcePull}/>
+              <MenuItemButton
+                title="强拉Bot"
+                theme="danger"
+                onClick={noop}
+                disabled={!isBotCanForcePull}
+              />
             </MenuItem>
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
-              <MenuItemButton title='编辑Bot' theme='warn' onClick={editBot} />
+              <MenuItemButton title="编辑Bot" theme="warn" onClick={editBot} />
             </MenuItem>
             <MenuItem>
-              <MenuItemButton title='删除Bot' theme='warn' onClick={deleteBot} />
+              <MenuItemButton
+                title="删除Bot"
+                theme="warn"
+                onClick={deleteBot}
+              />
             </MenuItem>
           </MenuItems>
         </Menu>

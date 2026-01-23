@@ -8,9 +8,12 @@ import { overwrite } from '@/utils/comm'
 export const useStickyNewComponentNode = () => {
   const editorStore = useEditorStore()
   const stickyNode = useStore(editorStore, state => state.stickyNewNode)
-  const createAndSticky = useCallback((nodeType: ComponentNodesEnum) => {
-    const node = createComponentNode(nodeType)
-    stickyNode(overwrite(node, { data: { _beforeCreate: true } }))
-  }, [stickyNode])
+  const createAndSticky = useCallback(
+    (nodeType: ComponentNodesEnum) => {
+      const node = createComponentNode(nodeType)
+      stickyNode(overwrite(node, { data: { _beforeCreate: true } }))
+    },
+    [stickyNode],
+  )
   return { createAndSticky }
 }
