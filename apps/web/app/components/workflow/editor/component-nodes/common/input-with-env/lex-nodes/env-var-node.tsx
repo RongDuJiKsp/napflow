@@ -155,7 +155,7 @@ export const $createEnvVarNode = (envVar: VarCtxName, envs: VarCtx[]) => {
  * @returns node
  */
 export const $createEnvVarNodeFromRaw = (raw: string, envs: VarCtx[]) => {
-  const varCtxName = raw.slice(3, -3).split('.').slice(1).join('.')
+  const varCtxName = raw.slice(3, -3)
   return $createEnvVarNode(varCtxName, envs)
 }
 

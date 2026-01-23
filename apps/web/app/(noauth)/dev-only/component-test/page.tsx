@@ -34,6 +34,7 @@ export default function Page() {
       env
       <button onClick={dispatch.setTrue}>true</button>
       <button onClick={dispatch.setFalse}>false</button>
+      {input}
       {render && (<InputWithEnv value={input} onChange={setInput} envs={envs} />)}
     </div>
 
