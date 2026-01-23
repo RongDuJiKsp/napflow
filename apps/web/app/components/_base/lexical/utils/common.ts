@@ -24,7 +24,7 @@ export const $splitTextNode = (node: TextNode, regExp: RegExp) => {
   }
 
   // 去重并排序
-  const uniqueOffsets = uniq(matches).sort((a, b) => a - b)
+  const uniqueOffsets = uniq(matches).sort((a, b) => a - b).filter(offset => offset > 0 && offset < textContent.length)
 
   // 如果没有匹配项，返回原节点
   if (uniqueOffsets.length === 0)

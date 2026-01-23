@@ -6,7 +6,6 @@ import {
   LexicalTypeaheadMenuPlugin,
   MenuOption,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin'
-import { $getSelection, $isRangeSelection } from 'lexical'
 import { useCallback, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { twMerge } from 'tailwind-merge'
@@ -191,17 +190,8 @@ const EnvVarMenuPlugin = ({
       closeMenu,
     ) => {
       editor.update(() => {
-        const selection = $getSelection()
-
-        if (!$isRangeSelection(selection) || selectedOption == null) return
-
-        // 移除触发文本
-        if (nodeToRemove) nodeToRemove.remove()
-
-        // 插入环境变量节点
-        selection.insertNodes([$createEnvVarNode(getCommVarCtxName(selectedOption.var), envVars)])
+        nodeToRemove?.replace($createEnvVarNode(getCommVarCtxName(selectedOption.var), envVars))
       })
-
       closeMenu()
     },
     [editor, envVars],

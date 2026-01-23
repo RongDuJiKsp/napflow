@@ -5,7 +5,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { useCreation } from 'ahooks'
 import { memo } from 'react'
-import { $transformEnvVarNode, LexEnvVarNode } from './lex-nodes/env-var-node'
+import { LexEnvVarNode } from './lex-nodes/env-var-node'
 import type { VarCtx } from '../../hooks/use-component-node-env'
 import LexicalParagraphControlledPlugin from '@/app/components/_base/lexical/plugins/LexicalControlledPlugin'
 import EnvVarSyncPlugin from './lex-plugins/EnvVarSyncPlugin'
@@ -13,9 +13,6 @@ import EnvVarNodeReplacementPlugin from './lex-plugins/EnvVarNodeReplacementPlug
 import EnvVarMenuPlugin from './lex-plugins/EnvVarMenuPlugin'
 import { twMerge } from 'tailwind-merge'
 import { lexParagraph } from '@/app/components/_base/lexical/utils/lex-paragraph'
-import { $dfs } from '@lexical/utils'
-import type { TextNode } from 'lexical'
-import { $isTextNode } from 'lexical'
 
 const InputWithEnv = ({
   value,
