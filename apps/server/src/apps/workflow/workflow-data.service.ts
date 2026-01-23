@@ -1,6 +1,6 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { WorkflowAppData } from '@shared/common/workflow/base'
+import type { WorkflowAppData, WorkflowAppDraft } from '@shared/common/workflow/base'
 import { CommError } from '../middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
 import type { Account } from '@shared/common/account/base'
@@ -42,7 +42,7 @@ export class WorkflowDataService {
     return draftData
   }
 
-  async syncDraft(appId: string, data: WorkflowAppData) {
+  async syncDraft(appId: string, data: WorkflowAppDraft) {
     return await this.db.workflowAppData.save({ ...data, ofAppId: appId, version: DRAFT_VERSION_KEY })
   }
 

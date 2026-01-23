@@ -27,8 +27,8 @@ import { WorkflowService } from './workflow.service'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { WorkflowDataService } from './workflow-data.service'
-import type { WorkflowAppData } from '@shared/common/workflow/base'
-import { ZodCheckWorkflowAppData } from '@shared/common/workflow/base'
+import type { WorkflowAppDraft } from '@shared/common/workflow/base'
+import { ZodCheckWorkflowAppDraft } from '@shared/common/workflow/base'
 @Controller('workflow')
 export class WorkflowController {
   constructor(
@@ -81,7 +81,7 @@ export class WorkflowController {
   @ZodSerializerDto(ZodCheckNullResp)
   async syncDraft(
     @Param('appId') appId: string,
-    @ZodBody({ zod: ZodCheckWorkflowAppData }) data: WorkflowAppData,
+    @ZodBody({ zod: ZodCheckWorkflowAppDraft }) data: WorkflowAppDraft,
   ) {
     await this.workflowDataService.syncDraft(appId, data)
     return Resp.ok()
