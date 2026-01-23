@@ -92,12 +92,14 @@ export class WorkflowController {
   @ZodSerializerDto(ZodCheckWorkflowPublishResp)
   async publishDraft(
     @Param('appId') appId: string,
+    @JwtAccount() account: Account,
     @ZodBody({ zod: ZodCheckWorkflowPublishReq }) data: WorkflowPublishReq,
   ) {
     const publishMeta = await this.workflowDataService.publishDraft(
       appId,
       data.version,
       data.description,
+      account,
     )
     if (!publishMeta)
       return Resp.error('Publish Failed: 版本已存在', Code.BadRequest)

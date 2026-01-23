@@ -4,7 +4,7 @@ import { AppConfigService } from '../app-config/app-config.service'
 import mysql from 'mysql2/promise'
 import { TypeOrmService } from './typeorm.service'
 import { UserEntity, UserGroupEntity } from './models/account.entity'
-import { WorkflowAppDataEntity, WorkflowAppEntity, WorkflowAppPublishEntity } from './models/workflow.entity'
+import { WorkflowAppDataEntity, WorkflowAppEntity } from './models/workflow.entity'
 import { BotRecordEntity } from './models/bot.entity'
 
 @Global()
@@ -38,7 +38,7 @@ import { BotRecordEntity } from './models/bot.entity'
     }),
     TypeOrmModule.forFeature([
       UserEntity, UserGroupEntity,
-      WorkflowAppEntity, WorkflowAppPublishEntity, WorkflowAppDataEntity,
+      WorkflowAppEntity, WorkflowAppDataEntity,
       BotRecordEntity,
     ]),
   ],

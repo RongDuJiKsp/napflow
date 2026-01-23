@@ -1,4 +1,4 @@
-import { BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
+import { BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm'
 import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
 @Entity('apps')
@@ -18,15 +18,13 @@ export class WorkflowAppEntity extends BaseEntity {
   @NotNullColumn()
   createdBy: string
 
-  @OneToMany(() => WorkflowAppPublishEntity, publish => publish.ofApp)
-  workflowAppPublishs: WorkflowAppPublishEntity[]
-
   @OneToMany(() => WorkflowAppDataEntity, data => data.ofApp)
   workflowAppDatas: WorkflowAppDataEntity[]
 }
 
-@Entity('app_publishs')
-export class WorkflowAppPublishEntity extends BaseEntity {
+@Entity('app_datas')
+export class WorkflowAppDataEntity extends BaseEntity {
+// meta area
   @PrimaryColumn()
   version: string
 
@@ -34,48 +32,22 @@ export class WorkflowAppPublishEntity extends BaseEntity {
   ofAppId: string
 
   @DefaultNullColumn({ type: 'varchar' })
-  description: string | null
+  publishDescription: string | null
 
-  @CreateDateColumn()
-  publishAt: Date
+  @DefaultNullColumn({ type: 'datetime' })
+  publishAt: Date | null
 
   @DefaultNullColumn({ type: 'varchar' })
   publishBy: string | null
 
-  @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppPublishs, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'ofAppId' })
-  ofApp: WorkflowAppEntity
-
-  @ManyToOne(() => WorkflowAppDataEntity, data => data.ofPublish, { onDelete: 'CASCADE' })
-  @JoinColumn([
-    { name: 'ofPublishVersion', referencedColumnName: 'ofPublishVersion' },
-    { name: 'ofAppId', referencedColumnName: 'ofAppId' },
-  ])
-  ofData: WorkflowAppDataEntity | null
-}
-
-@Entity('app_datas')
-@Unique(['ofPublishVersion', 'ofAppId'])
-export class WorkflowAppDataEntity extends BaseEntity {
-  @PrimaryColumn({ generated: 'uuid' })
-  dataId: string
-
-  @NotNullColumn()
-  ofAppId: string
+  @UpdateDateColumn()
+  lastUpdateAt: Date
 
   @ManyToOne(() => WorkflowAppEntity, app => app.workflowAppDatas, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ofAppId' })
   ofApp: WorkflowAppEntity
 
-  @NotNullColumn()
-  ofPublishVersion: string
-
-  @ManyToOne(() => WorkflowAppPublishEntity, publish => publish.ofData, { onDelete: 'CASCADE' })
-  @JoinColumn([
-    { name: 'ofPublishVersion', referencedColumnName: 'version' },
-    { name: 'ofAppId', referencedColumnName: 'ofAppId' },
-  ])
-  ofPublish: WorkflowAppPublishEntity
+  // data area
 
   @DefaultNullColumn({ type: 'json' })
   nodes: Node[] | null

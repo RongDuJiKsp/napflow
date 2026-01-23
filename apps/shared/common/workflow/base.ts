@@ -10,16 +10,14 @@ export const ZodCheckWorkflowApp = z.object({
 })
 export type WorkflowApp = z.infer<typeof ZodCheckWorkflowApp>
 
-export const ZodCheckWorkflowAppPublish = z.object({
-  version: z.string(),
-  description: z.string().nullable(),
-  publishAt: z.date(),
-  publishBy: z.string().nullable(),
-})
-export type WorkflowAppPublish = z.infer<typeof ZodCheckWorkflowAppPublish>
-
 export const ZodCheckWorkflowAppData = z.object({
-  dataId: z.string(),
+  version: z.string(),
+  ofAppId: z.string(),
+  publishDescription: z.string().nullable(),
+  publishAt: z.date().nullable(),
+  publishBy: z.string().nullable(),
+  lastUpdateAt: z.date(),
+
   nodes: z.array(
     ZodCheckNode,
   ).nullable(),

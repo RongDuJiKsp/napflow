@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppPublish } from '../../common/workflow/base'
+import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData } from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create
@@ -28,6 +28,5 @@ export const ZodCheckWorkflowPublishReq = z.object({
   description: z.string(),
 })
 export type WorkflowPublishReq = z.infer<typeof ZodCheckWorkflowPublishReq>
-
-export const ZodCheckWorkflowPublishResp = defineZodResp(ZodCheckWorkflowAppPublish)
+export const ZodCheckWorkflowPublishResp = defineZodResp(ZodCheckWorkflowAppData)
 export type WorkflowPublishResp = z.infer<typeof ZodCheckWorkflowPublishResp>
