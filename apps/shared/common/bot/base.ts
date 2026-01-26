@@ -21,6 +21,12 @@ export enum BotRunningState {
   fatal = 'fatal', // 当bot实例发生 fatal 错误时 此时为fatal
   killed = 'killed', // 当bot实例被kill时 此时为killed
 }
+export const BotRunningStateUtils = {
+  runningStates: [BotRunningState.running, BotRunningState.offline],
+  isRunning: (state: BotRunningState) => BotRunningStateUtils.runningStates.includes(state),
+  isStoped: (state: BotRunningState) => !BotRunningStateUtils.runningStates.includes(state),
+}
+
 // 上游服务状态
 export enum BotUpstreamState {
   ok = 'ok', // 上游服务正常运行
