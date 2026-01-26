@@ -1,3 +1,4 @@
+import BotSidebarNav from '@/app/components/bot/common-layout/BotSidebarNav'
 import BotProvider from '@/app/components/bot/provider/BotProvider'
 import type { PropsWithChildren } from 'react'
 
@@ -6,7 +7,9 @@ export default async function Layout({ children, params }: PropsWithChildren<{ p
   return (
     <>
       <BotProvider routerParam={param}>
-        {children}
+        <BotSidebarNav>
+          {children}
+        </BotSidebarNav>
       </BotProvider>
     </>
   )
