@@ -1,4 +1,6 @@
+import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
 import { useState } from 'react'
+import { useAppParam } from '../../hooks/use-app-param'
 
 export enum PublishStep {
   Close, // 关闭发布弹窗
@@ -41,5 +43,15 @@ export const usePublishDraftSteps = () => {
     handleFormSubmitSuccess,
     showResult,
     handleClose,
+  }
+}
+
+export const usePublishDiff = () => {
+  const { appId } = useAppParam()
+  const { data } = useAppVersionsQuery(appId)
+  console.log(data)
+
+  return {
+
   }
 }

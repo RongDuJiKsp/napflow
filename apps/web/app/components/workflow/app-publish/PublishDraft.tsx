@@ -2,7 +2,7 @@
 import { Button } from '@heroui/react'
 import { RiCloseLine, RiPuzzleLine, RiSendPlaneLine } from '@remixicon/react'
 import { memo } from 'react'
-import { usePublishDraftSteps } from './hooks/use-publish-draft'
+import { usePublishDiff, usePublishDraftSteps } from './hooks/use-publish-draft'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { DiffEditor } from '@monaco-editor/react'
 import { useCreation } from 'ahooks'
@@ -14,6 +14,7 @@ type PublishStepCommProps = {
 }
 
 const PublishStepDiff = ({ onNextStep, onClose }: PublishStepCommProps) => {
+  const {} = usePublishDiff()
   const editorOptions = useCreation<editor.IDiffEditorOptions>(() => ({
     readOnly: true,
     domReadOnly: true,
