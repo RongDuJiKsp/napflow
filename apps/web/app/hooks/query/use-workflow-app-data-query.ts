@@ -5,6 +5,9 @@ import type { LoadDraftResp } from '@shared/data-transfer/workflow/info'
 import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 
+/**
+ * 获取工作流应用草稿
+ */
 export const useWorkflowAppDraftQuery = (
   appId: string,
   options?: Omit<UseQueryOptions<WorkflowAppDraft>, 'queryKey' | 'queryFn'>,

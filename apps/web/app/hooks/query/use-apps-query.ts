@@ -4,11 +4,15 @@ import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
 import type { WorkflowApp } from '@shared/common/workflow/base'
 
+/**
+ * 获取插件列表
+ * @param onlySelf 是否只获取自己的插件
+ */
 export const useAppsQuery = (onlySelf?: boolean) => {
   return useQuery({
     queryKey: ['apps', onlySelf],
     queryFn: async (): Promise<WorkflowApp[]> => {
-      const res = await jsonQ.Get<GetAppsResp>('/workflow/apps')
+      const res = await jsonQ.Get<GetAppsResp>('/workflow/apps', { params: { onlySelf } })
       if (res.statusCode !== Code.Ok || !res.data)
         throw new Error(res.message || '获取插件列表失败')
 

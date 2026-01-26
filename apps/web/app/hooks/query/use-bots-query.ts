@@ -4,6 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import type { GetAllBotsResp } from '@shared/data-transfer/bot/manager'
 import type { CommonBotInfo } from '@shared/common/bot/base'
 
+/**
+ * 获取所有机器人
+ */
 export const useBotsQuery = () => {
   return useQuery({
     queryKey: ['bots'],

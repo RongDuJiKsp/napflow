@@ -4,6 +4,9 @@ import type { AccountInfoResp } from '@shared/data-transfer/account/account'
 import type { AccountInfo } from '@shared/common/account/base'
 import { useQuery } from '@tanstack/react-query'
 
+/**
+ * 获取当前账号信息
+ */
 export const useCurAccountQuery = () => {
   return useQuery({
     queryKey: ['cur-account'],
