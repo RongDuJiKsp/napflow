@@ -1,8 +1,8 @@
 import { jsonQ } from '@/utils/net'
-import { Code } from '@shared/data-transfer/_base'
 import type { AccountInfoListQuery, AccountInfoListResp } from '@shared/data-transfer/account/account'
 import type { AccountInfo, UserRole } from '@shared/common/account/base'
 import { useQuery } from '@tanstack/react-query'
+import { defineQueryFn } from './_base'
 
 /**
  * 获取账户列表
@@ -16,14 +16,8 @@ export const useAccountsQuery = (isDisabled?: boolean, roles?: UserRole[]) => {
   }
   return useQuery({
     queryKey: ['accounts', queryParams],
-    queryFn: async (): Promise<AccountInfo[]> => {
-      const res = await jsonQ.Get<AccountInfoListResp>('/account/account', {
-        params: queryParams,
-      })
-      if (res.statusCode !== Code.Ok || !res.data)
-        throw new Error(res.message || '获取账户列表失败')
-
-      return res.data
-    },
+    queryFn: defineQueryFn<AccountInfoListResp, AccountInfo[]>(async () => await jsonQ.Get<AccountInfoListResp>('/account/account', {
+      params: queryParams,
+    }), { errMsgFallback: '获取账户列表失败' }),
   })
 }

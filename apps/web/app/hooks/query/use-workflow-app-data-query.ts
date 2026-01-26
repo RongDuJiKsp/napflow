@@ -1,9 +1,9 @@
 import { jsonQ } from '@/utils/net'
 import type { WorkflowAppDraft } from '@shared/common/workflow/base'
-import { Code } from '@shared/data-transfer/_base'
 import type { LoadDraftResp } from '@shared/data-transfer/workflow/info'
 import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
+import { defineQueryFn } from './_base'
 
 /**
  * 获取工作流应用草稿
@@ -15,10 +15,6 @@ export const useWorkflowAppDraftQuery = (
   return useQuery({
     ...options,
     queryKey: ['workflow-app-data', appId],
-    queryFn: async (): Promise<WorkflowAppDraft> => {
-      const res = await jsonQ.Get<LoadDraftResp>(`/workflow/${appId}/draft`)
-      if (res.statusCode !== Code.Ok || !res.data) throw new Error(res.message)
-      return res.data
-    },
+    queryFn: defineQueryFn<LoadDraftResp, WorkflowAppDraft>(async () => await jsonQ.Get<LoadDraftResp>(`/workflow/${appId}/draft`)),
   })
 }
