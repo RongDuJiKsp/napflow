@@ -7,8 +7,9 @@ export enum PublishStep {
   Result, // 发布结果
 }
 
-export const usePublishDraft = () => {
+export const usePublishDraftSteps = () => {
   const [step, setStep] = useState(PublishStep.Close)
+  const shouldDialogOpen = step !== PublishStep.Close
 
   const handlePublish = () => {
     setStep(PublishStep.Diff)
@@ -25,12 +26,14 @@ export const usePublishDraft = () => {
   }
 
   const showResult = step === PublishStep.Result
+
   const handleClose = () => {
     setStep(PublishStep.Close)
   }
 
   return {
     step,
+    shouldDialogOpen,
     showDiff,
     handlePublish,
     handleDiffChecked,
