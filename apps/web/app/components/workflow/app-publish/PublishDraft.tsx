@@ -4,6 +4,9 @@ import { RiCloseLine, RiPuzzleLine, RiSendPlaneLine } from '@remixicon/react'
 import { memo } from 'react'
 import { usePublishDraftSteps } from './hooks/use-publish-draft'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { DiffEditor } from '@monaco-editor/react'
+import { useCreation } from 'ahooks'
+import type { editor } from 'monaco-editor'
 
 type PublishStepCommProps = {
   onNextStep: () => void
@@ -11,9 +14,32 @@ type PublishStepCommProps = {
 }
 
 const PublishStepDiff = ({ onNextStep, onClose }: PublishStepCommProps) => {
+  const editorOptions = useCreation<editor.IDiffEditorOptions>(() => ({
+    readOnly: true,
+    domReadOnly: true,
+    useInlineViewWhenSpaceIsLimited: false,
+    hideUnchangedRegions: {
+      enabled: true,
+      revealLineCount: 15, // 当用户点击折叠区域时，一次显示多少行代码
+      minimumLineCount: 5, // 只有未更改行数超过这个值才会被折叠
+      contextLineCount: 3, //  保留变更行前后的上下文行数
+    },
+    scrollbar: {
+      vertical: 'hidden',
+    },
+    minimap: {
+      enabled: false,
+    },
+    lineNumbers: line => `${line}&emsp;&emsp;`, // html string
+
+  }), [])
   return (
     <div>
-      Publish Step Diff
+      {/* Desc */}
+      <span className='text-black/50 pl-7'>对比上一次发布和最新草稿状态 确认发布内容</span>
+      <div className='pt-4'>
+        <DiffEditor options={editorOptions} height={'50vh'} width={'75vw'} original='1' modified='2'/>
+      </div>
     </div>
   )
 }
@@ -50,9 +76,9 @@ const PublsihDraft = () => {
         {/* Background */}
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="mx-auto max-w-md w-full rounded-2xl bg-white shadow-2xl overflow-hidden">
+          <DialogPanel className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden">
             {/* Header */}
-            <div className="px-6 py-4">
+            <div className="px-6 pb-2 pt-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <RiPuzzleLine className="w-6 h-6 " />
@@ -69,7 +95,7 @@ const PublsihDraft = () => {
               </div>
             </div>
             {/* Content */}
-            <div className='px-2 py-3'>
+            <div className='px-2 pb-3'>
               {showDiff && <PublishStepDiff onNextStep={handleDiffChecked} onClose={handleClose}/>}
               {showForm && <PublishStepForm onNextStep={handleFormSubmitSuccess} onClose={handleClose}/>}
               {showResult && <PublishStepResult onNextStep={handleClose} onClose={handleClose}/>}
