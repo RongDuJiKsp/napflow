@@ -5,6 +5,8 @@ import { ManagerController } from './manager/manager.controller'
 import { BotCoreRuntimeService } from './bot/core/bot-core-runtime.service'
 import { BotManagerService } from './bot/manager/bot-manager.service'
 import { BotManagerController } from './bot/manager/bot-manager.controller'
+import { BotBridgeService } from './bot/bridge/bot-bridge.service'
+import { BotBridgeController } from './bot/bridge/bot-bridge.controller'
 
 @Module({
   providers: [
@@ -12,13 +14,15 @@ import { BotManagerController } from './bot/manager/bot-manager.controller'
     ManagerService,
     BotCoreRuntimeService,
     BotManagerService,
+    BotBridgeService,
   ],
   exports: [
     CoreRuntimeService,
     BotCoreRuntimeService,
     ManagerService,
     BotManagerService,
+    BotBridgeService,
   ],
-  controllers: [ManagerController, BotManagerController],
+  controllers: [ManagerController, BotManagerController, BotBridgeController],
 })
 export class RuntimeModule {}
