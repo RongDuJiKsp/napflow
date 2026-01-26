@@ -19,6 +19,7 @@ import {
   ZodCheckCreateWorkflowResp,
   ZodCheckGetAppResp,
   ZodCheckGetAppsResp,
+  ZodCheckGetVersionsResp,
   ZodCheckLoadDraftResp,
   ZodCheckWorkflowPublishReq,
   ZodCheckWorkflowPublishResp,
@@ -104,6 +105,14 @@ export class WorkflowController {
     if (!publishMeta)
       return Resp.error('Publish Failed: 版本已存在', Code.BadRequest)
     return Resp.ok(publishMeta)
+  }
+
+  @Get(':appId/versions')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckGetVersionsResp)
+  async getVersions(@Param('appId') appId: string) {
+    const versions = await this.workflowDataService.getVersions(appId)
+    return Resp.ok(versions)
   }
 
   @Get(':appId')

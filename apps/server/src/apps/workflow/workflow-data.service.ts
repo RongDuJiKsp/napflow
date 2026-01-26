@@ -89,4 +89,13 @@ export class WorkflowDataService {
       publishBy: publisher.email,
     })
   }
+
+  async getVersions(appId: string) {
+    return await this.db.workflowAppData.find({
+      where: { ofAppId: appId },
+      order: {
+        publishAt: 'DESC',
+      },
+    })
+  }
 }
