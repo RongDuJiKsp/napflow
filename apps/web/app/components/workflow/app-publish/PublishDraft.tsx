@@ -1,12 +1,15 @@
 'use client'
 import { Button, Input, Label, TextArea, TextField } from '@heroui/react'
-import { RiCloseLine, RiPuzzleLine, RiSendPlaneLine } from '@remixicon/react'
+import { RiAppStoreLine, RiCloseLine, RiPuzzleLine, RiSendPlaneLine } from '@remixicon/react'
 import { memo } from 'react'
 import { usePublishDesctionForm, usePublishDiff, usePublishDraftSteps } from './hooks/use-publish-draft'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { DiffEditor } from '@monaco-editor/react'
 import { useCreation } from 'ahooks'
 import type { editor } from 'monaco-editor'
+import { useAppMetaQuery } from '@/app/hooks/query/use-app-meta-query'
+import { useAppParam } from '../hooks/use-app-param'
+import { useAppLastVersionQuery } from '@/app/hooks/query/use-app-last-version-query'
 
 type PublishStepCommProps = {
   onNextStep: () => void
@@ -78,10 +81,101 @@ const PublishStepForm = ({ onNextStep, onClose }: PublishStepCommProps) => {
   )
 }
 
-const PublishStepResult = ({ onNextStep, onClose }: PublishStepCommProps) => {
+const PublishStepResult = ({ onNextStep }: PublishStepCommProps) => {
+  const { appId } = useAppParam()
+  const { data: appMeta, isLoading: isAppMetaLoading } = useAppMetaQuery(appId)
+  const { data: versionData, isLoading: isVersionDataLoading } = useAppLastVersionQuery(appId)
+
+  const isLoading = isAppMetaLoading || isVersionDataLoading
+
   return (
-    <div>
-      Publish Step Result
+    <div className='px-2 min-w-[32vw]'>
+      {/* Desc */}
+      <span className='text-black/50 pl-9 pr-2'>确认发布结果</span>
+      <div className='px-12 pt-3 pb-4 flex flex-col gap-4'>
+        {isLoading ? (
+          <div className='flex items-center justify-center py-8'>
+            <div className='text-gray-500'>加载中...</div>
+          </div>
+        ) : (
+          <>
+            {/* 应用信息 */}
+            <div className='bg-linear-to-br from-pink-50 to-purple-50 rounded-lg p-4 border border-pink-200'>
+              <h3 className='text-purple-700 font-semibold mb-3 flex items-center gap-2'>
+                <RiAppStoreLine size={16} />
+                应用信息
+              </h3>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>应用名称:</span>
+                  <span className='text-sm text-gray-800 font-medium'>{appMeta?.appName || '-'}</span>
+                </div>
+                <div className='flex items-start gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>应用描述:</span>
+                  <span className='text-sm text-gray-800'>{appMeta?.appDescription || '-'}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>创建者:</span>
+                  <span className='text-sm text-gray-800'>{appMeta?.createdBy || '-'}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>创建时间:</span>
+                  <span className='text-sm text-gray-800'>
+                    {appMeta?.createdAt ? new Date(appMeta.createdAt).toLocaleString('zh-CN') : '-'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 版本信息 */}
+            <div className='bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200'>
+              <h3 className='text-blue-700 font-semibold mb-3 flex items-center gap-2'>
+                <RiPuzzleLine size={16} />
+                版本信息</h3>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>版本号:</span>
+                  <span className='text-sm text-gray-800 font-medium'>{versionData?.version || '-'}</span>
+                </div>
+                <div className='flex items-start gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>版本描述:</span>
+                  <span className='text-sm text-gray-800'>{versionData?.publishDescription || '-'}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>发布者:</span>
+                  <span className='text-sm text-gray-800'>{versionData?.publishBy || '-'}</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>发布时间:</span>
+                  <span className='text-sm text-gray-800'>
+                    {versionData?.publishAt ? new Date(versionData.publishAt).toLocaleString('zh-CN') : '-'}
+                  </span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-600 min-w-20'>更新时间:</span>
+                  <span className='text-sm text-gray-800'>
+                    {versionData?.lastUpdateAt ? new Date(versionData.lastUpdateAt).toLocaleString('zh-CN') : '-'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 发布成功提示 */}
+            <div className='bg-linear-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200'>
+              <div className='flex items-center gap-2 text-green-700'>
+                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                <span className='text-sm font-medium'>插件发布成功！</span>
+              </div>
+              <p className='text-sm text-green-600 mt-1'>
+                您的工作流已成功发布为插件，现在可以在插件市场中使用。
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+      <div className='py-2 px-4 flex justify-end gap-3'>
+        <Button onClick={onNextStep}>完成发布</Button>
+      </div>
     </div>
   )
 }

@@ -81,7 +81,7 @@ export class WorkflowDataService {
       ...latestDraft,
       ofAppId: appId,
       version,
-      description,
+      publishDescription: description,
       ...extra,
     })
   }
