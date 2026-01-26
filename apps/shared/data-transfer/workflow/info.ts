@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppDraft } from '../../common/workflow/base'
+import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppDraft, ZodCheckWorkflowAppVersionMeta } from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create
@@ -26,10 +26,18 @@ export type LoadDraftResp = z.infer<typeof ZodCheckLoadDraftResp>
 export const ZodCheckGetVersionsResp = defineZodResp(z.array(ZodCheckWorkflowAppData))
 export type GetVersionsResp = z.infer<typeof ZodCheckGetVersionsResp>
 
+// @/workflow/:appId/version-meta
+export const ZodCheckGetVersionMetaResp = defineZodResp(ZodCheckWorkflowAppVersionMeta)
+export type GetVersionMetaResp = z.infer<typeof ZodCheckGetVersionMetaResp>
+
+// @/workflow/:appId/last-version
+export const ZodCheckGetLastVersionResp = defineZodResp(ZodCheckWorkflowAppData)
+export type GetLastVersionResp = z.infer<typeof ZodCheckGetLastVersionResp>
+
 // @/workflow/:appId/publish
 export const ZodCheckWorkflowPublishReq = z.object({
-  version: z.string(),
-  description: z.string(),
+  version: z.string().min(1).max(30),
+  description: z.string().min(1).max(50),
 })
 export type WorkflowPublishReq = z.infer<typeof ZodCheckWorkflowPublishReq>
 export const ZodCheckWorkflowPublishResp = defineZodResp(ZodCheckWorkflowAppData)

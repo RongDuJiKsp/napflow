@@ -1,8 +1,8 @@
 'use client'
-import { Button } from '@heroui/react'
+import { Button, Input, Label, TextArea, TextField } from '@heroui/react'
 import { RiCloseLine, RiPuzzleLine, RiSendPlaneLine } from '@remixicon/react'
 import { memo } from 'react'
-import { usePublishDiff, usePublishDraftSteps } from './hooks/use-publish-draft'
+import { usePublishDesctionForm, usePublishDiff, usePublishDraftSteps } from './hooks/use-publish-draft'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { DiffEditor } from '@monaco-editor/react'
 import { useCreation } from 'ahooks'
@@ -14,7 +14,7 @@ type PublishStepCommProps = {
 }
 
 const PublishStepDiff = ({ onNextStep, onClose }: PublishStepCommProps) => {
-  const {} = usePublishDiff()
+  const { latestPublishedJson, draftJson, isLoading } = usePublishDiff()
   const editorOptions = useCreation<editor.IDiffEditorOptions>(() => ({
     readOnly: true,
     domReadOnly: true,
@@ -37,18 +37,43 @@ const PublishStepDiff = ({ onNextStep, onClose }: PublishStepCommProps) => {
   return (
     <div>
       {/* Desc */}
-      <span className='text-black/50 pl-7'>对比上一次发布和最新草稿状态 确认发布内容</span>
+      <span className='text-black/50 pl-9 pr-2'>对比上一次发布和最新草稿状态 确认发布内容</span>
       <div className='pt-4'>
-        <DiffEditor options={editorOptions} height={'50vh'} width={'75vw'} original='1' modified='2'/>
+        <DiffEditor options={editorOptions} loading={isLoading} height={'50vh'} width={'75vw'} originalLanguage='json' original={latestPublishedJson} modifiedLanguage='json' modified={draftJson}/>
+      </div>
+      <div className='py-2 px-4 flex justify-end gap-3'>
+        <Button variant="tertiary" onClick={onClose}>取消</Button>
+        <Button onClick={onNextStep}>下一步</Button>
       </div>
     </div>
   )
 }
 
 const PublishStepForm = ({ onNextStep, onClose }: PublishStepCommProps) => {
+  const {
+    description,
+    handleVersionChange,
+    handleDescriptionChange,
+    handleSubmit,
+  } = usePublishDesctionForm(onNextStep)
   return (
-    <div>
-      Publish Step Form
+    <div className='px-2 min-w-[32vw]'>
+      {/* Desc */}
+      <span className='text-black/50 pl-9 pr-2'>填写版本信息</span>
+      <div className='px-12 pt-3 pb-4 flex flex-col gap-3'>
+        <TextField value={description.version} onChange={handleVersionChange}>
+          <Label isRequired>版本号</Label>
+          <Input maxLength={30}/>
+        </TextField>
+        <TextField value={description.description} onChange={handleDescriptionChange}>
+          <Label isRequired>版本描述</Label>
+          <TextArea maxLength={50} rows={4}/>
+        </TextField>
+      </div>
+      <div className='py-2 px-4 flex justify-end gap-3'>
+        <Button variant="tertiary" onClick={onClose}>取消</Button>
+        <Button onClick={handleSubmit}>下一步</Button>
+      </div>
     </div>
   )
 }
@@ -62,7 +87,16 @@ const PublishStepResult = ({ onNextStep, onClose }: PublishStepCommProps) => {
 }
 
 const PublsihDraft = () => {
-  const { shouldDialogOpen, handlePublish, handleDiffChecked, handleFormSubmitSuccess, handleClose, showDiff, showForm, showResult } = usePublishDraftSteps()
+  const {
+    shouldDialogOpen,
+    handlePublish,
+    handleDiffChecked,
+    handleFormSubmitSuccess,
+    handleClose,
+    showDiff,
+    showForm,
+    showResult,
+  } = usePublishDraftSteps()
   return (
     <>
       <div className="absolute right-0 top-0 mt-3 mr-6 z-10">
@@ -96,7 +130,7 @@ const PublsihDraft = () => {
               </div>
             </div>
             {/* Content */}
-            <div className='px-2 pb-3'>
+            <div className='pb-3'>
               {showDiff && <PublishStepDiff onNextStep={handleDiffChecked} onClose={handleClose}/>}
               {showForm && <PublishStepForm onNextStep={handleFormSubmitSuccess} onClose={handleClose}/>}
               {showResult && <PublishStepResult onNextStep={handleClose} onClose={handleClose}/>}

@@ -19,6 +19,8 @@ import {
   ZodCheckCreateWorkflowResp,
   ZodCheckGetAppResp,
   ZodCheckGetAppsResp,
+  ZodCheckGetLastVersionResp,
+  ZodCheckGetVersionMetaResp,
   ZodCheckGetVersionsResp,
   ZodCheckLoadDraftResp,
   ZodCheckWorkflowPublishReq,
@@ -111,8 +113,26 @@ export class WorkflowController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckGetVersionsResp)
   async getVersions(@Param('appId') appId: string) {
-    const versions = await this.workflowDataService.getVersions(appId)
+    const versions = await this.workflowDataService.getDatas(appId)
     return Resp.ok(versions)
+  }
+
+  @Get(':appId/version-meta')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckGetVersionMetaResp)
+  async getVersionMeta(@Param('appId') appId: string, @Query('version') version: string) {
+    const data = await this.workflowDataService.findData(appId, version)
+    if (!data) return Resp.error('App Version Not Found', Code.NotFound)
+    return Resp.ok(data)
+  }
+
+  @Get(':appId/last-version')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckGetLastVersionResp)
+  async getLastVersion(@Param('appId') appId: string) {
+    const data = await this.workflowDataService.getLastestPublish(appId)
+    if (!data) return Resp.error('App Version Not Found', Code.NotFound)
+    return Resp.ok(data)
   }
 
   @Get(':appId')

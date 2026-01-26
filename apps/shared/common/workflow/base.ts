@@ -33,3 +33,11 @@ export const ZodCheckWorkflowAppDraft = ZodCheckWorkflowAppData.pick({
   edges: true,
 })
 export type WorkflowAppDraft = z.infer<typeof ZodCheckWorkflowAppDraft>
+
+export const ZodCheckWorkflowAppVersionMeta = ZodCheckWorkflowAppData.pick({
+  version: true,
+  publishDescription: true,
+  publishAt: true,
+  publishBy: true,
+})
+export type WorkflowAppVersionMeta = z.infer<typeof ZodCheckWorkflowAppVersionMeta>

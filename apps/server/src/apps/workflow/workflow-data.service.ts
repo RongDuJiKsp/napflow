@@ -7,12 +7,41 @@ import type {
 import { CommError } from '../middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
 import type { Account } from '@shared/common/account/base'
+import { Not } from 'typeorm'
 
 const DRAFT_VERSION_KEY = 'draft'
 
 @Injectable()
 export class WorkflowDataService {
   constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService) {}
+
+  // 查
+
+  async findData(appId: string, version: string) {
+    return await this.db.workflowAppData.findOne({
+      where: { ofAppId: appId, version },
+    })
+  }
+
+  async getDatas(appId: string) {
+    return await this.db.workflowAppData.find({
+      where: { ofAppId: appId },
+      order: {
+        publishAt: 'DESC',
+      },
+    })
+  }
+
+  async getLastestPublish(appId: string) {
+    return await this.db.workflowAppData.findOne({
+      where: { ofAppId: appId, version: Not(DRAFT_VERSION_KEY) },
+      order: {
+        publishAt: 'DESC',
+      },
+    })
+  }
+
+  // 增删改
 
   async createDraft(appId: string) {
     // 判断draft是否已经创建了 创建了就返回null
@@ -58,9 +87,7 @@ export class WorkflowDataService {
   }
 
   async loadDraft(appId: string) {
-    const draftData = await this.db.workflowAppData.findOne({
-      where: { ofAppId: appId, version: DRAFT_VERSION_KEY },
-    })
+    const draftData = await this.findData(appId, DRAFT_VERSION_KEY)
     if (!draftData) return await this.createDraft(appId)
 
     return draftData
@@ -87,15 +114,6 @@ export class WorkflowDataService {
     return await this.createPublish(appId, version, description, latestDraft, {
       publishAt: new Date(),
       publishBy: publisher.email,
-    })
-  }
-
-  async getVersions(appId: string) {
-    return await this.db.workflowAppData.find({
-      where: { ofAppId: appId },
-      order: {
-        publishAt: 'DESC',
-      },
     })
   }
 }
