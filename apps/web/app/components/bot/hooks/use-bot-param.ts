@@ -1,7 +1,9 @@
-import { createParamContext } from '@/utils/react'
+import { defineZodParamChecker } from '@/utils/next'
+import { z } from 'zod'
 
-export type BotParam = {
-  botId: string
-}
-const { context: BotParamContext, useContextHook: useBotParam } = createParamContext<BotParam>('BotParam')
-export { BotParamContext, useBotParam }
+export const ZodCheckBotParam = z.object({
+  botId: z.string().min(1),
+})
+export type BotParam = z.infer<typeof ZodCheckBotParam>
+
+export const useBotParam = defineZodParamChecker(ZodCheckBotParam)

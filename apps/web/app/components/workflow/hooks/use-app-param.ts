@@ -1,8 +1,9 @@
-import { createParamContext } from '@/utils/react'
+import { defineZodParamChecker } from '@/utils/next'
+import z from 'zod'
 
-export type AppParam = {
-  appId: string;
-}
+export const ZodCheckAppParam = z.object({
+  appId: z.string().min(1),
+})
+export type AppParam = z.infer<typeof ZodCheckAppParam>
 
-const { context: AppParamContext, useContextHook: useAppParam } = createParamContext<AppParam>('AppParam')
-export { AppParamContext, useAppParam }
+export const useAppParam = defineZodParamChecker(ZodCheckAppParam)

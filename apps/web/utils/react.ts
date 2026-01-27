@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react'
 
 /**
- * 创建一个参数上下文
+ * 创建一个透传上下文
  * @param name 上下文名称
  * @returns
  *  - context: 上下文
