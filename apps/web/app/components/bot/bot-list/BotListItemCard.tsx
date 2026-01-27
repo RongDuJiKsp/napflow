@@ -10,6 +10,7 @@ import { useBoolean } from 'ahooks'
 import { noop } from 'lodash-es'
 import MenuItemButton from '../../_base/button/MenuItemButton'
 import { dateFmt } from '@/utils/date'
+import { useRouter } from 'next/navigation'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
@@ -17,6 +18,7 @@ const formatDate = (date?: Date) => {
 }
 
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
+  const router = useRouter()
   const {
     stateTwBgColor,
     stateText,
@@ -36,10 +38,15 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     setShowMoreAction.setFalse()
   }, [setShowMoreAction])
 
+  const handleClick = useCallback(() => {
+    router.push(`/bots/${item.botId}`)
+  }, [item.botId, router])
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
       className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer flex justify-between flex-col h-52"
     >
       {/* 头部信息 */}
