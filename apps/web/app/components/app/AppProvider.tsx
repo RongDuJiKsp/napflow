@@ -5,13 +5,16 @@ import { App, ConfigProvider } from 'antd'
 import type { PropsWithChildren } from 'react'
 import { memo } from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
-const queryClient = new QueryClient()
+import { AntDesignTheme } from '@/app/style/ant-design-theme'
+import { useCreation } from 'ahooks'
 
 const AppProvider = ({ children }: PropsWithChildren) => {
+  const queryClient = useCreation(() => new QueryClient(), [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <StyleProvider layer>
-        <ConfigProvider>
+        <ConfigProvider theme={AntDesignTheme}>
           <AntdRegistry>
             <App>{children}</App>
           </AntdRegistry>
