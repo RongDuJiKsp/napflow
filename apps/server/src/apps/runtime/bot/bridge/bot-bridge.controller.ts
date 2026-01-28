@@ -21,7 +21,7 @@ export class BotBridgeController {
     @Param('botId') botId: string,
     @ZodBody(ZodCheckBotBridgeBindReq) req: BotBridgeBindReq,
   ) {
-    await this.botBridgeService.bindBotToWorkflow(botId, req.appId, req.appVersion)
+    await this.botBridgeService.bindingManyWorkflow(botId, req.map(r => ({ appId: r.appId, version: r.appVersion })))
     return Resp.ok()
   }
 

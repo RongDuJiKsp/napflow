@@ -149,7 +149,7 @@ const SelectedList = ({
 }
 
 const BingingDialogInner = ({ onClose}: { onClose?: () => void }) => {
-  const { apps, selectItemsWithName, handleAddItem, handleRemoveItem, handleConfirm } = useBindingMarket()
+  const { apps, selectItemsWithName, handleAddItem, handleRemoveItem, handleConfirm } = useBindingMarket(onClose)
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null)
 
   const selectedApp = apps?.find(app => app.appId === selectedAppId)
