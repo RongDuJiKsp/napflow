@@ -4,6 +4,7 @@ import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
 import { BotRunningStateUtils } from '@shared/common/bot/base'
 import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
+import { randomUUID } from 'node:crypto'
 
 @Injectable()
 export class BotBridgeService {
@@ -26,7 +27,8 @@ export class BotBridgeService {
     const botRecord = await this.getRecordOrThrow(botId)
     if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
-    botRecord.commonAdapterConfig.bindingWorkflowApp.push({ appId, version: appVersion })
+    // 可以将相同appId的相同版本绑定到同一个bot 这是因为相同的插件配合不同的env可以实现不同的效果
+    botRecord.commonAdapterConfig.bindingWorkflowApp.push({ appId, version: appVersion, bindingId: randomUUID() })
     return await botRecord.save()
   }
 
@@ -36,7 +38,7 @@ export class BotBridgeService {
     const botRecord = await this.getRecordOrThrow(botId)
     if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
-    botRecord.commonAdapterConfig.bindingWorkflowApp.push(...bindings)
+    botRecord.commonAdapterConfig.bindingWorkflowApp.push(...bindings.map(({ appId, version }) => ({ appId, version, bindingId: randomUUID() })))
     return await botRecord.save()
   }
 
