@@ -3,7 +3,7 @@ import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Inject, Injectable } from '@nestjs/common'
 import { Code } from '@shared/data-transfer/_base'
 
-// 这个不依赖bot的状态 直接从db读取 所以可以注入到Bot
+// 这个不依赖bot的状态 直接从db读取 所以可以注入到Bot 尽量只依赖db
 @Injectable()
 export class BotBridgeForBotService {
   constructor(

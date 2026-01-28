@@ -11,6 +11,7 @@ import {
 } from '@shared/common/bot/napcatws-adapter'
 import { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import { NCCHealthChecker } from './health-check'
+import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
@@ -23,6 +24,7 @@ export class NapcatWsAdapter implements BotInstance {
   readonly tag: AdapterTag = NapcatWsAdapter.meta.tag
   // db base
   readonly botConfigDB: BotRecordEntity
+  readonly bindingApps: WorkflowAppDataEntity[]
   // db computed
   private readonly logger: Logger
   // conn instances
@@ -35,8 +37,9 @@ export class NapcatWsAdapter implements BotInstance {
     return `${NapcatWsAdapter.name}-${this.botConfigDB.name}`
   }
 
-  constructor(db: BotRecordEntity) {
+  constructor(db: BotRecordEntity, binding: WorkflowAppDataEntity[]) {
     this.botConfigDB = db
+    this.bindingApps = binding
     this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(
       db.adapterConfig,
     ).data // 配置有问题先init完 等bootstrap时再抛错
@@ -60,14 +63,13 @@ export class NapcatWsAdapter implements BotInstance {
     }
   }
 
-  async bootstrap(): Promise<this> {
-    this.logger.log('Bootstrap...')
-    const cfg = this.botConfigSnapshot
-    if (!cfg) {
-      this.logger.error('Config is invalid. Stop bootstrap.')
-      throw new BotCoreRuntimeError('config is invalid')
-    }
-    // init sdk
+  async bootstrapPlugins(cfg: NonNullable<typeof this.botConfigSnapshot>) {
+    this.logger.log('Bootstrap plugins...')
+  }
+
+  async bootstrapSDKAndService(cfg: NonNullable<typeof this.botConfigSnapshot>) {
+    this.logger.log('Bootstrap SDK...')
+     // init sdk
     this.sdkConn = new NCWebsocket({
       baseUrl: cfg.endpoint.wsUrl,
       accessToken: cfg.endpoint.token,
@@ -83,14 +85,25 @@ export class NapcatWsAdapter implements BotInstance {
     const services: Registerable[] = [this.healthChecker]
     for (const service of services) service.register()
     this.logger.log('service is registered')
-    // finish
+      // finish
     await this.sdkConn.connect()
     this.logger.log('conn created')
 
     this.healthChecker.selfBeat()
+  }
+
+  async bootstrap(): Promise<this> {
+    this.logger.log('Bootstrap...')
+    const cfg = this.botConfigSnapshot
+    if (!cfg) {
+      this.logger.error('Config is invalid. Stop bootstrap.')
+      throw new BotCoreRuntimeError('config is invalid')
+    }
+    await this.bootstrapPlugins(cfg)
+    await this.bootstrapSDKAndService(cfg)
 
     return this
   }
 }
-export const NapcatWsFactory: BotAdapterFactory = async db =>
-  await new NapcatWsAdapter(db).bootstrap()
+export const NapcatWsFactory: BotAdapterFactory = async (db, binding) =>
+  await new NapcatWsAdapter(db, binding).bootstrap()

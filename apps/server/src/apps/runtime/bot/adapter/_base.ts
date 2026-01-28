@@ -1,4 +1,5 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
+import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
 
 // 可被数据库存储的Bot实例
@@ -16,6 +17,7 @@ export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable
 // 从record 启用一个实例的函数
 export type BotAdapterFactory = (
   entity: BotRecordEntity,
+  bindings: WorkflowAppDataEntity[],
 ) => BotInstance | Promise<BotInstance>
 
 export type Registerable = {
