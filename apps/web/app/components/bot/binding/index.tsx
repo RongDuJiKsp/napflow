@@ -1,11 +1,12 @@
-import { memo } from "react"
+import { memo } from 'react'
+import BindingMarket from './BindingMarket'
 
 const BotBinding = () => {
-    return (
-        <div >
-
-        </div>
-    )
+  return (
+    <div >
+      <BindingMarket />
+    </div>
+  )
 }
 
 export default memo(BotBinding)
