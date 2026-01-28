@@ -7,9 +7,11 @@ import { BotManagerService } from './bot/manager/bot-manager.service'
 import { BotManagerController } from './bot/manager/bot-manager.controller'
 import { BotBridgeService } from './bot/bridge/bot-bridge.service'
 import { BotBridgeController } from './bot/bridge/bot-bridge.controller'
+import { BotBridgeForBotService } from './bot/bridge/bot-bridge-for-bot'
 
 @Module({
   providers: [
+    BotBridgeForBotService,
     CoreRuntimeService,
     ManagerService,
     BotCoreRuntimeService,
@@ -17,6 +19,7 @@ import { BotBridgeController } from './bot/bridge/bot-bridge.controller'
     BotBridgeService,
   ],
   exports: [
+    BotBridgeForBotService,
     CoreRuntimeService,
     BotCoreRuntimeService,
     ManagerService,

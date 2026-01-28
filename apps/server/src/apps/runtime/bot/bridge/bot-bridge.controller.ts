@@ -6,12 +6,15 @@ import { type BotBridgeBindReq, ZodCheckBotBridgeBindReq, ZodCheckBotBridgeBindS
 import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodBody } from '@/src/decorator/zod'
 import { BotBridgeService } from './bot-bridge.service'
+import { BotBridgeForBotService } from './bot-bridge-for-bot'
 
 @Controller('bot-bridge')
 export class BotBridgeController {
   constructor(
     @Inject(BotBridgeService)
     private readonly botBridgeService: BotBridgeService,
+    @Inject(BotBridgeForBotService)
+    private readonly botBridgeForBotService: BotBridgeForBotService,
   ) {}
 
   @Post(':botId/bindmany')
@@ -29,7 +32,7 @@ export class BotBridgeController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
-    const binding = await this.botBridgeService.getBotBindingWorkflow(botId)
+    const binding = await this.botBridgeForBotService.getBotBindingWorkflow(botId)
     return Resp.ok({
       target: binding,
     })

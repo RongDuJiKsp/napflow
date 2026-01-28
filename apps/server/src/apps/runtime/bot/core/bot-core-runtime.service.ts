@@ -18,7 +18,9 @@ export const adapterClassMeta: Record<AdapterTag, BotAdapterClass> = {
 export class BotCoreRuntimeService {
   private readonly botInstanceMap = new Map<string, BotInstance>()
 
-  constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService) {}
+  constructor(
+    @Inject(TypeOrmService) private readonly db: TypeOrmService,
+  ) {}
 
   get botInstances() {
     return Array.from(this.botInstanceMap.values())
