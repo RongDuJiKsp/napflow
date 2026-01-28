@@ -12,7 +12,7 @@ import {
 import { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import { NCCHealthChecker } from './health-check'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
-import type { NapcatWsTriggerPlugin } from './plugins'
+import type { NapcatWsTriggerPlugin } from './plugin'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
