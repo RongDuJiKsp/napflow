@@ -35,7 +35,7 @@ export const useSubmitZodFn = <Req, Res extends BaseRespType<unknown>>(
       if (res.statusCode !== Code.Ok) {
         if (errorText) message.error(res.message)
 
-        return
+        return res
       }
       if (successText) message.success(successText)
 

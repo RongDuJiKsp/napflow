@@ -65,7 +65,7 @@ const AppVersionList = ({
 
   return (
     <div className="space-y-2">
-      {versions?.map(version => (
+      {versions?.filter(v => v.version !== 'draft').map(version => (
         <div
           key={version.version}
           className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors duration-200 cursor-pointer"
@@ -259,7 +259,7 @@ const BindingMarket = () => {
         {/* Background */}
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <BingingDialogInner/>
+          <BingingDialogInner onClose={dispatchDialog.setFalse}/>
         </div>
       </Dialog>
     </div>

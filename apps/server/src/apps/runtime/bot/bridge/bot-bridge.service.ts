@@ -19,16 +19,23 @@ export class BotBridgeService {
   }
 
   async bindBotToWorkflow(botId: string, appId: string, appVersion: string) {
+    if(appVersion === 'draft') throw new CommError('不能绑定草稿版本', Code.BadRequest, 'warn')
     const botState = this.bot.botState(botId)
     if(BotRunningStateUtils.isRunning(botState.runningState))
       throw new CommError('Bot正在运行，只能在停止后绑定', Code.BadRequest, 'warn')
     const botRecord = await this.getRecordOrThrow(botId)
+    if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
+      botRecord.commonAdapterConfig.bindingWorkflowApp = []
     botRecord.commonAdapterConfig.bindingWorkflowApp.push({ appId, version: appVersion })
     return await botRecord.save()
   }
 
   async bindingManyWorkflow(botId: string, bindings: { appId: string; version: string }[]) {
+    if(bindings.some(({ version }) => version === 'draft'))
+      throw new CommError('不能绑定草稿版本', Code.BadRequest, 'warn')
     const botRecord = await this.getRecordOrThrow(botId)
+    if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
+      botRecord.commonAdapterConfig.bindingWorkflowApp = []
     botRecord.commonAdapterConfig.bindingWorkflowApp.push(...bindings)
     return await botRecord.save()
   }
