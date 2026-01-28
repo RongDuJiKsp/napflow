@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import { Item, Submenu } from 'react-contexify'
 import { ComponentNodeCreatorMap } from '../../component-nodes/constants'
-import type { ComponentNodesEnum } from '../../component-nodes/types'
 import { useStickyNewComponentNode } from '../../hooks/use-create-component-node'
+import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 const traggerCreators = Object.entries(ComponentNodeCreatorMap).map(
   ([key, value]) => ({
     type: key as ComponentNodesEnum,

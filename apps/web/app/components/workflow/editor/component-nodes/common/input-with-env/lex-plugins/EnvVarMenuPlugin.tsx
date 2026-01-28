@@ -13,7 +13,7 @@ import {
   type VarCtx,
   getCommVarCtxName,
 } from '../../../hooks/use-component-node-env'
-import { VarTypes } from '../../../types'
+import { VarTypes } from '@shared/common/workflow/component-node'
 import { $createEnvVarNode } from '../lex-nodes/env-var-node'
 
 // 类型颜色映射

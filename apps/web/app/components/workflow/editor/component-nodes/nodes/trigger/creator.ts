@@ -1,12 +1,12 @@
 import z from 'zod'
-import {
-  type ComponentCreator,
-  ComponentNodesEnum,
-  VarTypes,
+import type {
+  ComponentCreator,
 } from '../../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'
+import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/component-node'
 
 export enum TriggerOn {
   Friend = 'friend',

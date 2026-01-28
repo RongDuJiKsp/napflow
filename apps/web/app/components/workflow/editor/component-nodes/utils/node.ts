@@ -1,7 +1,8 @@
 import { NodeClassic } from '@shared/common/workflow/core'
 import { createWorkflowNode } from '../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../constants'
-import type { ComponentNode, ComponentNodesEnum } from '../types'
+import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import type { ComponentNode } from '../types'
 
 export const createComponentNode = <T>(
   nodeClassic: ComponentNodesEnum,

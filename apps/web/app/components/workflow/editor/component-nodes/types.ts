@@ -3,30 +3,13 @@ import type z from 'zod'
 import type { ComponentWithClass } from '@/utils/type'
 import type { ComponentType, FC } from 'react'
 import type { NodeProps } from '@xyflow/react'
+import type { ComponentNodeMeta, ComponentNodesEnum, Var } from '@shared/common/workflow/component-node'
 
-// component nodes
-export enum ComponentNodesEnum {
-  Trigger = 'trigger',
-  Reply = 'reply',
-}
-// node env
-export enum VarTypes {
-  String = 'string',
-  Number = 'number',
-  StringArray = 'Array<string>',
-  NumberArray = 'Array<number>',
-}
-export type Var = {
-  name: string;
-  type: VarTypes;
-}
 // data实例
 export type ComponentNodeDataExtra = {
-  type: ComponentNodesEnum;
   title: string;
   desc: string;
-  vars: Var[];
-}
+} & ComponentNodeMeta
 export type ComponentNodeData<T = unknown> = ComponentNodeDataExtra & T
 export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
 export type ComponentNodeProps<T = unknown> = NodeProps<ComponentNode<T>>

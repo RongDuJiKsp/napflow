@@ -1,7 +1,7 @@
+import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { ReplyNodeCreator } from './nodes/reply/creator'
 import { TriggerNodeCreator } from './nodes/trigger/creator'
 import type { ComponentCreator } from './types'
-import { ComponentNodesEnum } from './types'
 
 export const COMPONENT_NODE_PANEL_ID = 'component-node-panel'
 

@@ -1,8 +1,9 @@
 import { uniqBy } from 'lodash-es'
 import type { WorkflowEdge } from '../../types'
-import type { ComponentNode, Var } from '../types'
 import { Queue } from 'datastructures-js'
 import { createContext, useContext } from 'react'
+import type { Var } from '@shared/common/workflow/component-node'
+import type { ComponentNode } from '../types'
 export type VarCtxName = string
 export type VarCtx = Var & {
   source: {
