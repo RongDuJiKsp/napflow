@@ -19,8 +19,36 @@ export class Task<Fn extends () => void> {
     return task
   }
 
+  static will<F extends () => void>(fn: F): WillTask<F> {
+    const task = new WillTask(fn)
+    return task
+  }
+
   abort() {
     this.abortSignal = 1
     return this.cancelable
+  }
+}
+
+/**
+ * @description 可取消提交的任务
+ */
+export class WillTask<Fn extends () => void = () => void> {
+  constructor(private readonly task: Fn) {}
+  private cancelSignal = 0 // 0: 未取消，1: 取消
+
+  abort() {
+    this.cancelSignal = 1
+  }
+
+  submit(delay?: number) {
+    if (this.cancelSignal) return
+    return Task.submit(this.task, delay)
+  }
+
+  orSubmit(saveFn: (task: Task<Fn>) => void, delay?: number) {
+    if (this.cancelSignal) return
+    const task = Task.submit(this.task, delay)
+    saveFn(task)
   }
 }

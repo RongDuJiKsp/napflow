@@ -1,7 +1,10 @@
-import type { Edge, Node } from '@shared/common/workflow/core'
+import type { Edge as DirtyMetaEdge, Node as DirtyMetaNode } from '@shared/common/workflow/core'
 
-export type NeighGraph = ReadonlyMap<Node, { prev: Node[], next: Node[], }>
-export const buildNeighGraph = (nodes: Node[], edges: Edge[]): NeighGraph => {
+type MetaNode = Pick<DirtyMetaNode, 'id'>
+type MetaEdge = Pick<DirtyMetaEdge, 'source' | 'target'>
+
+export type NeighGraph<Node extends MetaNode> = ReadonlyMap<Node, { prev: Node[], next: Node[], }>
+export const buildNeighGraph = <Node extends MetaNode, Edge extends MetaEdge>(nodes: Node[], edges: Edge[]): NeighGraph<Node> => {
   const graph = new Map<Node, { prev: Node[], next: Node[] }>()
   for (const node of nodes)
     graph.set(node, { prev: [], next: [] })

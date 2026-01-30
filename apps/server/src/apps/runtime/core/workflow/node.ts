@@ -1,8 +1,18 @@
-import type { Edge, Node, NodeClassic } from '@shared/common/workflow/core'
+import { type Edge, type Node, NodeClassic, ZodCheckNode } from '@shared/common/workflow/core'
 import type { ComponentNodeMeta } from '@shared/common/workflow/component-node'
 import z from 'zod'
+import type { Class } from 'type-fest'
 
-export type CommNodeType<T extends ComponentNodeMeta> = Omit<Node, 'position'> & {
+export enum CommNodeRole {
+  Trigger = 'trigger',
+  Action = 'action',
+}
+
+export const defineCommNodeSchema = <T extends ComponentNodeMeta = ComponentNodeMeta>(data: z.ZodType<T>) => ZodCheckNode.omit({ position: true, type: true }).extend({
+  type: z.enum([NodeClassic.Component]),
+  data,
+})
+export type CommNodeType<T extends ComponentNodeMeta = ComponentNodeMeta> = Omit<Node, 'position' | 'type'> & {
   type: NodeClassic.Component
   data: T
 }
@@ -14,18 +24,19 @@ export const CommEdgeSchema = z.object({
 })
 export type CommEdgeType = z.infer<typeof CommEdgeSchema>
 
-export class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> implements CommNodeType<T> {
-  id: string
+export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> implements CommNodeType<T> {
+  readonly id: string
   // 只有组件节点能跑 所以type固定为Component
-  type: NodeClassic.Component
-  data: T
+  readonly type: NodeClassic.Component
+  readonly data: T
+  abstract readonly role: CommNodeRole
 
   constructor(data: CommNodeType<T>) {
     Object.assign(this, data)
   }
 
-  static parse<U extends ComponentNodeMeta>(schema: z.ZodType<CommNodeType<U>>, data: Node | Record<string, any>): CommNode<U> {
-    return new CommNode(schema.parse(data))
+  static parse<U extends ComponentNodeMeta>(schema: z.ZodType<CommNodeType<U>>, data: Node | Record<string, any>, Klass: Class<CommNode<U>>): CommNode<U> {
+    return new Klass(schema.parse(data))
   }
 }
 
