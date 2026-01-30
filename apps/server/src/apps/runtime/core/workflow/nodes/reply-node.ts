@@ -2,6 +2,7 @@ import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-nod
 import z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
+import type { WorkflowThread } from '../pool'
 
 export enum ReplyTarget {
   User = 'user',
@@ -21,5 +22,9 @@ export class ReplyNode extends CommNode<ReplyData> {
   readonly role: CommNodeRole = CommNodeRole.Action
   constructor(data: CommNodeType<ReplyData>) {
     super(data)
+  }
+
+  onThread(thread: WorkflowThread): void | Promise<void> {
+    console.log('reply node onThread', thread.id)
   }
 }

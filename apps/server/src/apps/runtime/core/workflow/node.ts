@@ -2,10 +2,14 @@ import { type Edge, type Node, NodeClassic, ZodCheckNode } from '@shared/common/
 import type { ComponentNodeMeta } from '@shared/common/workflow/component-node'
 import z from 'zod'
 import type { Class } from 'type-fest'
+import type { WorkflowThread } from './pool'
 
 export enum CommNodeRole {
   Trigger = 'trigger',
   Action = 'action',
+}
+export enum TriggerOnEvents {
+  ChatMessage = 'chatMessage', // 聊天触发的消息 这时候kv里面有hmsg(人类可读文本)
 }
 
 export const defineCommNodeSchema = <T extends ComponentNodeMeta = ComponentNodeMeta>(data: z.ZodType<T>) => ZodCheckNode.omit({ position: true, type: true }).extend({
@@ -38,6 +42,8 @@ export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> 
   static parse<U extends ComponentNodeMeta>(schema: z.ZodType<CommNodeType<U>>, data: Node | Record<string, any>, Klass: Class<CommNode<U>>): CommNode<U> {
     return new Klass(schema.parse(data))
   }
+
+  abstract onThread(thread: WorkflowThread): void | Promise<void>
 }
 
 export class CommEdge implements CommEdgeType {

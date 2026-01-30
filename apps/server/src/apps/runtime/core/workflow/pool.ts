@@ -1,8 +1,7 @@
 import { randomUUID } from 'node:crypto'
-import type { TriggerEndpoint } from './nodes/trigger-node'
 import type { WillTask } from '@/src/utils/task-pool'
 import { Task } from '@/src/utils/task-pool'
-import type { CommNodeType } from './node'
+import type { CommNodeType, TriggerOnEvents } from './node'
 import { CommEdge, CommNode, CommNodeRole, defineCommNodeSchema } from './node'
 import { type Edge, type Node, NodeClassic } from '@shared/common/workflow/core'
 import type { NodeKlassMap, NodeSchemaMap } from './constant'
@@ -37,7 +36,7 @@ export abstract class CommPlugin {
     return Object.values(this.threads)
   }
 
-  onTrigger(endPoint: TriggerEndpoint, nid: string) {
+  onTrigger(endPoint: TriggerOnEvents, nid: string) {
     const thread = new WorkflowThread(endPoint, nid, this)
     this.threads[thread.id] = thread
     const taskTick = () => {
@@ -57,11 +56,11 @@ export class WorkflowThread {
   readonly createdAt = new Date()
   readonly kv: Record<string, any> = {}
 
-  readonly triggerEndpoint: TriggerEndpoint
+  readonly triggerEndpoint: TriggerOnEvents
   readonly nid: string
   readonly plugin: CommPlugin
 
-  constructor(triggerEndpoint: TriggerEndpoint, nid: string, plugin: CommPlugin) {
+  constructor(triggerEndpoint: TriggerOnEvents, nid: string, plugin: CommPlugin) {
     this.triggerEndpoint = triggerEndpoint
     this.nid = nid
     this.plugin = plugin

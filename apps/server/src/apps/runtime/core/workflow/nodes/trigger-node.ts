@@ -3,6 +3,7 @@ import type { CommNodeType } from '../node'
 import { CommNodeRole } from '../node'
 import { CommNode } from '../node'
 import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-node'
+import type { WorkflowThread } from '../pool'
 
 export enum TriggerEndpoint {
   Group = 'group',
@@ -19,5 +20,9 @@ export class TriggerNode extends CommNode<TriggerData> {
   readonly role: CommNodeRole = CommNodeRole.Trigger
   constructor(data: CommNodeType<TriggerData>) {
     super(data)
+  }
+
+  onThread(thread: WorkflowThread): void | Promise<void> {
+    console.log('trigger node onThread', thread.id)
   }
 }
