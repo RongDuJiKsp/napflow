@@ -1,8 +1,8 @@
-import type { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import type { Registerable } from '../_base'
 import { Logger } from '@nestjs/common'
 import { BotUpstreamState } from '@shared/common/bot/base'
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
+import type { NapcatWsSdk } from './sdk'
 
 export type HeartBeatSnapshot = {
   heartbeatAt: Date;
@@ -16,7 +16,7 @@ export class NCCHealthChecker implements Registerable {
   readonly createAt = new Date()
 
   constructor(
-    private readonly nc: NCWebsocket,
+    private readonly nc: NapcatWsSdk,
     private readonly cfg: NapcatWsAdapterConfig,
     private readonly ctxName: string,
   ) {

@@ -1,9 +1,11 @@
 import z from 'zod'
-import type { CommNodeType } from '../node'
-import { CommNodeRole } from '../node'
+import type { CommNodeType, CommTrigger } from '../node'
+import { CommNodeRole, TriggerOnEvents } from '../node'
 import { CommNode } from '../node'
 import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-node'
 import type { WorkflowThread } from '../pool'
+import type { WillTask } from '@/src/utils/task-pool'
+import { raiseErrors } from '../../../utils/errors'
 
 export enum TriggerEndpoint {
   Group = 'group',
@@ -16,13 +18,15 @@ export const TriggerDataSchema = ZodCheckComponentNodeMeta.extend({
 })
 export type TriggerData = z.infer<typeof TriggerDataSchema>
 
-export class TriggerNode extends CommNode<TriggerData> {
-  readonly role: CommNodeRole = CommNodeRole.Trigger
+export class TriggerNode extends CommNode<TriggerData> implements CommTrigger {
+  readonly role = CommNodeRole.Trigger
+  readonly triggerEv: TriggerOnEvents = TriggerOnEvents.ChatMessage
+
   constructor(data: CommNodeType<TriggerData>) {
     super(data)
   }
 
-  onThread(thread: WorkflowThread): void | Promise<void> {
-    console.log('trigger node onThread', thread.id)
+  onThread(thread: WorkflowThread, _nextTask: WillTask): void | Promise<void> {
+    raiseErrors(thread, TriggerNode)
   }
 }

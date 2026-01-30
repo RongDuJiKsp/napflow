@@ -1,3 +1,4 @@
+import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
@@ -18,6 +19,7 @@ export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable
 export type BotAdapterFactory = (
   entity: BotRecordEntity,
   bindings: WorkflowAppDataEntity[],
+  config: AppConfigService,
 ) => BotInstance | Promise<BotInstance>
 
 export type Registerable = {

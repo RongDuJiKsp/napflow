@@ -3,6 +3,8 @@ import z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
+import type { WillTask } from '@/src/utils/task-pool'
+import { raiseErrors } from '../../../utils/errors'
 
 export enum ReplyTarget {
   User = 'user',
@@ -24,7 +26,7 @@ export class ReplyNode extends CommNode<ReplyData> {
     super(data)
   }
 
-  onThread(thread: WorkflowThread): void | Promise<void> {
-    console.log('reply node onThread', thread.id)
+  onThread(thread: WorkflowThread, _nextTask: WillTask): void | Promise<void> {
+    raiseErrors(thread, ReplyNode)
   }
 }

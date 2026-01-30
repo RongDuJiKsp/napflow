@@ -3,13 +3,14 @@ import type { ComponentNodeMeta } from '@shared/common/workflow/component-node'
 import z from 'zod'
 import type { Class } from 'type-fest'
 import type { WorkflowThread } from './pool'
+import type { WillTask } from '@/src/utils/task-pool'
 
 export enum CommNodeRole {
   Trigger = 'trigger',
   Action = 'action',
 }
 export enum TriggerOnEvents {
-  ChatMessage = 'chatMessage', // 聊天触发的消息 这时候kv里面有hmsg(人类可读文本)
+  ChatMessage = 'chatMessage', // 聊天触发的消息 这时候kv里面有hmsg(人类可读文本), gid(群id)或 uid(用户id)
 }
 
 export const defineCommNodeSchema = <T extends ComponentNodeMeta = ComponentNodeMeta>(data: z.ZodType<T>) => ZodCheckNode.omit({ position: true, type: true }).extend({
@@ -43,7 +44,12 @@ export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> 
     return new Klass(schema.parse(data))
   }
 
-  abstract onThread(thread: WorkflowThread): void | Promise<void>
+  abstract onThread(thread: WorkflowThread, nextTask: WillTask): void | Promise<void>
+}
+
+export type CommTrigger = {
+  role: CommNodeRole.Trigger
+  triggerEv: TriggerOnEvents
 }
 
 export class CommEdge implements CommEdgeType {

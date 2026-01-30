@@ -7,6 +7,7 @@ import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
 import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
 import { BotSignal } from '@shared/common/bot/base'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
+import { AppConfigService } from '@/src/apps/app-config/app-config.service'
 
 export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
   [AdapterTag.napcatWs]: NapcatWsFactory,
@@ -22,6 +23,7 @@ export class BotCoreRuntimeService {
   constructor(
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
     @Inject(BotBridgeForBotService) private readonly bridge: BotBridgeForBotService,
+    @Inject(AppConfigService) private readonly config: AppConfigService,
   ) {}
 
   get botInstances() {
@@ -46,7 +48,7 @@ export class BotCoreRuntimeService {
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
 
       // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
-    const adapter = await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [])
+    const adapter = await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [], this.config)
     this.botInstanceMap.set(botId, adapter)
   }
 

@@ -9,10 +9,11 @@ import {
   type NapcatWsAdapterConfig,
   ZodCheckNapcatWsAdapterConfig,
 } from '@shared/common/bot/napcatws-adapter'
-import { NCWebsocket } from '@rdjksp/node-napcat-ts'
 import { NCCHealthChecker } from './health-check'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
-import type { NapcatWsTriggerPlugin } from './plugin'
+import { NapcatWsTriggerPlugin } from './plugin'
+import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
+import { NapcatWsSdk } from './sdk'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
@@ -26,11 +27,12 @@ export class NapcatWsAdapter implements BotInstance {
   // db base
   readonly botConfigDB: BotRecordEntity
   readonly bindingApps: WorkflowAppDataEntity[]
+  readonly config: AppConfigService
   // db computed
   private readonly logger: Logger
   // conn instances
   private botConfigSnapshot?: NapcatWsAdapterConfig
-  private sdkConn: NCWebsocket | null = null
+  private sdkConn: NapcatWsSdk | null = null
   // plugins
   private plugins: NapcatWsTriggerPlugin[] | null = null
   // services
@@ -40,7 +42,8 @@ export class NapcatWsAdapter implements BotInstance {
     return `${NapcatWsAdapter.name}-${this.botConfigDB.name}`
   }
 
-  constructor(db: BotRecordEntity, binding: WorkflowAppDataEntity[]) {
+  constructor(db: BotRecordEntity, binding: WorkflowAppDataEntity[], cfg: AppConfigService) {
+    this.config = cfg
     this.botConfigDB = db
     this.bindingApps = binding
     this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(
@@ -66,14 +69,22 @@ export class NapcatWsAdapter implements BotInstance {
     }
   }
 
-  async bootstrapPlugins(cfg: NonNullable<typeof this.botConfigSnapshot>) {
+  async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
     this.logger.log('Bootstrap plugins...')
+    this.plugins = []
+    for(const app of this.bindingApps) {
+      if(!app.nodes || !app.edges) {
+        this.logger.warn(`App ${app.ofAppId}@${app.version} has no nodes or edges. Skip.`)
+        continue
+      }
+      this.plugins.push(new NapcatWsTriggerPlugin(app.nodes, app.edges))
+    }
   }
 
   async bootstrapSDKAndService(cfg: NonNullable<typeof this.botConfigSnapshot>) {
     this.logger.log('Bootstrap SDK...')
      // init sdk
-    this.sdkConn = new NCWebsocket({
+    this.sdkConn = new NapcatWsSdk({
       baseUrl: cfg.endpoint.wsUrl,
       accessToken: cfg.endpoint.token,
       reconnection: {
@@ -105,8 +116,12 @@ export class NapcatWsAdapter implements BotInstance {
     await this.bootstrapPlugins(cfg)
     await this.bootstrapSDKAndService(cfg)
 
+    this.plugins?.forEach((p) => {
+      p.mount(this.sdkConn!)
+    })
+
     return this
   }
 }
-export const NapcatWsFactory: BotAdapterFactory = async (db, binding) =>
-  await new NapcatWsAdapter(db, binding).bootstrap()
+export const NapcatWsFactory: BotAdapterFactory = async (db, binding, cfg) =>
+  await new NapcatWsAdapter(db, binding, cfg).bootstrap()
