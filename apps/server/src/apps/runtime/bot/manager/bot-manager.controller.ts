@@ -87,4 +87,12 @@ export class BotManagerController {
     await this.botCoreRuntimeService.killBot(botId)
     return Resp.ok()
   }
+
+  @Post(':botId/reload')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async reloadBot(@Param('botId') botId: string) {
+    await this.botCoreRuntimeService.reloadBot(botId)
+    return Resp.ok()
+  }
 }

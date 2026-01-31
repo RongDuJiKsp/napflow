@@ -9,8 +9,10 @@ export class NapcatWsTriggerPlugin extends CommPlugin {
     super(nodes, edges, NcKlassMap)
   }
 
+  private unsubscribes: Array<() => void> | null = null
+
   mount(sdk: NapcatWsSdk) {
-    return [
+    this.unsubscribes = [
       sdk.subscribe('message.group', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
           gid: msg.group_id,
@@ -24,5 +26,9 @@ export class NapcatWsTriggerPlugin extends CommPlugin {
         })
       }),
     ]
+  }
+
+  unmount() {
+    this.unsubscribes?.forEach(unsubscribe => unsubscribe())
   }
 }

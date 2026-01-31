@@ -29,7 +29,8 @@ export const useBotOperate = (bot: CommonBotInfo) => {
   const startBot = useBotRestfulApi(bot.botId, 'run', { successMsg: 'Bot启动成功', onSuccess })
   const stopBot = useBotRestfulApi(bot.botId, 'stop', { successMsg: '已发送停止信号', onSuccess })
   const killBot = useBotRestfulApi(bot.botId, 'kill', { successMsg: '已发送终止信号', onSuccess })
-  return { startBot, stopBot, killBot }
+  const reloadBot = useBotRestfulApi(bot.botId, 'reload', { successMsg: 'Bot重拉成功', onSuccess })
+  return { startBot, stopBot, killBot, reloadBot }
 }
 
 export const useBotInfoOperator = (bot: CommonBotInfo) => {

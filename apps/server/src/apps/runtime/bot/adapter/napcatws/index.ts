@@ -54,9 +54,20 @@ export class NapcatWsAdapter implements BotInstance {
 
   signal(signal: BotSignal) {
     this.logger.log(`Recv signal : ${signal}(${BotSignal[signal]})`)
+    switch (signal) {
+      case BotSignal.SIGSTOP:
+        this.stop().then(() => {
+          this.clean()
+        })
+        break
+      case BotSignal.SIGKILL:
+        this.clean()
+        break
+    }
   }
 
   get runningStateEnum(): BotRunningState {
+    if(!this.healthChecker || !this.sdkConn) return BotRunningState.killed
     if (!this.healthChecker?.isConnetUpstream) return BotRunningState.offline
     return BotRunningState.running
   }
@@ -67,6 +78,10 @@ export class NapcatWsAdapter implements BotInstance {
       upStreamState: this.healthChecker?.upstreamStatus,
       bootTime: this.healthChecker?.createAt,
     }
+  }
+
+  get registerable() {
+    return [this.healthChecker].filter(Boolean) as Registerable[]
   }
 
   async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
@@ -96,8 +111,8 @@ export class NapcatWsAdapter implements BotInstance {
     this.logger.log('SDK inited')
     // init services
     this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName)
-    const services: Registerable[] = [this.healthChecker]
-    for (const service of services) service.register()
+
+    this.registerable.forEach(s => s.register())
     this.logger.log('service is registered')
       // finish
     await this.sdkConn.connect()
@@ -121,6 +136,25 @@ export class NapcatWsAdapter implements BotInstance {
     })
 
     return this
+  }
+
+  async stop() {
+    this.logger.log('Stopping bot...')
+    this.registerable.forEach(s => s.unregister())
+    this.healthChecker = null
+    this.logger.log('service is unregistered')
+    this.plugins?.forEach((p) => {
+      p.unmount()
+    })
+    this.plugins = null
+    this.logger.log('plugins is unmounted')
+  }
+
+  async clean() {
+    this.logger.log('Cleaning resources...')
+    this.sdkConn?.disconnect()
+    this.sdkConn = null
+    this.logger.log('conn closed')
   }
 }
 export const NapcatWsFactory: BotAdapterFactory = async (db, binding, cfg) =>

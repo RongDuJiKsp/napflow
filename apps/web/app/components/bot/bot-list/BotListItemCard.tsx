@@ -27,8 +27,9 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     isBotCanKill,
     isBotCanStart,
     isBotCanStop,
+    isBotCanForcePull,
   } = useBotState(item)
-  const { startBot, stopBot, killBot } = useBotOperate(item)
+  const { startBot, stopBot, killBot, reloadBot } = useBotOperate(item)
   const { editBot, deleteBot } = useBotInfoOperator(item)
   const [showMore, setShowMoreAction] = useBoolean(false)
 
@@ -151,14 +152,14 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
                 disabled={!isBotCanKill}
               />
             </MenuItem>
-            {/* <MenuItem>
+            <MenuItem>
               <MenuItemButton
-                title="强拉Bot"
+                title="重拉Bot"
                 theme="danger"
-                onClick={noop}
+                onClick={reloadBot}
                 disabled={!isBotCanForcePull}
               />
-            </MenuItem> */}
+            </MenuItem>
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
               <MenuItemButton title="编辑Bot" theme="warn" onClick={editBot} />

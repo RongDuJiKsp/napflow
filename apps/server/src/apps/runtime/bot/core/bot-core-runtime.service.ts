@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import type { BotAdapterFactory, BotInstance } from '../adapter/_base'
 import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcatws'
 import type { BotAdapterClass, BotState } from '@shared/common/bot/base'
-import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
+import { AdapterTag, BotRunningState, BotRunningStateUtils } from '@shared/common/bot/base'
 import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
 import { BotSignal } from '@shared/common/bot/base'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
@@ -42,7 +42,7 @@ export class BotCoreRuntimeService {
 
   async runBot(botId: string) {
     const botInstance = this.botInstanceMap.get(botId)
-    if (botInstance) return
+    if (botInstance && BotRunningStateUtils.isRunning(botInstance.runningState().runningState)) return
 
     const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
@@ -62,5 +62,10 @@ export class BotCoreRuntimeService {
     const botInstance = this.botInstanceMap.get(botId)
     if (!botInstance) return
     botInstance.signal(BotSignal.SIGKILL)
+  }
+
+  async reloadBot(botId: string) {
+    this.botInstanceMap.delete(botId)
+    await this.runBot(botId)
   }
 }
