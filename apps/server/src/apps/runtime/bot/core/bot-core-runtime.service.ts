@@ -57,4 +57,10 @@ export class BotCoreRuntimeService {
     if (!botInstance) return
     botInstance.signal(BotSignal.SIGSTOP)
   }
+
+  async killBot(botId: string) {
+    const botInstance = this.botInstanceMap.get(botId)
+    if (!botInstance) return
+    botInstance.signal(BotSignal.SIGKILL)
+  }
 }

@@ -79,4 +79,12 @@ export class BotManagerController {
     await this.botCoreRuntimeService.stopBot(botId)
     return Resp.ok()
   }
+
+  @Post(':botId/kill')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async killBot(@Param('botId') botId: string) {
+    await this.botCoreRuntimeService.killBot(botId)
+    return Resp.ok()
+  }
 }
