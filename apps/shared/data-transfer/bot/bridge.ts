@@ -6,6 +6,11 @@ export const ZodCheckBotBridgeBindReq = z.array(z.object({
 }))
 export type BotBridgeBindReq = z.infer<typeof ZodCheckBotBridgeBindReq>
 
+export const ZodCheckBotBridgeUnbindReq = z.object({
+  bindingIds: z.array(z.string()),
+})
+export type BotBridgeUnbindReq = z.infer<typeof ZodCheckBotBridgeUnbindReq>
+
 export const ZodCheckBotBridgeBindStatusResp = z.object({
   target: z.array(ZodCheckWorkflowAppVersionMeta),
 })

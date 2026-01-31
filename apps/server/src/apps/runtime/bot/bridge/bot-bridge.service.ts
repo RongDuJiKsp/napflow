@@ -40,4 +40,12 @@ export class BotBridgeService {
     botRecord.commonAdapterConfig.bindingWorkflowApp.push(...bindings.map(({ appId, version }) => ({ appId, version, bindingId: randomUUID() })))
     return await botRecord.save()
   }
+
+  async delBindings(botId: string, bindingIds: string[]) {
+    const botRecord = await this.bridge.getRecordOrThrow(botId)
+    if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
+      botRecord.commonAdapterConfig.bindingWorkflowApp = []
+    botRecord.commonAdapterConfig.bindingWorkflowApp = botRecord.commonAdapterConfig.bindingWorkflowApp.filter(({ bindingId }) => !bindingIds.includes(bindingId))
+    return await botRecord.save()
+  }
 }
