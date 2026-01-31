@@ -30,7 +30,7 @@ export class CommPlugin {
     this.configs = configs
     this.klassMap = klassMap
     // 过滤出组件节点
-    const commNodes = nodes.filter(node => node.classic === NodeClassic.Component).map(node => node as CommNodeType).map(commNode => CommNode.parse(defineCommNodeSchema(NodeSchemaMap[commNode.data.type]), commNode, klassMap[commNode.data.type]))
+    const commNodes = nodes.filter(node => node.type === NodeClassic.Component).map(node => node as CommNodeType).map(commNode => CommNode.parse(defineCommNodeSchema(NodeSchemaMap[commNode.data.type]), commNode, klassMap[commNode.data.type]))
     // 过滤出组件边
     const commIds = new Set(commNodes.map(node => node.id))
     const CommEdges = edges.filter(edge => commIds.has(edge.source) && commIds.has(edge.target)).map(edge => new CommEdge(edge))
@@ -97,6 +97,7 @@ export class WorkflowThread {
 
   async tick(nextTask: WillTask) {
     if(this.shouldBeKill()) {
+      this.logger.debug('thread killed')
       nextTask.abort()
       this.unmount()
       return
@@ -144,7 +145,7 @@ export class WorkflowThread {
     if(killReason)
       this.logger.log(killReason)
 
-    return !killReason
+    return killReason
   }
 
   unmount() {
