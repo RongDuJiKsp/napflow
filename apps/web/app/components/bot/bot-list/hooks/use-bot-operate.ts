@@ -7,19 +7,29 @@ import { App } from 'antd'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 
-export const useBotOperate = (bot: CommonBotInfo) => {
+export const useBotRestfulApi = (botId: string, action: string, { successMsg, onSuccess}: { successMsg?: string, onSuccess?: () => void | Promise<void> } = {}) => {
   const { message } = App.useApp()
-  const { refetch } = useBotsQuery()
-  const startBot = useCallback(async () => {
-    const res = await jsonQ.Post<NullResp>(`bots/${bot.botId}/run`)
+  return useCallback(async () => {
+    const res = await jsonQ.Post<NullResp>(`bots/${botId}/${action}`)
     if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
     }
-    message.success('Bot启动成功')
+    message.success(successMsg)
+    await onSuccess?.()
+  }, [action, message, successMsg, onSuccess, botId])
+}
+
+export const useBotOperate = (bot: CommonBotInfo) => {
+  const { refetch } = useBotsQuery()
+  const onSuccess = useCallback(async () => {
     await refetch()
-  }, [bot, message, refetch])
-  return { startBot }
+  }, [refetch])
+
+  const startBot = useBotRestfulApi(bot.botId, 'run', { successMsg: 'Bot启动成功', onSuccess })
+  const stopBot = useBotRestfulApi(bot.botId, 'stop', { successMsg: '已发送停止信号', onSuccess })
+  const killBot = useBotRestfulApi(bot.botId, 'kill', { successMsg: '已发送终止信号', onSuccess })
+  return { startBot, stopBot, killBot }
 }
 
 export const useBotInfoOperator = (bot: CommonBotInfo) => {

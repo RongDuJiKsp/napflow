@@ -1,5 +1,6 @@
 'use client'
 import type { CommonBotInfo } from '@shared/common/bot/base'
+import type { MouseEvent } from 'react'
 import { memo, useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBotState } from './hooks/use-bot-state'
@@ -7,7 +8,6 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { RiMore2Fill } from '@remixicon/react'
 import { useBotInfoOperator, useBotOperate } from './hooks/use-bot-operate'
 import { useBoolean } from 'ahooks'
-import { noop } from 'lodash-es'
 import MenuItemButton from '../../_base/button/MenuItemButton'
 import { dateFmt } from '@/utils/date'
 import { useRouter } from 'next/navigation'
@@ -17,6 +17,8 @@ const formatDate = (date?: Date) => {
   return dateFmt(date)
 }
 
+const disableMouseEv = (e: MouseEvent) => e.preventDefault()
+
 const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
   const router = useRouter()
   const {
@@ -25,9 +27,8 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     isBotCanKill,
     isBotCanStart,
     isBotCanStop,
-    isBotCanForcePull,
   } = useBotState(item)
-  const { startBot } = useBotOperate(item)
+  const { startBot, stopBot, killBot } = useBotOperate(item)
   const { editBot, deleteBot } = useBotInfoOperator(item)
   const [showMore, setShowMoreAction] = useBoolean(false)
 
@@ -46,11 +47,10 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
-      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300 cursor-pointer flex justify-between flex-col h-52"
+      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
     >
       {/* 头部信息 */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 cursor-pointer" onClick={handleClick}>
         <div className="flex items-center">
           <div
             className={twMerge(
@@ -117,7 +117,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
       {/* 操作 */}
       <div className="flex justify-end">
         <Menu>
-          <MenuButton>
+          <MenuButton onClick={disableMouseEv}>
             <div className="p-2 rounded-full hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer group">
               <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600" />
             </div>
@@ -138,7 +138,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
               <MenuItemButton
                 title="停止Bot"
                 theme="warn"
-                onClick={noop}
+                onClick={stopBot}
                 disabled={!isBotCanStop}
               />
             </MenuItem>
@@ -147,18 +147,18 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
               <MenuItemButton
                 title="杀死Bot"
                 theme="danger"
-                onClick={noop}
+                onClick={killBot}
                 disabled={!isBotCanKill}
               />
             </MenuItem>
-            <MenuItem>
+            {/* <MenuItem>
               <MenuItemButton
                 title="强拉Bot"
                 theme="danger"
                 onClick={noop}
                 disabled={!isBotCanForcePull}
               />
-            </MenuItem>
+            </MenuItem> */}
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
               <MenuItemButton title="编辑Bot" theme="warn" onClick={editBot} />
@@ -166,7 +166,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
             <MenuItem>
               <MenuItemButton
                 title="删除Bot"
-                theme="warn"
+                theme="danger"
                 onClick={deleteBot}
               />
             </MenuItem>
