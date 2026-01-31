@@ -53,6 +53,7 @@ export class CommPlugin {
     this.threads[thread.id] = thread
     assign(thread.kv, kv)
     const taskTick = async () => {
+      delete this.tasks[thread.id]
       const nextTask = Task.will(taskTick)
       await thread.tick(nextTask)
       nextTask.orSubmit(task => this.tasks[thread.id] = task)
@@ -97,12 +98,14 @@ export class WorkflowThread {
   async tick(nextTask: WillTask) {
     if(this.shouldBeKill()) {
       nextTask.abort()
+      this.unmount()
       return
     }
     const currNode = this.availableNodes.dequeue()
     if(!currNode) {
       nextTask.abort()
       this.logger.debug('no more node to run,exiting')
+      this.unmount()
       return
     }
 
@@ -142,5 +145,9 @@ export class WorkflowThread {
       this.logger.log(killReason)
 
     return !killReason
+  }
+
+  unmount() {
+    delete this.plugin.threads[this.id]
   }
 }
