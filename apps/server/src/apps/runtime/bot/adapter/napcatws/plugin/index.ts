@@ -15,16 +15,16 @@ export class NapcatWsTriggerPlugin extends CommPlugin {
     this.unsubscribes = [
       sdk.subscribe('message.group', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
-          gid: msg.group_id,
+          gid: String(msg.group_id),
           hmsg: await sdk.parseChain(msg.message),
-          messageid: msg.message_id,
+          messageid: String(msg.message_id),
         })
       }),
       sdk.subscribe('message.private', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
-          uid: msg.user_id,
+          uid: String(msg.user_id),
           hmsg: await sdk.parseChain(msg.message),
-          messageid: msg.message_id,
+          messageid: String(msg.message_id),
         })
       }),
     ]

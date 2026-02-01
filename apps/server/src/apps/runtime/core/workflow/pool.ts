@@ -48,7 +48,7 @@ export class CommPlugin {
   }
 
   // 这里凡是被message触发就提交任务 该不该往下走交给Thread自己判断
-  onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, any>) {
+  onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
     const thread = new WorkflowThread(endPoint, this)
     this.threads[thread.id] = thread
     assign(thread.kv, kv)
@@ -69,7 +69,7 @@ export class WorkflowThread {
   // 上下文数据
   readonly id = randomUUID()
   readonly createdAt = new Date()
-  readonly kv: Record<string, any> = {}
+  readonly kv: Record<string, string> = {}
   readonly nodeKv: Record<string, Record<string, any>> = {}
 
   readonly triggerEndpoint: TriggerOnEvents

@@ -17,13 +17,13 @@ export class NcTriggerNode extends TriggerNode {
       _nextTask.abort()
       return
     }
-    if(this.data.userId && thread.kv.uid !== this.data.userId) {
-      this.logger.debug(`Task not a ${this.data.userId} message, exiting`)
+    if(this.data.on === TriggerEndpoint.Friend && thread.kv.uid !== this.data.userId) {
+      this.logger.debug(`Task not a friend ${this.data.userId} message(${thread.kv.uid}), exiting`)
       _nextTask.abort()
       return
     }
-    if(this.data.groupId && thread.kv.gid !== this.data.groupId) {
-      this.logger.debug(`Task not a ${this.data.groupId} message, exiting`)
+    if(this.data.on === TriggerEndpoint.Group && thread.kv.gid !== this.data.groupId) {
+      this.logger.debug(`Task not a group ${this.data.groupId} message(${thread.kv.gid}), exiting`)
       _nextTask.abort()
       return
     }
