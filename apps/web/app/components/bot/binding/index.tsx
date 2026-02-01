@@ -8,17 +8,10 @@ const BotBinding = () => {
       <div className="flex flex-col md:flex-row gap-6">
         {/* 左侧：已绑定插件列表 */}
         <div className="md:w-1/2">
-          <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6 h-full">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-purple-700">已绑定插件</h2>
-              <div className="text-sm text-gray-500">
-                管理当前Bot绑定的工作流插件
-              </div>
-            </div>
-            <BindingList />
-          </div>
+          <BindingList />
         </div>
 
+        {/* 右侧：插件管理 */}
         <div className="md:w-1/2">
           <PluginManager />
         </div>
