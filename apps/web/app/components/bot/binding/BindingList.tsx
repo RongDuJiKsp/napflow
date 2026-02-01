@@ -5,6 +5,7 @@ import { RiCloseLine } from '@remixicon/react'
 import { twMerge } from 'tailwind-merge'
 import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
 import { useBotParam } from '../hooks/use-bot-param'
+import { useBindingItem } from './hooks/use-binding-item'
 
 type BindingItem = NonNullable<ReturnType<typeof useBindingBotQuery>['data']>[number]
 
@@ -48,6 +49,8 @@ const EmptyState = () => {
 }
 
 const BindingListItem = ({ item }: { item: BindingItem }) => {
+  const { botId } = useBotParam()
+  const { handleUnbind } = useBindingItem(botId, item.bindingId)
   return (
     <div
       className="binding-item p-4 rounded-lg border border-gray-200 bg-white hover:border-purple-200 hover:bg-purple-25 transition-all duration-200"
@@ -68,7 +71,7 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
                 'transition-all duration-200',
                 'px-3 py-1.5',
               )}
-              // onPress={() => handleUnbind(item.bindingId)}
+              onClick={handleUnbind}
             >
               <RiCloseLine className="w-4 h-4" />
               <span className="ml-1">解绑</span>
@@ -125,7 +128,7 @@ const BindingListContent = ({ items }: { items: BindingItem[] }) => {
   if (items.length === 0) return <EmptyState />
 
   return (
-    <div className="space-y-3 max-h-[600px] overflow-y-auto">
+    <div className="space-y-3 overflow-y-auto h-72">
       {items.map(item => (
         <BindingListItem key={item.bindingId} item={item} />
       ))}
@@ -135,7 +138,7 @@ const BindingListContent = ({ items }: { items: BindingItem[] }) => {
 
 const BindingListContainer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6 h-full">
+    <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6 h-96">
       {children}
     </div>
   )
