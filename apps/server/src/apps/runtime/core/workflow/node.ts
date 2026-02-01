@@ -44,7 +44,7 @@ export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> 
     return new Klass(schema.parse(data))
   }
 
-  abstract onThread(thread: WorkflowThread, nextTask: WillTask): void | Promise<void>
+  abstract onThread(thread: WorkflowThread, nextTask: WillTask, nkv: Record<string, any>): void | Promise<void>
 }
 
 export type CommTrigger = {

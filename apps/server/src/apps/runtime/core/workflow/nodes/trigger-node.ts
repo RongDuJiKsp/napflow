@@ -26,7 +26,7 @@ export class TriggerNode extends CommNode<TriggerData> implements CommTrigger {
     super(data)
   }
 
-  onThread(thread: WorkflowThread, _nextTask: WillTask): void | Promise<void> {
+  onThread(thread: WorkflowThread, _nextTask: WillTask, _nkv: Record<string, any>): void | Promise<void> {
     raiseErrors(thread, TriggerNode)
   }
 }

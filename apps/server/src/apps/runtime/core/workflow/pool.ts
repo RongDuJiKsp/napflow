@@ -70,6 +70,7 @@ export class WorkflowThread {
   readonly id = randomUUID()
   readonly createdAt = new Date()
   readonly kv: Record<string, any> = {}
+  readonly nodeKv: Record<string, Record<string, any>> = {}
 
   readonly triggerEndpoint: TriggerOnEvents
   readonly plugin: CommPlugin
@@ -110,7 +111,8 @@ export class WorkflowThread {
       return
     }
 
-    currNode.onThread(this, nextTask)
+    this.nodeKv[currNode.id] = {}
+    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
 
     for(const nextNode of this.plugin.nodeGraph.get(currNode)?.next ?? []) {
       if(!this.mayBeNextNodeDegree.has(nextNode))
