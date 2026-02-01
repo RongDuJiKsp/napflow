@@ -41,3 +41,6 @@ export const ZodCheckWorkflowAppVersionMeta = ZodCheckWorkflowAppData.pick({
   publishBy: true,
 })
 export type WorkflowAppVersionMeta = z.infer<typeof ZodCheckWorkflowAppVersionMeta>
+
+export const ZodCheckWorkflowAppVersionInfos = ZodCheckWorkflowAppVersionMeta.extend({ ofAppId: z.string() })
+export type WorkflowAppVersionInfos = z.infer<typeof ZodCheckWorkflowAppVersionInfos>

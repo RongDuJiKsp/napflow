@@ -6,6 +6,7 @@ import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
 import { randomUUID } from 'node:crypto'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
+import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 
 @Injectable()
 export class BotBridgeService {
@@ -47,5 +48,15 @@ export class BotBridgeService {
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
     botRecord.commonAdapterConfig.bindingWorkflowApp = botRecord.commonAdapterConfig.bindingWorkflowApp.filter(({ bindingId }) => !bindingIds.includes(bindingId))
     return await botRecord.save()
+  }
+
+  async getBindingsInfo(botId: string) {
+    const botRecord = await this.db.botRecord.findOne({ where: { recordId: botId } })
+    if(!botRecord)return null
+    const bindingApp = await this.bridge.getBotBindingWorkflow(botId)
+    if(!bindingApp) return null
+    const getAppString = (app: Pick<WorkflowAppDataEntity, 'ofAppId' | 'version'>) => `[appId=${app.ofAppId},version=${app.version}]`
+    const appMap = Object.fromEntries(bindingApp.map(app => [getAppString(app), app]))
+    return botRecord.commonAdapterConfig.bindingWorkflowApp?.map(({ appId, version, bindingId }) => ({ appId, version, bindingId, app: appMap[getAppString({ ofAppId: appId, version })] }))
   }
 }

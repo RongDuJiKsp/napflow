@@ -43,7 +43,7 @@ export class BotBridgeController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
-    const binding = await this.botBridgeForBotService.getBotBindingWorkflow(botId)
+    const binding = await this.botBridgeService.getBindingsInfo(botId)
     return Resp.ok(binding)
   }
 }
