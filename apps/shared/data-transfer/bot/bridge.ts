@@ -1,5 +1,6 @@
 import z from 'zod'
 import { ZodCheckWorkflowAppVersionMeta } from '../../common/workflow/base'
+import { defineZodResp } from '../_base'
 export const ZodCheckBotBridgeBindReq = z.array(z.object({
   appId: z.string(),
   appVersion: z.string(),
@@ -11,7 +12,7 @@ export const ZodCheckBotBridgeUnbindReq = z.object({
 })
 export type BotBridgeUnbindReq = z.infer<typeof ZodCheckBotBridgeUnbindReq>
 
-export const ZodCheckBotBridgeBindStatusResp = z.object({
-  target: z.array(ZodCheckWorkflowAppVersionMeta),
-})
+export const ZodCheckBotBridgeBindStatusResp = defineZodResp(
+  z.array(ZodCheckWorkflowAppVersionMeta),
+)
 export type BotBridgeBindStatusResp = z.infer<typeof ZodCheckBotBridgeBindStatusResp>

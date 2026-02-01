@@ -44,8 +44,6 @@ export class BotBridgeController {
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
     const binding = await this.botBridgeForBotService.getBotBindingWorkflow(botId)
-    return Resp.ok({
-      target: binding,
-    })
+    return Resp.ok(binding)
   }
 }
