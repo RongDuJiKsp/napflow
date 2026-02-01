@@ -57,6 +57,6 @@ export class BotBridgeService {
     if(!bindingApp) return null
     const getAppString = (app: Pick<WorkflowAppDataEntity, 'ofAppId' | 'version'>) => `[appId=${app.ofAppId},version=${app.version}]`
     const appMap = Object.fromEntries(bindingApp.map(app => [getAppString(app), app]))
-    return botRecord.commonAdapterConfig.bindingWorkflowApp?.map(({ appId, version, bindingId }) => ({ appId, version, bindingId, app: appMap[getAppString({ ofAppId: appId, version })] }))
+    return botRecord.commonAdapterConfig.bindingWorkflowApp?.map(({ appId, version, bindingId }) => ({ appId, version, bindingId, appPublish: appMap[getAppString({ ofAppId: appId, version })] }))
   }
 }

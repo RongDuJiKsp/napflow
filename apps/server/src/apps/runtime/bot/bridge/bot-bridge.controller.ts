@@ -7,6 +7,7 @@ import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodBody } from '@/src/decorator/zod'
 import { BotBridgeService } from './bot-bridge.service'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
+import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 
 @Controller('bot-bridge')
 export class BotBridgeController {
@@ -15,6 +16,8 @@ export class BotBridgeController {
     private readonly botBridgeService: BotBridgeService,
     @Inject(BotBridgeForBotService)
     private readonly botBridgeForBotService: BotBridgeForBotService,
+    @Inject(TypeOrmService)
+    private readonly db: TypeOrmService,
   ) {}
 
   @Post(':botId/bindmany')
@@ -44,6 +47,15 @@ export class BotBridgeController {
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
     const binding = await this.botBridgeService.getBindingsInfo(botId)
-    return Resp.ok(binding)
+    if(!binding) return Resp.ok([])
+    const apps = await this.db.workflowApp.find({
+      where: binding.map(({ appId }) => ({ appId })),
+    })
+    const appMap = Object.fromEntries(apps.map(app => [app.appId, app]))
+    const bindingInfos = binding.map(item => ({
+      ...item,
+      app: appMap[item.appId],
+    }))
+    return Resp.ok(bindingInfos)
   }
 }
