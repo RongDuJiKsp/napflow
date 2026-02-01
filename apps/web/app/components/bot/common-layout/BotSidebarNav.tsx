@@ -1,5 +1,5 @@
 'use client'
-import { RiDashboard2Line, RiEdit2Fill, RiEdit2Line, RiWebhookLine } from '@remixicon/react'
+import { RiDashboard2Line, RiEdit2Line, RiWebhookLine } from '@remixicon/react'
 import { useCreation } from 'ahooks'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
@@ -21,7 +21,7 @@ const BotSidebarLayout = ({ children }: PropsWithChildren) => {
     {
       key: 'binding',
       icon: <RiWebhookLine size={16}/>,
-      label: '绑定工作流',
+      label: '工作流管理',
     },
     {
       key: 'edit',
