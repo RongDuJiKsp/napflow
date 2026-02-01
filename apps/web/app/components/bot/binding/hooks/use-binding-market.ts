@@ -6,6 +6,7 @@ import { ZodCheckBotBridgeBindReq } from '@shared/data-transfer/bot/bridge'
 import { jsonQ } from '@/utils/net'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { Code, type NullResp } from '@shared/data-transfer/_base'
+import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
 
 export type SelectPair = {
   appId: string;
@@ -20,6 +21,7 @@ export type SelectedItem = SelectPair & {
 export const useBindingMarket = (onClose?: () => void) => {
   const { botId } = useBotParam()
   const { data: apps } = useAppsQuery()
+  const { refetch } = useBindingBotQuery(botId)
 
   const [selectedItems, setSelectedItems] = useState<SelectPair[]>([])
 
@@ -54,9 +56,11 @@ export const useBindingMarket = (onClose?: () => void) => {
   const doSubmit = useSubmitZod<BotBridgeBindReq, NullResp>(req, ZodCheckBotBridgeBindReq, doFetch, { successText: '绑定成功', errorText: '绑定失败' })
 
   const handleConfirm = useCallback(async () => {
-    if((await doSubmit())?.statusCode === Code.Ok)
+    if((await doSubmit())?.statusCode === Code.Ok) {
+      await refetch()
       onClose?.()
-  }, [onClose, doSubmit])
+    }
+  }, [onClose, doSubmit, refetch])
 
   return {
     apps,
