@@ -18,6 +18,7 @@
     "@nestjs/core": "^11.1.9",
     "@nestjs/platform-express": "^11.1.9",
     "@nestjs/typeorm": "^11.0.0",
+    "@rdjksp/node-napcat-ts": "^0.4.20",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
@@ -26,9 +27,9 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.3",
     "nestjs-zod": "^5.0.1",
-    "@rdjksp/node-napcat-ts": "^0.4.20",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
+    "simple-statistics": "^7.8.8",
     "typeorm": "^0.3.28"
   },
   "devDependencies": {

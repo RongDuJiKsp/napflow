@@ -7,6 +7,7 @@ import { WorkflowModule } from './apps/workflow/workflow.module'
 import { DbModule } from './apps/db/db.module'
 import { ZodModule } from './apps/zod/zod.module'
 import { RuntimeModule } from './apps/runtime/runtime.module'
+import { HealthCheckModule } from './apps/health-check/health-check.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RuntimeModule } from './apps/runtime/runtime.module'
     AccountModule.forRoot(),
     WorkflowModule,
     RuntimeModule,
+    HealthCheckModule,
   ],
 })
 export class AppModule {}
