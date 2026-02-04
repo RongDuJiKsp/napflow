@@ -2,24 +2,19 @@ import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { Injectable, Logger } from '@nestjs/common'
 import type { CheckMemService, MemoryStatistics } from './check-mem.service'
 import type { MemoryMetric } from './check-mem.service'
-import type { CheckCpuService, CPUStatistics } from './check-cpu.service'
+import type { CPUStatistics, CheckCpuService } from './check-cpu.service'
 import type { CPUMetric } from './check-cpu.service'
-import type { CheckEventLoopService } from './check-event-loop.service'
+import type { CheckEventLoopService, EventLoopStatistics } from './check-event-loop.service'
 import type { EventLoopMetric } from './check-event-loop.service'
 import type { CheckGcService, GCStatistics } from './check-gc.service'
 import type { GCMetric } from './check-gc.service'
-import type { StatisticalSummary } from './types'
 import { RingBuffer } from 'ring-buffer-ts'
 
 export type AggregatedMetrics = {
   timestamp: number
   memory: MemoryStatistics | null
   cpu: CPUStatistics | null
-  eventLoop: {
-    mean: StatisticalSummary
-    max: StatisticalSummary
-    healthScore: number
-  } | null
+  eventLoop: EventLoopStatistics | null
   gc: GCStatistics | null
 }
 

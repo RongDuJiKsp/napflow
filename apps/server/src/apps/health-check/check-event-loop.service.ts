@@ -2,17 +2,23 @@ import { Injectable } from '@nestjs/common'
 import { monitorEventLoopDelay } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
+import type { StatisticalSummary } from './types'
 
 export type EventLoopMetric = {
   timestamp: number
   min: number
   max: number
   mean: number
-  stddev: number
   p50: number
   p90: number
   p99: number
   p999: number
+}
+
+export type EventLoopStatistics = {
+  mean: StatisticalSummary
+  max: StatisticalSummary
+  healthScore: number
 }
 
 @Injectable()
@@ -27,7 +33,6 @@ export class CheckEventLoopService {
       min: this.histogram.min,
       max: this.histogram.max,
       mean: this.histogram.mean,
-      stddev: this.histogram.stddev,
       p50: this.histogram.percentile(50),
       p90: this.histogram.percentile(90),
       p99: this.histogram.percentile(99),
