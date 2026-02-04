@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { RingBuffer } from 'ring-buffer-ts'
+import * as ss from 'simple-statistics'
+import type { StatisticalSummary } from './types'
 
 export type CPUMetric = {
   timestamp: number
   userPercent: number
   systemPercent: number
   totalPercent: number
+}
+
+export type CPUStatistics = {
+  user: StatisticalSummary
+  system: StatisticalSummary
+  total: StatisticalSummary
 }
 
 @Injectable()
@@ -53,5 +61,43 @@ export class CheckCpuService {
 
   clearMetrics(): void {
     this.metrics.clear()
+  }
+
+  /**
+   * 计算CPU统计数据（基于最近的样本窗口）
+   */
+  calculateStatistics(windowSize: number = 6) {
+    const cpuData = this.getRecentMetrics(windowSize)
+
+    if (cpuData.length === 0)
+      return null
+
+    const userValues = cpuData.map(c => c.userPercent)
+    const systemValues = cpuData.map(c => c.systemPercent)
+    const totalValues = cpuData.map(c => c.totalPercent)
+
+    return {
+      user: {
+        min: ss.min(userValues),
+        max: ss.max(userValues),
+        mean: ss.mean(userValues),
+        median: ss.median(userValues),
+        p95: ss.quantile(userValues, 0.95),
+      },
+      system: {
+        min: ss.min(systemValues),
+        max: ss.max(systemValues),
+        mean: ss.mean(systemValues),
+        median: ss.median(systemValues),
+        p95: ss.quantile(systemValues, 0.95),
+      },
+      total: {
+        min: ss.min(totalValues),
+        max: ss.max(totalValues),
+        mean: ss.mean(totalValues),
+        median: ss.median(totalValues),
+        p95: ss.quantile(totalValues, 0.95),
+      },
+    }
   }
 }

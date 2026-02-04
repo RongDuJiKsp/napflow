@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { PerformanceObserver } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
+import * as ss from 'simple-statistics'
+import type { StatisticalSummary } from './types'
 
 export type GCMetric = {
   timestamp: number
@@ -12,6 +14,13 @@ export type GCMetric = {
 export type GCSnapshot = {
   recentGCs: GCMetric[]
   frequency: number
+  pressureScore: number
+}
+
+export type GCStatistics = {
+  frequency: number
+  duration: StatisticalSummary | null
+  typeFrequency: Record<string, number>
   pressureScore: number
 }
 
@@ -131,5 +140,41 @@ export class CheckGcService {
   destroy(): void {
     if (this.observer)
       this.observer.disconnect()
+  }
+
+  /**
+   * 计算GC统计数据（基于最近的GC事件）
+   */
+  calculateStatistics(timeWindow: number = 60000): GCStatistics {
+    const gcSnapshot = this.collectSnapshot(timeWindow)
+
+    if (gcSnapshot.recentGCs.length === 0) {
+      return {
+        frequency: 0,
+        duration: null,
+        typeFrequency: {},
+        pressureScore: gcSnapshot.pressureScore,
+      }
+    }
+
+    const durations = gcSnapshot.recentGCs.map(gc => gc.duration)
+    const typeFrequency: Record<string, number> = {}
+
+    gcSnapshot.recentGCs.forEach((gc) => {
+      typeFrequency[gc.type] = (typeFrequency[gc.type] || 0) + 1
+    })
+
+    return {
+      frequency: gcSnapshot.recentGCs.length,
+      duration: durations.length > 0 ? {
+        min: ss.min(durations),
+        max: ss.max(durations),
+        mean: ss.mean(durations),
+        median: ss.median(durations),
+        p95: ss.quantile(durations, 0.95),
+      } : null,
+      typeFrequency,
+      pressureScore: gcSnapshot.pressureScore,
+    }
   }
 }

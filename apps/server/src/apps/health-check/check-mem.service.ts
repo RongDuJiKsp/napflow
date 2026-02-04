@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import v8 from 'node:v8'
 import { RingBuffer } from 'ring-buffer-ts'
-
+import * as ss from 'simple-statistics'
+import type { StatisticalSummary } from './types'
 export type MemoryMetric = {
   timestamp: number
   process: NodeJS.MemoryUsage
   v8: v8.HeapInfo
+}
+
+export type MemoryStatistics = {
+  heapUsed: StatisticalSummary
+  rss: StatisticalSummary
+  heapTotal: StatisticalSummary
+  utilization: StatisticalSummary
 }
 
 @Injectable()
@@ -51,10 +59,59 @@ export class CheckMemService {
     return (memory.heapUsed / memory.heapTotal) * 100
   }
 
-  /**
+    /**
    * 清空存储的数据
    */
   clearMetrics(): void {
     this.metrics.clear()
+  }
+
+  /**
+   * 计算内存统计数据（基于最近的样本窗口）
+   */
+  calculateStatistics(windowSize: number = 6): MemoryStatistics | null {
+    const memoryData = this.getRecentMetrics(windowSize)
+
+    if (memoryData.length === 0)
+      return null
+
+    const heapUsedValues = memoryData.map(m => m.process.heapUsed)
+    const rssValues = memoryData.map(m => m.process.rss)
+    const heapTotalValues = memoryData.map(m => m.process.heapTotal)
+
+    const utilizationValues = heapUsedValues.map((used, i) =>
+      (used / heapTotalValues[i]) * 100,
+    )
+
+    return {
+      heapUsed: {
+        min: ss.min(heapUsedValues),
+        max: ss.max(heapUsedValues),
+        mean: ss.mean(heapUsedValues),
+        median: ss.median(heapUsedValues),
+        p95: ss.quantile(heapUsedValues, 0.95),
+      },
+      rss: {
+        min: ss.min(rssValues),
+        max: ss.max(rssValues),
+        mean: ss.mean(rssValues),
+        median: ss.median(rssValues),
+        p95: ss.quantile(rssValues, 0.95),
+      },
+      heapTotal: {
+        min: ss.min(heapTotalValues),
+        max: ss.max(heapTotalValues),
+        mean: ss.mean(heapTotalValues),
+        median: ss.median(heapTotalValues),
+        p95: ss.quantile(heapTotalValues, 0.95),
+      },
+      utilization: {
+        min: ss.min(utilizationValues),
+        mean: ss.mean(utilizationValues),
+        max: ss.max(utilizationValues),
+        median: ss.median(utilizationValues),
+        p95: ss.quantile(utilizationValues, 0.95),
+      },
+    }
   }
 }

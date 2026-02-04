@@ -1,52 +1,26 @@
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { Injectable, Logger } from '@nestjs/common'
-import * as ss from 'simple-statistics'
-import type { CheckMemService } from './check-mem.service'
+import type { CheckMemService, MemoryStatistics } from './check-mem.service'
 import type { MemoryMetric } from './check-mem.service'
-import type { CheckCpuService } from './check-cpu.service'
+import type { CheckCpuService, CPUStatistics } from './check-cpu.service'
 import type { CPUMetric } from './check-cpu.service'
 import type { CheckEventLoopService } from './check-event-loop.service'
 import type { EventLoopMetric } from './check-event-loop.service'
-import type { CheckGcService } from './check-gc.service'
+import type { CheckGcService, GCStatistics } from './check-gc.service'
 import type { GCMetric } from './check-gc.service'
+import type { StatisticalSummary } from './types'
 import { RingBuffer } from 'ring-buffer-ts'
-
-// 聚合统计类型定义
-export type StatisticalSummary = {
-  min: number
-  max: number
-  mean: number
-  median: number
-  p95: number
-}
 
 export type AggregatedMetrics = {
   timestamp: number
-  memory: {
-    heapUsed: StatisticalSummary
-    rss: StatisticalSummary
-    heapTotal: StatisticalSummary
-    utilization: {
-      mean: number
-      max: number
-    }
-  } | null
-  cpu: {
-    user: StatisticalSummary
-    system: StatisticalSummary
-    total: StatisticalSummary
-  } | null
+  memory: MemoryStatistics | null
+  cpu: CPUStatistics | null
   eventLoop: {
     mean: StatisticalSummary
     max: StatisticalSummary
     healthScore: number
   } | null
-  gc: {
-    frequency: number
-    duration: StatisticalSummary | null
-    typeFrequency: Record<string, number>
-    pressureScore: number
-  } | null
+  gc: GCStatistics | null
 }
 
 export type RealTimeSamplesResponse = {
@@ -168,147 +142,21 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
       gc: null,
     }
 
-    // 从小服务获取最近的数据进行统计聚合
-    const recentMemory = this.checkMemService.getRecentMetrics(this.windowSize)
-    const recentCpu = this.checkCpuService.getRecentMetrics(this.windowSize)
-    const recentEventLoop = this.checkEventLoopService.getRecentMetrics(this.windowSize)
-    const gcSnapshot = this.checkGcService.collectSnapshot(this.outputInterval)
-
     // 内存统计聚合
-    if (recentMemory.length > 0)
-      aggregated.memory = this.calculateMemoryStatistics(recentMemory)
+    aggregated.memory = this.checkMemService.calculateStatistics(this.windowSize)
 
     // CPU统计聚合
-    if (recentCpu.length > 0)
-      aggregated.cpu = this.calculateCpuStatistics(recentCpu)
+    aggregated.cpu = this.checkCpuService.calculateStatistics(this.windowSize)
 
     // 事件循环统计聚合
-    if (recentEventLoop.length > 0)
-      aggregated.eventLoop = this.calculateEventLoopStatistics(recentEventLoop)
+    aggregated.eventLoop = this.checkEventLoopService.calculateStatistics(this.windowSize)
 
     // GC统计聚合
-    if (gcSnapshot.recentGCs.length > 0)
-      aggregated.gc = this.calculateGCStatistics(gcSnapshot.recentGCs, gcSnapshot.pressureScore)
+    aggregated.gc = this.checkGcService.calculateStatistics(this.outputInterval)
 
     this.aggregatedMetrics.add(aggregated)
 
     this.logger.debug(`统计聚合完成 - 时间戳: ${new Date(now).toISOString()}`)
-  }
-
-  private calculateMemoryStatistics(memoryData: MemoryMetric[]) {
-    const heapUsedValues = memoryData.map(m => m.process.heapUsed)
-    const rssValues = memoryData.map(m => m.process.rss)
-    const heapTotalValues = memoryData.map(m => m.process.heapTotal)
-
-    return {
-      heapUsed: {
-        min: ss.min(heapUsedValues),
-        max: ss.max(heapUsedValues),
-        mean: ss.mean(heapUsedValues),
-        median: ss.median(heapUsedValues),
-        p95: ss.quantile(heapUsedValues, 0.95),
-      },
-      rss: {
-        min: ss.min(rssValues),
-        max: ss.max(rssValues),
-        mean: ss.mean(rssValues),
-        median: ss.median(rssValues),
-        p95: ss.quantile(rssValues, 0.95),
-      },
-      heapTotal: {
-        min: ss.min(heapTotalValues),
-        max: ss.max(heapTotalValues),
-        mean: ss.mean(heapTotalValues),
-        median: ss.median(heapTotalValues),
-        p95: ss.quantile(heapTotalValues, 0.95),
-      },
-      utilization: {
-        mean: ss.mean(heapUsedValues.map((used, i) =>
-          (used / heapTotalValues[i]) * 100,
-        )),
-        max: ss.max(heapUsedValues.map((used, i) =>
-          (used / heapTotalValues[i]) * 100,
-        )),
-      },
-    }
-  }
-
-  private calculateCpuStatistics(cpuData: CPUMetric[]) {
-    const userValues = cpuData.map(c => c.userPercent)
-    const systemValues = cpuData.map(c => c.systemPercent)
-    const totalValues = cpuData.map(c => c.totalPercent)
-
-    return {
-      user: {
-        min: ss.min(userValues),
-        max: ss.max(userValues),
-        mean: ss.mean(userValues),
-        median: ss.median(userValues),
-        p95: ss.quantile(userValues, 0.95),
-      },
-      system: {
-        min: ss.min(systemValues),
-        max: ss.max(systemValues),
-        mean: ss.mean(systemValues),
-        median: ss.median(systemValues),
-        p95: ss.quantile(systemValues, 0.95),
-      },
-      total: {
-        min: ss.min(totalValues),
-        max: ss.max(totalValues),
-        mean: ss.mean(totalValues),
-        median: ss.median(totalValues),
-        p95: ss.quantile(totalValues, 0.95),
-      },
-    }
-  }
-
-  private calculateEventLoopStatistics(eventLoopData: EventLoopMetric[]) {
-    const meanValues = eventLoopData.map(e => e.mean)
-
-    const maxValues = eventLoopData.map(e => e.max)
-
-    return {
-      mean: {
-        min: ss.min(meanValues),
-        max: ss.max(meanValues),
-        mean: ss.mean(meanValues),
-        median: ss.median(meanValues),
-        p95: ss.quantile(meanValues, 0.95),
-      },
-
-      max: {
-        min: ss.min(maxValues),
-        max: ss.max(maxValues),
-        mean: ss.mean(maxValues),
-        median: ss.median(maxValues),
-        p95: ss.quantile(maxValues, 0.95),
-      },
-      healthScore: this.checkEventLoopService.calculateHealthScore(eventLoopData[eventLoopData.length - 1]),
-    }
-  }
-
-  private calculateGCStatistics(gcData: GCMetric[], pressureScore: number) {
-    const durations = gcData.map(gc => gc.duration)
-    const typeFrequency: Record<string, number> = {}
-
-    gcData.forEach((gc) => {
-      typeFrequency[gc.type] = (typeFrequency[gc.type] || 0) + 1
-    })
-
-    return {
-      frequency: gcData.length,
-      duration: durations.length > 0 ? {
-        min: ss.min(durations),
-        max: ss.max(durations),
-        mean: ss.mean(durations),
-        median: ss.median(durations),
-        p95: ss.quantile(durations, 0.95),
-
-      } : null,
-      typeFrequency,
-      pressureScore,
-    }
   }
 
   // 公共API方法
