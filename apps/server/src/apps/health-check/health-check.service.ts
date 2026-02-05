@@ -13,8 +13,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(HealthCheckService.name)
 
   // 监控配置
-  private readonly collectInterval = 10000 // 10秒采样一次
-  private readonly outputInterval = 60000 // 1分钟输出一次
+  private readonly collectInterval = 10 * 1e3 // 10秒采样一次
+  private readonly outputInterval = 60 * 1e3 // 1分钟输出一次
   private readonly windowSize = 6 // 6个样本的窗口(1分钟)
 
   // 聚合统计数据
@@ -112,7 +112,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
    * 获取实时采样数据（最近6次采样，约1分钟内）
    */
   public getRealTimeSamples(): RealTimeSamples {
-    const gcSnapshot = this.checkGcService.collectSnapshot(60000)
+    const gcSnapshot = this.checkGcService.collectSnapshot(this.outputInterval)
 
     return {
       memory: this.checkMemService.getRecentMetrics(6),
@@ -153,7 +153,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
         eventLoop: latest?.eventLoop ? {
           health: latest.eventLoop.healthScore > 80 ? 'excellent'
             : latest.eventLoop.healthScore > 60 ? 'good' : 'poor',
-          avgDelay: `${(latest.eventLoop.mean.mean / 1000000).toFixed(2)}ms`,
+          avgDelay: `${(latest.eventLoop.mean.mean / 1e6).toFixed(2)}ms`,
         } : null,
         gc: latest?.gc ? {
           pressureScore: latest.gc.pressureScore,
@@ -173,7 +173,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     // 从小服务获取最近的指标计算健康分数
     const recentMemory = this.checkMemService.getRecentMetrics(5)
     const recentEventLoop = this.checkEventLoopService.getRecentMetrics(5)
-    const gcSnapshot = this.checkGcService.collectSnapshot(60000)
+    const gcSnapshot = this.checkGcService.collectSnapshot(60 * 1e3)
 
     // 内存健康检查
     if (recentMemory.length > 0) {
@@ -189,8 +189,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     if (recentEventLoop.length > 0) {
       const avgDelay = recentEventLoop.reduce((sum, e) => sum + e.mean, 0) / recentEventLoop.length
 
-      if (avgDelay > 50000000) score -= 25 // 50ms
-      else if (avgDelay > 20000000) score -= 10 // 20ms
+      if (avgDelay > 50 * 1e6) score -= 25 // 50ms
+      else if (avgDelay > 20 * 1e6) score -= 10 // 20ms
     }
 
     // GC健康检查

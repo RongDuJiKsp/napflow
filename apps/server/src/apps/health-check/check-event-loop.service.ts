@@ -12,14 +12,14 @@ export class CheckEventLoopService {
 
   collectSnapshot(): EventLoopMetric {
     const metric: EventLoopMetric = {
-      timestamp: Math.floor(Date.now() / 10 ** 3),
-      min: Math.floor(this.histogram.min / 10 ** 6),
-      max: Math.floor(this.histogram.max / 10 ** 6),
-      mean: Math.floor(this.histogram.mean / 10 ** 6),
-      p50: Math.floor(this.histogram.percentile(50) / 10 ** 6),
-      p90: Math.floor(this.histogram.percentile(90) / 10 ** 6),
-      p99: Math.floor(this.histogram.percentile(99) / 10 ** 6),
-      p999: Math.floor(this.histogram.percentile(99.9) / 10 ** 6),
+      timestamp: Math.floor(Date.now() / 1e3),
+      min: Math.floor(this.histogram.min / 1e6),
+      max: Math.floor(this.histogram.max / 1e6),
+      mean: Math.floor(this.histogram.mean / 1e6),
+      p50: Math.floor(this.histogram.percentile(50) / 1e6),
+      p90: Math.floor(this.histogram.percentile(90) / 1e6),
+      p99: Math.floor(this.histogram.percentile(99) / 1e6),
+      p999: Math.floor(this.histogram.percentile(99.9) / 1e6),
     }
 
     this.metrics.add(metric)
@@ -51,17 +51,17 @@ export class CheckEventLoopService {
     let score = 100
 
     // 基于平均延迟评分
-    if (metric.mean > 50000000) score -= 40 // 50ms
-    else if (metric.mean > 20000000) score -= 20 // 20ms
-    else if (metric.mean > 10000000) score -= 10 // 10ms
+    if (metric.mean > 50 * 1e6) score -= 40 // 50ms
+    else if (metric.mean > 20 * 1e6) score -= 20 // 20ms
+    else if (metric.mean > 10 * 1e6) score -= 10 // 10ms
 
     // 基于P99延迟评分
-    if (metric.p99 > 100000000) score -= 30 // 100ms
-    else if (metric.p99 > 50000000) score -= 15 // 50ms
+    if (metric.p99 > 100 * 1e6) score -= 30 // 100ms
+    else if (metric.p99 > 50 * 1e6) score -= 15 // 50ms
 
     // 基于最大延迟评分
-    if (metric.max > 200000000) score -= 20 // 200ms
-    else if (metric.max > 100000000) score -= 10 // 100ms
+    if (metric.max > 200 * 1e6) score -= 20 // 200ms
+    else if (metric.max > 100 * 1e6) score -= 10 // 100ms
 
     return Math.max(0, score)
   }

@@ -125,7 +125,7 @@ export class CheckGcService {
   /**
    * 计算GC统计数据（基于最近的GC事件）
    */
-  calculateStatistics(timeWindow: number = 60000): GCStatistics {
+  calculateStatistics(timeWindow: number = 60 * 1e3): GCStatistics {
     const gcSnapshot = this.collectSnapshot(timeWindow)
 
     if (gcSnapshot.recentGCs.length === 0) {

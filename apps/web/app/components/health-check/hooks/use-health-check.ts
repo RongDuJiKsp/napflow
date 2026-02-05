@@ -5,5 +5,5 @@ export const useHealthCheck = () => {
   const { refetch } = useHealthSamplesQuery()
   useInterval(() => {
     refetch()
-  }, 60000)
+  }, 60 * 1e3)
 }
