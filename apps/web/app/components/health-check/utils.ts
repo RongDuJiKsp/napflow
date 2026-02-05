@@ -14,8 +14,9 @@ export const formatBytes = (bytes: number) => {
   return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`
 }
 
-export const fmtAxis = (v: number) => `${v.toFixed(1)}%`
-export const fmtTooltip = (v: number) => `${v.toFixed(2)}%`
-export const fmtMs = (v: number) => `${v.toFixed(4)}ms`
+export const fmtPersentAxis = (v: number) => `${v.toFixed(1)}%`
+export const fmtPersentTooltip = (v: number) => `${v.toFixed(2)}%`
+export const fmtMsAxis = (v: number) => `${v.toFixed(2)}ms`
+export const fmtMsTooltip = (v: number) => `${v.toFixed(4)}ms`
 export const fmtGCAxis = (val: number) => `${val.toFixed(2)}`
 export const fmtGCTooltip = (val: number) => `${val.toFixed(2)} 次/分钟`

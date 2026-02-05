@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { ChartCard, StatCard } from './common'
 import { useLineGraphConfig } from './hooks/use-line-graph'
-import { fmtGCAxis, fmtGCTooltip, fmtMs, formatTimestamp } from './utils'
+import { fmtGCAxis, fmtGCTooltip, fmtMsAxis, fmtMsTooltip, formatTimestamp } from './utils'
 const getGcScoreDescription = (score: number) => {
   if (score >= 70) return '健康'
   if (score >= 30) return '一般'
@@ -91,7 +91,7 @@ const GCDurationChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMs, fmtTooltip: fmtMs })
+  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMsAxis, fmtTooltip: fmtMsTooltip })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无 GC 数据</div>

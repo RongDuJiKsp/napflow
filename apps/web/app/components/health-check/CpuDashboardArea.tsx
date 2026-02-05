@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { formatTimestamp } from './utils'
 import { useLineGraphConfig } from './hooks/use-line-graph'
-import { fmtAxis, fmtTooltip } from './utils'
+import { fmtPersentAxis, fmtPersentTooltip } from './utils'
 import { ChartCard } from './common'
 // CPU 图表组件
 const CPUChart = () => {
@@ -29,7 +29,7 @@ const CPUChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis, fmtTooltip })
+  const config = useLineGraphConfig(chartData, { fmtAxis: fmtPersentAxis, fmtTooltip: fmtPersentTooltip })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无 CPU 数据</div>

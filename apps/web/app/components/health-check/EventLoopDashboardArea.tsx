@@ -2,7 +2,7 @@
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
-import { fmtMs, formatTimestamp } from './utils'
+import { fmtMsAxis, fmtMsTooltip, formatTimestamp } from './utils'
 import { useLineGraphConfig } from './hooks/use-line-graph'
 import { ChartCard } from './common'
 
@@ -29,7 +29,7 @@ const EventLoopChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMs, fmtTooltip: fmtMs })
+  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMsAxis, fmtTooltip: fmtMsTooltip })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无事件循环数据</div>
