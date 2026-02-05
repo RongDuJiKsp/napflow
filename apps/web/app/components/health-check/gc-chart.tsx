@@ -1,9 +1,11 @@
 'use client'
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { useMemo } from 'react'
-import { Gauge } from '@ant-design/charts'
+import { Gauge, Line } from '@ant-design/charts'
 import { StatCard } from './common'
 import { useScoreGaugeConfig } from './hooks/use-score-gauge'
+import { useLineGraphConfig } from './hooks/use-line-graph'
+import { fmtMs, formatTimestamp } from './utils'
 
 // GC 健康分数仪表盘
 export const GCHealthGauge = () => {
@@ -53,4 +55,59 @@ export const GCStats = () => {
       />
     </div>
   )
+}
+
+// GC 次数趋势图
+export const GCFrequencyChart = () => {
+  const { data } = useHealthSamplesQuery()
+
+  const chartData = useMemo(() => {
+    if (!data) return []
+    return data.flatMap((item) => {
+      if (!item.gc) return []
+      return [
+        {
+          time: formatTimestamp(item.timestamp),
+          value: item.gc.frequency,
+          type: 'GC 次数',
+        },
+      ]
+    })
+  }, [data])
+
+  const config = useLineGraphConfig(chartData, {
+    fmtAxis: (val: number) => `${val.toFixed(2)}`,
+    fmtTooltip: (val: number) => `${val.toFixed(2)} 次/秒`,
+  })
+
+  if (chartData.length === 0)
+    return <div className="text-gray-400 text-center py-8">暂无 GC 数据</div>
+
+  return <Line {...config} />
+}
+
+// GC 时延趋势图
+export const GCDurationChart = () => {
+  const { data } = useHealthSamplesQuery()
+
+  const chartData = useMemo(() => {
+    if (!data) return []
+    return data.flatMap((item) => {
+      if (!item.gc) return []
+      return [
+        {
+          time: formatTimestamp(item.timestamp),
+          value: item.gc.duration?.mean ?? 0,
+          type: 'GC 时延',
+        },
+      ]
+    })
+  }, [data])
+
+  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMs, fmtTooltip: fmtMs })
+
+  if (chartData.length === 0)
+    return <div className="text-gray-400 text-center py-8">暂无 GC 数据</div>
+
+  return <Line {...config} />
 }

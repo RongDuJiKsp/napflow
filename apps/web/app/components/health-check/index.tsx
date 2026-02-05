@@ -6,7 +6,7 @@ import { ChartCard, EmptyState, LoadingState } from './common'
 import { CPUChart } from './cpu-chart'
 import { MemoryChart, MemoryUtilizationGauge } from './memory-chart'
 import { EventLoopChart, EventLoopHealthGauge } from './event-loop-chart'
-import { GCHealthGauge, GCStats } from './gc-chart'
+import { GCDurationChart, GCFrequencyChart, GCHealthGauge, GCStats } from './gc-chart'
 
 const HealthCheckDashboard = () => {
   const { data, isLoading } = useHealthSamplesQuery()
@@ -68,6 +68,15 @@ const HealthCheckDashboard = () => {
         </ChartCard>
         <ChartCard title="GC 统计信息">
           <GCStats />
+        </ChartCard>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ChartCard title="GC 次数趋势">
+          <GCFrequencyChart />
+        </ChartCard>
+        <ChartCard title="GC 时延趋势">
+          <GCDurationChart />
         </ChartCard>
       </div>
     </div>
