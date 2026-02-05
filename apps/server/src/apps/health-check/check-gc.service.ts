@@ -2,27 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PerformanceObserver } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { StatisticalSummary } from './types'
-
-export type GCMetric = {
-  timestamp: number
-  type: string
-  duration: number
-  flags: number
-}
-
-export type GCSnapshot = {
-  recentGCs: GCMetric[]
-  frequency: number
-  pressureScore: number
-}
-
-export type GCStatistics = {
-  frequency: number
-  duration: StatisticalSummary | null
-  typeFrequency: Record<string, number>
-  pressureScore: number
-}
+import type { GCMetric, GCSnapshot, GCStatistics } from '@shared/common/health-check/gc'
 
 @Injectable()
 export class CheckGcService {

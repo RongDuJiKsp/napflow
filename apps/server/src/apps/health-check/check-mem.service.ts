@@ -2,20 +2,7 @@ import { Injectable } from '@nestjs/common'
 import v8 from 'node:v8'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { StatisticalSummary } from './types'
-export type MemoryMetric = {
-  timestamp: number
-  process: NodeJS.MemoryUsage
-  v8: v8.HeapInfo
-}
-
-export type MemoryStatistics = {
-  heapUsed: StatisticalSummary
-  rss: StatisticalSummary
-  heapTotal: StatisticalSummary
-  utilization: StatisticalSummary
-}
-
+import type { MemoryMetric, MemoryStatistics } from '@shared/common/health-check/mem'
 @Injectable()
 export class CheckMemService {
   private readonly maxStorageSize = 100

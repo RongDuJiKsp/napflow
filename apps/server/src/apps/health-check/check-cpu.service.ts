@@ -1,21 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { StatisticalSummary } from './types'
-
-export type CPUMetric = {
-  timestamp: number
-  userPercent: number
-  systemPercent: number
-  totalPercent: number
-}
-
-export type CPUStatistics = {
-  user: StatisticalSummary
-  system: StatisticalSummary
-  total: StatisticalSummary
-}
-
+import type { CPUMetric, CPUStatistics } from '@shared/common/health-check/cpu'
 @Injectable()
 export class CheckCpuService {
   private readonly maxStorageSize = 100
@@ -66,7 +52,7 @@ export class CheckCpuService {
   /**
    * 计算CPU统计数据（基于最近的样本窗口）
    */
-  calculateStatistics(windowSize: number = 6) {
+  calculateStatistics(windowSize: number = 6): CPUStatistics | null {
     const cpuData = this.getRecentMetrics(windowSize)
 
     if (cpuData.length === 0)

@@ -2,24 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { monitorEventLoopDelay } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { StatisticalSummary } from './types'
-
-export type EventLoopMetric = {
-  timestamp: number
-  min: number
-  max: number
-  mean: number
-  p50: number
-  p90: number
-  p99: number
-  p999: number
-}
-
-export type EventLoopStatistics = {
-  mean: StatisticalSummary
-  max: StatisticalSummary
-  healthScore: number
-}
+import type { EventLoopMetric, EventLoopStatistics } from '@shared/common/health-check/event-loop'
 
 @Injectable()
 export class CheckEventLoopService {
@@ -104,7 +87,7 @@ export class CheckEventLoopService {
   /**
    * 计算事件循环统计数据（基于最近的样本窗口）
    */
-  calculateStatistics(windowSize: number = 6) {
+  calculateStatistics(windowSize: number = 6): EventLoopStatistics | null {
     const eventLoopData = this.getRecentMetrics(windowSize)
 
     if (eventLoopData.length === 0)

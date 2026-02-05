@@ -1,55 +1,12 @@
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { Injectable, Logger } from '@nestjs/common'
-import type { CheckMemService, MemoryStatistics } from './check-mem.service'
-import type { MemoryMetric } from './check-mem.service'
-import type { CPUStatistics, CheckCpuService } from './check-cpu.service'
-import type { CPUMetric } from './check-cpu.service'
-import type { CheckEventLoopService, EventLoopStatistics } from './check-event-loop.service'
-import type { EventLoopMetric } from './check-event-loop.service'
-import type { CheckGcService, GCStatistics } from './check-gc.service'
-import type { GCMetric } from './check-gc.service'
+import type { CheckMemService } from './check-mem.service'
+import type { } from './check-mem.service'
+import type { CheckCpuService } from './check-cpu.service'
+import type { CheckEventLoopService } from './check-event-loop.service'
+import type { CheckGcService } from './check-gc.service'
 import { RingBuffer } from 'ring-buffer-ts'
-
-export type AggregatedMetrics = {
-  timestamp: number
-  memory: MemoryStatistics | null
-  cpu: CPUStatistics | null
-  eventLoop: EventLoopStatistics | null
-  gc: GCStatistics | null
-}
-
-export type RealTimeSamplesResponse = {
-  memory: MemoryMetric[]
-  cpu: CPUMetric[]
-  eventLoop: EventLoopMetric[]
-  gc: GCMetric[]
-  timestamp: number
-  note: string
-}
-
-export type HealthSummary = {
-  status: 'healthy' | 'warning' | 'critical'
-  score: number
-  timestamp: number
-  details: {
-    memory?: {
-      heapUtilization: string
-    }
-    cpu?: {
-      avgLoad: string
-      maxLoad: string
-    }
-    eventLoop?: {
-      health: string
-      avgDelay: string
-    }
-    gc?: {
-      pressureScore: number
-      frequency: number
-      avgDuration: string
-    }
-  }
-}
+import type { AggregatedMetrics, HealthSummary, RealTimeSamplesResponse } from '@shared/common/health-check/health-check'
 
 @Injectable()
 export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
