@@ -2,27 +2,46 @@ import { Injectable } from '@nestjs/common'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
 import type { CPUMetric, CPUStatistics } from '@shared/common/health-check/cpu'
+
 @Injectable()
 export class CheckCpuService {
   private readonly maxStorageSize = 100
   private metrics: RingBuffer<CPUMetric> = new RingBuffer<CPUMetric>(this.maxStorageSize)
   private lastCpuUsage: NodeJS.CpuUsage | null = null
+  private lastHrTime: [number, number] | null = null
 
   /**
    * 重置CPU监控基准
    */
   reset(): void {
     this.lastCpuUsage = process.cpuUsage()
+    this.lastHrTime = process.hrtime()
   }
 
   collectSnapshot(): CPUMetric {
-    const currentUsage = process.cpuUsage(this.lastCpuUsage || undefined)
-    this.lastCpuUsage = process.cpuUsage()
+    const currentCpuUsage = process.cpuUsage(this.lastCpuUsage || undefined)
+    const currentHrTime = process.hrtime(this.lastHrTime || undefined)
 
-    // 转换为百分比
-    const totalTime = currentUsage.user + currentUsage.system
-    const userPercent = totalTime > 0 ? (currentUsage.user / totalTime) * 100 : 0
-    const systemPercent = totalTime > 0 ? (currentUsage.system / totalTime) * 100 : 0
+    // 计算实际经过的时间（微秒）
+    // hrtime 返回 [秒, 纳秒]，转换为微秒
+    const elapsedMicroseconds = currentHrTime[0] * 1e6 + currentHrTime[1] / 1e3
+
+    // 更新基准
+    this.lastCpuUsage = process.cpuUsage()
+    this.lastHrTime = process.hrtime()
+
+    // 计算真正的 CPU 使用率百分比
+    // cpuUsage 返回的是微秒级的 CPU 时间
+    // 使用率 = (CPU时间 / 经过时间) * 100%
+    // 注意：单核最大100%，多核可能超过100%，这里保持原始值
+    let userPercent = 0
+    let systemPercent = 0
+
+    if (elapsedMicroseconds > 0) {
+      userPercent = (currentCpuUsage.user / elapsedMicroseconds) * 100
+      systemPercent = (currentCpuUsage.system / elapsedMicroseconds) * 100
+    }
+
     const totalPercent = userPercent + systemPercent
 
     const metric: CPUMetric = {
