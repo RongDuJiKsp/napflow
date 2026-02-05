@@ -168,33 +168,39 @@ const MemoryChart = () => {
   return <Line {...config} />
 }
 
-// 内存利用率仪表盘
+// 内存健康度仪表盘（剩余可用内存越多越健康）
 const MemoryUtilizationGauge = () => {
   const { data } = useHealthSamplesQuery()
 
-  const latestUtilization = useMemo(() => {
+  const memoryHealthScore = useMemo(() => {
     if (!data || data.length === 0) return 0
     const latest = data[data.length - 1]
     if (!latest?.memory) return 0
-    return latest.memory.utilization.mean * 100
+    // 剩余可用内存百分比，越高越健康
+    return Math.floor(latest.memory.utilization.mean)
   }, [data])
 
   const config = useCreation(
     () => ({
       data: {
-        target: latestUtilization,
+        target: memoryHealthScore,
         total: 100,
-        name: '内存利用率',
+        name: '内存健康度',
       },
       legend: false,
       scale: {
         color: {
+          // 分数越高越好：绿 -> 黄 -> 红
           range: ['#30BF78', '#FAAD14', '#F4664A'],
         },
       },
+      style: {
+        textContent: (target: number, total: number) => `${target}`,
+        textY: '65%',
+      },
       height: 180,
     }),
-    [latestUtilization],
+    [memoryHealthScore],
   )
 
   return <Gauge {...config} />
@@ -264,7 +270,7 @@ const EventLoopHealthGauge = () => {
     if (!data || data.length === 0) return 0
     const latest = data[data.length - 1]
     if (!latest?.eventLoop) return 0
-    return latest.eventLoop.healthScore * 100
+    return latest.eventLoop.healthScore
   }, [data])
 
   const config = useCreation(
@@ -277,8 +283,13 @@ const EventLoopHealthGauge = () => {
       legend: false,
       scale: {
         color: {
-          range: ['#F4664A', '#FAAD14', '#30BF78'],
+          // 分数越高越好：绿 -> 黄 -> 红
+          range: ['#30BF78', '#FAAD14', '#F4664A'],
         },
+      },
+      style: {
+        textContent: (target: number, total: number) => `${target}`,
+        textY: '65%',
       },
       height: 180,
     }),
@@ -288,33 +299,39 @@ const EventLoopHealthGauge = () => {
   return <Gauge {...config} />
 }
 
-// GC 压力分数仪表盘
-const GCPressureGauge = () => {
+// GC 健康分数仪表盘
+const GCHealthGauge = () => {
   const { data } = useHealthSamplesQuery()
 
-  const pressureScore = useMemo(() => {
+  const healthScore = useMemo(() => {
     if (!data || data.length === 0) return 0
     const latest = data[data.length - 1]
     if (!latest?.gc) return 0
-    return Math.min(latest.gc.pressureScore * 100, 100)
+    // score 值域 0-100，100 为最好，0 为最差
+    return Math.min(Math.max(latest.gc.pressureScore, 0), 100)
   }, [data])
 
   const config = useCreation(
     () => ({
       data: {
-        target: pressureScore,
+        target: healthScore,
         total: 100,
-        name: 'GC 压力',
+        name: 'GC 健康度',
       },
       legend: false,
       scale: {
         color: {
+          // 分数越高越好：绿 -> 黄 -> 红
           range: ['#30BF78', '#FAAD14', '#F4664A'],
         },
       },
+      style: {
+        textContent: (target: number, total: number) => `${target}`,
+        textY: '65%',
+      },
       height: 180,
     }),
-    [pressureScore],
+    [healthScore],
   )
 
   return <Gauge {...config} />
@@ -355,7 +372,8 @@ const GCStats = () => {
     return {
       frequency: latest.gc.frequency,
       avgDuration: latest.gc.duration?.mean ?? 0,
-      pressureScore: latest.gc.pressureScore,
+      // score 值域 0-100，100 为最好
+      healthScore: latest.gc.pressureScore,
     }
   }, [data])
 
@@ -367,10 +385,10 @@ const GCStats = () => {
       <StatCard title="GC 频率" value={gcStats.frequency.toFixed(2)} unit="次/秒" />
       <StatCard title="平均耗时" value={gcStats.avgDuration.toFixed(2)} unit="ms" />
       <StatCard
-        title="压力分数"
-        value={(gcStats.pressureScore * 100).toFixed(1)}
-        unit="%"
-        description={gcStats.pressureScore < 0.3 ? '健康' : gcStats.pressureScore < 0.7 ? '一般' : '压力大'}
+        title="健康分数"
+        value={gcStats.healthScore.toFixed(1)}
+        unit="分"
+        description={gcStats.healthScore >= 70 ? '健康' : gcStats.healthScore >= 30 ? '一般' : '较差'}
       />
     </div>
   )
@@ -409,14 +427,14 @@ const HealthCheckDashboard = () => {
 
       {/* 仪表盘区域 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <ChartCard title="内存利用率">
+        <ChartCard title="内存健康度">
           <MemoryUtilizationGauge />
         </ChartCard>
         <ChartCard title="事件循环健康度">
           <EventLoopHealthGauge />
         </ChartCard>
-        <ChartCard title="GC 压力">
-          <GCPressureGauge />
+        <ChartCard title="GC 健康度">
+          <GCHealthGauge />
         </ChartCard>
       </div>
 
