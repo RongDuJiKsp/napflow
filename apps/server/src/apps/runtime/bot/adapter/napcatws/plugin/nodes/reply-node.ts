@@ -5,7 +5,7 @@ import { Logger } from '@nestjs/common'
 import type { NapcatWsSdk } from '../../sdk'
 export class NcReplyNode extends ReplyNode {
   readonly logger = new Logger(NcReplyNode.name)
-  override onThread(thread: WorkflowThread<NapcatWsSdk>, _nextTask: WillTask): void | Promise<void> {
+  override onThread(thread: WorkflowThread<NapcatWsSdk>, _nextTask: WillTask, nkv: Record<string, any>): void | Promise<void> {
     this.logger.debug(`Processing thread in ${thread.id}`)
     this.logger.debug(`Msg content: ${thread.kv.hmsg}`)
     if(this.data.replyTarget === ReplyTarget.Group)
