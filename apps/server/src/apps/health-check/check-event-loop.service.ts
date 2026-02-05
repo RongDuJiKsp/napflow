@@ -15,11 +15,11 @@ export class CheckEventLoopService {
       timestamp: Math.floor(Date.now() / 10 ** 3),
       min: Math.floor(this.histogram.min / 10 ** 6),
       max: Math.floor(this.histogram.max / 10 ** 6),
-      mean: this.histogram.mean / 10 ** 6,
-      p50: this.histogram.percentile(50) / 10 ** 6,
-      p90: this.histogram.percentile(90) / 10 ** 6,
-      p99: this.histogram.percentile(99) / 10 ** 6,
-      p999: this.histogram.percentile(99.9) / 10 ** 6,
+      mean: Math.floor(this.histogram.mean / 10 ** 6),
+      p50: Math.floor(this.histogram.percentile(50) / 10 ** 6),
+      p90: Math.floor(this.histogram.percentile(90) / 10 ** 6),
+      p99: Math.floor(this.histogram.percentile(99) / 10 ** 6),
+      p999: Math.floor(this.histogram.percentile(99.9) / 10 ** 6),
     }
 
     this.metrics.add(metric)
