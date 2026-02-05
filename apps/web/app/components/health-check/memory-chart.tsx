@@ -2,9 +2,9 @@
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { useMemo } from 'react'
 import { Gauge, Line } from '@ant-design/charts'
-import { useCreation } from 'ahooks'
 import { formatBytes, formatTimestamp } from './utils'
 import { useScoreGaugeConfig } from './hooks/use-score-gauge'
+import { useLineGraphConfig } from './hooks/use-line-graph'
 
 // 内存图表组件
 export const MemoryChart = () => {
@@ -34,32 +34,7 @@ export const MemoryChart = () => {
     })
   }, [data])
 
-  const config = useCreation(
-    () => ({
-      data: chartData,
-      xField: 'time',
-      yField: 'value',
-      colorField: 'type',
-      axis: {
-        y: {
-          labelFormatter: (v: number) => formatBytes(v),
-        },
-      },
-      tooltip: {
-        items: [
-          {
-            channel: 'y',
-            valueFormatter: (v: number) => formatBytes(v),
-          },
-        ],
-      },
-      style: {
-        lineWidth: 2,
-      },
-      height: 200,
-    }),
-    [chartData],
-  )
+  const config = useLineGraphConfig(chartData, { fmtAxis: formatBytes, fmtTooltip: formatBytes })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无内存数据</div>

@@ -13,3 +13,6 @@ export const formatBytes = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`
 }
+
+export const fmtAxis = (v: number) => `${v.toFixed(1)}%`
+export const fmtTooltip = (v: number) => `${v.toFixed(2)}%`

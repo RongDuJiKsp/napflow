@@ -2,9 +2,9 @@
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { useMemo } from 'react'
 import { Line } from '@ant-design/charts'
-import { useCreation } from 'ahooks'
 import { formatTimestamp } from './utils'
-
+import { useLineGraphConfig } from './hooks/use-line-graph'
+import { fmtAxis, fmtTooltip } from './utils'
 // CPU 图表组件
 export const CPUChart = () => {
   const { data } = useHealthSamplesQuery()
@@ -28,32 +28,7 @@ export const CPUChart = () => {
     })
   }, [data])
 
-  const config = useCreation(
-    () => ({
-      data: chartData,
-      xField: 'time',
-      yField: 'value',
-      colorField: 'type',
-      axis: {
-        y: {
-          labelFormatter: (v: number) => `${v.toFixed(1)}%`,
-        },
-      },
-      tooltip: {
-        items: [
-          {
-            channel: 'y',
-            valueFormatter: (v: number) => `${v.toFixed(2)}%`,
-          },
-        ],
-      },
-      style: {
-        lineWidth: 2,
-      },
-      height: 200,
-    }),
-    [chartData],
-  )
+  const config = useLineGraphConfig(chartData, { fmtAxis, fmtTooltip })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无 CPU 数据</div>
