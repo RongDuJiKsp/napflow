@@ -32,7 +32,7 @@ const GCStats = () => {
 
   return (
     <div className="grid grid-cols-3 gap-3">
-      <StatCard title="GC 频率" value={gcStats.frequency.toFixed(2)} unit="次/秒" />
+      <StatCard title="GC 频率" value={gcStats.frequency.toFixed(2)} unit="次/分钟" />
       <StatCard title="平均耗时" value={gcStats.avgDuration.toFixed(2)} unit="ms" />
       <StatCard
         title="健康分数"

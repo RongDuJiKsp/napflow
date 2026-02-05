@@ -16,7 +16,7 @@ export class HealthCheckController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckHealthCheckSamplesResp)
   async getSamples() {
-    const samples = this.healthCheckService.getAggregatedMetrics()
+    const samples = this.healthCheckService.getAggregatedMetrics(80)
     return Resp.ok(samples)
   }
 }
