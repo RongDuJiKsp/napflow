@@ -16,3 +16,4 @@ export const formatBytes = (bytes: number) => {
 
 export const fmtAxis = (v: number) => `${v.toFixed(1)}%`
 export const fmtTooltip = (v: number) => `${v.toFixed(2)}%`
+export const fmtMs = (v: number) => `${v.toFixed(4)}ms`
