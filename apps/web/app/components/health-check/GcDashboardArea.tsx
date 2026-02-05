@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { ChartCard, StatCard } from './common'
 import { useLineGraphConfig } from './hooks/use-line-graph'
-import { fmtMs, formatTimestamp } from './utils'
+import { fmtGCAxis, fmtGCTooltip, fmtMs, formatTimestamp } from './utils'
 const getGcScoreDescription = (score: number) => {
   if (score >= 70) return '健康'
   if (score >= 30) return '一般'
@@ -63,8 +63,8 @@ const GCFrequencyChart = () => {
   }, [data])
 
   const config = useLineGraphConfig(chartData, {
-    fmtAxis: (val: number) => `${val.toFixed(2)}`,
-    fmtTooltip: (val: number) => `${val.toFixed(2)} 次/秒`,
+    fmtAxis: fmtGCAxis,
+    fmtTooltip: fmtGCTooltip,
   })
 
   if (chartData.length === 0)
