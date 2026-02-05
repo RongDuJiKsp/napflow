@@ -1,12 +1,13 @@
 'use client'
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { formatTimestamp } from './utils'
 import { useLineGraphConfig } from './hooks/use-line-graph'
 import { fmtAxis, fmtTooltip } from './utils'
+import { ChartCard } from './common'
 // CPU 图表组件
-export const CPUChart = () => {
+const CPUChart = () => {
   const { data } = useHealthSamplesQuery()
 
   const chartData = useMemo(() => {
@@ -35,3 +36,15 @@ export const CPUChart = () => {
 
   return <Line {...config} />
 }
+
+const CpuDashboardArea = () => {
+  return (
+    <>
+      <ChartCard title="CPU 使用趋势">
+        <CPUChart />
+      </ChartCard>
+    </>
+  )
+}
+
+export default memo(CpuDashboardArea)

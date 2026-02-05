@@ -2,11 +2,12 @@
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { memo } from 'react'
 import { formatTimestamp } from './utils'
-import { ChartCard, EmptyState, LoadingState } from './common'
-import { CPUChart } from './cpu-chart'
-import { MemoryChart, MemoryUtilizationGauge } from './memory-chart'
-import { EventLoopChart, EventLoopHealthGauge } from './event-loop-chart'
-import { GCDurationChart, GCFrequencyChart, GCHealthGauge, GCStats } from './gc-chart'
+import { EmptyState, LoadingState } from './common'
+import CpuDashboardArea from './CpuDashboardArea'
+import MemoryDashboardArea from './MemoryDashboardArea'
+import EventLoopDashboardArea from './EventLoopDashboardArea'
+import GaugeDashboardArea from './GaugeDashboardArea'
+import GcDashboardArea from './GcDashboardArea'
 
 const HealthCheckDashboard = () => {
   const { data, isLoading } = useHealthSamplesQuery()
@@ -39,45 +40,13 @@ const HealthCheckDashboard = () => {
         </span>
       </div>
 
-      {/* 仪表盘区域 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <ChartCard title="内存健康度">
-          <MemoryUtilizationGauge />
-        </ChartCard>
-        <ChartCard title="事件循环健康度">
-          <EventLoopHealthGauge />
-        </ChartCard>
-        <ChartCard title="GC 健康度">
-          <GCHealthGauge />
-        </ChartCard>
-      </div>
-
-      {/* 趋势图区域 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ChartCard title="CPU 使用趋势">
-          <CPUChart />
-        </ChartCard>
-        <ChartCard title="内存使用趋势">
-          <MemoryChart />
-        </ChartCard>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ChartCard title="事件循环延迟趋势">
-          <EventLoopChart />
-        </ChartCard>
-        <ChartCard title="GC 统计信息">
-          <GCStats />
-        </ChartCard>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ChartCard title="GC 次数趋势">
-          <GCFrequencyChart />
-        </ChartCard>
-        <ChartCard title="GC 时延趋势">
-          <GCDurationChart />
-        </ChartCard>
+      {/* 统一网格布局 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <GaugeDashboardArea/>
+        <CpuDashboardArea/>
+        <EventLoopDashboardArea/>
+        <MemoryDashboardArea/>
+        <GcDashboardArea/>
       </div>
     </div>
   )

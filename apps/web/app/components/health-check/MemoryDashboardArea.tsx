@@ -1,13 +1,13 @@
 'use client'
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
-import { useMemo } from 'react'
-import { Gauge, Line } from '@ant-design/charts'
+import { memo, useMemo } from 'react'
+import { Line } from '@ant-design/charts'
 import { formatBytes, formatTimestamp } from './utils'
-import { useScoreGaugeConfig } from './hooks/use-score-gauge'
 import { useLineGraphConfig } from './hooks/use-line-graph'
+import { ChartCard } from './common'
 
 // 内存图表组件
-export const MemoryChart = () => {
+const MemoryChart = () => {
   const { data } = useHealthSamplesQuery()
 
   const chartData = useMemo(() => {
@@ -42,19 +42,14 @@ export const MemoryChart = () => {
   return <Line {...config} />
 }
 
-// 内存健康度仪表盘（剩余可用内存越多越健康）
-export const MemoryUtilizationGauge = () => {
-  const { data } = useHealthSamplesQuery()
-
-  const memoryHealthScore = useMemo(() => {
-    if (!data || data.length === 0) return 0
-    const latest = data[data.length - 1]
-    if (!latest?.memory) return 0
-    // 剩余可用内存百分比，越高越健康
-    return Math.floor(latest.memory.utilization.mean)
-  }, [data])
-
-  const config = useScoreGaugeConfig('内存健康度', memoryHealthScore)
-
-  return <Gauge {...config} />
+const MemoryDashboardArea = () => {
+  return (
+    <>
+      <ChartCard title="内存使用趋势" >
+        <MemoryChart />
+      </ChartCard>
+    </>
+  )
 }
+
+export default memo(MemoryDashboardArea)

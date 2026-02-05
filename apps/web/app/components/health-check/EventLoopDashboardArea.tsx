@@ -1,13 +1,13 @@
 'use client'
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
-import { useMemo } from 'react'
-import { Gauge, Line } from '@ant-design/charts'
+import { memo, useMemo } from 'react'
+import { Line } from '@ant-design/charts'
 import { fmtMs, formatTimestamp } from './utils'
-import { useScoreGaugeConfig } from './hooks/use-score-gauge'
 import { useLineGraphConfig } from './hooks/use-line-graph'
+import { ChartCard } from './common'
 
 // 事件循环图表组件
-export const EventLoopChart = () => {
+const EventLoopChart = () => {
   const { data } = useHealthSamplesQuery()
 
   const chartData = useMemo(() => {
@@ -37,18 +37,13 @@ export const EventLoopChart = () => {
   return <Line {...config} />
 }
 
-// 事件循环健康分数仪表盘
-export const EventLoopHealthGauge = () => {
-  const { data } = useHealthSamplesQuery()
-
-  const healthScore = useMemo(() => {
-    if (!data || data.length === 0) return 0
-    const latest = data[data.length - 1]
-    if (!latest?.eventLoop) return 0
-    return latest.eventLoop.healthScore
-  }, [data])
-
-  const config = useScoreGaugeConfig('事件循环健康度', healthScore)
-
-  return <Gauge {...config} />
+const EventLoopDashboardArea = () => {
+  return <>
+    {/* 事件循环图表 */}
+    <ChartCard title="事件循环延迟趋势" >
+      <EventLoopChart />
+    </ChartCard>
+  </>
 }
+
+export default memo(EventLoopDashboardArea)

@@ -45,7 +45,7 @@ export const StatCard = ({
   description?: string
 }) => {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
+    <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
       <div className="text-xs text-gray-500 mb-1">{title}</div>
       <div className="text-2xl font-bold text-gray-800">
         {value}
