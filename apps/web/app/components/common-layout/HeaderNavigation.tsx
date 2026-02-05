@@ -1,6 +1,6 @@
 'use client'
 import type { ComponentWithClass } from '@/utils/type'
-import { RiFlowChart, RiRobot2Line } from '@remixicon/react'
+import { RiDashboard3Fill, RiFlowChart, RiRobot2Line } from '@remixicon/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
@@ -15,6 +15,7 @@ type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { href: '/bots', icon: RiRobot2Line, label: '机器人' },
   { href: '/workflows', icon: RiFlowChart, label: '工作流' },
+  { href: '/health-check', icon: RiDashboard3Fill, label: '健康面板' },
 ]
 
 const HeaderNavigation = () => {
