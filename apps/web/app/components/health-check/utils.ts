@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 // 格式化时间戳
 export const formatTimestamp = (timestamp: number) => {
-  return dayjs(timestamp).format('HH:mm:ss')
+  return dayjs(timestamp).format('HH:mm')
 }
 
 // 格式化字节大小
