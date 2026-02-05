@@ -17,7 +17,7 @@ export type PluginConfigs = {
 /**
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
-export class CommPlugin {
+export class CommPlugin<SDK = unknown> {
   readonly threads: Record<string, WorkflowThread> = {}
   readonly tasks: Record<string, Task<() => void>> = {}
   // 邻居图
@@ -25,6 +25,7 @@ export class CommPlugin {
   readonly graphHead: CommNode & CommTrigger
   readonly klassMap: typeof NodeKlassMap
   readonly configs: PluginConfigs
+  sdk: SDK | null = null
 
   constructor(nodes: Node[], edges: Edge[], klassMap: typeof NodeKlassMap, configs: PluginConfigs = {}) {
     this.configs = configs
@@ -60,12 +61,20 @@ export class CommPlugin {
     }
     this.tasks[thread.id] = Task.submit(taskTick)
   }
+
+  mount(sdk: SDK) {
+    this.sdk = sdk
+  }
+
+  unmount() {
+    this.sdk = null
+  }
 }
 
 /**
  * @description 任务线程 每个实例对应每次触发创建的运行实体
  */
-export class WorkflowThread {
+export class WorkflowThread<SDK = unknown> {
   // 上下文数据
   readonly id = randomUUID()
   readonly createdAt = new Date()
@@ -73,7 +82,7 @@ export class WorkflowThread {
   readonly nodeKv: Record<string, Record<string, any>> = {}
 
   readonly triggerEndpoint: TriggerOnEvents
-  readonly plugin: CommPlugin
+  readonly plugin: CommPlugin<SDK>
 
   // 运行时图数据
   readonly availableNodes = new Queue<CommNode>()
@@ -81,7 +90,7 @@ export class WorkflowThread {
 
   readonly logger = new Logger(`${WorkflowThread.name}#${this.id}`)
 
-  constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin) {
+  constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin<SDK>) {
     this.triggerEndpoint = triggerEndpoint
     this.plugin = plugin
 

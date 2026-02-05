@@ -4,7 +4,7 @@ import { NcKlassMap } from './constant'
 import { TriggerOnEvents } from '@/src/apps/runtime/core/workflow/node'
 import type { NapcatWsSdk } from '../sdk'
 
-export class NapcatWsTriggerPlugin extends CommPlugin {
+export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
   constructor(nodes: Node[], edges: Edge[]) {
     super(nodes, edges, NcKlassMap)
   }
@@ -12,6 +12,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin {
   private unsubscribes: Array<() => void> | null = null
 
   mount(sdk: NapcatWsSdk) {
+    super.mount(sdk)
     this.unsubscribes = [
       sdk.subscribe('message.group', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
@@ -32,5 +33,6 @@ export class NapcatWsTriggerPlugin extends CommPlugin {
 
   unmount() {
     this.unsubscribes?.forEach(unsubscribe => unsubscribe())
+    super.unmount()
   }
 }
