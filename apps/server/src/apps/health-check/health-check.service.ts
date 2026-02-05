@@ -60,6 +60,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     }, this.collectInterval)
 
     this.checkGcService.initializeGCObserver()
+    this.checkEventLoopService.initEventLoopSnapshot()
   }
 
   private collectAllMetrics(): void {
@@ -209,6 +210,11 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     // 清理小服务资源
     this.checkEventLoopService.destroy()
     this.checkGcService.destroy()
+
+    this.checkCpuService.clearMetrics()
+    this.checkEventLoopService.clearMetrics()
+    this.checkMemService.clearMetrics()
+    this.checkGcService.clearMetrics()
 
     this.logger.log('性能监控服务已关闭')
   }
