@@ -27,12 +27,6 @@ export type RealTimeSamplesResponse = {
   note: string
 }
 
-export type AggregatedMetricsResponse = {
-  data: AggregatedMetrics[]
-  latest: AggregatedMetrics | null
-  count: number
-}
-
 export type HealthSummary = {
   status: 'healthy' | 'warning' | 'critical'
   score: number
@@ -75,7 +69,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
 
   // 监控器实例
   private collectInterval_: NodeJS.Timeout | null = null
-  private aggregationInterval: NodeJS.Timeout | null = null
+  private aggregationInterval_: NodeJS.Timeout | null = null
 
   constructor(
     private readonly checkMemService: CheckMemService,
@@ -121,7 +115,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
 
   private startStatisticalAggregation(): void {
     // 每分钟进行一次统计聚合
-    this.aggregationInterval = setInterval(() => {
+    this.aggregationInterval_ = setInterval(() => {
       this.performStatisticalAggregation()
     }, this.outputInterval)
   }
@@ -175,12 +169,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   /**
    * 获取统计聚合数据（1分钟间隔的统计结果）
    */
-  public getAggregatedMetrics(): AggregatedMetricsResponse {
-    return {
-      data: this.aggregatedMetricsArray.slice(-20), // 最近20条记录
-      latest: this.aggregatedMetricsArray.slice(-1)[0] || null,
-      count: this.aggregatedMetricsArray.length,
-    }
+  public getAggregatedMetrics(): AggregatedMetrics[] {
+    return this.aggregatedMetricsArray.slice(-20) // 最近20条记录
   }
 
   /**
@@ -256,8 +246,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     if (this.collectInterval_)
       clearInterval(this.collectInterval_)
 
-    if (this.aggregationInterval)
-      clearInterval(this.aggregationInterval)
+    if (this.aggregationInterval_)
+      clearInterval(this.aggregationInterval_)
 
     // 清理小服务资源
     this.checkEventLoopService.destroy()
