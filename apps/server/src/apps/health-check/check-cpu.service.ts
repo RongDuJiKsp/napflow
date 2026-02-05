@@ -32,8 +32,7 @@ export class CheckCpuService {
 
     // 计算真正的 CPU 使用率百分比
     // cpuUsage 返回的是微秒级的 CPU 时间
-    // 使用率 = (CPU时间 / 经过时间) * 100%
-    // 注意：单核最大100%，多核可能超过100%，这里保持原始值
+    // 单核最大100%，多核可能超过100%，这里保持原始值
     let userPercent = 0
     let systemPercent = 0
 

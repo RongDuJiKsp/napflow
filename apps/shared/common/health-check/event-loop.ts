@@ -2,6 +2,7 @@ import z from 'zod'
 import { ZodCheckStatisticalSummary } from './base'
 
 // 事件循环指标 Schema
+// 单位 毫秒(ms)
 export const ZodCheckEventLoopMetric = z.object({
   timestamp: z.number(),
   min: z.number(),

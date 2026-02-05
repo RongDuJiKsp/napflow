@@ -12,14 +12,14 @@ export class CheckEventLoopService {
 
   collectSnapshot(): EventLoopMetric {
     const metric: EventLoopMetric = {
-      timestamp: Date.now() / 1000,
-      min: this.histogram.min,
-      max: this.histogram.max,
-      mean: this.histogram.mean,
-      p50: this.histogram.percentile(50),
-      p90: this.histogram.percentile(90),
-      p99: this.histogram.percentile(99),
-      p999: this.histogram.percentile(99.9),
+      timestamp: Math.floor(Date.now() / 10 ** 3),
+      min: Math.floor(this.histogram.min / 10 ** 6),
+      max: Math.floor(this.histogram.max / 10 ** 6),
+      mean: this.histogram.mean / 10 ** 6,
+      p50: this.histogram.percentile(50) / 10 ** 6,
+      p90: this.histogram.percentile(90) / 10 ** 6,
+      p99: this.histogram.percentile(99) / 10 ** 6,
+      p999: this.histogram.percentile(99.9) / 10 ** 6,
     }
 
     this.metrics.add(metric)
