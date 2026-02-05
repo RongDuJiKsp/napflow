@@ -1,12 +1,12 @@
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
-import { Injectable, Logger } from '@nestjs/common'
-import type { CheckMemService } from './check-mem.service'
+import { Inject, Injectable, Logger } from '@nestjs/common'
+import { CheckMemService } from './check-mem.service'
 import type { } from './check-mem.service'
-import type { CheckCpuService } from './check-cpu.service'
-import type { CheckEventLoopService } from './check-event-loop.service'
-import type { CheckGcService } from './check-gc.service'
+import { CheckCpuService } from './check-cpu.service'
+import { CheckEventLoopService } from './check-event-loop.service'
+import { CheckGcService } from './check-gc.service'
 import { RingBuffer } from 'ring-buffer-ts'
-import type { AggregatedMetrics, HealthSummary, RealTimeSamplesResponse } from '@shared/common/health-check/health-check'
+import type { AggregatedMetrics, HealthSummary, RealTimeSamples } from '@shared/common/health-check/health-check'
 
 @Injectable()
 export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
@@ -29,10 +29,10 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   private aggregationInterval_: NodeJS.Timeout | null = null
 
   constructor(
-    private readonly checkMemService: CheckMemService,
-    private readonly checkCpuService: CheckCpuService,
-    private readonly checkEventLoopService: CheckEventLoopService,
-    private readonly checkGcService: CheckGcService,
+    @Inject(CheckMemService) private readonly checkMemService: CheckMemService,
+    @Inject(CheckCpuService) private readonly checkCpuService: CheckCpuService,
+    @Inject(CheckEventLoopService) private readonly checkEventLoopService: CheckEventLoopService,
+    @Inject(CheckGcService) private readonly checkGcService: CheckGcService,
   ) {}
 
   async onModuleInit() {
@@ -110,7 +110,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   /**
    * 获取实时采样数据（最近6次采样，约1分钟内）
    */
-  public getRealTimeSamples(): RealTimeSamplesResponse {
+  public getRealTimeSamples(): RealTimeSamples {
     const gcSnapshot = this.checkGcService.collectSnapshot(60000)
 
     return {
@@ -126,8 +126,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   /**
    * 获取统计聚合数据（1分钟间隔的统计结果）
    */
-  public getAggregatedMetrics(): AggregatedMetrics[] {
-    return this.aggregatedMetricsArray.slice(-20) // 最近20条记录
+  public getAggregatedMetrics(samples: number = 20): AggregatedMetrics[] {
+    return this.aggregatedMetricsArray.slice(-samples) // 最近samples条记录
   }
 
   /**
@@ -144,21 +144,21 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
       details: {
         memory: latest?.memory ? {
           heapUtilization: `${latest.memory.utilization.mean.toFixed(2)}%`,
-        } : undefined,
+        } : null,
         cpu: latest?.cpu ? {
           avgLoad: `${latest.cpu.total.mean.toFixed(2)}%`,
           maxLoad: `${latest.cpu.total.max.toFixed(2)}%`,
-        } : undefined,
+        } : null,
         eventLoop: latest?.eventLoop ? {
           health: latest.eventLoop.healthScore > 80 ? 'excellent'
             : latest.eventLoop.healthScore > 60 ? 'good' : 'poor',
           avgDelay: `${(latest.eventLoop.mean.mean / 1000000).toFixed(2)}ms`,
-        } : undefined,
+        } : null,
         gc: latest?.gc ? {
           pressureScore: latest.gc.pressureScore,
           frequency: latest.gc.frequency,
           avgDuration: latest.gc.duration ? `${latest.gc.duration.mean.toFixed(2)}ms` : '0ms',
-        } : undefined,
+        } : null,
       },
     }
   }

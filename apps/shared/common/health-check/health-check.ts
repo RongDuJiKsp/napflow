@@ -18,7 +18,7 @@ export const ZodCheckAggregatedMetrics = z.object({
 export type AggregatedMetrics = z.infer<typeof ZodCheckAggregatedMetrics>
 
 // 实时采样响应 Schema
-export const ZodCheckRealTimeSamplesResponse = z.object({
+export const ZodCheckRealTimeSamples = z.object({
   memory: z.array(ZodCheckMemoryMetric),
   cpu: z.array(ZodCheckCPUMetric),
   eventLoop: z.array(ZodCheckEventLoopMetric),
@@ -26,7 +26,7 @@ export const ZodCheckRealTimeSamplesResponse = z.object({
   timestamp: z.number(),
   note: z.string(),
 })
-export type RealTimeSamplesResponse = z.infer<typeof ZodCheckRealTimeSamplesResponse>
+export type RealTimeSamples = z.infer<typeof ZodCheckRealTimeSamples>
 
 // 健康状态枚举
 export const HealthStatus = {
@@ -40,20 +40,20 @@ export type HealthStatusType = typeof HealthStatus[keyof typeof HealthStatus]
 export const ZodCheckHealthSummaryDetails = z.object({
   memory: z.object({
     heapUtilization: z.string(),
-  }).optional(),
+  }).nullable(),
   cpu: z.object({
     avgLoad: z.string(),
     maxLoad: z.string(),
-  }).optional(),
+  }).nullable(),
   eventLoop: z.object({
     health: z.string(),
     avgDelay: z.string(),
-  }).optional(),
+  }).nullable(),
   gc: z.object({
     pressureScore: z.number(),
     frequency: z.number(),
     avgDuration: z.string(),
-  }).optional(),
+  }).nullable(),
 })
 export type HealthSummaryDetails = z.infer<typeof ZodCheckHealthSummaryDetails>
 
