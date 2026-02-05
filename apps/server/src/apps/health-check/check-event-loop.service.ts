@@ -8,7 +8,7 @@ import type { EventLoopMetric, EventLoopStatistics } from '@shared/common/health
 export class CheckEventLoopService {
   private readonly maxStorageSize = 100
   private metrics: RingBuffer<EventLoopMetric> = new RingBuffer<EventLoopMetric>(this.maxStorageSize)
-  private histogram = monitorEventLoopDelay({ resolution: 20 })
+  private histogram = monitorEventLoopDelay({ resolution: 5 }) // 事件循环监控精度
 
   collectSnapshot(): EventLoopMetric {
     const metric: EventLoopMetric = {
