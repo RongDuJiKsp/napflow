@@ -8,7 +8,6 @@ import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
 import { BotSignal } from '@shared/common/bot/base'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 import { AppConfigService } from '@/src/apps/app-config/app-config.service'
-import { ModuleRef } from '@nestjs/core'
 
 export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
   [AdapterTag.napcatWs]: NapcatWsFactory,
@@ -25,7 +24,6 @@ export class BotCoreRuntimeService {
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
     @Inject(BotBridgeForBotService) private readonly bridge: BotBridgeForBotService,
     @Inject(AppConfigService) private readonly config: AppConfigService,
-    @Inject(ModuleRef) private readonly moduleRef: ModuleRef
   ) {}
 
   get botInstances() {

@@ -14,6 +14,7 @@ import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity
 import { NapcatWsTriggerPlugin } from './plugin'
 import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import { NapcatWsSdk } from './sdk'
+import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
@@ -80,6 +81,10 @@ export class NapcatWsAdapter implements BotInstance {
     }
   }
 
+  sourceSnapshot(): BotPluginStatusSnapshot | null {
+    return this.healthChecker?.pluginStatus() ?? null
+  }
+
   get registerable() {
     return [this.healthChecker].filter(Boolean) as Registerable[]
   }
@@ -110,7 +115,7 @@ export class NapcatWsAdapter implements BotInstance {
     })
     this.logger.log('SDK inited')
     // init services
-    this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName)
+    this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName, this.plugins || [])
 
     this.registerable.forEach(s => s.register())
     this.logger.log('service is registered')

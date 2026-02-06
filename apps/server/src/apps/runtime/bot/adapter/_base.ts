@@ -2,6 +2,7 @@ import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
+import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 
 // 可被数据库存储的Bot实例
 export type BotDBInstance = {
@@ -10,6 +11,7 @@ export type BotDBInstance = {
 
 export type BotHealthCheckable = {
   runningState: () => BotState;
+  sourceSnapshot: () => BotPluginStatusSnapshot | null;
   signal: (signal: BotSignal) => void;
 }
 // Bot实例 设计思路： bot实例可被db存储配置 启动时从数据库运行 （BotDBInstance） ；每个bot实例可以连接到一个上游适配器

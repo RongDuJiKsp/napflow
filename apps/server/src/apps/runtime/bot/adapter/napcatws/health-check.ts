@@ -3,6 +3,8 @@ import { Logger } from '@nestjs/common'
 import { BotUpstreamState } from '@shared/common/bot/base'
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 import type { NapcatWsSdk } from './sdk'
+import type { NapcatWsTriggerPlugin } from './plugin'
+import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 
 export type HeartBeatSnapshot = {
   heartbeatAt: Date;
@@ -19,6 +21,7 @@ export class NCCHealthChecker implements Registerable {
     private readonly nc: NapcatWsSdk,
     private readonly cfg: NapcatWsAdapterConfig,
     private readonly ctxName: string,
+    private readonly plugins: NapcatWsTriggerPlugin[],
   ) {
     this.logger = new Logger(this.checkerName)
   }
@@ -73,5 +76,12 @@ export class NCCHealthChecker implements Registerable {
     if (!this.heartbeatSnapshot.online) return BotUpstreamState.offline
 
     return BotUpstreamState.ok
+  }
+
+  pluginStatus(): BotPluginStatusSnapshot {
+    return {
+      taskQueueLength: this.plugins.map(plugin => plugin.threadList.length).reduce((acc, cur) => acc + cur, 0),
+      nodeQueueLength: this.plugins.map(plugin => plugin.threadList.reduce((acc, cur) => acc + cur.availableNodes.size(), 0)).reduce((acc, cur) => acc + cur, 0),
+    }
   }
 }
