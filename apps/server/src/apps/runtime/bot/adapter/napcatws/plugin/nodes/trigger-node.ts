@@ -27,7 +27,7 @@ export class NcTriggerNode extends TriggerNode {
       _nextTask.abort()
       return
     }
-    nkv['trigger.triggerid'] = thread.id
+    nkv['trigger.triggerid'] = this.id
     if(this.data.on === TriggerEndpoint.Group)
       nkv['trigger.uid'] = Number(thread.kv.uid)
 
