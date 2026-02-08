@@ -26,7 +26,7 @@ const BotSidebarLayout = ({ children }: PropsWithChildren) => {
     {
       key: 'edit',
       icon: <RiEdit2Line size={16}/>,
-      label: '编辑BotInfo',
+      label: 'Bot设置',
     },
   ], [])
 
