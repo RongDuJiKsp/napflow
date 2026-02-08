@@ -26,8 +26,16 @@ export class BotCoreRuntimeService {
     @Inject(AppConfigService) private readonly config: AppConfigService,
   ) {}
 
+  get botIds() {
+    return Array.from(this.botInstanceMap.keys())
+  }
+
   get botInstances() {
     return Array.from(this.botInstanceMap.values())
+  }
+
+  get botEntities() {
+    return Array.from(this.botInstanceMap.entries()).map(([botId, botInstance]) => ({ botId, botInstance }))
   }
 
   botState(botId: string): BotState {
