@@ -87,6 +87,7 @@ export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
         },
       })
     }
+    this.logger.debug(`统计聚合完成 - 时间戳: ${new Date().toISOString()}`)
   }
 
   getRecordStatics(botId: string, window: number = 80) {

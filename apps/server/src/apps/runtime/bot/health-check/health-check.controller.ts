@@ -6,7 +6,7 @@ import { ZodCheckBotHealthSamplesResp }from '@shared/data-transfer/bot/health-ch
 import { Resp } from '@shared/data-transfer/_base'
 import { BotHealthCheckService } from './health-check.service'
 @Controller('bot-health-check')
-export class HealthCheckController {
+export class BotHealthCheckController {
   constructor(@Inject(BotHealthCheckService) private readonly healthCheckService: BotHealthCheckService) {}
   @Get(':botId/sample')
   @AllowUserGroup(UserRole.User)
