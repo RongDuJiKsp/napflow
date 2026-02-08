@@ -70,6 +70,7 @@ export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
       const taskQueueLength = snapArr.map(snap => snap.taskQueueLength)
       const nodeQueueLength = snapArr.map(snap => snap.nodeQueueLength)
       buf.add({
+        sampleAt: Math.floor(Date.now() / 1000),
         taskQueueLength: {
           min: ss.min(taskQueueLength),
           max: ss.max(taskQueueLength),
