@@ -22,8 +22,18 @@ const EventLoopChart = () => {
         },
         {
           time: formatTimestamp(item.timestamp),
+          value: item.eventLoop.mean.p95,
+          type: '平均延迟 P95',
+        },
+        {
+          time: formatTimestamp(item.timestamp),
           value: item.eventLoop.max.mean,
-          type: '最大延迟',
+          type: '最大延迟(均值)',
+        },
+        {
+          time: formatTimestamp(item.timestamp),
+          value: item.eventLoop.max.p95,
+          type: '最大延迟 P95',
         },
       ]
     })

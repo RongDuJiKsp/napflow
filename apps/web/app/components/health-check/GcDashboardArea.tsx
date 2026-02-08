@@ -87,6 +87,11 @@ const GCDurationChart = () => {
           value: item.gc.duration?.mean ?? 0,
           type: 'GC 时延',
         },
+        {
+          time: formatTimestamp(item.timestamp),
+          value: item.gc.duration?.p95 ?? 0,
+          type: 'GC 时延 P95',
+        },
       ]
     })
   }, [data])

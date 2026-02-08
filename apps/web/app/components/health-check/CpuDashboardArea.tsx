@@ -22,6 +22,11 @@ const CPUChart = () => {
         },
         {
           time: formatTimestamp(item.timestamp),
+          value: item.cpu.total.p95,
+          type: 'CPU 平均使用率(95分位)',
+        },
+        {
+          time: formatTimestamp(item.timestamp),
           value: item.cpu.total.max,
           type: 'CPU 峰值',
         },
