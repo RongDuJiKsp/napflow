@@ -16,12 +16,12 @@ const NodeQueueChart = () => {
     return data.flatMap((item) => {
       return [
         {
-          time: formatTimestamp(item.sampleAt),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.nodeQueueLength.mean,
           type: '节点队列长度(均值)',
         },
         {
-          time: formatTimestamp(item.sampleAt),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.nodeQueueLength.p95,
           type: '节点队列长度 P95',
         },

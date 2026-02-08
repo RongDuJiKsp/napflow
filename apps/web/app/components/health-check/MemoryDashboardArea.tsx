@@ -16,32 +16,32 @@ const MemoryChart = () => {
       if (!item.memory) return []
       return [
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.heapUsed.mean,
           type: '堆内存使用(均值)',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.heapUsed.p95,
           type: '堆内存使用 P95',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.heapTotal.mean,
           type: '堆内存总量(均值)',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.heapTotal.p95,
           type: '堆内存总量 P95',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.rss.mean,
           type: 'RSS(均值)',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.memory.rss.p95,
           type: 'RSS P95',
         },

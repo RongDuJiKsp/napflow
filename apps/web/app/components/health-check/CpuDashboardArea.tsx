@@ -16,17 +16,17 @@ const CPUChart = () => {
       if (!item.cpu) return []
       return [
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.cpu.total.mean,
           type: 'CPU 平均使用率',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.cpu.total.p95,
           type: 'CPU 平均使用率(95分位)',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.cpu.total.max,
           type: 'CPU 峰值',
         },

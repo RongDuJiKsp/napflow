@@ -9,7 +9,7 @@ import { ZodCheckEventLoopMetric } from './event-loop'
 
 // 聚合指标 Schema
 export const ZodCheckAggregatedMetrics = z.object({
-  timestamp: z.number(),
+  sampleAtMs: z.number(),
   memory: ZodCheckMemoryStatistics.nullable(),
   cpu: ZodCheckCPUStatistics.nullable(),
   eventLoop: ZodCheckEventLoopStatistics.nullable(),

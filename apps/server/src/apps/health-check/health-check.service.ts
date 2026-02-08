@@ -82,7 +82,7 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     const now = Date.now()
 
     const aggregated: AggregatedMetrics = {
-      timestamp: now,
+      sampleAtMs: now,
       memory: null,
       cpu: null,
       eventLoop: null,

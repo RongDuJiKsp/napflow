@@ -36,7 +36,7 @@ const HealthCheckDashboard = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800">系统健康监控</h2>
         <span className="text-sm text-gray-500">
-          最后更新: {formatTimestamp(data[data.length - 1].timestamp)}
+          最后更新: {formatTimestamp(data[data.length - 1].sampleAtMs)}
         </span>
       </div>
 

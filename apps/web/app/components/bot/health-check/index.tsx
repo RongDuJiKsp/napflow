@@ -7,10 +7,12 @@ import { formatTimestamp } from '../../health-check/utils'
 import { EmptyState, LoadingState } from '../../health-check/common'
 import NodeQueueArea from './NodeQueueArea'
 import TaskQueueArea from './TaskQueueArea'
+import { useHealthCheck } from './hooks/use-health-check'
 
 const BotHealthCheck = () => {
   const { botId } = useBotParam()
   const { data, isLoading } = useBotHealthCheckQuery(botId)
+  useHealthCheck()
 
   if (isLoading) {
     return (
@@ -36,7 +38,7 @@ const BotHealthCheck = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800">Bot健康监控</h2>
         <span className="text-sm text-gray-500">
-          最后更新: {formatTimestamp(data[data.length - 1].sampleAt)}
+          最后更新: {formatTimestamp(data[data.length - 1].sampleAtMs)}
         </span>
       </div>
 

@@ -1,8 +1,7 @@
 import BotHealthCheck from '@components/bot/health-check'
 export default function Page() {
   return (
-    <div>
-      DashBoard
+    <div className='w-full'>
       <BotHealthCheck />
     </div>
   )

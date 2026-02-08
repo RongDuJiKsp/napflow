@@ -54,7 +54,7 @@ const GCFrequencyChart = () => {
       if (!item.gc) return []
       return [
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.gc.frequency,
           type: 'GC 次数',
         },
@@ -83,12 +83,12 @@ const GCDurationChart = () => {
       if (!item.gc) return []
       return [
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.gc.duration?.mean ?? 0,
           type: 'GC 时延',
         },
         {
-          time: formatTimestamp(item.timestamp),
+          time: formatTimestamp(item.sampleAtMs),
           value: item.gc.duration?.p95 ?? 0,
           type: 'GC 时延 P95',
         },
