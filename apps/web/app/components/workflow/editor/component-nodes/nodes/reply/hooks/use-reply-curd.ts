@@ -3,18 +3,21 @@ import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
 import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
 import type { ComponentNode } from '../../../types'
 import type { ReplyData, ReplyTarget } from '../creator'
+import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 
 export const useReplyCurd = (id: string) => {
   const { vars } = useComponentNodeEnv(id)
   const { editNode } = useStoreImmerCurd()
+  const { submitSyncDraft } = useWorkflowDraft()
 
   const handleContentChange = useCallback(
     (content: string) => {
       editNode<ComponentNode<ReplyData>>(id, (draft) => {
         draft.data.content = content
       })
+      submitSyncDraft()
     },
-    [id, editNode],
+    [id, editNode, submitSyncDraft],
   )
 
   const handleReplyTargetChange = useCallback(
@@ -25,8 +28,9 @@ export const useReplyCurd = (id: string) => {
         draft.data.groupId = undefined
         draft.data.triggerSourceId = undefined
       })
+      submitSyncDraft()
     },
-    [id, editNode],
+    [editNode, id, submitSyncDraft],
   )
 
   const handleUserIdChange = useCallback(
@@ -34,8 +38,9 @@ export const useReplyCurd = (id: string) => {
       editNode<ComponentNode<ReplyData>>(id, (draft) => {
         draft.data.userId = userId
       })
+      submitSyncDraft()
     },
-    [id, editNode],
+    [editNode, id, submitSyncDraft],
   )
 
   const handleGroupIdChange = useCallback(
@@ -43,8 +48,9 @@ export const useReplyCurd = (id: string) => {
       editNode<ComponentNode<ReplyData>>(id, (draft) => {
         draft.data.groupId = groupId
       })
+      submitSyncDraft()
     },
-    [id, editNode],
+    [editNode, id, submitSyncDraft],
   )
 
   const handleTriggerSourceIdChange = useCallback(
@@ -52,8 +58,9 @@ export const useReplyCurd = (id: string) => {
       editNode<ComponentNode<ReplyData>>(id, (draft) => {
         draft.data.triggerSourceId = triggerSourceId
       })
+      submitSyncDraft()
     },
-    [id, editNode],
+    [editNode, id, submitSyncDraft],
   )
   return {
     vars,
