@@ -26,7 +26,9 @@ export class NcReplyNode extends ReplyNode {
     }
     else if(this.data.replyTarget === ReplyTarget.triggerSource && this.data.triggerSourceId) {
       this.logger.debug('Replying to trigger source')
-      const sourceKv = thread.nodeKv[this.data.triggerSourceId]
+      const triggerSourceId = compileTemplate(this.data.triggerSourceId, thread)
+      const sourceKv = thread.nodeKv[triggerSourceId]
+
       if(sourceKv['trigger.uid'])
         await this.replyToUser(thread, sourceKv['trigger.uid'], content)
       else if(sourceKv['trigger.gid'])

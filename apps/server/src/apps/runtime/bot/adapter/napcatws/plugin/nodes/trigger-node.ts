@@ -29,10 +29,10 @@ export class NcTriggerNode extends TriggerNode {
     }
     nkv['trigger.triggerid'] = this.id
     if(this.data.on === TriggerEndpoint.Group)
-      nkv['trigger.uid'] = Number(thread.kv.uid)
+      nkv['trigger.gid'] = Number(thread.kv.gid)
 
     if(this.data.on === TriggerEndpoint.Friend)
-      nkv['trigger.gid'] = Number(thread.kv.gid)
+      nkv['trigger.uid'] = Number(thread.kv.uid)
     nkv['trigger.messageid'] = thread.kv.messageid
     nkv['trigger.msgreadable'] = thread.kv.hmsg
   }
