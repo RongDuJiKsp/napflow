@@ -1,7 +1,7 @@
 import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
 import { Gauge } from '@ant-design/charts'
 import { memo, useMemo } from 'react'
-import { useScoreGaugeConfig } from './hooks/use-score-gauge'
+import { useScoreGaugeConfig } from '../../hooks/antd-charts/use-score-gauge'
 import { ChartCard } from './common'
 
 // GC 健康分数仪表盘

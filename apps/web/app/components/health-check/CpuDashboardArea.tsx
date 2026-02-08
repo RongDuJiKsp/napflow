@@ -3,7 +3,7 @@ import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-quer
 import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { formatTimestamp } from './utils'
-import { useLineGraphConfig } from './hooks/use-line-graph'
+import { useLineGraphConfig } from '../../hooks/antd-charts/use-line-graph'
 import { fmtPersentAxis, fmtPersentTooltip } from './utils'
 import { ChartCard } from './common'
 // CPU 图表组件
