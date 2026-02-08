@@ -67,6 +67,9 @@ export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
       const snapArr = rec.toArray()
       delete this.botSnapshotBuf[botId]
 
+      if(snapArr.length === 0)
+        continue
+
       const taskQueueLength = snapArr.map(snap => snap.taskQueueLength)
       const nodeQueueLength = snapArr.map(snap => snap.nodeQueueLength)
       buf.add({
