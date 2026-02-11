@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge'
 import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingItem } from './hooks/use-binding-item'
+import BindingConfigButton from './BindingConfigButton'
 
 type BindingItem = NonNullable<ReturnType<typeof useBindingBotQuery>['data']>[number]
 
@@ -62,20 +63,23 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
               <div className="font-semibold text-gray-800">{item.app.appName}</div>
               <div className="text-xs text-gray-500 mt-0.5">ID: {item.appId}</div>
             </div>
-            <Button
-              size="sm"
-              className={twMerge(
-                'bg-linear-to-r from-red-500 to-pink-500',
-                'text-white shadow-md hover:shadow-lg',
-                'hover:from-red-600 hover:to-pink-600',
-                'transition-all duration-200',
-                'px-3 py-1.5',
-              )}
-              onClick={handleUnbind}
-            >
-              <RiCloseLine className="w-4 h-4" />
-              <span className="ml-1">解绑</span>
-            </Button>
+            <div className='flex gap-3'>
+              <BindingConfigButton bindingId={item.bindingId}/>
+              <Button
+                size="sm"
+                className={twMerge(
+                  'bg-linear-to-r from-red-500 to-pink-500',
+                  'text-white shadow-md hover:shadow-lg',
+                  'hover:from-red-600 hover:to-pink-600',
+                  'transition-all duration-200',
+                  'px-3 py-1.5',
+                )}
+                onClick={handleUnbind}
+              >
+                <RiCloseLine className="w-4 h-4" />
+                <span className="ml-1">解绑</span>
+              </Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
