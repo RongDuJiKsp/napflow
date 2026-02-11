@@ -4,7 +4,7 @@ import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'
 import { useWorkflowDraft } from '../../hooks/use-workflow-draft'
 
-export const useWorkflowEnvAdd = () => {
+export const useWorkflowEnvAdd = (onFinish?: () => void) => {
   const { submitSyncDraft } = useWorkflowDraft()
   const { message } = App.useApp()
   const {
@@ -12,7 +12,6 @@ export const useWorkflowEnvAdd = () => {
     envs,
   } = useWorkflowEnvDialog()
 
-  const [isAdding, setIsAdding] = useState(false)
   const [newName, setNewName] = useState('')
   const [newType, setNewType] = useState<VarTypes>(VarTypes.String)
 
@@ -25,19 +24,17 @@ export const useWorkflowEnvAdd = () => {
     addEnv({ name: newName.trim(), type: newType })
     setNewName('')
     setNewType(VarTypes.String)
-    setIsAdding(false)
+    onFinish?.()
     submitSyncDraft()
-  }, [newName, newType, addEnv, envs, message, submitSyncDraft])
+  }, [newName, newType, addEnv, envs, message, submitSyncDraft, onFinish])
 
   const handleCancel = useCallback(() => {
     setNewName('')
     setNewType(VarTypes.String)
-    setIsAdding(false)
-  }, [])
+    onFinish?.()
+  }, [onFinish])
 
   return{
-    isAdding,
-    setIsAdding,
     handleAdd,
     handleCancel,
     form: {
