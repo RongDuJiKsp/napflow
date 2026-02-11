@@ -25,3 +25,4 @@ export const ZodCheckBotBridgeBindStatusResp = defineZodResp(
 export type BotBridgeBindStatusResp = z.infer<typeof ZodCheckBotBridgeBindStatusResp>
 
 export const ZodCheckBotBindingConfigResp = defineZodResp(ZodCheckBotWorkflowAppBindingConfig)
+export type BotBindingConfigResp = z.infer<typeof ZodCheckBotBindingConfigResp>
