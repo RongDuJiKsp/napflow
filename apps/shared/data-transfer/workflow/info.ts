@@ -26,6 +26,10 @@ export type LoadDraftResp = z.infer<typeof ZodCheckLoadDraftResp>
 export const ZodCheckGetVersionsResp = defineZodResp(z.array(ZodCheckWorkflowAppData))
 export type GetVersionsResp = z.infer<typeof ZodCheckGetVersionsResp>
 
+// @/workflow/:appId/version/:version
+export const ZodCheckGetVersionResp = defineZodResp(ZodCheckWorkflowAppData)
+export type GetVersionResp = z.infer<typeof ZodCheckGetVersionResp>
+
 // @/workflow/:appId/version-meta
 export const ZodCheckGetVersionMetaResp = defineZodResp(ZodCheckWorkflowAppVersionMeta)
 export type GetVersionMetaResp = z.infer<typeof ZodCheckGetVersionMetaResp>

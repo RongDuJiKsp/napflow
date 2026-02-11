@@ -7,13 +7,13 @@ import { twMerge } from 'tailwind-merge'
 import { useBindingConfig } from './hooks/use-binding-config'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
-import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
+import { useAppVersionDataQuery } from '@/app/hooks/query/use-app-version-data-query'
 
 const EnvProviderForm = ({ bindingId, ofAppId, ofAppVersion}: { bindingId: string, ofAppId: string, ofAppVersion: string }) => {
   const { botId } = useBotParam()
   const { data: bindingConfig } = useBindingBotConfigQuery(botId, bindingId)
   const { submitConfig } = useBindingConfig(bindingId)
-  const { data: appConfig } = useAppVersionsQuery(ofAppId)
+  const { data: appConfig } = useAppVersionDataQuery(ofAppId, ofAppVersion)
   return (
     <div>
 
