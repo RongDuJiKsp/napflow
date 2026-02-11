@@ -1,22 +1,152 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
-import { Button } from '@heroui/react'
-import { RiCloseLine, RiPlug2Line, RiSettings2Line } from '@remixicon/react'
+import { Button, Input, Label, TextField } from '@heroui/react'
+import { RiCheckLine, RiCloseLine, RiEdit2Line, RiPlug2Line, RiSettings2Line } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
-import { memo } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBindingConfig } from './hooks/use-binding-config'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
 import { useAppVersionDataQuery } from '@/app/hooks/query/use-app-version-data-query'
+import type { Var } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/component-node'
 
-const EnvProviderForm = ({ bindingId, ofAppId, ofAppVersion}: { bindingId: string, ofAppId: string, ofAppVersion: string }) => {
+const typeColors: Record<VarTypes, string> = {
+  [VarTypes.String]: 'bg-blue-100 text-blue-700',
+  [VarTypes.Number]: 'bg-green-100 text-green-700',
+  [VarTypes.StringArray]: 'bg-purple-100 text-purple-700',
+  [VarTypes.NumberArray]: 'bg-pink-100 text-pink-700',
+}
+
+const typeLabels: Record<VarTypes, string> = {
+  [VarTypes.String]: 'String',
+  [VarTypes.Number]: 'Number',
+  [VarTypes.StringArray]: 'StringArray',
+  [VarTypes.NumberArray]: 'NumberArray',
+}
+
+/* ──────────────── 单个环境变量行 ──────────────── */
+const EnvItem = ({
+  env,
+  value,
+  bindingId,
+}: {
+  env: Var
+  value: string | undefined
+  bindingId: string
+}) => {
+  const { botId } = useBotParam()
+  const { data: bindingConfig, refetch } = useBindingBotConfigQuery(botId, bindingId)
+  const { submitConfig } = useBindingConfig(bindingId)
+
+  const [isEditing, setIsEditing] = useBoolean(false)
+  const [inputValue, setInputValue] = useState(value ?? '')
+  const [saving, setSaving] = useState(false)
+
+  const handleSave = useCallback(async () => {
+    if (!inputValue.trim()) return
+    setSaving(true)
+    const envKV = bindingConfig?.envKV ?? {}
+    const newKV = { ...envKV, [env.name]: inputValue.trim() }
+    await submitConfig({ envKV: newKV })
+    await refetch()
+    setSaving(false)
+    setIsEditing.setFalse()
+  }, [inputValue, env.name, bindingConfig, submitConfig, refetch, setIsEditing])
+
+  const handleCancel = useCallback(() => {
+    setInputValue(value ?? '')
+    setIsEditing.setFalse()
+  }, [value, setIsEditing])
+
+  return (
+    <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 rounded-lg border border-gray-200 group hover:border-gray-300 transition-colors">
+      <div className="flex items-center space-x-3 min-w-0 flex-1">
+        <span className="text-sm font-medium text-gray-700 shrink-0">
+          {env.name}
+        </span>
+        <span
+          className={twMerge(
+            'text-xs px-2 py-0.5 rounded-full font-medium shrink-0',
+            typeColors[env.type],
+          )}
+        >
+          {typeLabels[env.type]}
+        </span>
+
+        {isEditing ? (
+          <div className="flex items-center space-x-2 flex-1 min-w-0">
+            <TextField
+              value={inputValue}
+              onChange={setInputValue}
+              className="flex-1 min-w-0"
+            >
+              <Label className="sr-only">值</Label>
+              <Input
+                placeholder="输入环境变量值"
+                onKeyDown={e => e.key === 'Enter' && handleSave()}
+              />
+            </TextField>
+            <button
+              onClick={handleSave}
+              disabled={saving || !inputValue.trim()}
+              className="text-green-500 hover:text-green-700 transition-colors disabled:opacity-50"
+            >
+              <RiCheckLine className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleCancel}
+              className="text-gray-400 hover:text-red-500 transition-colors"
+            >
+              <RiCloseLine className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <span className="text-sm text-gray-500 truncate">
+            {value || <span className="text-gray-300 italic">未设置</span>}
+          </span>
+        )}
+      </div>
+
+      {!isEditing && (
+        <button
+          onClick={setIsEditing.setTrue}
+          className="text-gray-300 hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100 ml-2 shrink-0"
+        >
+          <RiEdit2Line className="w-4 h-4" />
+        </button>
+      )}
+    </div>
+  )
+}
+
+/* ──────────────── 环境变量配置表单 ──────────────── */
+const EnvProviderForm = ({ bindingId, ofAppId, ofAppVersion }: { bindingId: string; ofAppId: string; ofAppVersion: string }) => {
   const { botId } = useBotParam()
   const { data: bindingConfig } = useBindingBotConfigQuery(botId, bindingId)
-  const { submitConfig } = useBindingConfig(bindingId)
   const { data: appConfig } = useAppVersionDataQuery(ofAppId, ofAppVersion)
-  return (
-    <div>
 
+  const envs = useMemo(() => appConfig?.envs ?? [], [appConfig])
+  const envKV = useMemo(() => bindingConfig?.envKV ?? {}, [bindingConfig])
+
+  if (envs.length === 0) {
+    return (
+      <div className="text-center text-sm text-gray-400 py-6">
+        该插件没有定义环境变量
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      {envs.map((env, index) => (
+        <EnvItem
+          key={`${env.name}-${index}`}
+          env={env}
+          value={envKV[env.name] != null ? String(envKV[env.name]) : undefined}
+          bindingId={bindingId}
+        />
+      ))}
     </div>
   )
 }
@@ -53,7 +183,7 @@ const BindingConfigButton = ({ bindingId, ofAppId, ofAppVersion}: { bindingId: s
                 </DialogTitle>
               </div>
               <button
-                onClick={close}
+                onClick={setIsOpen.setFalse}
                 className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
               >
                 <RiCloseLine className="w-5 h-5" />
