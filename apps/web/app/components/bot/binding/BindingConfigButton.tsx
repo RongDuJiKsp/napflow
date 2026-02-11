@@ -7,6 +7,14 @@ import { twMerge } from 'tailwind-merge'
 
 const BindingIdContext = createContext<string>('')
 
+const EnvProviderForm = () => {
+  return (
+    <div>
+
+    </div>
+  )
+}
+
 const BindingConfigButton = ({ bindingId}: { bindingId: string }) => {
   const [isOpen, setIsOpen] = useBoolean(false)
   return <>
@@ -57,7 +65,7 @@ const BindingConfigButton = ({ bindingId}: { bindingId: string }) => {
           {/* Env List */}
           <div className="px-6 pb-4 overflow-y-auto flex-1">
             <BindingIdContext.Provider value={bindingId}>
-
+              <EnvProviderForm />
             </BindingIdContext.Provider>
           </div>
         </DialogPanel>
