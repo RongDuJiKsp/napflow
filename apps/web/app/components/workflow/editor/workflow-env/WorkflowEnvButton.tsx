@@ -8,7 +8,7 @@ const WorkflowEnvButton = () => {
   const editorOutsideStore = useEditorOutsideStore()
   const open = useStore(editorOutsideStore, state => state.openEnvWindow)
   return <>
-    <Button onClick={open}>
+    <Button onClick={open} variant='tertiary'>
       ENV
     </Button>
   </>
