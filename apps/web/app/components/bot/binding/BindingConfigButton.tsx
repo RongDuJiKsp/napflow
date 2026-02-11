@@ -4,10 +4,13 @@ import { RiCloseLine, RiPlug2Line, RiSettings2Line } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
 import { createContext, memo } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { useBindingConfig } from './hooks/use-binding-config'
 
 const BindingIdContext = createContext<string>('')
 
 const EnvProviderForm = () => {
+  const { data } = useBindingBotQuery()
+  const { submitConfig } = useBindingConfig()
   return (
     <div>
 

@@ -6,7 +6,7 @@ import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 
-export const useBingConfig = (bindingId: string) => {
+export const useBindingConfig = (bindingId: string) => {
   const { botId } = useBotParam()
   const submitReqFn = useCallback(async (data: BotWorkflowAppBindingConfig) => await jsonQ.Post<NullResp>(`/${botId}/bindingconfig/${bindingId}`, data), [botId, bindingId])
   const submitConfig = useSubmitZodFn(ZodCheckBotWorkflowAppBindingConfig, submitReqFn)
