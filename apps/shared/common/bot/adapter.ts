@@ -1,6 +1,8 @@
 import z from 'zod'
 
-export const ZodCheckBotWorkflowAppBindingConfig = z.object({}).partial()
+export const ZodCheckBotWorkflowAppBindingConfig = z.object({
+  envKV: z.record(z.string(), z.any()),
+}).partial()
 export type BotWorkflowAppBindingConfig = z.infer<typeof ZodCheckBotWorkflowAppBindingConfig>
 
 export const ZodCheckCommonAdapterConfig = z.object({
