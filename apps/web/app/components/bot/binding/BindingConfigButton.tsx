@@ -2,15 +2,18 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Button } from '@heroui/react'
 import { RiCloseLine, RiPlug2Line, RiSettings2Line } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
-import { createContext, memo } from 'react'
+import { memo } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBindingConfig } from './hooks/use-binding-config'
+import { useBotParam } from '../hooks/use-bot-param'
+import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
+import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
 
-const BindingIdContext = createContext<string>('')
-
-const EnvProviderForm = () => {
-  const { data } = useBindingBotQuery()
-  const { submitConfig } = useBindingConfig()
+const EnvProviderForm = ({ bindingId, ofAppId, ofAppVersion}: { bindingId: string, ofAppId: string, ofAppVersion: string }) => {
+  const { botId } = useBotParam()
+  const { data: bindingConfig } = useBindingBotConfigQuery(botId, bindingId)
+  const { submitConfig } = useBindingConfig(bindingId)
+  const { data: appConfig } = useAppVersionsQuery(ofAppId)
   return (
     <div>
 
@@ -18,7 +21,7 @@ const EnvProviderForm = () => {
   )
 }
 
-const BindingConfigButton = ({ bindingId}: { bindingId: string }) => {
+const BindingConfigButton = ({ bindingId, ofAppId, ofAppVersion}: { bindingId: string, ofAppId: string, ofAppVersion: string }) => {
   const [isOpen, setIsOpen] = useBoolean(false)
   return <>
     <Button
@@ -67,9 +70,7 @@ const BindingConfigButton = ({ bindingId}: { bindingId: string }) => {
 
           {/* Env List */}
           <div className="px-6 pb-4 overflow-y-auto flex-1">
-            <BindingIdContext.Provider value={bindingId}>
-              <EnvProviderForm />
-            </BindingIdContext.Provider>
+            <EnvProviderForm {...{ bindingId, ofAppId, ofAppVersion }}/>
           </div>
         </DialogPanel>
       </div>

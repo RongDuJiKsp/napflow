@@ -64,7 +64,7 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
               <div className="text-xs text-gray-500 mt-0.5">ID: {item.appId}</div>
             </div>
             <div className='flex gap-3'>
-              <BindingConfigButton bindingId={item.bindingId}/>
+              <BindingConfigButton bindingId={item.bindingId} ofAppId={item.appId} ofAppVersion={item.version}/>
               <Button
                 size="sm"
                 className={twMerge(

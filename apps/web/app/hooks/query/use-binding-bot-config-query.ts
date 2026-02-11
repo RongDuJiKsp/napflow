@@ -4,9 +4,9 @@ import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import type { BotBindingConfigResp } from '@shared/data-transfer/bot/bridge'
 import { jsonQ } from '@/utils/net'
 
-export const useBingBotConfig = (botId: string, bindingId: string) => {
+export const useBindingBotConfigQuery = (botId: string, bindingId: string) => {
   return useQuery({
-    queryKey: ['bing-bot-config', botId, bindingId],
+    queryKey: ['binding-bot-config', botId, bindingId],
     queryFn: defineQueryFn<BotBindingConfigResp, BotWorkflowAppBindingConfig>(async () => await jsonQ.Get<BotBindingConfigResp>(`/${botId}/bindingconfig/${bindingId}`)),
   })
 }
