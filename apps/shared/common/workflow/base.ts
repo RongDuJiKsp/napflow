@@ -1,5 +1,6 @@
 import z from 'zod'
 import { ZodCheckEdge, ZodCheckNode } from './core'
+import { ZodCheckVar } from './component-node'
 
 export const ZodCheckWorkflowApp = z.object({
   appId: z.uuidv4(),
@@ -24,6 +25,9 @@ export const ZodCheckWorkflowAppData = z.object({
   edges: z.array(
     ZodCheckEdge,
   ).nullable(),
+  envs: z.array(
+    ZodCheckVar,
+  ).nullable(),
 })
 export type WorkflowAppData = z.infer<typeof ZodCheckWorkflowAppData>
 
@@ -31,6 +35,7 @@ export const ZodCheckWorkflowAppDraft = ZodCheckWorkflowAppData.pick({
   ofAppId: true,
   nodes: true,
   edges: true,
+  envs: true,
 })
 export type WorkflowAppDraft = z.infer<typeof ZodCheckWorkflowAppDraft>
 

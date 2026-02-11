@@ -8,14 +8,17 @@ import { useAppParam } from '../../hooks/use-app-param'
 import type { NullResp } from '@shared/data-transfer/_base'
 import { useSubmitZodFn } from '@/app/hooks/utils/use-form'
 import { debounce } from 'lodash-es'
+import { useWorkflowExtStore } from './use-workflow-ext-state'
 
 export const useWorkflowDraft = () => {
   const { appId } = useAppParam()
   const workflowStore = useStoreApi<WorkflowNode, WorkflowEdge>()
+  const workflowExtStore = useWorkflowExtStore()
   const getCurrentStateSnapshot = useCallback((): WorkflowAppDraft => {
     const { nodes, edges } = workflowStore.getState()
-    return { nodes, edges, ofAppId: appId }
-  }, [workflowStore, appId])
+    const { envs } = workflowExtStore.getState()
+    return { nodes, edges, ofAppId: appId, envs }
+  }, [workflowStore, workflowExtStore, appId])
   const syncRequest = useCallback(
     async (draft: WorkflowAppDraft) =>
       await jsonQ.Post<NullResp>(`/workflow/${appId}/sync`, draft),

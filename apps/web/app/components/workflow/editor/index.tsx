@@ -10,6 +10,7 @@ import '@xyflow/react/dist/style.css'
 import 'react-contexify/dist/ReactContexify.css'
 import { initEdges, initNodes } from './utils/nodes'
 import WorkflowExtStoreProvider from './providers/WorkflowExtStoreProvider'
+import type { WorkflowExtStateStoreShape } from './hooks/use-workflow-ext-state'
 
 const Editor = () => {
   const { appId } = useAppParam()
@@ -29,12 +30,16 @@ const Editor = () => {
     () => (remoteState?.edges ? initEdges(remoteState.edges) : []),
     [remoteState],
   )
+  const remoteExtState = useMemo<Partial<WorkflowExtStateStoreShape>>(
+    () => ({ envs: remoteState?.envs ?? [] }),
+    [remoteState],
+  )
 
   if (!remoteState) return <div>loading</div>
   return (
     <ReactFlowProvider>
       <StoreProvider>
-        <WorkflowExtStoreProvider>
+        <WorkflowExtStoreProvider remoteExtState={remoteExtState}>
           <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
         </WorkflowExtStoreProvider>
       </StoreProvider>
