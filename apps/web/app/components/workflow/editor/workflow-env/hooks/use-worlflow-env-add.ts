@@ -2,8 +2,10 @@ import { VarTypes } from '@shared/common/workflow/component-node'
 import { useCallback, useState } from 'react'
 import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'
+import { useWorkflowDraft } from '../../hooks/use-workflow-draft'
 
 export const useWorkflowEnvAdd = () => {
+  const { submitSyncDraft } = useWorkflowDraft()
   const { message } = App.useApp()
   const {
     addEnv,
@@ -24,7 +26,8 @@ export const useWorkflowEnvAdd = () => {
     setNewName('')
     setNewType(VarTypes.String)
     setIsAdding(false)
-  }, [newName, newType, addEnv, envs, message])
+    submitSyncDraft()
+  }, [newName, newType, addEnv, envs, message, submitSyncDraft])
 
   const handleCancel = useCallback(() => {
     setNewName('')
