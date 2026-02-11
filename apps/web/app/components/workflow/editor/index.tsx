@@ -9,6 +9,7 @@ import { useWorkflowAppDraftQuery } from '@/app/hooks/query/use-workflow-app-dat
 import '@xyflow/react/dist/style.css'
 import 'react-contexify/dist/ReactContexify.css'
 import { initEdges, initNodes } from './utils/nodes'
+import WorkflowExtStoreProvider from './providers/WorkflowExtStoreProvider'
 
 const Editor = () => {
   const { appId } = useAppParam()
@@ -33,7 +34,9 @@ const Editor = () => {
   return (
     <ReactFlowProvider>
       <StoreProvider>
-        <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
+        <WorkflowExtStoreProvider>
+          <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
+        </WorkflowExtStoreProvider>
       </StoreProvider>
     </ReactFlowProvider>
   )

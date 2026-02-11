@@ -2,11 +2,11 @@ import { createParamContext } from '@/utils/react'
 import type { StoreApi } from 'zustand'
 import { createStore } from 'zustand'
 
-export type EditorOutsideStoreState = {
+type EditorOutsideStoreState = {
   isEnvWindowOpen: boolean;
 }
 
-export type NodeEditorOutsideAction = {
+type NodeEditorOutsideAction = {
   openEnvWindow: () => void;
   closeEnvWindow: () => void;
 }
