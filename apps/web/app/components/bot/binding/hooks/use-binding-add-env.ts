@@ -3,9 +3,13 @@ import { useBoolean } from 'ahooks'
 import { useCallback, useState } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { useBindingConfig } from './use-binding-config'
-import type { Var } from '@shared/common/workflow/component-node'
+import { type Var, VarZodChecks } from '@shared/common/workflow/component-node'
+import { App } from 'antd'
+import z from 'zod'
 
 export const useBindingAddEnv = (bindingId: string, env: Var, value: string | undefined) => {
+  const { notification } = App.useApp()
+
   const { botId } = useBotParam()
   const { refetch } = useBindingBotConfigQuery(botId, bindingId)
 
@@ -15,13 +19,20 @@ export const useBindingAddEnv = (bindingId: string, env: Var, value: string | un
   const [saving, setSaving] = useState(false)
 
   const handleSave = useCallback(async () => {
-    if (!inputValue.trim()) return
+    const validated = VarZodChecks[env.type].safeParse(inputValue.trim())
+    if (!validated.success) {
+      notification.error({
+        title: '保存失败',
+        description: z.prettifyError(validated.error),
+      })
+      return
+    }
     setSaving(true)
-    await submitConfig({ envKV: { [env.name]: inputValue.trim() } })
+    await submitConfig({ envKV: { [env.name]: validated.data } })
     await refetch()
     setSaving(false)
     setIsEditing.setFalse()
-  }, [inputValue, env.name, submitConfig, refetch, setIsEditing])
+  }, [inputValue, env.name, submitConfig, refetch, setIsEditing, env.type, notification])
 
   const handleCancel = useCallback(() => {
     setInputValue(value ?? '')
