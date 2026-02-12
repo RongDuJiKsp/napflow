@@ -42,7 +42,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
     on: TriggerOn.Friend,
   }),
   schema: TriggerDataSchema,
-  label: '触发器',
+  label: '消息触发器',
   icon: RiWebhookLine,
   nodeComponent: TriggerNode,
   editPanelComponent: TriggerPanel,
