@@ -2,14 +2,14 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Button, Input, Label, TextField } from '@heroui/react'
 import { RiCheckLine, RiCloseLine, RiEdit2Line, RiPlug2Line, RiSettings2Line } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useMemo } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useBindingConfig } from './hooks/use-binding-config'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
 import { useAppVersionDataQuery } from '@/app/hooks/query/use-app-version-data-query'
 import type { Var } from '@shared/common/workflow/component-node'
 import { VarTypes } from '@shared/common/workflow/component-node'
+import { useBindingAddEnv } from './hooks/use-binding-add-env'
 
 const typeColors: Record<VarTypes, string> = {
   [VarTypes.String]: 'bg-blue-100 text-blue-700',
@@ -35,27 +35,7 @@ const EnvItem = ({
   value: string | undefined
   bindingId: string
 }) => {
-  const { botId } = useBotParam()
-  const { refetch } = useBindingBotConfigQuery(botId, bindingId)
-  const { submitConfig } = useBindingConfig(bindingId)
-
-  const [isEditing, setIsEditing] = useBoolean(false)
-  const [inputValue, setInputValue] = useState(value ?? '')
-  const [saving, setSaving] = useState(false)
-
-  const handleSave = useCallback(async () => {
-    if (!inputValue.trim()) return
-    setSaving(true)
-    await submitConfig({ envKV: { [env.name]: inputValue.trim() } })
-    await refetch()
-    setSaving(false)
-    setIsEditing.setFalse()
-  }, [inputValue, env.name, submitConfig, refetch, setIsEditing])
-
-  const handleCancel = useCallback(() => {
-    setInputValue(value ?? '')
-    setIsEditing.setFalse()
-  }, [value, setIsEditing])
+  const { isEditing, setIsEditing, inputValue, setInputValue, handleSave, handleCancel, saving } = useBindingAddEnv(bindingId, env, value)
 
   return (
     <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 rounded-lg border border-gray-200 group hover:border-gray-300 transition-colors">
@@ -82,7 +62,6 @@ const EnvItem = ({
               <Label className="sr-only">值</Label>
               <Input
                 placeholder="输入环境变量值"
-                onKeyDown={e => e.key === 'Enter' && handleSave()}
               />
             </TextField>
             <button
