@@ -1,6 +1,6 @@
 import { useStore } from 'zustand'
-import { useEditorOutsideStore } from '../../hooks/use-editor-outside-store'
-import { useWorkflowExtStore } from '../../hooks/use-workflow-ext-state'
+import { useEditorOutsideStore } from '../../../hooks/use-editor-outside-store'
+import { useWorkflowExtStore } from '../../../hooks/use-workflow-ext-state'
 
 export const useWorkflowEnvDialog = () => {
   const editorOutsideStore = useEditorOutsideStore()

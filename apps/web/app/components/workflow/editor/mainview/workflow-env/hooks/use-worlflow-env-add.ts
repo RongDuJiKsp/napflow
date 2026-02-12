@@ -2,7 +2,7 @@ import { VarTypes } from '@shared/common/workflow/component-node'
 import { useCallback, useState } from 'react'
 import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'
-import { useWorkflowDraft } from '../../hooks/use-workflow-draft'
+import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 
 export const useWorkflowEnvAdd = (onFinish?: () => void) => {
   const { submitSyncDraft } = useWorkflowDraft()
