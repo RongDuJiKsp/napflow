@@ -4,6 +4,7 @@ import z from 'zod'
 export enum ComponentNodesEnum {
   Trigger = 'trigger',
   Reply = 'reply',
+  If = 'if',
 }
 // node env
 export enum VarTypes {

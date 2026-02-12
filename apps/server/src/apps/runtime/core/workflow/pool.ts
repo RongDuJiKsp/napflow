@@ -123,9 +123,6 @@ export class WorkflowThread<SDK = unknown> {
       return
     }
 
-    this.nodeKv[currNode.id] = {}
-    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
-
     for(const nextNode of this.plugin.nodeGraph.get(currNode)?.next ?? []) {
       if(!this.mayBeNextNodeDegree.has(nextNode))
         this.mayBeNextNodeDegree.set(nextNode, this.plugin.nodeGraph.get(nextNode)!.prev.length)
@@ -144,6 +141,9 @@ export class WorkflowThread<SDK = unknown> {
         }
       }
     }
+
+    this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
+    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
   }
 
   shouldBeKill() {
