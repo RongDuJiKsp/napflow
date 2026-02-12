@@ -98,7 +98,7 @@ export const NodeEnvContext = createContext<Record<string, VarCtx[]>>({})
 
 export const useComponentNodeEnv = (nodeId: string) => {
   const varsCache = useContext(NodeEnvContext)
-  const localVars = varsCache[nodeId]
+  const localVars = useMemo(() => varsCache[nodeId] || [], [varsCache, nodeId])
 
   const workflowExtStore = useWorkflowExtStore()
   const envs = useStore(workflowExtStore, state => state.envs)
