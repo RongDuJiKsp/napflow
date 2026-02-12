@@ -4,6 +4,7 @@ import z from 'zod'
 import type { Class } from 'type-fest'
 import type { WorkflowThread } from './pool'
 import type { WillTask } from '@/src/utils/task-pool'
+import { merge } from 'lodash-es'
 
 export enum CommNodeRole {
   Trigger = 'trigger',
@@ -58,7 +59,7 @@ export class CommEdge implements CommEdgeType {
   target: string
 
   constructor(data: CommEdgeType) {
-    Object.assign(this, data)
+    merge(this, data)
   }
 
   static parse(data: Edge | Record<string, any>): CommEdge {

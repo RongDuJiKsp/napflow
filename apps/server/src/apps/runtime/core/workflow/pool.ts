@@ -7,7 +7,7 @@ import { type Edge, type Node, NodeClassic } from '@shared/common/workflow/core'
 import type { NodeKlassMap } from './constant'
 import { NodeSchemaMap } from './constant'
 import { buildNeighGraph } from '@/src/utils/algorithm'
-import { assign } from 'lodash-es'
+import { merge } from 'lodash-es'
 import { Queue } from 'datastructures-js'
 import { Logger } from '@nestjs/common'
 import type { Var } from '@shared/common/workflow/component-node'
@@ -52,7 +52,10 @@ export class CommPlugin<SDK = unknown> {
   onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
     const thread = new WorkflowThread(endPoint, this)
     this.threads[thread.id] = thread
-    assign(thread.kv, kv)
+    merge(thread.kv, kv)
+    merge(thread.nodeKv, {
+      global: this.bindingConfig.envKV || {},
+    })
     const taskTick = async () => {
       delete this.tasks[thread.id]
       const nextTask = Task.will(taskTick)
