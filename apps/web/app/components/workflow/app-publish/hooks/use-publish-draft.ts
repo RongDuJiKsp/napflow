@@ -55,7 +55,7 @@ export const usePublishDraftSteps = () => {
   }
 }
 
-const getAsDraft = (data?: WorkflowAppData): WorkflowAppDraft | undefined => data ? pick(data, ['ofAppId', 'nodes', 'edges']) : undefined
+const getAsDraft = (data?: WorkflowAppData): WorkflowAppDraft | undefined => data ? pick(data, ['ofAppId', 'nodes', 'edges', 'envs']) : undefined
 
 export const usePublishDiff = () => {
   const { appId } = useAppParam()

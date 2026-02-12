@@ -11,10 +11,10 @@ export const StickyNode = () => {
   if (!StickyElement || !stickyElementProps || !stickyLocation) return null
   return (
     <div
-      className="absolute z-10 pointer-events-none"
+      className="absolute z-50 pointer-events-none"
       style={{
         left: stickyLocation.x,
-        top: stickyLocation.y,
+        top: stickyLocation.y - 64,
         transform: `scale(${zoom})`,
         transformOrigin: '0 0',
       }}
