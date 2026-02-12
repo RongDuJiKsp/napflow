@@ -1,53 +1,24 @@
 import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-node'
-import z from 'zod'
+import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { raiseErrors } from '../../../utils/errors'
+import { BranchType, CompareOperator, IfDataRawSchema } from '@shared/common/workflow/node-data/if'
 
-// 比较操作符
-export enum CompareOperator {
-  StringEqual = 'string_equal',
-  Contains = 'contains',
-  ContainedBy = 'contained_by',
-  NotContains = 'not_contains',
-  NotContainedBy = 'not_contained_by',
-  NumberGreaterThan = 'number_gt',
-  NumberLessThan = 'number_lt',
-  NumberNotLessThan = 'number_gte',
-  NumberNotGreaterThan = 'number_lte',
-}
+// 从共享模块re-export，方便其他文件引用
+export { CompareOperator, BranchType }
 
-// 条件分支类型
-export enum BranchType {
-  If = 'if',
-  ElseIf = 'else_if',
-  Else = 'else',
-}
+// 使用 MetaSchema.extend(sharedSchema) 做兼容
+export const IfDataCtxSchema = ZodCheckComponentNodeMeta.extend(IfDataRawSchema.shape)
 
-const ConditionSchema = z.object({
-  variable: z.string(),
-  operator: z.enum(CompareOperator),
-  value: z.string(),
-})
+export type IfDataCtx = z.infer<typeof IfDataCtxSchema>
 
-const BranchSchema = z.object({
-  id: z.string(),
-  type: z.enum(BranchType),
-  condition: ConditionSchema.optional(),
-})
-
-export const IfDataSchema = ZodCheckComponentNodeMeta.extend({
-  branches: z.array(BranchSchema).min(1),
-})
-
-export type IfData = z.infer<typeof IfDataSchema>
-
-export class IfNode extends CommNode<IfData> {
+export class IfNode extends CommNode<IfDataCtx> {
   readonly role: CommNodeRole = CommNodeRole.Action
 
-  constructor(data: CommNodeType<IfData>) {
+  constructor(data: CommNodeType<IfDataCtx>) {
     super(data)
   }
 
