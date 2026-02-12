@@ -46,7 +46,7 @@ const IfNode: ComponentNodeFc<IfData> = ({ id, data }) => {
               right: 'auto',
               transform: 'none',
             }}
-            className="!w-2 !h-2 !bg-purple-400 !border-purple-600 shrink-0"
+            className="w-2! h-2! bg-purple-400! border-purple-600! shrink-0"
           />
         </div>
       ))}
