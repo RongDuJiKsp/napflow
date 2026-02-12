@@ -4,9 +4,9 @@ import type { Account } from '@shared/common/account/base'
 import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
 import {
   BotCoreRuntimeService,
-  adapterClassMeta,
 } from '../core/bot-core-runtime.service'
 import { BotRunningState } from '@shared/common/bot/base'
+import { BotFactoryService } from '../core/bot-factory.service'
 
 const botStateWeight: Record<BotRunningState, number> = {
   [BotRunningState.stopped]: 0,
@@ -35,7 +35,7 @@ export class BotManagerService {
         return {
           botId: botRecord.recordId,
           adapterTag: botRecord.adapterTag,
-          adapterDesc: adapterClassMeta[botRecord.adapterTag].meta.desc,
+          adapterDesc: BotFactoryService.getAdapterClass(botRecord.adapterTag)?.meta.desc,
           botName: botRecord.name,
           botDesc: botRecord.description,
           state: this.botCoreRuntimeService.botState(botRecord.recordId),
