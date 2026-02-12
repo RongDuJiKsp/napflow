@@ -19,11 +19,31 @@ export const ZodCheckVar = z.object({
 })
 export type Var = z.infer<typeof ZodCheckVar>
 
+/**
+ * 尝试将字符串 JSON.parse 为目标类型，解析失败则保留原值交给 zod 校验
+ */
+const tryParseJson = (val: unknown): unknown => {
+  if (typeof val === 'string') {
+    try {
+      return JSON.parse(val)
+    }
+    catch (_e) {
+      return val
+    }
+  }
+  return val
+}
 export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
   [VarTypes.String]: z.string(),
-  [VarTypes.Number]: z.preprocess(val => Number(val), z.number()),
-  [VarTypes.StringArray]: z.preprocess(val => JSON.parse(String(val)), z.array(z.string())),
-  [VarTypes.NumberArray]: z.preprocess(val => JSON.parse(String(val)), z.array(z.number())),
+  [VarTypes.Number]: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      const num = Number(val)
+      return Number.isNaN(num) ? val : num
+    }
+    return val
+  }, z.number()),
+  [VarTypes.StringArray]: z.preprocess(tryParseJson, z.array(z.string())),
+  [VarTypes.NumberArray]: z.preprocess(tryParseJson, z.array(z.number())),
 }
 
 export const ZodCheckComponentNodeMeta = z.object({
