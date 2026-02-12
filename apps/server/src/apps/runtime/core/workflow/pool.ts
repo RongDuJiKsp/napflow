@@ -11,6 +11,7 @@ import { assign } from 'lodash-es'
 import { Queue } from 'datastructures-js'
 import { Logger } from '@nestjs/common'
 import type { Var } from '@shared/common/workflow/component-node'
+import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 
 export type PluginConfigs = {
   threadMaxLiveSecond?: number // 任务线程最大存活时间 默认10分钟
@@ -24,15 +25,11 @@ export class CommPlugin<SDK = unknown> {
   // 邻居图
   readonly nodeGraph: ReadonlyMap<CommNode, { prev: CommNode[]; next: CommNode[] }>
   readonly graphHead: CommNode & CommTrigger
-  readonly klassMap: typeof NodeKlassMap
-  readonly env: Var[]
   readonly configs: PluginConfigs
   sdk: SDK | null = null
 
-  constructor(nodes: Node[], edges: Edge[], env: Var[], klassMap: typeof NodeKlassMap, configs: PluginConfigs = {}) {
-    this.env = env
+  constructor(readonly nodes: Node[], readonly edges: Edge[], readonly env: Var[], readonly bindingConfig: BotWorkflowAppBindingConfig, readonly klassMap: typeof NodeKlassMap, configs: PluginConfigs = {}) {
     this.configs = configs
-    this.klassMap = klassMap
     // 过滤出组件节点
     const commNodes = nodes.filter(node => node.type === NodeClassic.Component).map(node => node as CommNodeType).map(commNode => CommNode.parse(defineCommNodeSchema(NodeSchemaMap[commNode.data.type]), commNode, klassMap[commNode.data.type]))
     // 过滤出组件边

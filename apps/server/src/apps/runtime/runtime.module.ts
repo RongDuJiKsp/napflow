@@ -10,12 +10,14 @@ import { BotBridgeController } from './bot/bridge/bot-bridge.controller'
 import { BotBridgeForBotService } from './bot/bridge/bot-bridge-for-bot'
 import { BotHealthCheckService } from './bot/health-check/health-check.service'
 import { BotHealthCheckController } from './bot/health-check/health-check.controller'
+import { BotFactoryService } from './bot/core/bot-factory.service'
 
 @Module({
   providers: [
     BotBridgeForBotService,
     CoreRuntimeService,
     ManagerService,
+    BotFactoryService,
     BotCoreRuntimeService,
     BotManagerService,
     BotBridgeService,
@@ -24,6 +26,7 @@ import { BotHealthCheckController } from './bot/health-check/health-check.contro
   exports: [
     BotBridgeForBotService,
     CoreRuntimeService,
+    BotFactoryService,
     BotCoreRuntimeService,
     ManagerService,
     BotManagerService,
