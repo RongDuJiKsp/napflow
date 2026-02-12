@@ -4,14 +4,11 @@ import IfNode from './node'
 import IfPanel from './panel'
 import { RiGitBranchLine } from '@remixicon/react'
 import {
-  BranchSchema,
   BranchType,
   CompareOperator,
-  CompareOperatorLabels,
-  ConditionSchema,
   IfDataSchema,
 } from '@shared/common/workflow/node-data/if'
-import type { Branch, Condition, IfData } from '@shared/common/workflow/node-data/if'
+import type { IfData } from '@shared/common/workflow/node-data/if'
 
 let branchIdCounter = 0
 export const generateBranchId = () => `branch_${Date.now()}_${branchIdCounter++}`
