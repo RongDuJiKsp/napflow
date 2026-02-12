@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react'
 import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'
 import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
+import { EnvVarRegex } from '../../../component-nodes/common/input-with-env/lex-nodes/env-var-node'
 
 export const useWorkflowEnvAdd = (onFinish?: () => void) => {
   const { submitSyncDraft } = useWorkflowDraft()
@@ -17,6 +18,10 @@ export const useWorkflowEnvAdd = (onFinish?: () => void) => {
 
   const handleAdd = useCallback(() => {
     if (!newName.trim()) return
+    if (!new RegExp(`^${EnvVarRegex.source}$`).test(`{{#global.${newName.trim()}#}}`)) {
+      message.error('环境变量名称不符合规范')
+      return
+    }
     if (envs.find(env => env.name === newName.trim())) {
       message.error('环境变量已存在')
       return
