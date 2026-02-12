@@ -56,7 +56,7 @@ export class BotCoreRuntimeService {
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
 
       // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
-    const adapter = await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [], this.config)
+    const adapter = await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [], this.config, this.bridge)
     this.botInstanceMap.set(botId, adapter)
   }
 
