@@ -7,7 +7,12 @@ import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 
 export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
-  constructor(nodes: Node[], edges: Edge[], env: Var[], bindingCfg: BotWorkflowAppBindingConfig) {
+  constructor(
+    nodes: Node[],
+    edges: Edge[],
+    env: Var[],
+    bindingCfg: BotWorkflowAppBindingConfig,
+  ) {
     super(nodes, edges, env, bindingCfg, NcKlassMap)
   }
 

@@ -10,6 +10,8 @@ import { defineQueryFn } from './_base'
 export const useCurAccountQuery = () => {
   return useQuery({
     queryKey: ['cur-account'],
-    queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(async () => await jsonQ.Get<AccountInfoResp>('/account/cur-account')),
+    queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(
+      async () => await jsonQ.Get<AccountInfoResp>('/account/cur-account'),
+    ),
   })
 }

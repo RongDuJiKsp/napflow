@@ -14,8 +14,7 @@ import type { PartialDeep } from 'type-fest'
 export function choose<T>(
   ...args: (T | undefined | null | false | '')[]
 ): T | undefined {
-  for (const item of args)
-    if (item) return item
+  for (const item of args) if (item) return item
 
   return undefined
 }

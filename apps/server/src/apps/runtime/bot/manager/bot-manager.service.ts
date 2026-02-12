@@ -2,9 +2,7 @@ import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import type { Account } from '@shared/common/account/base'
 import type { CreateBotReq } from '@shared/data-transfer/bot/manager'
-import {
-  BotCoreRuntimeService,
-} from '../core/bot-core-runtime.service'
+import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
 import { BotRunningState } from '@shared/common/bot/base'
 import { BotFactoryService } from '../core/bot-factory.service'
 
@@ -35,7 +33,8 @@ export class BotManagerService {
         return {
           botId: botRecord.recordId,
           adapterTag: botRecord.adapterTag,
-          adapterDesc: BotFactoryService.getAdapterClass(botRecord.adapterTag)?.meta.desc,
+          adapterDesc: BotFactoryService.getAdapterClass(botRecord.adapterTag)
+            ?.meta.desc,
           botName: botRecord.name,
           botDesc: botRecord.description,
           state: this.botCoreRuntimeService.botState(botRecord.recordId),

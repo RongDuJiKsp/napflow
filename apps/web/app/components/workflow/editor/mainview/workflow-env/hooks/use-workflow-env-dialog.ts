@@ -9,7 +9,10 @@ export const useWorkflowEnvDialog = () => {
   const workflowExtStore = useWorkflowExtStore()
   const envs = useStore(workflowExtStore, state => state.envs)
   const addEnv = useStore(workflowExtStore, state => state.addEnv)
-  const deleteEnv = useStore(workflowExtStore, state => state.removeEnvByIndex)
+  const deleteEnv = useStore(
+    workflowExtStore,
+    state => state.removeEnvByIndex,
+  )
   return {
     isOpen,
     close,

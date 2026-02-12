@@ -12,8 +12,8 @@ export const TriggerDataRawSchema = z.object({
   groupId: z.string().optional(),
 })
 
-export const TriggerDataSchema = TriggerDataRawSchema
-  .superRefine((data, ctx) => {
+export const TriggerDataSchema = TriggerDataRawSchema.superRefine(
+  (data, ctx) => {
     if (data.on === TriggerOn.Friend && !data.userId) {
       ctx.addIssue({
         code: 'custom',
@@ -28,6 +28,7 @@ export const TriggerDataSchema = TriggerDataRawSchema
         path: ['groupId'],
       })
     }
-  })
+  },
+)
 
 export type TriggerData = z.infer<typeof TriggerDataSchema>

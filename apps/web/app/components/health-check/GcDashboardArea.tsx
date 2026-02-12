@@ -4,7 +4,13 @@ import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { ChartCard, StatCard } from './common'
 import { useLineGraphConfig } from '../../hooks/antd-charts/use-line-graph'
-import { fmtGCAxis, fmtGCTooltip, fmtMsAxis, fmtMsTooltip, formatTimestamp } from './utils'
+import {
+  fmtGCAxis,
+  fmtGCTooltip,
+  fmtMsAxis,
+  fmtMsTooltip,
+  formatTimestamp,
+} from './utils'
 const getGcScoreDescription = (score: number) => {
   if (score >= 70) return '健康'
   if (score >= 30) return '一般'
@@ -32,8 +38,16 @@ const GCStats = () => {
 
   return (
     <div className="grid grid-cols-3 gap-3">
-      <StatCard title="GC 频率" value={gcStats.frequency.toFixed(2)} unit="次/分钟" />
-      <StatCard title="平均耗时" value={gcStats.avgDuration.toFixed(2)} unit="ms" />
+      <StatCard
+        title="GC 频率"
+        value={gcStats.frequency.toFixed(2)}
+        unit="次/分钟"
+      />
+      <StatCard
+        title="平均耗时"
+        value={gcStats.avgDuration.toFixed(2)}
+        unit="ms"
+      />
       <StatCard
         title="健康分数"
         value={gcStats.healthScore.toFixed(1)}
@@ -96,7 +110,10 @@ const GCDurationChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMsAxis, fmtTooltip: fmtMsTooltip })
+  const config = useLineGraphConfig(chartData, {
+    fmtAxis: fmtMsAxis,
+    fmtTooltip: fmtMsTooltip,
+  })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无 GC 数据</div>
@@ -105,20 +122,22 @@ const GCDurationChart = () => {
 }
 
 const GcDashboardArea = () => {
-  return <>
-    {/* GC 统计信息 */}
-    <ChartCard title="GC 统计信息" >
-      <GCStats />
-    </ChartCard>
+  return (
+    <>
+      {/* GC 统计信息 */}
+      <ChartCard title="GC 统计信息">
+        <GCStats />
+      </ChartCard>
 
-    {/* GC 趋势图 */}
-    <ChartCard title="GC 次数趋势" >
-      <GCFrequencyChart />
-    </ChartCard>
-    <ChartCard title="GC 时延趋势" >
-      <GCDurationChart />
-    </ChartCard>
-  </>
+      {/* GC 趋势图 */}
+      <ChartCard title="GC 次数趋势">
+        <GCFrequencyChart />
+      </ChartCard>
+      <ChartCard title="GC 时延趋势">
+        <GCDurationChart />
+      </ChartCard>
+    </>
+  )
 }
 
 export default memo(GcDashboardArea)

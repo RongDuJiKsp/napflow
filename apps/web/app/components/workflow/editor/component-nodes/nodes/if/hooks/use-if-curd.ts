@@ -23,8 +23,7 @@ export const useIfCurd = (id: string) => {
         if (branch && branch.condition) {
           if (field === 'operator')
             branch.condition.operator = value as CompareOperator
-          else
-            branch.condition[field] = value
+          else branch.condition[field] = value
         }
       })
     },
@@ -44,11 +43,11 @@ export const useIfCurd = (id: string) => {
         },
       }
       // 在else之前插入，如果有else的话
-      const elseIndex = draft.data.branches.findIndex(b => b.type === BranchType.Else)
-      if (elseIndex >= 0)
-        draft.data.branches.splice(elseIndex, 0, newBranch)
-      else
-        draft.data.branches.push(newBranch)
+      const elseIndex = draft.data.branches.findIndex(
+        b => b.type === BranchType.Else,
+      )
+      if (elseIndex >= 0) draft.data.branches.splice(elseIndex, 0, newBranch)
+      else draft.data.branches.push(newBranch)
     })
   }, [id, editNode])
 
@@ -56,7 +55,9 @@ export const useIfCurd = (id: string) => {
   const handleAddElse = useCallback(() => {
     editNode<ComponentNode<IfData>>(id, (draft) => {
       // 如果已经有else了就不再添加
-      const hasElse = draft.data.branches.some(b => b.type === BranchType.Else)
+      const hasElse = draft.data.branches.some(
+        b => b.type === BranchType.Else,
+      )
       if (hasElse) return
       draft.data.branches.push({
         id: generateBranchId(),

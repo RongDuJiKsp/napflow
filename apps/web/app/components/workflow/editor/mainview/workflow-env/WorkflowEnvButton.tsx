@@ -7,11 +7,13 @@ import { useStore } from 'zustand'
 const WorkflowEnvButton = () => {
   const editorOutsideStore = useEditorOutsideStore()
   const open = useStore(editorOutsideStore, state => state.openEnvWindow)
-  return <>
-    <Button onClick={open} variant='tertiary'>
-      ENV
-    </Button>
-  </>
+  return (
+    <>
+      <Button onClick={open} variant="tertiary">
+        ENV
+      </Button>
+    </>
+  )
 }
 
 export default memo(WorkflowEnvButton)

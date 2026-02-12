@@ -34,7 +34,10 @@ const CPUChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: fmtPersentAxis, fmtTooltip: fmtPersentTooltip })
+  const config = useLineGraphConfig(chartData, {
+    fmtAxis: fmtPersentAxis,
+    fmtTooltip: fmtPersentTooltip,
+  })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无 CPU 数据</div>

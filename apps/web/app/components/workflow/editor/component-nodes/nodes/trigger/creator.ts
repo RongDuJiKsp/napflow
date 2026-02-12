@@ -1,12 +1,13 @@
-import type {
-  ComponentCreator,
-} from '../../types'
+import type { ComponentCreator } from '../../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { VarTypes } from '@shared/common/workflow/component-node'
-import { TriggerDataSchema, TriggerOn } from '@shared/common/workflow/node-data/trigger'
+import {
+  TriggerDataSchema,
+  TriggerOn,
+} from '@shared/common/workflow/node-data/trigger'
 import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 
 export const TriggerNodeCreator: ComponentCreator<TriggerData> = {

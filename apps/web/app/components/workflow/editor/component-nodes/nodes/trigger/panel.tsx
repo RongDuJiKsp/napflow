@@ -8,8 +8,12 @@ import ProviderEnv from '../../common/provider-env'
 import InputWithEnv from '../../common/input-with-env'
 
 const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
-  const { vars, handleTriggerTargetChange, handleUserIdChange, handleGroupIdChange }
-    = useTriggerCurd(id)
+  const {
+    vars,
+    handleTriggerTargetChange,
+    handleUserIdChange,
+    handleGroupIdChange,
+  } = useTriggerCurd(id)
 
   return (
     <div className="flex flex-col gap-4">

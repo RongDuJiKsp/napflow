@@ -18,18 +18,22 @@ export const adapterClassMeta: Record<AdapterTag, BotAdapterClass> = {
 @Injectable()
 export class BotFactoryService {
   constructor(
-    @Inject(BotBridgeForBotService) private readonly bridge: BotBridgeForBotService,
+    @Inject(BotBridgeForBotService)
+    private readonly bridge: BotBridgeForBotService,
     @Inject(AppConfigService) private readonly config: AppConfigService,
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
-  ) {
-
-  }
+  ) {}
 
   async createBot(botId: string) {
     const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
-              // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
-    return await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [], this.config, this.bridge)
+    // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
+    return await adapterFactory[botRecord.adapterTag](
+      botRecord,
+      (await this.bridge.getBotBindingWorkflow(botId)) || [],
+      this.config,
+      this.bridge,
+    )
   }
 
   static getAdapterClass(tag: AdapterTag) {

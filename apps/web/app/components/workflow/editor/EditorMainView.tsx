@@ -24,7 +24,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
       <NodeContextMenu />
       <StickyNode />
       <NodeEditSiderbar />
-      <WorkflowEnv/>
+      <WorkflowEnv />
       {children}
     </div>
   )

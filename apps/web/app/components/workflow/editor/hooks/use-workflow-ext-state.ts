@@ -6,11 +6,15 @@ import { createParamContext } from '@/utils/react'
 
 type Shape = WorkflowEnvStoreShape
 
-export const createWorkflowExtStateStore = () => createStore<Shape>((...args) => ({
-  ...createWorkflowEnvStore(...args),
-}))
+export const createWorkflowExtStateStore = () =>
+  createStore<Shape>((...args) => ({
+    ...createWorkflowEnvStore(...args),
+  }))
 
-const { context: WorkflowExtStoreContext, useContextHook: useWorkflowExtStore } = createParamContext<StoreApi<Shape>>('workflow-ext-state')
+const {
+  context: WorkflowExtStoreContext,
+  useContextHook: useWorkflowExtStore,
+} = createParamContext<StoreApi<Shape>>('workflow-ext-state')
 
 export { WorkflowExtStoreContext, useWorkflowExtStore }
 

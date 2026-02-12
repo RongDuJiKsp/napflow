@@ -19,15 +19,9 @@ export const ZodCheckWorkflowAppData = z.object({
   publishBy: z.string().nullable(),
   lastUpdateAt: z.date(),
 
-  nodes: z.array(
-    ZodCheckNode,
-  ).nullable(),
-  edges: z.array(
-    ZodCheckEdge,
-  ).nullable(),
-  envs: z.array(
-    ZodCheckVar,
-  ).nullable(),
+  nodes: z.array(ZodCheckNode).nullable(),
+  edges: z.array(ZodCheckEdge).nullable(),
+  envs: z.array(ZodCheckVar).nullable(),
 })
 export type WorkflowAppData = z.infer<typeof ZodCheckWorkflowAppData>
 
@@ -45,7 +39,12 @@ export const ZodCheckWorkflowAppVersionMeta = ZodCheckWorkflowAppData.pick({
   publishAt: true,
   publishBy: true,
 })
-export type WorkflowAppVersionMeta = z.infer<typeof ZodCheckWorkflowAppVersionMeta>
+export type WorkflowAppVersionMeta = z.infer<
+  typeof ZodCheckWorkflowAppVersionMeta
+>
 
-export const ZodCheckWorkflowAppVersionInfos = ZodCheckWorkflowAppVersionMeta.extend({ ofAppId: z.string() })
-export type WorkflowAppVersionInfos = z.infer<typeof ZodCheckWorkflowAppVersionInfos>
+export const ZodCheckWorkflowAppVersionInfos
+  = ZodCheckWorkflowAppVersionMeta.extend({ ofAppId: z.string() })
+export type WorkflowAppVersionInfos = z.infer<
+  typeof ZodCheckWorkflowAppVersionInfos
+>

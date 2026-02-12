@@ -8,7 +8,9 @@ import { raiseErrors } from '../../../utils/errors'
 import { ReplyDataRawSchema } from '@shared/common/workflow/node-data/reply'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
-export const ReplyDataCtxSchema = ZodCheckComponentNodeMeta.extend(ReplyDataRawSchema.shape)
+export const ReplyDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+  ReplyDataRawSchema.shape,
+)
 
 export type ReplyDataCtx = z.infer<typeof ReplyDataCtxSchema>
 
@@ -18,7 +20,11 @@ export class ReplyNode extends CommNode<ReplyDataCtx> {
     super(data)
   }
 
-  onThread(thread: WorkflowThread, _nextTask: WillTask, _nkv: Record<string, any>): void | Promise<void> {
+  onThread(
+    thread: WorkflowThread,
+    _nextTask: WillTask,
+    _nkv: Record<string, any>,
+  ): void | Promise<void> {
     raiseErrors(thread, ReplyNode)
   }
 }

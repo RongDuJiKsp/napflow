@@ -5,8 +5,7 @@ export const defineZodParamChecker = <T>(schema: z.ZodType<T>) => {
   return () => {
     const params = useParams()
     const check = schema.safeParse(params)
-    if(!check.success)
-      throw new Error(z.prettifyError(check.error))
+    if (!check.success) throw new Error(z.prettifyError(check.error))
 
     return check.data
   }

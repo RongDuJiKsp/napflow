@@ -3,7 +3,10 @@ import type { ComponentCreator } from '../../types'
 import ReplyNode from './node'
 import ReplyPanel from './panel'
 import { RiQuestionAnswerLine } from '@remixicon/react'
-import { ReplyDataSchema, ReplyTarget } from '@shared/common/workflow/node-data/reply'
+import {
+  ReplyDataSchema,
+  ReplyTarget,
+} from '@shared/common/workflow/node-data/reply'
 import type { ReplyData } from '@shared/common/workflow/node-data/reply'
 
 export const ReplyNodeCreator: ComponentCreator<ReplyData> = {

@@ -6,7 +6,10 @@ import type { CPUMetric, CPUStatistics } from '@shared/common/health-check/cpu'
 @Injectable()
 export class CheckCpuService {
   private readonly maxStorageSize = 100
-  private metrics: RingBuffer<CPUMetric> = new RingBuffer<CPUMetric>(this.maxStorageSize)
+  private metrics: RingBuffer<CPUMetric> = new RingBuffer<CPUMetric>(
+    this.maxStorageSize,
+  )
+
   private lastCpuUsage: NodeJS.CpuUsage | null = null
   private lastHrTime: [number, number] | null = null
 
@@ -73,8 +76,7 @@ export class CheckCpuService {
   calculateStatistics(windowSize: number = 6): CPUStatistics | null {
     const cpuData = this.getRecentMetrics(windowSize)
 
-    if (cpuData.length === 0)
-      return null
+    if (cpuData.length === 0) return null
 
     const userValues = cpuData.map(c => c.userPercent)
     const systemValues = cpuData.map(c => c.systemPercent)

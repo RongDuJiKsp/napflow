@@ -3,7 +3,11 @@ import type z from 'zod'
 import type { ComponentWithClass } from '@/utils/type'
 import type { ComponentType, FC } from 'react'
 import type { NodeProps } from '@xyflow/react'
-import type { ComponentNodeMeta, ComponentNodesEnum, Var } from '@shared/common/workflow/component-node'
+import type {
+  ComponentNodeMeta,
+  ComponentNodesEnum,
+  Var,
+} from '@shared/common/workflow/component-node'
 
 // data实例
 export type ComponentNodeDataExtra = {

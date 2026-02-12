@@ -16,6 +16,10 @@ export type WorkflowEnvStoreShape = WorkflowEnvState & WorkflowEnvAction
 export const createWorkflowEnvStore: StateCreator<WorkflowEnvStoreShape> = set => ({
   envs: [],
   addEnv: (env: Var) => set(state => ({ envs: [...state.envs, env] })),
-  removeEnv: (envname: string) => set(state => ({ envs: state.envs.filter(env => env.name !== envname) })),
-  removeEnvByIndex: (index: number) => set(state => ({ envs: state.envs.filter((_, i) => i !== index) })),
+  removeEnv: (envname: string) =>
+    set(state => ({
+      envs: state.envs.filter(env => env.name !== envname),
+    })),
+  removeEnvByIndex: (index: number) =>
+    set(state => ({ envs: state.envs.filter((_, i) => i !== index) })),
 })

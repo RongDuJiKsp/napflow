@@ -3,7 +3,14 @@ import { memo, useCallback, useState } from 'react'
 import { RiAddLine, RiCloseLine, RiPlug2Line } from '@remixicon/react'
 import { VarTypes } from '@shared/common/workflow/component-node'
 import { twMerge } from 'tailwind-merge'
-import { Button, Input, Label, ListBox, Select, TextField } from '@heroui/react'
+import {
+  Button,
+  Input,
+  Label,
+  ListBox,
+  Select,
+  TextField,
+} from '@heroui/react'
 import { useWorkflowEnvDialog } from './hooks/use-workflow-env-dialog'
 import { useWorkflowEnvAdd } from './hooks/use-worlflow-env-add'
 
@@ -75,17 +82,18 @@ const EnvList = ({ isAdding }: { isAdding: boolean }) => {
 }
 
 /* ──────────────── 手风琴添加表单 ──────────────── */
-const EnvAddAccordion = ({ isAdding, setIsAdding }: { isAdding: boolean; setIsAdding: (adding: boolean) => void }) => {
+const EnvAddAccordion = ({
+  isAdding,
+  setIsAdding,
+}: {
+  isAdding: boolean;
+  setIsAdding: (adding: boolean) => void;
+}) => {
   const onFinish = useCallback(() => {
     setIsAdding(false)
   }, [setIsAdding])
-  const {
-    form,
-    setNewName,
-    setNewType,
-    handleAdd,
-    handleCancel,
-  } = useWorkflowEnvAdd(onFinish)
+  const { form, setNewName, setNewType, handleAdd, handleCancel }
+    = useWorkflowEnvAdd(onFinish)
 
   return (
     <div className="mt-3">
@@ -127,10 +135,7 @@ const EnvAddAccordion = ({ isAdding, setIsAdding }: { isAdding: boolean; setIsAd
             <Button variant="tertiary" onPress={handleCancel}>
               取消
             </Button>
-            <Button
-              onPress={handleAdd}
-              isDisabled={!form.newName.trim()}
-            >
+            <Button onPress={handleAdd} isDisabled={!form.newName.trim()}>
               确认
             </Button>
           </div>

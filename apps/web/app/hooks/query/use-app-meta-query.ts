@@ -11,6 +11,9 @@ import { defineQueryFn } from './_base'
 export const useAppMetaQuery = (appId: string) => {
   return useQuery({
     queryKey: ['app-meta', appId],
-    queryFn: defineQueryFn<GetAppResp, WorkflowApp>(async () => await jsonQ.Get<GetAppResp>(`/workflow/${appId}`), { errMsgFallback: '获取AppMeta失败' }),
+    queryFn: defineQueryFn<GetAppResp, WorkflowApp>(
+      async () => await jsonQ.Get<GetAppResp>(`/workflow/${appId}`),
+      { errMsgFallback: '获取AppMeta失败' },
+    ),
   })
 }

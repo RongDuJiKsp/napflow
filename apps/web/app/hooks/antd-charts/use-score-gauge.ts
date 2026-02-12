@@ -3,7 +3,7 @@ import type { Gauge } from '@ant-design/charts'
 import { useCreation } from 'ahooks'
 
 export const useScoreGaugeConfig = (title: string, score: number) => {
-    // 麻了 导入的类型会导致实例化过深 只能这样写
+  // 麻了 导入的类型会导致实例化过深 只能这样写
   return useCreation<ParamTypeofReactComp<typeof Gauge>>(
     () => ({
       data: {

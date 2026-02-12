@@ -14,7 +14,8 @@ export class BotCoreRuntimeService {
 
   constructor(
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
-    @Inject(BotBridgeForBotService) private readonly bridge: BotBridgeForBotService,
+    @Inject(BotBridgeForBotService)
+    private readonly bridge: BotBridgeForBotService,
     @Inject(AppConfigService) private readonly config: AppConfigService,
     @Inject(BotFactoryService) private readonly botFactory: BotFactoryService,
   ) {}
@@ -28,7 +29,9 @@ export class BotCoreRuntimeService {
   }
 
   get botEntities() {
-    return Array.from(this.botInstanceMap.entries()).map(([botId, botInstance]) => ({ botId, botInstance }))
+    return Array.from(this.botInstanceMap.entries()).map(
+      ([botId, botInstance]) => ({ botId, botInstance }),
+    )
   }
 
   botState(botId: string): BotState {
@@ -43,7 +46,11 @@ export class BotCoreRuntimeService {
 
   async runBot(botId: string) {
     const botInstance = this.botInstanceMap.get(botId)
-    if (botInstance && BotRunningStateUtils.isRunning(botInstance.runningState().runningState)) return
+    if (
+      botInstance
+      && BotRunningStateUtils.isRunning(botInstance.runningState().runningState)
+    )
+      return
 
     const adapter = await this.botFactory.createBot(botId)
     this.botInstanceMap.set(botId, adapter)

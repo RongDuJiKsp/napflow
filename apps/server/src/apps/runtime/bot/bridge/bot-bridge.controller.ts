@@ -2,7 +2,16 @@ import { AllowUserGroup } from '@/src/decorator/account'
 import { Controller, Get, Inject, Param, Post } from '@nestjs/common'
 import { UserRole } from '@shared/common/account/base'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { type BotBridgeBindReq, type BotBridgeUnbindReq, type ConfigBotWorkflowAppBindingConfigReq, ZodCheckBotBindingConfigResp, ZodCheckBotBridgeBindReq, ZodCheckBotBridgeBindStatusResp, ZodCheckBotBridgeUnbindReq, ZodCheckConfigBotWorkflowAppBindingConfigReq } from '@shared/data-transfer/bot/bridge'
+import {
+  type BotBridgeBindReq,
+  type BotBridgeUnbindReq,
+  type ConfigBotWorkflowAppBindingConfigReq,
+  ZodCheckBotBindingConfigResp,
+  ZodCheckBotBridgeBindReq,
+  ZodCheckBotBridgeBindStatusResp,
+  ZodCheckBotBridgeUnbindReq,
+  ZodCheckConfigBotWorkflowAppBindingConfigReq,
+} from '@shared/data-transfer/bot/bridge'
 import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodBody } from '@/src/decorator/zod'
 import { BotBridgeService } from './bot-bridge.service'
@@ -27,7 +36,10 @@ export class BotBridgeController {
     @Param('botId') botId: string,
     @ZodBody({ zod: ZodCheckBotBridgeBindReq }) req: BotBridgeBindReq,
   ) {
-    await this.botBridgeService.bindingManyWorkflow(botId, req.map(r => ({ appId: r.appId, version: r.appVersion })))
+    await this.botBridgeService.bindingManyWorkflow(
+      botId,
+      req.map(r => ({ appId: r.appId, version: r.appVersion })),
+    )
     return Resp.ok()
   }
 
@@ -47,7 +59,7 @@ export class BotBridgeController {
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
     const binding = await this.botBridgeForBotService.getBindingsInfo(botId)
-    if(!binding) return Resp.ok([])
+    if (!binding) return Resp.ok([])
     const apps = await this.db.workflowApp.find({
       where: binding.map(({ appId }) => ({ appId })),
     })
@@ -66,8 +78,11 @@ export class BotBridgeController {
     @Param('botId') botId: string,
     @Param('bindingId') bindingId: string,
   ) {
-    const config = await this.botBridgeForBotService.getBindingConfig(botId, bindingId)
-    if(!config) return Resp.error('binding not found', Code.NotFound)
+    const config = await this.botBridgeForBotService.getBindingConfig(
+      botId,
+      bindingId,
+    )
+    if (!config) return Resp.error('binding not found', Code.NotFound)
     return Resp.ok(config)
   }
 
@@ -77,7 +92,8 @@ export class BotBridgeController {
   async configBinding(
     @Param('botId') botId: string,
     @Param('bindingId') bindingId: string,
-    @ZodBody({ zod: ZodCheckConfigBotWorkflowAppBindingConfigReq }) req: ConfigBotWorkflowAppBindingConfigReq,
+    @ZodBody({ zod: ZodCheckConfigBotWorkflowAppBindingConfigReq })
+    req: ConfigBotWorkflowAppBindingConfigReq,
   ) {
     await this.botBridgeService.configBinding(botId, bindingId, req)
     return Resp.ok()

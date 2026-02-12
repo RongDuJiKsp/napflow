@@ -7,7 +7,10 @@ export type ChartTsItem = {
 }
 export type ValueFmt = (v: number) => string
 
-export const useLineGraphConfig = (chartData: ChartTsItem[], { fmtAxis, fmtTooltip}: { fmtAxis?: ValueFmt, fmtTooltip?: ValueFmt } = {}) => {
+export const useLineGraphConfig = (
+  chartData: ChartTsItem[],
+  { fmtAxis, fmtTooltip }: { fmtAxis?: ValueFmt; fmtTooltip?: ValueFmt } = {},
+) => {
   return useCreation(
     () => ({
       data: chartData,

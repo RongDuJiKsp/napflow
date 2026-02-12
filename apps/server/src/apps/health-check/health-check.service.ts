@@ -1,12 +1,16 @@
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { CheckMemService } from './check-mem.service'
-import type { } from './check-mem.service'
+import type {} from './check-mem.service'
 import { CheckCpuService } from './check-cpu.service'
 import { CheckEventLoopService } from './check-event-loop.service'
 import { CheckGcService } from './check-gc.service'
 import { RingBuffer } from 'ring-buffer-ts'
-import type { AggregatedMetrics, HealthSummary, RealTimeSamples } from '@shared/common/health-check/health-check'
+import type {
+  AggregatedMetrics,
+  HealthSummary,
+  RealTimeSamples,
+} from '@shared/common/health-check/health-check'
 
 @Injectable()
 export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
@@ -18,7 +22,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   private readonly windowSize = 6 // 6个样本的窗口(1分钟)
 
   // 聚合统计数据
-  private aggregatedMetrics: RingBuffer<AggregatedMetrics> = new RingBuffer<AggregatedMetrics>(100)
+  private aggregatedMetrics: RingBuffer<AggregatedMetrics>
+    = new RingBuffer<AggregatedMetrics>(100)
 
   get aggregatedMetricsArray(): AggregatedMetrics[] {
     return this.aggregatedMetrics.toArray()
@@ -31,7 +36,8 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject(CheckMemService) private readonly checkMemService: CheckMemService,
     @Inject(CheckCpuService) private readonly checkCpuService: CheckCpuService,
-    @Inject(CheckEventLoopService) private readonly checkEventLoopService: CheckEventLoopService,
+    @Inject(CheckEventLoopService)
+    private readonly checkEventLoopService: CheckEventLoopService,
     @Inject(CheckGcService) private readonly checkGcService: CheckGcService,
   ) {}
 
@@ -90,16 +96,22 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     }
 
     // 内存统计聚合
-    aggregated.memory = this.checkMemService.calculateStatistics(this.windowSize)
+    aggregated.memory = this.checkMemService.calculateStatistics(
+      this.windowSize,
+    )
 
     // CPU统计聚合
     aggregated.cpu = this.checkCpuService.calculateStatistics(this.windowSize)
 
     // 事件循环统计聚合
-    aggregated.eventLoop = this.checkEventLoopService.calculateStatistics(this.windowSize)
+    aggregated.eventLoop = this.checkEventLoopService.calculateStatistics(
+      this.windowSize,
+    )
 
     // GC统计聚合
-    aggregated.gc = this.checkGcService.calculateStatistics(this.outputInterval)
+    aggregated.gc = this.checkGcService.calculateStatistics(
+      this.outputInterval,
+    )
 
     this.aggregatedMetrics.add(aggregated)
 
@@ -139,27 +151,46 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     const latest = this.aggregatedMetricsArray.slice(-1)[0]
 
     return {
-      status: healthScore > 80 ? 'healthy' : healthScore > 60 ? 'warning' : 'critical',
+      status:
+        healthScore > 80
+          ? 'healthy'
+          : healthScore > 60
+            ? 'warning'
+            : 'critical',
       score: healthScore,
       timestamp: Date.now(),
       details: {
-        memory: latest?.memory ? {
-          heapUtilization: `${latest.memory.utilization.mean.toFixed(2)}%`,
-        } : null,
-        cpu: latest?.cpu ? {
-          avgLoad: `${latest.cpu.total.mean.toFixed(2)}%`,
-          maxLoad: `${latest.cpu.total.max.toFixed(2)}%`,
-        } : null,
-        eventLoop: latest?.eventLoop ? {
-          health: latest.eventLoop.healthScore > 80 ? 'excellent'
-            : latest.eventLoop.healthScore > 60 ? 'good' : 'poor',
-          avgDelay: `${(latest.eventLoop.mean.mean / 1e6).toFixed(2)}ms`,
-        } : null,
-        gc: latest?.gc ? {
-          pressureScore: latest.gc.pressureScore,
-          frequency: latest.gc.frequency,
-          avgDuration: latest.gc.duration ? `${latest.gc.duration.mean.toFixed(2)}ms` : '0ms',
-        } : null,
+        memory: latest?.memory
+          ? {
+            heapUtilization: `${latest.memory.utilization.mean.toFixed(2)}%`,
+          }
+          : null,
+        cpu: latest?.cpu
+          ? {
+            avgLoad: `${latest.cpu.total.mean.toFixed(2)}%`,
+            maxLoad: `${latest.cpu.total.max.toFixed(2)}%`,
+          }
+          : null,
+        eventLoop: latest?.eventLoop
+          ? {
+            health:
+                latest.eventLoop.healthScore > 80
+                  ? 'excellent'
+                  : latest.eventLoop.healthScore > 60
+                    ? 'good'
+                    : 'poor',
+            avgDelay: `${(latest.eventLoop.mean.mean / 1e6).toFixed(2)}ms`,
+          }
+          : null,
+        gc: latest?.gc
+          ? {
+            pressureScore: latest.gc.pressureScore,
+            frequency: latest.gc.frequency,
+            avgDuration: latest.gc.duration
+              ? `${latest.gc.duration.mean.toFixed(2)}ms`
+              : '0ms',
+          }
+          : null,
       },
     }
   }
@@ -177,9 +208,11 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
 
     // 内存健康检查
     if (recentMemory.length > 0) {
-      const avgHeapUsage = recentMemory.reduce((sum, m) =>
-        sum + (m.process.heapUsed / m.process.heapTotal), 0,
-      ) / recentMemory.length
+      const avgHeapUsage
+        = recentMemory.reduce(
+          (sum, m) => sum + m.process.heapUsed / m.process.heapTotal,
+          0,
+        ) / recentMemory.length
 
       if (avgHeapUsage > 0.9) score -= 30
       else if (avgHeapUsage > 0.8) score -= 15
@@ -187,25 +220,25 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
 
     // 事件循环健康检查
     if (recentEventLoop.length > 0) {
-      const avgDelay = recentEventLoop.reduce((sum, e) => sum + e.mean, 0) / recentEventLoop.length
+      const avgDelay
+        = recentEventLoop.reduce((sum, e) => sum + e.mean, 0)
+        / recentEventLoop.length
 
-      if (avgDelay > 50 * 1e6) score -= 25 // 50ms
+      if (avgDelay > 50 * 1e6)
+        score -= 25 // 50ms
       else if (avgDelay > 20 * 1e6) score -= 10 // 20ms
     }
 
     // GC健康检查
-    if (gcSnapshot.frequency > 10)
-      score -= 15
+    if (gcSnapshot.frequency > 10) score -= 15
 
     return Math.max(0, score)
   }
 
   private cleanup(): void {
-    if (this.collectInterval_)
-      clearInterval(this.collectInterval_)
+    if (this.collectInterval_) clearInterval(this.collectInterval_)
 
-    if (this.aggregationInterval_)
-      clearInterval(this.aggregationInterval_)
+    if (this.aggregationInterval_) clearInterval(this.aggregationInterval_)
 
     // 清理小服务资源
     this.checkEventLoopService.destroy()

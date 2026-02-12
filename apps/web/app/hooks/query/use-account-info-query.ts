@@ -11,8 +11,11 @@ import type { AccountInfo } from '@shared/common/account/base'
 export const useAccountInfoQuery = (accEmail: string) => {
   return useQuery({
     queryKey: ['account-info', accEmail],
-    queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(async () => await jsonQ.Get<AccountInfoResp>('/account/account-info', {
-      params: { email: accEmail },
-    })),
+    queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(
+      async () =>
+        await jsonQ.Get<AccountInfoResp>('/account/account-info', {
+          params: { email: accEmail },
+        }),
+    ),
   })
 }

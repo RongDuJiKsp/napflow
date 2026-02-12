@@ -1,11 +1,16 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { ZodCheckAccountInfo, ZodCheckUserRoleType } from '../../common/account/base'
+import {
+  ZodCheckAccountInfo,
+  ZodCheckUserRoleType,
+} from '../../common/account/base'
 
 // req resp
 
 // @/account/login
-export const ZodCheckLoginReq = ZodCheckAccountInfo.pick({ email: true }).extend({
+export const ZodCheckLoginReq = ZodCheckAccountInfo.pick({
+  email: true,
+}).extend({
   password: z.string(),
 })
 export type LoginReq = z.infer<typeof ZodCheckLoginReq>
@@ -24,28 +29,40 @@ export const ZodCheckAccountInfoListQuery = z.object({
 })
 export type AccountInfoListQuery = z.infer<typeof ZodCheckAccountInfoListQuery>
 
-export const ZodCheckAccountInfoListResp = defineZodResp(z.array(ZodCheckAccountInfo))
+export const ZodCheckAccountInfoListResp = defineZodResp(
+  z.array(ZodCheckAccountInfo),
+)
 export type AccountInfoListResp = z.infer<typeof ZodCheckAccountInfoListResp>
 
 // @/account/cur-account @/account/account-info
-export const ZodCheckAccountInfoResp = defineZodResp(ZodCheckAccountInfo.nullable())
+export const ZodCheckAccountInfoResp = defineZodResp(
+  ZodCheckAccountInfo.nullable(),
+)
 export type AccountInfoResp = z.infer<typeof ZodCheckAccountInfoResp>
 
 // @/account/upgrade @/account/downgrade
-export const ZodCheckAccountUpDownGradeReq = ZodCheckAccountInfo.pick({ email: true }).extend({
+export const ZodCheckAccountUpDownGradeReq = ZodCheckAccountInfo.pick({
+  email: true,
+}).extend({
   groupType: z.array(ZodCheckUserRoleType),
 })
-export type AccountUpDownGradeReq = z.infer<typeof ZodCheckAccountUpDownGradeReq>
+export type AccountUpDownGradeReq = z.infer<
+  typeof ZodCheckAccountUpDownGradeReq
+>
 
 export const ZodCheckAccountUpDownGradeResp = defineZodResp(
   z.object({
     effectLines: z.number(),
   }),
 )
-export type AccountUpDownGradeResp = z.infer<typeof ZodCheckAccountUpDownGradeResp>
+export type AccountUpDownGradeResp = z.infer<
+  typeof ZodCheckAccountUpDownGradeResp
+>
 
 // @/account/disable
-export const ZodCheckAccountDisableReq = ZodCheckAccountInfo.pick({ email: true })
+export const ZodCheckAccountDisableReq = ZodCheckAccountInfo.pick({
+  email: true,
+})
 export type AccountDisableReq = z.infer<typeof ZodCheckAccountDisableReq>
 
 // @/account/create
@@ -65,7 +82,9 @@ export type AccountChangePasswordReq = z.infer<
 >
 
 // @/account/change-nickname
-export const ZodCheckAccountChangeNicknameReq = ZodCheckAccountInfo.pick({ nickname: true })
+export const ZodCheckAccountChangeNicknameReq = ZodCheckAccountInfo.pick({
+  nickname: true,
+})
 export type AccountChangeNicknameReq = z.infer<
   typeof ZodCheckAccountChangeNicknameReq
 >

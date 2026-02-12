@@ -24,7 +24,13 @@ export const useWorkflowViewOperations = () => {
         || !targetNode
         || reactflow
           .getEdges()
-          .find(e => e.source === source && e.target === target && e.sourceHandle === sourceHandle && e.targetHandle === targetHandle)
+          .find(
+            e =>
+              e.source === source
+              && e.target === target
+              && e.sourceHandle === sourceHandle
+              && e.targetHandle === targetHandle,
+          )
       )
         return
       if (

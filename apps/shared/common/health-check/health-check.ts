@@ -34,26 +34,34 @@ export const HealthStatus = {
   warning: 'warning',
   critical: 'critical',
 } as const
-export type HealthStatusType = typeof HealthStatus[keyof typeof HealthStatus]
+export type HealthStatusType = (typeof HealthStatus)[keyof typeof HealthStatus]
 
 // 健康摘要详情 Schema
 export const ZodCheckHealthSummaryDetails = z.object({
-  memory: z.object({
-    heapUtilization: z.string(),
-  }).nullable(),
-  cpu: z.object({
-    avgLoad: z.string(),
-    maxLoad: z.string(),
-  }).nullable(),
-  eventLoop: z.object({
-    health: z.string(),
-    avgDelay: z.string(),
-  }).nullable(),
-  gc: z.object({
-    pressureScore: z.number(),
-    frequency: z.number(),
-    avgDuration: z.string(),
-  }).nullable(),
+  memory: z
+    .object({
+      heapUtilization: z.string(),
+    })
+    .nullable(),
+  cpu: z
+    .object({
+      avgLoad: z.string(),
+      maxLoad: z.string(),
+    })
+    .nullable(),
+  eventLoop: z
+    .object({
+      health: z.string(),
+      avgDelay: z.string(),
+    })
+    .nullable(),
+  gc: z
+    .object({
+      pressureScore: z.number(),
+      frequency: z.number(),
+      avgDuration: z.string(),
+    })
+    .nullable(),
 })
 export type HealthSummaryDetails = z.infer<typeof ZodCheckHealthSummaryDetails>
 

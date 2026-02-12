@@ -15,8 +15,7 @@ const WorkflowExtStoreProvider = ({
 }>) => {
   const extStore = useCreation(createWorkflowExtStateStore, [])
   useEffect(() => {
-    if (remoteExtState)
-      extStore.setState(remoteExtState)
+    if (remoteExtState) extStore.setState(remoteExtState)
   }, [extStore, remoteExtState])
 
   return (

@@ -16,6 +16,7 @@ export const createEditorStore = () => {
   }))
 }
 
-const { context: EditorStoreContext, useContextHook: useEditorStore } = createParamContext<StoreApi<Shape>>('editor-store')
+const { context: EditorStoreContext, useContextHook: useEditorStore }
+  = createParamContext<StoreApi<Shape>>('editor-store')
 
 export { EditorStoreContext, useEditorStore }

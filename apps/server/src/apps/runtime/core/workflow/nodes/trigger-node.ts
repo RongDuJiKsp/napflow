@@ -9,11 +9,15 @@ import { raiseErrors } from '../../../utils/errors'
 import { TriggerDataRawSchema } from '@shared/common/workflow/node-data/trigger'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
-export const TriggerDataCtxSchema = ZodCheckComponentNodeMeta.extend(TriggerDataRawSchema.shape)
+export const TriggerDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+  TriggerDataRawSchema.shape,
+)
 
 export type TriggerDataCtx = z.infer<typeof TriggerDataCtxSchema>
 
-export class TriggerNode extends CommNode<TriggerDataCtx> implements CommTrigger {
+export class TriggerNode
+  extends CommNode<TriggerDataCtx>
+  implements CommTrigger {
   readonly role = CommNodeRole.Trigger
   readonly triggerEv: TriggerOnEvents = TriggerOnEvents.ChatMessage
 
@@ -21,7 +25,11 @@ export class TriggerNode extends CommNode<TriggerDataCtx> implements CommTrigger
     super(data)
   }
 
-  onThread(thread: WorkflowThread, _nextTask: WillTask, _nkv: Record<string, any>): void | Promise<void> {
+  onThread(
+    thread: WorkflowThread,
+    _nextTask: WillTask,
+    _nkv: Record<string, any>,
+  ): void | Promise<void> {
     raiseErrors(thread, TriggerNode)
   }
 }

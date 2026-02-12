@@ -8,17 +8,18 @@ import { EnvVarRegex } from '../../../component-nodes/common/input-with-env/lex-
 export const useWorkflowEnvAdd = (onFinish?: () => void) => {
   const { submitSyncDraft } = useWorkflowDraft()
   const { message } = App.useApp()
-  const {
-    addEnv,
-    envs,
-  } = useWorkflowEnvDialog()
+  const { addEnv, envs } = useWorkflowEnvDialog()
 
   const [newName, setNewName] = useState('')
   const [newType, setNewType] = useState<VarTypes>(VarTypes.String)
 
   const handleAdd = useCallback(() => {
     if (!newName.trim()) return
-    if (!new RegExp(`^${EnvVarRegex.source}$`).test(`{{#global.${newName.trim()}#}}`)) {
+    if (
+      !new RegExp(`^${EnvVarRegex.source}$`).test(
+        `{{#global.${newName.trim()}#}}`,
+      )
+    ) {
       message.error('环境变量名称不符合规范')
       return
     }
@@ -39,7 +40,7 @@ export const useWorkflowEnvAdd = (onFinish?: () => void) => {
     onFinish?.()
   }, [onFinish])
 
-  return{
+  return {
     handleAdd,
     handleCancel,
     form: {

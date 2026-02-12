@@ -13,7 +13,11 @@ import type { WorkflowApp } from '@shared/common/workflow/base'
 import { useBoolean } from 'ahooks'
 import { memo, useCallback, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { type SelectPair, type SelectedItem, useBindingMarket } from './hooks/use-binding-market'
+import {
+  type SelectPair,
+  type SelectedItem,
+  useBindingMarket,
+} from './hooks/use-binding-market'
 
 // 左侧应用列表组件
 const AppList = ({
@@ -65,25 +69,27 @@ const AppVersionList = ({
 
   return (
     <div className="space-y-2">
-      {versions?.filter(v => v.version !== 'draft').map(version => (
-        <div
-          key={version.version}
-          className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors duration-200 cursor-pointer"
-          onClick={() => onSelect({ appId, version: version.version })}
-        >
-          <div className="flex-1">
-            <div className="text-sm font-medium text-gray-700">
-              {version.version}
-            </div>
-            {version.publishDescription && (
-              <div className="text-xs text-gray-500 mt-1">
-                {version.publishDescription}
+      {versions
+        ?.filter(v => v.version !== 'draft')
+        .map(version => (
+          <div
+            key={version.version}
+            className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors duration-200 cursor-pointer"
+            onClick={() => onSelect({ appId, version: version.version })}
+          >
+            <div className="flex-1">
+              <div className="text-sm font-medium text-gray-700">
+                {version.version}
               </div>
-            )}
+              {version.publishDescription && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {version.publishDescription}
+                </div>
+              )}
+            </div>
+            <RiAddLine className="w-4 h-4 text-purple-500" />
           </div>
-          <RiAddLine className="w-4 h-4 text-purple-500" />
-        </div>
-      ))}
+        ))}
     </div>
   )
 }
@@ -117,7 +123,9 @@ const SelectedList = ({
                 </div>
               </div>
               <button
-                onClick={() => onRemoveItem({ appId: item.appId, version: item.version })}
+                onClick={() =>
+                  onRemoveItem({ appId: item.appId, version: item.version })
+                }
                 className="text-gray-400 hover:text-red-500 transition-colors duration-200 p-1"
               >
                 <RiCloseLine className="w-4 h-4" />
@@ -148,8 +156,14 @@ const SelectedList = ({
   )
 }
 
-const BingingDialogInner = ({ onClose}: { onClose?: () => void }) => {
-  const { apps, selectItemsWithName, handleAddItem, handleRemoveItem, handleConfirm } = useBindingMarket(onClose)
+const BingingDialogInner = ({ onClose }: { onClose?: () => void }) => {
+  const {
+    apps,
+    selectItemsWithName,
+    handleAddItem,
+    handleRemoveItem,
+    handleConfirm,
+  } = useBindingMarket(onClose)
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null)
 
   const selectedApp = apps?.find(app => app.appId === selectedAppId)
@@ -157,8 +171,7 @@ const BingingDialogInner = ({ onClose}: { onClose?: () => void }) => {
     setSelectedAppId(appId)
   }, [])
 
-  if(!apps)
-    return null
+  if (!apps) return null
 
   return (
     <DialogPanel className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden w-full max-w-6xl max-h-[80vh]">
@@ -192,16 +205,11 @@ const BingingDialogInner = ({ onClose}: { onClose?: () => void }) => {
         {/* 中间：版本列表 */}
         <div className="w-1/3 border-r border-gray-200 pr-6">
           <h3 className="text-sm font-semibold text-purple-700 mb-4">
-            {selectedApp
-              ? `${selectedApp.appName} 版本`
-              : '选择插件查看版本'}
+            {selectedApp ? `${selectedApp.appName} 版本` : '选择插件查看版本'}
           </h3>
           <div className="max-h-[400px] overflow-y-auto">
             {selectedAppId ? (
-              <AppVersionList
-                appId={selectedAppId}
-                onSelect={handleAddItem}
-              />
+              <AppVersionList appId={selectedAppId} onSelect={handleAddItem} />
             ) : (
               <div className="text-center text-gray-500 py-8">
                 请先选择一个插件
@@ -259,7 +267,7 @@ const BindingMarket = () => {
         {/* Background */}
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <BingingDialogInner onClose={dispatchDialog.setFalse}/>
+          <BingingDialogInner onClose={dispatchDialog.setFalse} />
         </div>
       </Dialog>
     </div>

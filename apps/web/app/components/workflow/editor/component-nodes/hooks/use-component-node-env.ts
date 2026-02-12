@@ -103,13 +103,16 @@ export const useComponentNodeEnv = (nodeId: string) => {
   const workflowExtStore = useWorkflowExtStore()
   const envs = useStore(workflowExtStore, state => state.envs)
 
-  const varsWithGlobal = useMemo(() => [
-    ...localVars,
-    ...envs.map(env => ({
-      ...env,
-      source: { id: 'global', title: '全局环境变量' },
-    })),
-  ], [localVars, envs])
+  const varsWithGlobal = useMemo(
+    () => [
+      ...localVars,
+      ...envs.map(env => ({
+        ...env,
+        source: { id: 'global', title: '全局环境变量' },
+      })),
+    ],
+    [localVars, envs],
+  )
   return {
     vars: varsWithGlobal,
     localVars,

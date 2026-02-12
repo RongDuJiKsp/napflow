@@ -7,7 +7,11 @@ import { type Var, VarZodChecks } from '@shared/common/workflow/component-node'
 import { App } from 'antd'
 import z from 'zod'
 
-export const useBindingAddEnv = (bindingId: string, env: Var, value: string | undefined) => {
+export const useBindingAddEnv = (
+  bindingId: string,
+  env: Var,
+  value: string | undefined,
+) => {
   const { notification } = App.useApp()
 
   const { botId } = useBotParam()
@@ -32,7 +36,15 @@ export const useBindingAddEnv = (bindingId: string, env: Var, value: string | un
     await refetch()
     setSaving(false)
     setIsEditing.setFalse()
-  }, [inputValue, env.name, submitConfig, refetch, setIsEditing, env.type, notification])
+  }, [
+    inputValue,
+    env.name,
+    submitConfig,
+    refetch,
+    setIsEditing,
+    env.type,
+    notification,
+  ])
 
   const handleCancel = useCallback(() => {
     setInputValue(value ?? '')

@@ -1,4 +1,9 @@
-import { type Edge, type Node, NodeClassic, ZodCheckNode } from '@shared/common/workflow/core'
+import {
+  type Edge,
+  type Node,
+  NodeClassic,
+  ZodCheckNode,
+} from '@shared/common/workflow/core'
 import type { ComponentNodeMeta } from '@shared/common/workflow/component-node'
 import z from 'zod'
 import type { Class } from 'type-fest'
@@ -14,14 +19,20 @@ export enum TriggerOnEvents {
   ChatMessage = 'chatMessage', // 聊天触发的消息 这时候kv里面有hmsg(人类可读文本), gid(群id)或 uid(用户id)
 }
 
-export const defineCommNodeSchema = <T extends ComponentNodeMeta = ComponentNodeMeta>(data: z.ZodType<T>) => ZodCheckNode.omit({ position: true, type: true }).extend({
-  type: z.enum([NodeClassic.Component]),
-  data,
-})
-export type CommNodeType<T extends ComponentNodeMeta = ComponentNodeMeta> = Omit<Node, 'position' | 'type'> & {
-  type: NodeClassic.Component
-  data: T
-}
+export const defineCommNodeSchema = <
+  T extends ComponentNodeMeta = ComponentNodeMeta,
+>(
+  data: z.ZodType<T>,
+) =>
+  ZodCheckNode.omit({ position: true, type: true }).extend({
+    type: z.enum([NodeClassic.Component]),
+    data,
+  })
+export type CommNodeType<T extends ComponentNodeMeta = ComponentNodeMeta>
+  = Omit<Node, 'position' | 'type'> & {
+    type: NodeClassic.Component;
+    data: T;
+  }
 
 export const CommEdgeSchema = z.object({
   id: z.string(),
@@ -30,7 +41,9 @@ export const CommEdgeSchema = z.object({
 })
 export type CommEdgeType = z.infer<typeof CommEdgeSchema>
 
-export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> implements CommNodeType<T> {
+export abstract class CommNode<
+  T extends ComponentNodeMeta = ComponentNodeMeta,
+> implements CommNodeType<T> {
   readonly id: string
   // 只有组件节点能跑 所以type固定为Component
   readonly type: NodeClassic.Component
@@ -41,16 +54,24 @@ export abstract class CommNode<T extends ComponentNodeMeta = ComponentNodeMeta> 
     Object.assign(this, data)
   }
 
-  static parse<U extends ComponentNodeMeta>(schema: z.ZodType<CommNodeType<U>>, data: Node | Record<string, any>, Klass: Class<CommNode<U>>): CommNode<U> {
+  static parse<U extends ComponentNodeMeta>(
+    schema: z.ZodType<CommNodeType<U>>,
+    data: Node | Record<string, any>,
+    Klass: Class<CommNode<U>>,
+  ): CommNode<U> {
     return new Klass(schema.parse(data))
   }
 
-  abstract onThread(thread: WorkflowThread, nextTask: WillTask, nkv: Record<string, any>): void | Promise<void>
+  abstract onThread(
+    thread: WorkflowThread,
+    nextTask: WillTask,
+    nkv: Record<string, any>,
+  ): void | Promise<void>
 }
 
 export type CommTrigger = {
-  role: CommNodeRole.Trigger
-  triggerEv: TriggerOnEvents
+  role: CommNodeRole.Trigger;
+  triggerEv: TriggerOnEvents;
 }
 
 export class CommEdge implements CommEdgeType {

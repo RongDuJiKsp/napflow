@@ -6,6 +6,14 @@ import { jsonQ } from '@/utils/net'
 export const useBindingBotQuery = (botId: string) => {
   return useQuery({
     queryKey: ['binding-bot', botId],
-    queryFn: defineQueryFn<BotBridgeBindStatusResp, NonNullable<BotBridgeBindStatusResp['data']>>(async () => await jsonQ.Get<BotBridgeBindStatusResp>(`/bot-bridge/${botId}/binding`)),
+    queryFn: defineQueryFn<
+      BotBridgeBindStatusResp,
+      NonNullable<BotBridgeBindStatusResp['data']>
+    >(
+      async () =>
+        await jsonQ.Get<BotBridgeBindStatusResp>(
+          `/bot-bridge/${botId}/binding`,
+        ),
+    ),
   })
 }

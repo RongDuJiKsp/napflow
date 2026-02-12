@@ -80,8 +80,17 @@ export class NCCHealthChecker implements Registerable {
 
   pluginStatus(): BotPluginStatusSnapshot {
     return {
-      taskQueueLength: this.plugins.map(plugin => plugin.threadList.length).reduce((acc, cur) => acc + cur, 0),
-      nodeQueueLength: this.plugins.map(plugin => plugin.threadList.reduce((acc, cur) => acc + cur.availableNodes.size(), 0)).reduce((acc, cur) => acc + cur, 0),
+      taskQueueLength: this.plugins
+        .map(plugin => plugin.threadList.length)
+        .reduce((acc, cur) => acc + cur, 0),
+      nodeQueueLength: this.plugins
+        .map(plugin =>
+          plugin.threadList.reduce(
+            (acc, cur) => acc + cur.availableNodes.size(),
+            0,
+          ),
+        )
+        .reduce((acc, cur) => acc + cur, 0),
     }
   }
 }

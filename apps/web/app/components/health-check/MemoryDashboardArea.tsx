@@ -49,7 +49,10 @@ const MemoryChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: formatBytes, fmtTooltip: formatBytes })
+  const config = useLineGraphConfig(chartData, {
+    fmtAxis: formatBytes,
+    fmtTooltip: formatBytes,
+  })
 
   if (chartData.length === 0)
     return <div className="text-gray-400 text-center py-8">暂无内存数据</div>
@@ -60,7 +63,7 @@ const MemoryChart = () => {
 const MemoryDashboardArea = () => {
   return (
     <>
-      <ChartCard title="内存使用趋势" >
+      <ChartCard title="内存使用趋势">
         <MemoryChart />
       </ChartCard>
     </>

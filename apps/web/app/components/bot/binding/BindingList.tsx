@@ -8,7 +8,9 @@ import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingItem } from './hooks/use-binding-item'
 import BindingConfigButton from './BindingConfigButton'
 
-type BindingItem = NonNullable<ReturnType<typeof useBindingBotQuery>['data']>[number]
+type BindingItem = NonNullable<
+  ReturnType<typeof useBindingBotQuery>['data']
+>[number]
 
 const BindingListHeader = ({ count }: { count?: number }) => {
   return (
@@ -21,9 +23,7 @@ const BindingListHeader = ({ count }: { count?: number }) => {
           </span>
         )}
       </div>
-      <div className="text-sm text-gray-500">
-        管理当前Bot绑定的工作流插件
-      </div>
+      <div className="text-sm text-gray-500">管理当前Bot绑定的工作流插件</div>
     </div>
   )
 }
@@ -44,7 +44,9 @@ const EmptyState = () => {
     <div className="text-center text-gray-500 py-12 bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-100">
       <RiCloseLine className="w-12 h-12 mx-auto text-purple-300 mb-3" />
       <p className="font-medium">暂无绑定的插件</p>
-      <p className="text-sm mt-1 text-gray-600">点击右侧&quot;绑定新插件&quot;按钮开始</p>
+      <p className="text-sm mt-1 text-gray-600">
+        点击右侧&quot;绑定新插件&quot;按钮开始
+      </p>
     </div>
   )
 }
@@ -53,18 +55,24 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
   const { botId } = useBotParam()
   const { handleUnbind } = useBindingItem(botId, item.bindingId)
   return (
-    <div
-      className="binding-item p-4 rounded-lg border border-gray-200 bg-white hover:border-purple-200 hover:bg-purple-25 transition-all duration-200"
-    >
+    <div className="binding-item p-4 rounded-lg border border-gray-200 bg-white hover:border-purple-200 hover:bg-purple-25 transition-all duration-200">
       <div className="flex items-start justify-between">
         <div className="flex-1 space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <div className="font-semibold text-gray-800">{item.app.appName}</div>
-              <div className="text-xs text-gray-500 mt-0.5">ID: {item.appId}</div>
+              <div className="font-semibold text-gray-800">
+                {item.app.appName}
+              </div>
+              <div className="text-xs text-gray-500 mt-0.5">
+                ID: {item.appId}
+              </div>
             </div>
-            <div className='flex gap-3'>
-              <BindingConfigButton bindingId={item.bindingId} ofAppId={item.appId} ofAppVersion={item.version}/>
+            <div className="flex gap-3">
+              <BindingConfigButton
+                bindingId={item.bindingId}
+                ofAppId={item.appId}
+                ofAppVersion={item.version}
+              />
               <Button
                 size="sm"
                 className={twMerge(
@@ -89,7 +97,10 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
             </div>
             <div>
               <div className="text-gray-500">绑定ID</div>
-              <div className="font-mono text-xs text-gray-700 truncate" title={item.bindingId}>
+              <div
+                className="font-mono text-xs text-gray-700 truncate"
+                title={item.bindingId}
+              >
                 {item.bindingId}
               </div>
             </div>
@@ -108,18 +119,25 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
             <div>
               <div className="text-gray-500">发布时间</div>
               <div className="text-gray-700">
-                {item.appPublish.publishAt ? new Date(item.appPublish.publishAt).toLocaleDateString('zh-CN', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }) : '-'}
+                {item.appPublish.publishAt
+                  ? new Date(item.appPublish.publishAt).toLocaleDateString(
+                    'zh-CN',
+                    {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    },
+                  )
+                  : '-'}
               </div>
             </div>
             <div>
               <div className="text-gray-500">发布者</div>
-              <div className="text-gray-700">{item.appPublish.publishBy || '-'}</div>
+              <div className="text-gray-700">
+                {item.appPublish.publishBy || '-'}
+              </div>
             </div>
           </div>
         </div>

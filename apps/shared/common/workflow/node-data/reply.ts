@@ -15,32 +15,31 @@ export const ReplyDataRawSchema = z.object({
   triggerSourceId: z.string().optional(),
 })
 
-export const ReplyDataSchema = ReplyDataRawSchema
-  .superRefine((data, ctx) => {
-    if (data.replyTarget === ReplyTarget.User) {
-      if (!data.userId) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '请选择回复目标',
-        })
-      }
+export const ReplyDataSchema = ReplyDataRawSchema.superRefine((data, ctx) => {
+  if (data.replyTarget === ReplyTarget.User) {
+    if (!data.userId) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '请选择回复目标',
+      })
     }
-    if (data.replyTarget === ReplyTarget.Group) {
-      if (!data.groupId) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '请选择回复目标',
-        })
-      }
+  }
+  if (data.replyTarget === ReplyTarget.Group) {
+    if (!data.groupId) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '请选择回复目标',
+      })
     }
-    if (data.replyTarget === ReplyTarget.triggerSource) {
-      if (!data.triggerSourceId) {
-        ctx.addIssue({
-          code: 'custom',
-          message: '请选择回复目标',
-        })
-      }
+  }
+  if (data.replyTarget === ReplyTarget.triggerSource) {
+    if (!data.triggerSourceId) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '请选择回复目标',
+      })
     }
-  })
+  }
+})
 
 export type ReplyData = z.infer<typeof ReplyDataSchema>

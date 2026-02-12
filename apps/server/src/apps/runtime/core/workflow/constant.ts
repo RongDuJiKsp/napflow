@@ -12,7 +12,10 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.If]: IfNode,
 }
 
-export const NodeSchemaMap: Record<ComponentNodesEnum, z.ZodType<CommNodeType['data']>> = {
+export const NodeSchemaMap: Record<
+  ComponentNodesEnum,
+  z.ZodType<CommNodeType['data']>
+> = {
   [ComponentNodesEnum.Trigger]: TriggerDataCtxSchema,
   [ComponentNodesEnum.Reply]: ReplyDataCtxSchema,
   [ComponentNodesEnum.If]: IfDataCtxSchema,

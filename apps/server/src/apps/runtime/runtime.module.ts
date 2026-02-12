@@ -33,6 +33,11 @@ import { BotFactoryService } from './bot/core/bot-factory.service'
     BotBridgeService,
     BotHealthCheckService,
   ],
-  controllers: [ManagerController, BotManagerController, BotBridgeController, BotHealthCheckController],
+  controllers: [
+    ManagerController,
+    BotManagerController,
+    BotBridgeController,
+    BotHealthCheckController,
+  ],
 })
 export class RuntimeModule {}

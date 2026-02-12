@@ -2,11 +2,16 @@ import { Injectable } from '@nestjs/common'
 import v8 from 'node:v8'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { MemoryMetric, MemoryStatistics } from '@shared/common/health-check/mem'
+import type {
+  MemoryMetric,
+  MemoryStatistics,
+} from '@shared/common/health-check/mem'
 @Injectable()
 export class CheckMemService {
   private readonly maxStorageSize = 100
-  private metrics: RingBuffer<MemoryMetric> = new RingBuffer<MemoryMetric>(this.maxStorageSize)
+  private metrics: RingBuffer<MemoryMetric> = new RingBuffer<MemoryMetric>(
+    this.maxStorageSize,
+  )
 
   /**
    * 收集当前内存快照并存储
@@ -46,7 +51,7 @@ export class CheckMemService {
     return (memory.heapUsed / memory.heapTotal) * 100
   }
 
-    /**
+  /**
    * 清空存储的数据
    */
   clearMetrics(): void {
@@ -59,15 +64,14 @@ export class CheckMemService {
   calculateStatistics(windowSize: number = 6): MemoryStatistics | null {
     const memoryData = this.getRecentMetrics(windowSize)
 
-    if (memoryData.length === 0)
-      return null
+    if (memoryData.length === 0) return null
 
     const heapUsedValues = memoryData.map(m => m.process.heapUsed)
     const rssValues = memoryData.map(m => m.process.rss)
     const heapTotalValues = memoryData.map(m => m.process.heapTotal)
 
-    const utilizationValues = heapUsedValues.map((used, i) =>
-      (used / heapTotalValues[i]) * 100,
+    const utilizationValues = heapUsedValues.map(
+      (used, i) => (used / heapTotalValues[i]) * 100,
     )
 
     return {

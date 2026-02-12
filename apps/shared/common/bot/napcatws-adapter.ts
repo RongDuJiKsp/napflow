@@ -5,10 +5,14 @@ export const ZodCheckNapcatWsAdapterConfig = z.object({
     wsUrl: z.url(),
     token: z.string().optional(),
   }),
-  retryConfig: z.object({
-    retryMaxTimes: z.number().min(0),
-    retryDelay: z.number().min(1000),
-  }).optional(),
+  retryConfig: z
+    .object({
+      retryMaxTimes: z.number().min(0),
+      retryDelay: z.number().min(1000),
+    })
+    .optional(),
   heartBeatDuration: z.number().min(0),
 })
-export type NapcatWsAdapterConfig = z.infer<typeof ZodCheckNapcatWsAdapterConfig>
+export type NapcatWsAdapterConfig = z.infer<
+  typeof ZodCheckNapcatWsAdapterConfig
+>
