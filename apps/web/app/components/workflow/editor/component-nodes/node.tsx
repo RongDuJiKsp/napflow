@@ -43,12 +43,12 @@ const ComponentNodesNode: ComponentNodeFc<unknown> = (props) => {
         </div>
       )}
       {/* beforeCreate时没有托管给workflow 就不渲染handle */}
-      {!data._beforeCreate && !!creator.prevNodes?.length && (
+      {!creator.mutiPrevHandles && !data._beforeCreate && !!creator.prevNodes?.length && (
         <>
           <Handle type="target" position={Position.Left} />
         </>
       )}
-      {!data._beforeCreate && !!creator.nextNodes?.length && (
+      {!creator.mutiNextHandles && !data._beforeCreate && !!creator.nextNodes?.length && (
         <>
           <Handle type="source" position={Position.Right} />
         </>
