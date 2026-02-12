@@ -97,7 +97,7 @@ export class NapcatWsAdapter implements BotInstance {
         this.logger.warn(`App ${app.ofAppId}@${app.version} has no nodes or edges. Skip.`)
         continue
       }
-      this.plugins.push(new NapcatWsTriggerPlugin(app.nodes, app.edges))
+      this.plugins.push(new NapcatWsTriggerPlugin(app.nodes, app.edges, app.envs || []))
     }
   }
 

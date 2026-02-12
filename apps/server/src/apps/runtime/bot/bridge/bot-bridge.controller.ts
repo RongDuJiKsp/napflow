@@ -46,7 +46,7 @@ export class BotBridgeController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
-    const binding = await this.botBridgeService.getBindingsInfo(botId)
+    const binding = await this.botBridgeForBotService.getBindingsInfo(botId)
     if(!binding) return Resp.ok([])
     const apps = await this.db.workflowApp.find({
       where: binding.map(({ appId }) => ({ appId })),
@@ -66,7 +66,7 @@ export class BotBridgeController {
     @Param('botId') botId: string,
     @Param('bindingId') bindingId: string,
   ) {
-    const config = await this.botBridgeService.getBindingConfig(botId, bindingId)
+    const config = await this.botBridgeForBotService.getBindingConfig(botId, bindingId)
     if(!config) return Resp.error('binding not found', Code.NotFound)
     return Resp.ok(config)
   }

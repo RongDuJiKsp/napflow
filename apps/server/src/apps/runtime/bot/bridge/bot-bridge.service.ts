@@ -6,10 +6,9 @@ import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
 import { randomUUID } from 'node:crypto'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
-import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
-import { merge } from 'lodash-es'
 import type { PartialDeep } from 'type-fest'
+import { merge } from 'lodash-es'
 
 @Injectable()
 export class BotBridgeService {
@@ -46,6 +45,9 @@ export class BotBridgeService {
   }
 
   async delBindings(botId: string, bindingIds: string[]) {
+    const botState = this.bot.botState(botId)
+    if(BotRunningStateUtils.isRunning(botState.runningState))
+      throw new CommError('Bot正在运行，只能在停止后删除绑定', Code.BadRequest, 'warn')
     const botRecord = await this.bridge.getRecordOrThrow(botId)
     if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
@@ -53,17 +55,10 @@ export class BotBridgeService {
     return await botRecord.save()
   }
 
-  async getBindingsInfo(botId: string) {
-    const botRecord = await this.db.botRecord.findOne({ where: { recordId: botId } })
-    if(!botRecord)return null
-    const bindingApp = await this.bridge.getBotBindingWorkflow(botId)
-    if(!bindingApp) return null
-    const getAppString = (app: Pick<WorkflowAppDataEntity, 'ofAppId' | 'version'>) => `[appId=${app.ofAppId},version=${app.version}]`
-    const appMap = Object.fromEntries(bindingApp.map(app => [getAppString(app), app]))
-    return botRecord.commonAdapterConfig.bindingWorkflowApp?.map(({ appId, version, bindingId }) => ({ appId, version, bindingId, appPublish: appMap[getAppString({ ofAppId: appId, version })] }))
-  }
-
   async configBinding(botId: string, bindingId: string, config: PartialDeep<BotWorkflowAppBindingConfig>) {
+    const botState = this.bot.botState(botId)
+    if(BotRunningStateUtils.isRunning(botState.runningState))
+      throw new CommError('Bot正在运行，只能在停止后配置绑定', Code.BadRequest, 'warn')
     const botRecord = await this.bridge.getRecordOrThrow(botId)
     if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
@@ -71,14 +66,5 @@ export class BotBridgeService {
     if(!binding) throw new CommError('绑定不存在', Code.BadRequest, 'warn')
     binding.bindingConfig = merge(binding.bindingConfig, config)
     return await botRecord.save()
-  }
-
-  async getBindingConfig(botId: string, bindingId: string) {
-    const botRecord = await this.db.botRecord.findOne({ where: { recordId: botId } })
-    if(!botRecord)return null
-    if(!botRecord.commonAdapterConfig.bindingWorkflowApp) return null
-    const binding = botRecord.commonAdapterConfig.bindingWorkflowApp.find(({ bindingId: id }) => id === bindingId)
-    if(!binding) return null
-    return binding.bindingConfig
   }
 }

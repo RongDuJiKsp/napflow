@@ -10,6 +10,7 @@ import { buildNeighGraph } from '@/src/utils/algorithm'
 import { assign } from 'lodash-es'
 import { Queue } from 'datastructures-js'
 import { Logger } from '@nestjs/common'
+import type { Var } from '@shared/common/workflow/component-node'
 
 export type PluginConfigs = {
   threadMaxLiveSecond?: number // 任务线程最大存活时间 默认10分钟
@@ -24,10 +25,12 @@ export class CommPlugin<SDK = unknown> {
   readonly nodeGraph: ReadonlyMap<CommNode, { prev: CommNode[]; next: CommNode[] }>
   readonly graphHead: CommNode & CommTrigger
   readonly klassMap: typeof NodeKlassMap
+  readonly env: Var[]
   readonly configs: PluginConfigs
   sdk: SDK | null = null
 
-  constructor(nodes: Node[], edges: Edge[], klassMap: typeof NodeKlassMap, configs: PluginConfigs = {}) {
+  constructor(nodes: Node[], edges: Edge[], env: Var[], klassMap: typeof NodeKlassMap, configs: PluginConfigs = {}) {
+    this.env = env
     this.configs = configs
     this.klassMap = klassMap
     // 过滤出组件节点
