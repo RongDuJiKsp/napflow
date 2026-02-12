@@ -1,9 +1,11 @@
 import { uniqBy } from 'lodash-es'
 import type { WorkflowEdge } from '../../types'
 import { Queue } from 'datastructures-js'
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useMemo } from 'react'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { ComponentNode } from '../types'
+import { useWorkflowExtStore } from '../../hooks/use-workflow-ext-state'
+import { useStore } from 'zustand'
 export type VarCtxName = string
 export type VarCtx = Var & {
   source: {
@@ -96,6 +98,20 @@ export const NodeEnvContext = createContext<Record<string, VarCtx[]>>({})
 
 export const useComponentNodeEnv = (nodeId: string) => {
   const varsCache = useContext(NodeEnvContext)
-  const vars = varsCache[nodeId]
-  return { vars }
+  const localVars = varsCache[nodeId]
+
+  const workflowExtStore = useWorkflowExtStore()
+  const envs = useStore(workflowExtStore, state => state.envs)
+
+  const varsWithGlobal = useMemo(() => [
+    ...localVars,
+    ...envs.map(env => ({
+      ...env,
+      source: { id: 'global', title: '全局环境变量' },
+    })),
+  ], [localVars, envs])
+  return {
+    vars: varsWithGlobal,
+    localVars,
+  }
 }
