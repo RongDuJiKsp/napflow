@@ -24,6 +24,7 @@
   "dependencies": {
     "datastructures-js": "^13.0.0",
     "ring-buffer-ts": "^1.2.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "zod-deep-partial": "^1.2.0"
   }
 }

@@ -36,7 +36,7 @@ const EnvItem = ({
   bindingId: string
 }) => {
   const { botId } = useBotParam()
-  const { data: bindingConfig, refetch } = useBindingBotConfigQuery(botId, bindingId)
+  const { refetch } = useBindingBotConfigQuery(botId, bindingId)
   const { submitConfig } = useBindingConfig(bindingId)
 
   const [isEditing, setIsEditing] = useBoolean(false)
@@ -46,13 +46,11 @@ const EnvItem = ({
   const handleSave = useCallback(async () => {
     if (!inputValue.trim()) return
     setSaving(true)
-    const envKV = bindingConfig?.envKV ?? {}
-    const newKV = { ...envKV, [env.name]: inputValue.trim() }
-    await submitConfig({ envKV: newKV })
+    await submitConfig({ envKV: { [env.name]: inputValue.trim() } })
     await refetch()
     setSaving(false)
     setIsEditing.setFalse()
-  }, [inputValue, env.name, bindingConfig, submitConfig, refetch, setIsEditing])
+  }, [inputValue, env.name, submitConfig, refetch, setIsEditing])
 
   const handleCancel = useCallback(() => {
     setInputValue(value ?? '')

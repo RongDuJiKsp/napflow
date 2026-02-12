@@ -2,13 +2,12 @@ import { AllowUserGroup } from '@/src/decorator/account'
 import { Controller, Get, Inject, Param, Post } from '@nestjs/common'
 import { UserRole } from '@shared/common/account/base'
 import { ZodSerializerDto } from 'nestjs-zod'
-import { type BotBridgeBindReq, type BotBridgeUnbindReq, ZodCheckBotBridgeBindReq, ZodCheckBotBridgeBindStatusResp, ZodCheckBotBridgeUnbindReq } from '@shared/data-transfer/bot/bridge'
+import { type BotBridgeBindReq, type BotBridgeUnbindReq, type ConfigBotWorkflowAppBindingConfigReq, ZodCheckBotBindingConfigResp, ZodCheckBotBridgeBindReq, ZodCheckBotBridgeBindStatusResp, ZodCheckBotBridgeUnbindReq, ZodCheckConfigBotWorkflowAppBindingConfigReq } from '@shared/data-transfer/bot/bridge'
 import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodBody } from '@/src/decorator/zod'
 import { BotBridgeService } from './bot-bridge.service'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
-import { type BotWorkflowAppBindingConfig, ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 
 @Controller('bot-bridge')
 export class BotBridgeController {
@@ -62,7 +61,7 @@ export class BotBridgeController {
 
   @Get(':botId/bindingconfig/:bindingId')
   @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckBotWorkflowAppBindingConfig)
+  @ZodSerializerDto(ZodCheckBotBindingConfigResp)
   async getBindingConfig(
     @Param('botId') botId: string,
     @Param('bindingId') bindingId: string,
@@ -78,7 +77,7 @@ export class BotBridgeController {
   async configBinding(
     @Param('botId') botId: string,
     @Param('bindingId') bindingId: string,
-    @ZodBody({ zod: ZodCheckBotWorkflowAppBindingConfig }) req: BotWorkflowAppBindingConfig,
+    @ZodBody({ zod: ZodCheckConfigBotWorkflowAppBindingConfigReq }) req: ConfigBotWorkflowAppBindingConfigReq,
   ) {
     await this.botBridgeService.configBinding(botId, bindingId, req)
     return Resp.ok()

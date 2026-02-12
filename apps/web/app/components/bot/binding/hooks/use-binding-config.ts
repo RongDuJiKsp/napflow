@@ -8,7 +8,7 @@ import type { NullResp } from '@shared/data-transfer/_base'
 
 export const useBindingConfig = (bindingId: string) => {
   const { botId } = useBotParam()
-  const submitReqFn = useCallback(async (data: BotWorkflowAppBindingConfig) => await jsonQ.Post<NullResp>(`/${botId}/bindingconfig/${bindingId}`, data), [botId, bindingId])
+  const submitReqFn = useCallback(async (data: BotWorkflowAppBindingConfig) => await jsonQ.Post<NullResp>(`/bot-bridge/${botId}/bindingconfig/${bindingId}`, data), [botId, bindingId])
   const submitConfig = useSubmitZodFn(ZodCheckBotWorkflowAppBindingConfig, submitReqFn)
   return {
     submitConfig,

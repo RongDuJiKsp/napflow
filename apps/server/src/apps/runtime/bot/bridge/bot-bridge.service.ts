@@ -8,7 +8,8 @@ import { randomUUID } from 'node:crypto'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
-import { assign } from 'lodash-es'
+import { merge } from 'lodash-es'
+import type { PartialDeep } from 'type-fest'
 
 @Injectable()
 export class BotBridgeService {
@@ -62,13 +63,13 @@ export class BotBridgeService {
     return botRecord.commonAdapterConfig.bindingWorkflowApp?.map(({ appId, version, bindingId }) => ({ appId, version, bindingId, appPublish: appMap[getAppString({ ofAppId: appId, version })] }))
   }
 
-  async configBinding(botId: string, bindingId: string, config: BotWorkflowAppBindingConfig) {
+  async configBinding(botId: string, bindingId: string, config: PartialDeep<BotWorkflowAppBindingConfig>) {
     const botRecord = await this.bridge.getRecordOrThrow(botId)
     if(!botRecord.commonAdapterConfig.bindingWorkflowApp)
       botRecord.commonAdapterConfig.bindingWorkflowApp = []
     const binding = botRecord.commonAdapterConfig.bindingWorkflowApp.find(({ bindingId: id }) => id === bindingId)
     if(!binding) throw new CommError('绑定不存在', Code.BadRequest, 'warn')
-    binding.bindingConfig = assign(binding.bindingConfig, config)
+    binding.bindingConfig = merge(binding.bindingConfig, config)
     return await botRecord.save()
   }
 

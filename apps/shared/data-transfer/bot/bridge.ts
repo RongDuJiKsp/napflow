@@ -1,4 +1,5 @@
 import z from 'zod'
+import { zodDeepPartial } from 'zod-deep-partial'
 import { ZodCheckWorkflowApp, ZodCheckWorkflowAppVersionInfos } from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
 import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
@@ -23,6 +24,9 @@ export const ZodCheckBotBridgeBindStatusResp = defineZodResp(
   })),
 )
 export type BotBridgeBindStatusResp = z.infer<typeof ZodCheckBotBridgeBindStatusResp>
+
+export const ZodCheckConfigBotWorkflowAppBindingConfigReq = zodDeepPartial(ZodCheckBotWorkflowAppBindingConfig)
+export type ConfigBotWorkflowAppBindingConfigReq = z.infer<typeof ZodCheckConfigBotWorkflowAppBindingConfigReq>
 
 export const ZodCheckBotBindingConfigResp = defineZodResp(ZodCheckBotWorkflowAppBindingConfig)
 export type BotBindingConfigResp = z.infer<typeof ZodCheckBotBindingConfigResp>

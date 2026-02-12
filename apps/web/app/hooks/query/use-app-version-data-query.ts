@@ -7,6 +7,6 @@ import { useQuery } from '@tanstack/react-query'
 export const useAppVersionDataQuery = (appId: string, version: string) => {
   return useQuery({
     queryKey: ['app-version-data', appId, version],
-    queryFn: defineQueryFn<GetVersionResp, WorkflowAppData>(async () => await jsonQ.Get<GetVersionResp>(`/app/${appId}/version/${version}`)),
+    queryFn: defineQueryFn<GetVersionResp, WorkflowAppData>(async () => await jsonQ.Get<GetVersionResp>(`/workflow/${appId}/version/${version}`)),
   })
 }
