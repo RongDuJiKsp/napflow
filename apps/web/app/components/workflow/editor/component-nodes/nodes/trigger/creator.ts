@@ -9,10 +9,6 @@ import { VarTypes } from '@shared/common/workflow/component-node'
 import { TriggerDataSchema, TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 
-// 从共享模块re-export，方便其他文件引用
-export { TriggerOn, TriggerDataSchema }
-export type { TriggerData }
-
 export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
   create: () => ({
     on: TriggerOn.Friend,

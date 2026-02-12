@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
 import type { ComponentNodeFc } from '../../types'
-import type { IfData } from './creator'
-import { BranchType, CompareOperatorLabels } from './creator'
+import type { IfData } from '@shared/common/workflow/node-data/if'
+import { BranchType, CompareOperatorLabels } from '@shared/common/workflow/node-data/if'
 import { Handle, Position } from '@xyflow/react'
 
 const IfNode: ComponentNodeFc<IfData> = ({ id, data }) => {

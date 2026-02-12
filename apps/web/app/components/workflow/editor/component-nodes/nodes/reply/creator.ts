@@ -6,10 +6,6 @@ import { RiQuestionAnswerLine } from '@remixicon/react'
 import { ReplyDataSchema, ReplyTarget } from '@shared/common/workflow/node-data/reply'
 import type { ReplyData } from '@shared/common/workflow/node-data/reply'
 
-// 从共享模块re-export，方便其他文件引用
-export { ReplyTarget, ReplyDataSchema }
-export type { ReplyData }
-
 export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
   create: () => ({
     content: '',

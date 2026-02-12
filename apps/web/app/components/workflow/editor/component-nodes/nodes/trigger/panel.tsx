@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import type { ComponentPanelFc } from '../../types'
-import type { TriggerData } from './creator'
+import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 import { useTriggerCurd } from './hooks/use-trigger-curd'
-import { TriggerOn } from './creator'
+import { TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import { Input, Label, ListBox, Select, TextField } from '@heroui/react'
 import ProviderEnv from '../../common/provider-env'
 

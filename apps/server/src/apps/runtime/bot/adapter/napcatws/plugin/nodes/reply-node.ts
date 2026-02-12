@@ -1,4 +1,5 @@
-import { ReplyNode, ReplyTarget } from '@/src/apps/runtime/core/workflow/nodes/reply-node'
+import { ReplyNode } from '@/src/apps/runtime/core/workflow/nodes/reply-node'
+import { ReplyTarget } from '@shared/common/workflow/node-data/reply'
 import type { WorkflowThread } from '@/src/apps/runtime/core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { Logger } from '@nestjs/common'

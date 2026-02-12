@@ -8,8 +8,8 @@ import {
   CompareOperator,
   type Condition,
   type IfData,
-  generateBranchId,
-} from '../creator'
+} from '@shared/common/workflow/node-data/if'
+import { generateBranchId } from '../creator'
 
 export const useIfCurd = (id: string) => {
   const { vars } = useComponentNodeEnv(id)

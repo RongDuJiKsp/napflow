@@ -13,17 +13,6 @@ import {
 } from '@shared/common/workflow/node-data/if'
 import type { Branch, Condition, IfData } from '@shared/common/workflow/node-data/if'
 
-// 从共享模块re-export，方便其他文件引用
-export {
-  CompareOperator,
-  CompareOperatorLabels,
-  BranchType,
-  ConditionSchema,
-  BranchSchema,
-  IfDataSchema,
-}
-export type { Condition, Branch, IfData }
-
 let branchIdCounter = 0
 export const generateBranchId = () => `branch_${Date.now()}_${branchIdCounter++}`
 

@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import type { ComponentNodeFc } from '../../types'
-import { type TriggerData, TriggerOn } from './creator'
+import { TriggerOn } from '@shared/common/workflow/node-data/trigger'
+import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 
 const TriggerNode: ComponentNodeFc<TriggerData> = ({ data }) => {
   return (

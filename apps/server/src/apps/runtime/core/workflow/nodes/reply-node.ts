@@ -5,10 +5,7 @@ import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { raiseErrors } from '../../../utils/errors'
-import { ReplyDataRawSchema, ReplyTarget } from '@shared/common/workflow/node-data/reply'
-
-// 从共享模块re-export，方便其他文件引用
-export { ReplyTarget }
+import { ReplyDataRawSchema } from '@shared/common/workflow/node-data/reply'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
 export const ReplyDataCtxSchema = ZodCheckComponentNodeMeta.extend(ReplyDataRawSchema.shape)

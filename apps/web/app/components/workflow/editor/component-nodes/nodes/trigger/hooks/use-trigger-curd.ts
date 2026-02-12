@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
 import type { ComponentNode } from '../../../types'
-import type { TriggerData, TriggerOn } from '../creator'
+import type { TriggerData, TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 
 export const useTriggerCurd = (nodeId: string) => {
