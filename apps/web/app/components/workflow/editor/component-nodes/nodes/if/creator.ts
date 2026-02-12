@@ -10,8 +10,7 @@ import {
 } from '@shared/common/workflow/node-data/if'
 import type { IfData } from '@shared/common/workflow/node-data/if'
 
-let branchIdCounter = 0
-export const generateBranchId = () => `branch_${Date.now()}_${branchIdCounter++}`
+export const generateBranchId = () => `branch_${Date.now()}`
 
 export const IfNodeCreator: ComponentCreator<IfData> = {
   create: () => ({

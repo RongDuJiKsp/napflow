@@ -29,6 +29,7 @@ const typeLabels: Record<VarTypes, string> = {
 // ─── 操作符分组（字符串类 / 数值类）───
 const stringOperators = [
   'string_equal',
+  'string_not_equal',
   'contains',
   'contained_by',
   'not_contains',
@@ -45,6 +46,7 @@ const numberOperators = [
 // 操作符颜色
 const operatorColors: Record<string, string> = {
   string_equal: 'text-blue-600',
+  string_not_equal: 'text-red-500',
   contains: 'text-blue-600',
   contained_by: 'text-blue-600',
   not_contains: 'text-red-500',

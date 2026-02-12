@@ -16,7 +16,7 @@ export const useWorkflowViewOperations = () => {
     = useComponentNodeOperations()
 
   const handleConnect = useCallback(
-    ({ source, target }: Connection) => {
+    ({ source, target, sourceHandle, targetHandle }: Connection) => {
       const sourceNode = reactflow.getNode(source)
       const targetNode = reactflow.getNode(target)
       if (
@@ -24,7 +24,7 @@ export const useWorkflowViewOperations = () => {
         || !targetNode
         || reactflow
           .getEdges()
-          .find(e => e.source === source && e.target === target)
+          .find(e => e.source === source && e.target === target && e.sourceHandle === sourceHandle && e.targetHandle === targetHandle)
       )
         return
       if (
@@ -34,6 +34,8 @@ export const useWorkflowViewOperations = () => {
         handleComponentNodeConnect(
           sourceNode as ComponentNode,
           targetNode as ComponentNode,
+          sourceHandle,
+          targetHandle,
         )
       }
       submitSyncDraft()

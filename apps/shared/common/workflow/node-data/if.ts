@@ -3,6 +3,7 @@ import z from 'zod'
 // 比较操作符
 export enum CompareOperator {
   StringEqual = 'string_equal', // 字符串等于
+  StringNotEqual = 'string_not_equal', // 字符串不等于
   Contains = 'contains', // 包含
   ContainedBy = 'contained_by', // 包含于
   NotContains = 'not_contains', // 不包含
@@ -15,6 +16,7 @@ export enum CompareOperator {
 
 export const CompareOperatorLabels: Record<CompareOperator, string> = {
   [CompareOperator.StringEqual]: '字符串等于',
+  [CompareOperator.StringNotEqual]: '字符串不等于',
   [CompareOperator.Contains]: '包含',
   [CompareOperator.ContainedBy]: '包含于',
   [CompareOperator.NotContains]: '不包含',
