@@ -7,6 +7,9 @@ export type TemplatePartItem
   | { type: TemplatePart.Var; payload: string }
 
 export const splitTemplateVars = (template: string): TemplatePartItem[] => {
+  if (!template)
+    return []
+
   const regex = /\{\{#([^#]+)#\}\}/g
   const matches = Array.from(template.matchAll(regex))
 

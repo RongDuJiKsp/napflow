@@ -3,6 +3,7 @@ import { TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import type { WorkflowThread } from '@/src/apps/runtime/core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { Logger } from '@nestjs/common'
+import { compileTemplate } from '@/src/apps/runtime/utils/templates'
 
 export class NcTriggerNode extends TriggerNode {
   readonly logger = new Logger(NcTriggerNode.name)
@@ -11,6 +12,8 @@ export class NcTriggerNode extends TriggerNode {
     _nextTask: WillTask,
     nkv: Record<string, any>,
   ): void | Promise<void> {
+    const uid = compileTemplate(this.data.userId ?? '', thread)
+    const gid = compileTemplate(this.data.groupId ?? '', thread)
     this.logger.debug(`Processing thread in ${thread.id}`)
     if (this.data.on === TriggerOn.Group && !thread.kv.gid) {
       this.logger.debug('Task not a group message, exiting')
@@ -24,20 +27,20 @@ export class NcTriggerNode extends TriggerNode {
     }
     if (
       this.data.on === TriggerOn.Friend
-      && thread.kv.uid !== this.data.userId
+      && thread.kv.uid !== uid
     ) {
       this.logger.debug(
-        `Task not a friend ${this.data.userId} message(${thread.kv.uid}), exiting`,
+        `Task not a friend ${uid} message(${thread.kv.uid}), exiting`,
       )
       _nextTask.abort()
       return
     }
     if (
       this.data.on === TriggerOn.Group
-      && thread.kv.gid !== this.data.groupId
+      && thread.kv.gid !== gid
     ) {
       this.logger.debug(
-        `Task not a group ${this.data.groupId} message(${thread.kv.gid}), exiting`,
+        `Task not a group ${gid} message(${thread.kv.gid}), exiting`,
       )
       _nextTask.abort()
       return
