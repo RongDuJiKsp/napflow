@@ -1,6 +1,7 @@
 import { ExpressHttpHost } from '@/src/utils/nest-middleware'
 import {
   type ArgumentsHost,
+  Catch,
   type ExceptionFilter,
   Logger,
 } from '@nestjs/common'
@@ -17,6 +18,7 @@ export class CommError extends Error {
   }
 }
 
+@Catch(CommError)
 export class CommErrorExceptionFilter implements ExceptionFilter<CommError> {
   private readonly logger = new Logger(CommErrorExceptionFilter.name)
 
