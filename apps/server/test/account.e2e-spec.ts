@@ -1,16 +1,11 @@
-import 'reflect-metadata'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { TestingModule } from '@nestjs/testing'
-import { Test } from '@nestjs/testing'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
-import { AppModule } from './../src/app.module'
-import { TypeOrmService } from './../src/apps/db/typeorm.service'
-import { JwtService } from './../src/apps/account/jwt.service'
 import { UserRole } from '@shared/common/account/base'
 import { Code } from '@shared/data-transfer/_base'
 import bcryptjs from 'bcryptjs'
+import { createE2EApp, createTokenFactory } from './test-utils'
 
 /**
  * Account 端点 E2E 测试
@@ -29,7 +24,8 @@ import bcryptjs from 'bcryptjs'
  */
 describe('AccountController (e2e)', () => {
   let app: INestApplication<App>
-  let jwtService: JwtService
+  let getAdminToken: () => string
+  let getUserToken: () => string
 
   // ---------- Mock 数据 ----------
   const hashedPassword = bcryptjs.hashSync('password123', 10)
@@ -110,36 +106,20 @@ describe('AccountController (e2e)', () => {
     },
   }
 
-  // ---------- Token 辅助方法 ----------
-  function getAdminToken(): string {
-    return jwtService.account.jwtSign({
-      email: mockUserAdmin.email,
-      nickname: mockUserAdmin.nickname,
-      userGroup: mockUserAdmin.userGroup.map(g => ({ groupType: g.groupType })),
-    })
-  }
-
-  function getUserToken(): string {
-    return jwtService.account.jwtSign({
-      email: mockUserNormal.email,
-      nickname: mockUserNormal.nickname,
-      userGroup: mockUserNormal.userGroup.map(g => ({ groupType: g.groupType })),
-    })
-  }
-
   // ---------- 测试生命周期 ----------
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+    const ctx = await createE2EApp(mockTypeOrmService)
+    app = ctx.app
+
+    const tokenFactory = createTokenFactory(ctx.jwtService)
+    getAdminToken = () => tokenFactory.getAdminToken({
+      email: mockUserAdmin.email,
+      nickname: mockUserAdmin.nickname,
     })
-      .overrideProvider(TypeOrmService)
-      .useValue(mockTypeOrmService)
-      .compile()
-
-    app = moduleFixture.createNestApplication()
-    await app.init()
-
-    jwtService = moduleFixture.get<JwtService>(JwtService)
+    getUserToken = () => tokenFactory.getUserToken({
+      email: mockUserNormal.email,
+      nickname: mockUserNormal.nickname,
+    })
   })
 
   afterAll(async () => {

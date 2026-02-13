@@ -1,15 +1,9 @@
-import 'reflect-metadata'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { TestingModule } from '@nestjs/testing'
-import { Test } from '@nestjs/testing'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
-import { AppModule } from './../src/app.module'
-import { TypeOrmService } from './../src/apps/db/typeorm.service'
-import { JwtService } from './../src/apps/account/jwt.service'
-import { UserRole } from '@shared/common/account/base'
 import { Code } from '@shared/data-transfer/_base'
+import { createBaseMockTypeOrmService, createE2EApp, createTokenFactory } from './test-utils'
 
 /**
  * Workflow 端点 E2E 测试
@@ -28,7 +22,7 @@ import { Code } from '@shared/data-transfer/_base'
  */
 describe('WorkflowController (e2e)', () => {
   let app: INestApplication<App>
-  let jwtService: JwtService
+  let getUserToken: () => string
 
   // ---------- Mock 数据 ----------
   const TEST_APP_ID = '550e8400-e29b-41d4-a716-446655440000'
@@ -68,18 +62,7 @@ describe('WorkflowController (e2e)', () => {
   // ---------- Mock TypeOrmService ----------
   const mockTypeOrmService = {
     // account 相关（jwt 认证需要）
-    user: {
-      findOne: vi.fn().mockResolvedValue(null),
-      find: vi.fn().mockResolvedValue([]),
-      save: vi.fn().mockResolvedValue({}),
-      update: vi.fn().mockResolvedValue({ affected: 1 }),
-      softDelete: vi.fn().mockResolvedValue({ affected: 1 }),
-    },
-    userGroup: {
-      find: vi.fn().mockResolvedValue([]),
-      save: vi.fn().mockResolvedValue([]),
-      delete: vi.fn().mockResolvedValue({ affected: 1 }),
-    },
+    ...createBaseMockTypeOrmService(),
     // workflow 相关
     workflowApp: {
       save: vi.fn().mockImplementation((data: any) => {
@@ -128,39 +111,13 @@ describe('WorkflowController (e2e)', () => {
     },
   }
 
-  // ---------- Token 辅助方法 ----------
-  function getUserToken(): string {
-    return jwtService.account.jwtSign({
-      email: 'user@test.com',
-      nickname: 'TestUser',
-      userGroup: [{ groupType: UserRole.User }],
-    })
-  }
-
-  function getAdminToken(): string {
-    return jwtService.account.jwtSign({
-      email: 'admin@test.com',
-      nickname: 'AdminUser',
-      userGroup: [
-        { groupType: UserRole.Admin },
-        { groupType: UserRole.User },
-      ],
-    })
-  }
-
   // ---------- 测试生命周期 ----------
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(TypeOrmService)
-      .useValue(mockTypeOrmService)
-      .compile()
+    const ctx = await createE2EApp(mockTypeOrmService)
+    app = ctx.app
 
-    app = moduleFixture.createNestApplication()
-    await app.init()
-
-    jwtService = moduleFixture.get<JwtService>(JwtService)
+    const tokenFactory = createTokenFactory(ctx.jwtService)
+    getUserToken = () => tokenFactory.getUserToken()
   })
 
   afterAll(async () => {
