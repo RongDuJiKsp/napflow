@@ -18,8 +18,6 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.(t|j)s'],
     },
-    // 全局 API（describe, it, expect 等）
-    globals: true,
   },
   plugins: [swc.vite()],
 })
