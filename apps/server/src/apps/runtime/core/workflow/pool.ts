@@ -76,9 +76,13 @@ export class CommPlugin<SDK = unknown> {
       throw new Error('Workflow must have exactly one trigger node')
     this.graphHead = triggers[0]
     this.commNodes = commNodes
-    this.commNodeCache = Object.fromEntries(commNodes.map(node => [node.id, node]))
+    this.commNodeCache = Object.fromEntries(
+      commNodes.map(node => [node.id, node]),
+    )
     this.commEdges = CommEdges
-    this.commEdgeCache = Object.fromEntries(CommEdges.map(edge => [edge.id, edge]))
+    this.commEdgeCache = Object.fromEntries(
+      CommEdges.map(edge => [edge.id, edge]),
+    )
   }
 
   get threadList() {

@@ -14,7 +14,10 @@ export const IfDataCtxSchema = ZodCheckComponentNodeMeta.extend(
 
 export type IfDataCtx = z.infer<typeof IfDataCtxSchema>
 
-export const OperatorChecker: Record<CompareOperator, (a: unknown, b: unknown) => boolean> = {
+export const OperatorChecker: Record<
+  CompareOperator,
+  (a: unknown, b: unknown) => boolean
+> = {
   // 字符串等于
   [CompareOperator.StringEqual]: (a: unknown, b: unknown): boolean =>
     String(a) === String(b),
@@ -59,28 +62,37 @@ export class IfNode extends CommNode<IfDataCtx> {
     _nextTask: WillTask,
     _nkv: Record<string, any>,
   ): void | Promise<void> {
-    const branchEdges = thread.plugin.edges.filter(edge => edge.source === this.id)
-    const needToDeleteQueues = new Set<string>(branchEdges.map(edge => edge.target))
-    for(const branch of this.data.branches) {
-      const branchEdge = branchEdges.find(edge => edge.sourceHandle === branch.id)
+    const branchEdges = thread.plugin.edges.filter(
+      edge => edge.source === this.id,
+    )
+    const needToDeleteQueues = new Set<string>(
+      branchEdges.map(edge => edge.target),
+    )
+    for (const branch of this.data.branches) {
+      const branchEdge = branchEdges.find(
+        edge => edge.sourceHandle === branch.id,
+      )
       // 没有对应的边 不管
-      if(!branchEdge)
-        continue
+      if (!branchEdge) continue
       // 没有condition为else 结束
-      if(!branch.condition)
-        break
+      if (!branch.condition) break
       //
       const [varNodeIndex, ...varNames] = branch.condition.variable.split('.')
       const value = thread.nodeKv[varNodeIndex][varNames.join('.')]
-    // 判断条件是否成立
-    // 如果成立 则执行对应的边
-      if(OperatorChecker[branch.condition.operator](value, branch.condition.value)) {
+      // 判断条件是否成立
+      // 如果成立 则执行对应的边
+      if (
+        OperatorChecker[branch.condition.operator](
+          value,
+          branch.condition.value,
+        )
+      ) {
         needToDeleteQueues.delete(branchEdge.target)
         break
       }
     }
     // 删除不需要执行的节点
-    for(const target of needToDeleteQueues)
+    for (const target of needToDeleteQueues)
       thread.mayBeNextNodeDegree.delete(thread.plugin.commNodeCache[target])
   }
 }
