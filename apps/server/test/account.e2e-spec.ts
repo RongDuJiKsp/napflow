@@ -187,7 +187,7 @@ describe('AccountController (e2e)', () => {
         .post('/account/login')
         .send({ email: 'disabled@test.com', password: 'password123' })
 
-      expect(res.body.statusCode).toBe(Code.NotFound)
+      expect(res.body.statusCode).toBe(Code.Forbidden)
       expect(res.body.message).toContain('用户已被禁用')
     })
 
@@ -421,7 +421,7 @@ describe('AccountController (e2e)', () => {
           password: 'newPassword456',
         })
 
-      expect(res.body.statusCode).toBe(Code.BadRequest)
+      expect(res.body.statusCode).toBe(Code.Forbidden)
       expect(res.body.message).toContain('原密码错误')
     })
 
@@ -506,7 +506,7 @@ describe('AccountController (e2e)', () => {
           groupType: [UserRole.User],
         })
 
-      expect(res.body.statusCode).toBe(Code.BadRequest)
+      expect(res.body.statusCode).toBe(Code.Forbidden)
       expect(res.body.message).toContain('不能对User组进行升降级')
     })
 
@@ -574,7 +574,7 @@ describe('AccountController (e2e)', () => {
           groupType: [UserRole.User],
         })
 
-      expect(res.body.statusCode).toBe(Code.BadRequest)
+      expect(res.body.statusCode).toBe(Code.Forbidden)
       expect(res.body.message).toContain('不能对User组进行升降级')
     })
 

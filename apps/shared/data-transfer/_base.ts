@@ -3,6 +3,7 @@ import z from 'zod'
 export enum Code {
   Ok = 200,
   BadRequest = 400,
+  Forbidden = 403,
   Unauthorized = 401,
   NotFound = 404,
   ServerError = 500,

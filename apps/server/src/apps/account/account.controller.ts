@@ -63,7 +63,7 @@ export class AccountController {
       req.password,
     )
     if (!user) return Resp.error('用户不存在或密码错误', Code.NotFound)
-    if (user.disabledAt) return Resp.error('用户已被禁用', Code.NotFound)
+    if (user.disabledAt) return Resp.error('用户已被禁用', Code.Forbidden)
 
     return Resp.ok({
       token: this.jwtService.account.jwtSign(user),
@@ -145,7 +145,7 @@ export class AccountController {
     @ZodBody({ zod: ZodCheckAccountUpDownGradeReq }) req: AccountUpDownGradeReq,
   ) {
     if (req.groupType.includes(UserRole.User))
-      return Resp.error('不能对User组进行升降级', Code.BadRequest)
+      return Resp.error('不能对User组进行升降级', Code.Forbidden)
     const res = await this.accountService.upgradeAccount(
       req.email,
       req.groupType,
@@ -170,7 +170,7 @@ export class AccountController {
     @ZodBody({ zod: ZodCheckAccountUpDownGradeReq }) req: AccountUpDownGradeReq,
   ) {
     if (req.groupType.includes(UserRole.User))
-      return Resp.error('不能对User组进行升降级', Code.BadRequest)
+      return Resp.error('不能对User组进行升降级', Code.Forbidden)
     const res = await this.accountService.downgradeAccount(
       req.email,
       req.groupType,
@@ -246,7 +246,7 @@ export class AccountController {
       account.email,
       req.originPassword,
     )
-    if (!userFull) return Resp.error('原密码错误', Code.BadRequest)
+    if (!userFull) return Resp.error('原密码错误', Code.Forbidden)
 
     await this.accountService.changePassword(account.email, req.password)
     return Resp.ok()
