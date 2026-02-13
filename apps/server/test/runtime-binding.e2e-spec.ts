@@ -3,7 +3,7 @@ import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
-import { AdapterTag, BotRunningState, BotSignal } from '@shared/common/bot/base'
+import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
 import { createBaseMockTypeOrmService, createE2EApp, createTokenFactory } from './test-utils'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
@@ -353,12 +353,12 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
         .send([
           { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
         ])
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
@@ -433,10 +433,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
         .send({ bindingIds: [TEST_BINDING_ID] })
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
@@ -486,9 +486,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
@@ -527,9 +527,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .get(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
@@ -601,10 +601,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .send({ envKV: { key: 'value' } })
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
