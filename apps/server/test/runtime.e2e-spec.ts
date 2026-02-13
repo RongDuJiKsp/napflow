@@ -178,7 +178,7 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .post('/bots/create')
         .send({
           name: '新机器人',
@@ -187,7 +187,7 @@ describe('Runtime BotManager (e2e)', () => {
           adapterTag: AdapterTag.napcatWs,
           adapterConfig: {},
         })
-        .expect(401)
+      expect(res.status).toBe(401)
     })
   })
 
