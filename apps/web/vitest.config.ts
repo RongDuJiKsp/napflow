@@ -10,11 +10,8 @@ export default defineConfig({
     },
   },
   test: {
-    // 测试环境
     environment: 'jsdom',
-    // 匹配 .spec.ts 结尾的测试文件
     include: ['**/*.spec.ts'],
-    // 覆盖率配置
     coverage: {
       provider: 'v8',
     },

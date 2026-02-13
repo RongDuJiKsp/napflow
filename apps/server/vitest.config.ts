@@ -9,15 +9,12 @@ export default defineConfig({
     },
   },
   test: {
-    // 测试环境
     environment: 'node',
-    // 匹配 .spec.ts 和 .e2e-spec.ts 结尾的测试文件
     include: ['src/**/*.spec.ts', 'test/**/*.e2e-spec.ts'],
-    // 覆盖率配置
     coverage: {
       provider: 'v8',
       include: ['src/**/*.(t|j)s'],
     },
   },
-  plugins: [swc.vite()],
+  plugins: [swc.vite()], // 解决没有meta-data的问题
 })
