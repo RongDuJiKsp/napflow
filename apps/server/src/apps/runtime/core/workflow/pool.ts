@@ -16,6 +16,7 @@ import { Queue } from 'datastructures-js'
 import { Logger } from '@nestjs/common'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+import type { Class } from 'type-fest'
 
 export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
@@ -32,6 +33,10 @@ export class CommPlugin<SDK = unknown> {
     { prev: CommNode[]; next: CommNode[] }
   >
 
+  readonly commNodes: CommNode[]
+  readonly commNodeCache: Record<string, CommNode>
+  readonly commEdges: CommEdge[]
+  readonly commEdgeCache: Record<string, CommEdge>
   readonly graphHead: CommNode & CommTrigger
   readonly configs: PluginConfigs
   sdk: SDK | null = null
@@ -70,6 +75,10 @@ export class CommPlugin<SDK = unknown> {
     if (triggers.length === 0 || triggers.length > 1)
       throw new Error('Workflow must have exactly one trigger node')
     this.graphHead = triggers[0]
+    this.commNodes = commNodes
+    this.commNodeCache = Object.fromEntries(commNodes.map(node => [node.id, node]))
+    this.commEdges = CommEdges
+    this.commEdgeCache = Object.fromEntries(CommEdges.map(edge => [edge.id, edge]))
   }
 
   get threadList() {
@@ -130,7 +139,7 @@ export class WorkflowThread<SDK = unknown> {
     this.applyEndPoints()
   }
 
-  applyEndPoints() {
+  private applyEndPoints() {
     const startNode = this.plugin.graphHead
     if (startNode.triggerEv === this.triggerEndpoint)
       this.availableNodes.enqueue(startNode)
@@ -178,7 +187,7 @@ export class WorkflowThread<SDK = unknown> {
     currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
   }
 
-  shouldBeKill() {
+  private shouldBeKill() {
     let killReason = ''
     const { threadMaxLiveSecond = 600 } = this.plugin.configs
 
@@ -194,7 +203,11 @@ export class WorkflowThread<SDK = unknown> {
     return killReason
   }
 
-  unmount() {
+  private unmount() {
     delete this.plugin.threads[this.id]
+  }
+
+  getLogger(klass: Class<CommNode>): Logger {
+    return new Logger(`${WorkflowThread.name}::${klass.name}`)
   }
 }

@@ -23,6 +23,8 @@ export const ZodCheckEdge = z
     id: z.string(),
     source: z.string(),
     target: z.string(),
+    sourceHandle: z.string().optional().nullable(),
+    targetHandle: z.string().optional().nullable(),
   })
   .catchall(z.any())
 export type Edge = z.infer<typeof ZodCheckEdge>
