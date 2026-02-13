@@ -1,4 +1,12 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
@@ -35,8 +43,16 @@ describe('AccountController (e2e)', () => {
     nickname: 'AdminUser',
     password: hashedPassword,
     userGroup: [
-      { ofUser: 'admin@test.com', groupType: UserRole.Admin, createdAt: new Date() },
-      { ofUser: 'admin@test.com', groupType: UserRole.User, createdAt: new Date() },
+      {
+        ofUser: 'admin@test.com',
+        groupType: UserRole.Admin,
+        createdAt: new Date(),
+      },
+      {
+        ofUser: 'admin@test.com',
+        groupType: UserRole.User,
+        createdAt: new Date(),
+      },
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -48,7 +64,11 @@ describe('AccountController (e2e)', () => {
     nickname: 'NormalUser',
     password: hashedPassword,
     userGroup: [
-      { ofUser: 'user@test.com', groupType: UserRole.User, createdAt: new Date() },
+      {
+        ofUser: 'user@test.com',
+        groupType: UserRole.User,
+        createdAt: new Date(),
+      },
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -60,7 +80,11 @@ describe('AccountController (e2e)', () => {
     nickname: 'DisabledUser',
     password: hashedPassword,
     userGroup: [
-      { ofUser: 'disabled@test.com', groupType: UserRole.User, createdAt: new Date() },
+      {
+        ofUser: 'disabled@test.com',
+        groupType: UserRole.User,
+        createdAt: new Date(),
+      },
     ],
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -80,7 +104,11 @@ describe('AccountController (e2e)', () => {
         return Promise.resolve(allMockUsers)
       }),
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({ ...data, createdAt: new Date(), updatedAt: new Date() })
+        return Promise.resolve({
+          ...data,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
       }),
       update: vi.fn().mockImplementation((_where: any, _data: any) => {
         return Promise.resolve({ affected: 1 })
@@ -112,14 +140,16 @@ describe('AccountController (e2e)', () => {
     app = ctx.app
 
     const tokenFactory = createTokenFactory(ctx.jwtService)
-    getAdminToken = () => tokenFactory.getAdminToken({
-      email: mockUserAdmin.email,
-      nickname: mockUserAdmin.nickname,
-    })
-    getUserToken = () => tokenFactory.getUserToken({
-      email: mockUserNormal.email,
-      nickname: mockUserNormal.nickname,
-    })
+    getAdminToken = () =>
+      tokenFactory.getAdminToken({
+        email: mockUserAdmin.email,
+        nickname: mockUserAdmin.nickname,
+      })
+    getUserToken = () =>
+      tokenFactory.getUserToken({
+        email: mockUserNormal.email,
+        nickname: mockUserNormal.nickname,
+      })
   })
 
   afterAll(async () => {
@@ -287,8 +317,9 @@ describe('AccountController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/account/cur-account')
+      const res = await request(app.getHttpServer()).get(
+        '/account/cur-account',
+      )
 
       expect(res.status).toBe(401)
     })
@@ -369,8 +400,7 @@ describe('AccountController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/account/account')
+      const res = await request(app.getHttpServer()).get('/account/account')
 
       expect(res.status).toBe(401)
     })
@@ -559,7 +589,9 @@ describe('AccountController (e2e)', () => {
     })
 
     it('delete affected 为 0 时应返回错误', async () => {
-      mockTypeOrmService.userGroup.delete.mockResolvedValueOnce({ affected: 0 })
+      mockTypeOrmService.userGroup.delete.mockResolvedValueOnce({
+        affected: 0,
+      })
 
       const res = await request(app.getHttpServer())
         .post('/account/downgrade')

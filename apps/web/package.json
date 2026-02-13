@@ -5,7 +5,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix",
-    "test":"vitest"
+    "lint:prettier": "npx prettier --write .",
+    "lint:all": "pnpm lint:prettier&& pnpm lint",
+    "test": "vitest"
   },
   "dependencies": {
     "@ant-design/charts": "^2.6.7",

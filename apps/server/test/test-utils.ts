@@ -10,9 +10,9 @@ import { JwtService } from './../src/apps/account/jwt.service'
 import { UserRole } from '@shared/common/account/base'
 
 export type E2EContext = {
-  app: INestApplication<App>
-  jwtService: JwtService
-  module: TestingModule
+  app: INestApplication<App>;
+  jwtService: JwtService;
+  module: TestingModule;
 }
 
 export function createBaseMockTypeOrmService() {
@@ -32,7 +32,9 @@ export function createBaseMockTypeOrmService() {
   }
 }
 
-export async function createE2EApp(mockTypeOrmService: Record<string, any>): Promise<E2EContext> {
+export async function createE2EApp(
+  mockTypeOrmService: Record<string, any>,
+): Promise<E2EContext> {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
   })

@@ -1,10 +1,22 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
 import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
-import { createBaseMockTypeOrmService, createE2EApp, createTokenFactory } from './test-utils'
+import {
+  createBaseMockTypeOrmService,
+  createE2EApp,
+  createTokenFactory,
+} from './test-utils'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
@@ -45,8 +57,8 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
    * 提供 save 方法以模拟 TypeORM BaseEntity.save()
    */
   function createMockBotRecord(overrides?: {
-    bindingWorkflowApp?: any[]
-    recordId?: string
+    bindingWorkflowApp?: any[];
+    recordId?: string;
   }) {
     const record: any = {
       recordId: overrides?.recordId ?? TEST_BOT_ID,
@@ -111,9 +123,11 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
   }
 
   // ---------- Mock BotInstance ----------
-  function createMockBotInstance(overrides?: Partial<{
-    runningState: BotRunningState
-  }>): BotInstance {
+  function createMockBotInstance(
+    overrides?: Partial<{
+      runningState: BotRunningState;
+    }>,
+  ): BotInstance {
     const state = overrides?.runningState ?? BotRunningState.running
     return {
       tag: AdapterTag.napcatWs,
@@ -132,7 +146,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
    * 清理 BotCoreRuntimeService 内部的 botInstanceMap
    */
   function clearBotInstanceMap() {
-    const map = (botCoreRuntimeService as any).botInstanceMap as Map<string, BotInstance>
+    const map = (botCoreRuntimeService as any).botInstanceMap as Map<
+      string,
+      BotInstance
+    >
     map.clear()
   }
 
@@ -140,7 +157,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
    * 模拟启动一个 bot 到 running 状态，让绑定操作受到"运行中"限制
    */
   async function startBot() {
-    const mockInstance = createMockBotInstance({ runningState: BotRunningState.running })
+    const mockInstance = createMockBotInstance({
+      runningState: BotRunningState.running,
+    })
     vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
     await request(app.getHttpServer())
       .post(`/bots/${TEST_BOT_ID}/run`)
@@ -187,11 +206,13 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     botRecord: {
       find: vi.fn().mockResolvedValue([currentBotRecord]),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(currentBotRecord)
         return Promise.resolve(null)
       }),
       findOneBy: vi.fn().mockImplementation((where: any) => {
-        if (where.recordId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(currentBotRecord)
         return Promise.resolve(null)
       }),
       save: vi.fn().mockImplementation((data: any) => {
@@ -205,7 +226,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     const ctx = await createE2EApp(mockTypeOrmService)
     app = ctx.app
     botFactoryService = ctx.module.get<BotFactoryService>(BotFactoryService)
-    botCoreRuntimeService = ctx.module.get<BotCoreRuntimeService>(BotCoreRuntimeService)
+    botCoreRuntimeService = ctx.module.get<BotCoreRuntimeService>(
+      BotCoreRuntimeService,
+    )
 
     const tokenFactory = createTokenFactory(ctx.jwtService)
     getUserToken = () => tokenFactory.getUserToken()
@@ -223,12 +246,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     // 重置 botRecord mock 默认行为
     mockTypeOrmService.botRecord.find.mockResolvedValue([currentBotRecord])
-    mockTypeOrmService.botRecord.findOne.mockImplementation(({ where }: any) => {
-      if (where.recordId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
-      return Promise.resolve(null)
-    })
+    mockTypeOrmService.botRecord.findOne.mockImplementation(
+      ({ where }: any) => {
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(currentBotRecord)
+        return Promise.resolve(null)
+      },
+    )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
-      if (where.recordId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
+      if (where.recordId === TEST_BOT_ID)
+        return Promise.resolve(currentBotRecord)
       return Promise.resolve(null)
     })
   })
@@ -239,20 +266,26 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
-        .send([
-          { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
-        ])
+        .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
 
       expect(res.body.statusCode).toBe(Code.Ok)
       // 验证 botRecord.save 被调用
       expect(currentBotRecord.save).toHaveBeenCalled()
       // 验证绑定被写入 commonAdapterConfig
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(1)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].appId).toBe(TEST_APP_ID)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].version).toBe('v1.0.0')
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(1)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].appId,
+      ).toBe(TEST_APP_ID)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].version,
+      ).toBe('v1.0.0')
       // 每条绑定都应有唯一 bindingId
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId).toBeDefined()
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId,
+      ).toBeDefined()
     })
 
     it('Bot 停止时应当成功批量绑定多个插件', async () => {
@@ -266,7 +299,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .expect(201)
 
       expect(res.body.statusCode).toBe(Code.Ok)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(2)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(2)
       // 两条绑定的 bindingId 应不同
       const ids = currentBotRecord.commonAdapterConfig.bindingWorkflowApp.map(
         (b: any) => b.bindingId,
@@ -289,7 +324,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
 
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(2)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(2)
       // 两条记录 appId 相同但 bindingId 不同
       const bindings = currentBotRecord.commonAdapterConfig.bindingWorkflowApp
       expect(bindings[0].appId).toBe(bindings[1].appId)
@@ -300,15 +337,15 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
-        .send([
-          { appId: TEST_APP_ID, appVersion: 'draft' },
-        ])
+        .send([{ appId: TEST_APP_ID, appVersion: 'draft' }])
 
       // CommError 被 CommErrorExceptionFilter 捕获，HTTP 状态码 400
       expect(res.status).toBe(400)
       expect(res.body.statusCode).toBe(Code.BadRequest)
       // 绑定列表应该为空（没有成功写入）
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(0)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(0)
     })
 
     it('批量绑定中包含 draft 版本时应当全部拒绝', async () => {
@@ -322,7 +359,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       expect(res.status).toBe(400)
       // 所有绑定都不应被写入
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(0)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(0)
     })
 
     it('Bot 运行中绑定应当返回 400 错误', async () => {
@@ -331,9 +370,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
-        .send([
-          { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
-        ])
+        .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
 
       expect(res.status).toBe(400)
       expect(res.body.statusCode).toBe(Code.BadRequest)
@@ -343,9 +380,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/bot-bridge/non-existent-bot/bindmany')
         .set('Authorization', `Bearer ${getUserToken()}`)
-        .send([
-          { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
-        ])
+        .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
 
       // 由于 botRecord.findOne 对不存在的ID返回null，
       // getRecordOrThrow 会抛出 CommError(NotFound)
@@ -355,9 +390,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer())
         .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
-        .send([
-          { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
-        ])
+        .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
       expect(res.status).toBe(401)
     })
   })
@@ -368,7 +401,11 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       // 先在 botRecord 中预置绑定数据
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
         { appId: TEST_APP_ID, version: 'v1.0.0', bindingId: TEST_BINDING_ID },
-        { appId: TEST_APP_ID_2, version: 'v2.0.0', bindingId: TEST_BINDING_ID_2 },
+        {
+          appId: TEST_APP_ID_2,
+          version: 'v2.0.0',
+          bindingId: TEST_BINDING_ID_2,
+        },
       ]
 
       const res = await request(app.getHttpServer())
@@ -380,14 +417,22 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.Ok)
       expect(currentBotRecord.save).toHaveBeenCalled()
       // 只剩下 binding-id-002
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(1)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId).toBe(TEST_BINDING_ID_2)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(1)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId,
+      ).toBe(TEST_BINDING_ID_2)
     })
 
     it('应当支持批量解绑多个插件', async () => {
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
         { appId: TEST_APP_ID, version: 'v1.0.0', bindingId: TEST_BINDING_ID },
-        { appId: TEST_APP_ID_2, version: 'v2.0.0', bindingId: TEST_BINDING_ID_2 },
+        {
+          appId: TEST_APP_ID_2,
+          version: 'v2.0.0',
+          bindingId: TEST_BINDING_ID_2,
+        },
       ]
 
       const res = await request(app.getHttpServer())
@@ -397,7 +442,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .expect(201)
 
       expect(res.body.statusCode).toBe(Code.Ok)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(0)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(0)
     })
 
     it('解绑不存在的 bindingId 应当静默成功', async () => {
@@ -413,7 +460,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       expect(res.body.statusCode).toBe(Code.Ok)
       // 原有绑定不受影响
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(1)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(1)
     })
 
     it('Bot 运行中解绑应当返回 400 错误', async () => {
@@ -473,7 +522,11 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('有多个绑定时应当全部返回', async () => {
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
         { appId: TEST_APP_ID, version: 'v1.0.0', bindingId: TEST_BINDING_ID },
-        { appId: TEST_APP_ID_2, version: 'v2.0.0', bindingId: TEST_BINDING_ID_2 },
+        {
+          appId: TEST_APP_ID_2,
+          version: 'v2.0.0',
+          bindingId: TEST_BINDING_ID_2,
+        },
       ]
 
       const res = await request(app.getHttpServer())
@@ -486,8 +539,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+      const res = await request(app.getHttpServer()).get(
+        `/bot-bridge/${TEST_BOT_ID}/binding`,
+      )
       expect(res.status).toBe(401)
     })
   })
@@ -527,8 +581,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+      const res = await request(app.getHttpServer()).get(
+        `/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
+      )
       expect(res.status).toBe(401)
     })
   })
@@ -567,8 +622,12 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .expect(201)
 
       // merge 后 existingKey 和 newKey 应该都存在
-      const binding = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0]
-      expect(binding.bindingConfig.envKV).toHaveProperty('existingKey', 'existingValue')
+      const binding
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0]
+      expect(binding.bindingConfig.envKV).toHaveProperty(
+        'existingKey',
+        'existingValue',
+      )
       expect(binding.bindingConfig.envKV).toHaveProperty('newKey', 'newValue')
     })
 
@@ -627,7 +686,8 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(listRes1.body.statusCode).toBe(Code.Ok)
       expect(listRes1.body.data.length).toBe(1)
 
-      const bindingId = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
+      const bindingId
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
 
       // 3. 解绑
       const unbindRes = await request(app.getHttpServer())
@@ -654,7 +714,8 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
 
-      const bindingId = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
+      const bindingId
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
 
       // 2. 设置配置
       await request(app.getHttpServer())
@@ -714,10 +775,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         ])
         .expect(201)
 
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(2)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(2)
 
-      const bindingIdFirst = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
-      const bindingIdSecond = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[1].bindingId
+      const bindingIdFirst
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId
+      const bindingIdSecond
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[1].bindingId
 
       // 解绑第一个
       await request(app.getHttpServer())
@@ -726,8 +791,12 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .send({ bindingIds: [bindingIdFirst] })
         .expect(201)
 
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(1)
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId).toBe(bindingIdSecond)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(1)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0].bindingId,
+      ).toBe(bindingIdSecond)
 
       // 解绑第二个
       await request(app.getHttpServer())
@@ -736,7 +805,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .send({ bindingIds: [bindingIdSecond] })
         .expect(201)
 
-      expect(currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length).toBe(0)
+      expect(
+        currentBotRecord.commonAdapterConfig.bindingWorkflowApp.length,
+      ).toBe(0)
     })
 
     it('多次 merge 配置应累积更新', async () => {
@@ -763,7 +834,8 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
         .send({ envKV: { key2: 'val2' } })
         .expect(201)
 
-      const binding = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0]
+      const binding
+        = currentBotRecord.commonAdapterConfig.bindingWorkflowApp[0]
       expect(binding.bindingConfig.envKV).toHaveProperty('key1', 'val1')
       expect(binding.bindingConfig.envKV).toHaveProperty('key2', 'val2')
     })

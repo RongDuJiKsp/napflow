@@ -1,10 +1,26 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
-import { AdapterTag, BotRunningState, BotSignal } from '@shared/common/bot/base'
-import { createBaseMockTypeOrmService, createE2EApp, createTokenFactory } from './test-utils'
+import {
+  AdapterTag,
+  BotRunningState,
+  BotSignal,
+} from '@shared/common/bot/base'
+import {
+  createBaseMockTypeOrmService,
+  createE2EApp,
+  createTokenFactory,
+} from './test-utils'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
@@ -53,10 +69,12 @@ describe('Runtime BotManager (e2e)', () => {
   }
 
   // ---------- Mock BotInstance ----------
-  function createMockBotInstance(overrides?: Partial<{
-    runningState: BotRunningState
-    botRecord: any
-  }>): BotInstance {
+  function createMockBotInstance(
+    overrides?: Partial<{
+      runningState: BotRunningState;
+      botRecord: any;
+    }>,
+  ): BotInstance {
     const state = overrides?.runningState ?? BotRunningState.running
     const record = overrides?.botRecord ?? mockBotRecord
     return {
@@ -77,7 +95,10 @@ describe('Runtime BotManager (e2e)', () => {
    * 因为 botInstanceMap 是 private 的，通过访问私有属性来清理
    */
   function clearBotInstanceMap() {
-    const map = (botCoreRuntimeService as any).botInstanceMap as Map<string, BotInstance>
+    const map = (botCoreRuntimeService as any).botInstanceMap as Map<
+      string,
+      BotInstance
+    >
     map.clear()
   }
 
@@ -99,17 +120,25 @@ describe('Runtime BotManager (e2e)', () => {
     botRecord: {
       find: vi.fn().mockResolvedValue([mockBotRecord]),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-        if (where.recordId === TEST_BOT_ID_2) return Promise.resolve(mockBotRecord2)
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(mockBotRecord)
+        if (where.recordId === TEST_BOT_ID_2)
+          return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       }),
       findOneBy: vi.fn().mockImplementation((where: any) => {
-        if (where.recordId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-        if (where.recordId === TEST_BOT_ID_2) return Promise.resolve(mockBotRecord2)
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(mockBotRecord)
+        if (where.recordId === TEST_BOT_ID_2)
+          return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       }),
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({ ...mockBotRecord, ...data, recordId: TEST_BOT_ID })
+        return Promise.resolve({
+          ...mockBotRecord,
+          ...data,
+          recordId: TEST_BOT_ID,
+        })
       }),
     },
   }
@@ -119,7 +148,9 @@ describe('Runtime BotManager (e2e)', () => {
     const ctx = await createE2EApp(mockTypeOrmService)
     app = ctx.app
     botFactoryService = ctx.module.get<BotFactoryService>(BotFactoryService)
-    botCoreRuntimeService = ctx.module.get<BotCoreRuntimeService>(BotCoreRuntimeService)
+    botCoreRuntimeService = ctx.module.get<BotCoreRuntimeService>(
+      BotCoreRuntimeService,
+    )
 
     const tokenFactory = createTokenFactory(ctx.jwtService)
     getUserToken = () => tokenFactory.getUserToken()
@@ -136,18 +167,27 @@ describe('Runtime BotManager (e2e)', () => {
 
     // 重置 botRecord mock 默认行为
     mockTypeOrmService.botRecord.find.mockResolvedValue([mockBotRecord])
-    mockTypeOrmService.botRecord.findOne.mockImplementation(({ where }: any) => {
-      if (where.recordId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-      if (where.recordId === TEST_BOT_ID_2) return Promise.resolve(mockBotRecord2)
-      return Promise.resolve(null)
-    })
+    mockTypeOrmService.botRecord.findOne.mockImplementation(
+      ({ where }: any) => {
+        if (where.recordId === TEST_BOT_ID)
+          return Promise.resolve(mockBotRecord)
+        if (where.recordId === TEST_BOT_ID_2)
+          return Promise.resolve(mockBotRecord2)
+        return Promise.resolve(null)
+      },
+    )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
       if (where.recordId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-      if (where.recordId === TEST_BOT_ID_2) return Promise.resolve(mockBotRecord2)
+      if (where.recordId === TEST_BOT_ID_2)
+        return Promise.resolve(mockBotRecord2)
       return Promise.resolve(null)
     })
     mockTypeOrmService.botRecord.save.mockImplementation((data: any) => {
-      return Promise.resolve({ ...mockBotRecord, ...data, recordId: TEST_BOT_ID })
+      return Promise.resolve({
+        ...mockBotRecord,
+        ...data,
+        recordId: TEST_BOT_ID,
+      })
     })
   })
 
@@ -178,15 +218,13 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/bots/create')
-        .send({
-          name: '新机器人',
-          description: '新机器人描述',
-          commonConfig: {},
-          adapterTag: AdapterTag.napcatWs,
-          adapterConfig: {},
-        })
+      const res = await request(app.getHttpServer()).post('/bots/create').send({
+        name: '新机器人',
+        description: '新机器人描述',
+        commonConfig: {},
+        adapterTag: AdapterTag.napcatWs,
+        adapterConfig: {},
+      })
       expect(res.status).toBe(401)
     })
   })
@@ -204,8 +242,7 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/bots/list')
+      const res = await request(app.getHttpServer()).get('/bots/list')
       expect(res.status).toBe(401)
     })
   })
@@ -228,7 +265,9 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('bot 已运行时不应重复创建', async () => {
       // 先创建一个运行中的实例
-      const mockInstance = createMockBotInstance({ runningState: BotRunningState.running })
+      const mockInstance = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
       vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
 
       // 第一次启动
@@ -248,8 +287,9 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+      const res = await request(app.getHttpServer()).post(
+        `/bots/${TEST_BOT_ID}/run`,
+      )
       expect(res.status).toBe(401)
     })
   })
@@ -368,9 +408,13 @@ describe('Runtime BotManager (e2e)', () => {
   describe('Manager → Bot 指令组合场景', () => {
     it('run → stop → run 应当完整走完生命周期', async () => {
       // 第一个实例 running → stop 后变为 stopped
-      const instance1 = createMockBotInstance({ runningState: BotRunningState.running })
+      const instance1 = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
       // stop 之后将状态改为 stopped，这样下次 run 会重新创建
-      const instance2 = createMockBotInstance({ runningState: BotRunningState.running })
+      const instance2 = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
 
       const createBotSpy = vi.spyOn(botFactoryService, 'createBot')
       createBotSpy.mockResolvedValueOnce(instance1)
@@ -387,10 +431,10 @@ describe('Runtime BotManager (e2e)', () => {
         .post(`/bots/${TEST_BOT_ID}/stop`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
-      expect(instance1.signal).toHaveBeenCalledWith(BotSignal.SIGSTOP)
+      expect(instance1.signal).toHaveBeenCalledWith(BotSignal.SIGSTOP);
 
       // 模拟 stop 后状态变为非 running（实际 adapter 中 signal 会改变内部状态）
-      ;(instance1.runningState as any) = vi.fn().mockReturnValue({
+      (instance1.runningState as any) = vi.fn().mockReturnValue({
         runningState: BotRunningState.stopped,
       })
 
@@ -451,7 +495,10 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('多个 bot 实例的指令应当互不影响', async () => {
-      mockTypeOrmService.botRecord.find.mockResolvedValue([mockBotRecord, mockBotRecord2])
+      mockTypeOrmService.botRecord.find.mockResolvedValue([
+        mockBotRecord,
+        mockBotRecord2,
+      ])
 
       const instance1 = createMockBotInstance({ botRecord: mockBotRecord })
       const instance2 = createMockBotInstance({ botRecord: mockBotRecord2 })

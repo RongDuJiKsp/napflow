@@ -1,6 +1,8 @@
 {
   "name": "shared",
   "scripts": {
-    "lint": "npx eslint --fix"
+    "lint": "npx eslint --fix",
+    "lint:prettier": "npx prettier --write .",
+    "lint:all": "pnpm lint:prettier&& pnpm lint"
   }
 }

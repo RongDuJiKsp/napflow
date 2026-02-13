@@ -3,9 +3,7 @@ import { Module } from '@nestjs/common'
 import { APP_FILTER } from '@nestjs/core'
 import { CommErrorExceptionFilter } from './commerror.filter'
 
-@Module({
-
-})
+@Module({})
 export class CommModule {
   static forRoot(): DynamicModule {
     return {

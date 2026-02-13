@@ -19,6 +19,10 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
   icon: RiQuestionAnswerLine,
   nodeComponent: ReplyNode,
   editPanelComponent: ReplyPanel,
-  prevNodes: [ComponentNodesEnum.Trigger, ComponentNodesEnum.Reply, ComponentNodesEnum.If],
+  prevNodes: [
+    ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Reply,
+    ComponentNodesEnum.If,
+  ],
   nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.If],
 }

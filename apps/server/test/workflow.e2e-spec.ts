@@ -1,9 +1,21 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
-import { createBaseMockTypeOrmService, createE2EApp, createTokenFactory } from './test-utils'
+import {
+  createBaseMockTypeOrmService,
+  createE2EApp,
+  createTokenFactory,
+} from './test-utils'
 
 /**
  * Workflow 端点 E2E 测试
@@ -42,7 +54,9 @@ describe('WorkflowController (e2e)', () => {
     publishAt: null,
     publishBy: null,
     lastUpdateAt: new Date(),
-    nodes: [{ id: 'node-1', type: 'component', position: { x: 0, y: 0 }, data: {} }],
+    nodes: [
+      { id: 'node-1', type: 'component', position: { x: 0, y: 0 }, data: {} },
+    ],
     edges: [],
     envs: [],
   }
@@ -54,7 +68,9 @@ describe('WorkflowController (e2e)', () => {
     publishAt: new Date(),
     publishBy: 'user@test.com',
     lastUpdateAt: new Date(),
-    nodes: [{ id: 'node-1', type: 'component', position: { x: 0, y: 0 }, data: {} }],
+    nodes: [
+      { id: 'node-1', type: 'component', position: { x: 0, y: 0 }, data: {} },
+    ],
     edges: [],
     envs: [],
   }
@@ -70,7 +86,8 @@ describe('WorkflowController (e2e)', () => {
       }),
       delete: vi.fn().mockResolvedValue({ affected: 1 }),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.appId === TEST_APP_ID) return Promise.resolve(mockWorkflowApp)
+        if (where.appId === TEST_APP_ID)
+          return Promise.resolve(mockWorkflowApp)
         return Promise.resolve(null)
       }),
       find: vi.fn().mockImplementation(({ where }: any) => {
@@ -99,7 +116,11 @@ describe('WorkflowController (e2e)', () => {
         return Promise.resolve([])
       }),
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({ ...mockDraftData, ...data, lastUpdateAt: new Date() })
+        return Promise.resolve({
+          ...mockDraftData,
+          ...data,
+          lastUpdateAt: new Date(),
+        })
       }),
       count: vi.fn().mockResolvedValue(0),
     },
@@ -128,10 +149,13 @@ describe('WorkflowController (e2e)', () => {
     vi.clearAllMocks()
 
     // 重置默认 mock 行为
-    mockTypeOrmService.workflowApp.findOne.mockImplementation(({ where }: any) => {
-      if (where.appId === TEST_APP_ID) return Promise.resolve(mockWorkflowApp)
-      return Promise.resolve(null)
-    })
+    mockTypeOrmService.workflowApp.findOne.mockImplementation(
+      ({ where }: any) => {
+        if (where.appId === TEST_APP_ID)
+          return Promise.resolve(mockWorkflowApp)
+        return Promise.resolve(null)
+      },
+    )
     mockTypeOrmService.workflowApp.find.mockImplementation(({ where }: any) => {
       if (where?.createdBy) {
         return Promise.resolve(
@@ -143,22 +167,30 @@ describe('WorkflowController (e2e)', () => {
     mockTypeOrmService.workflowApp.save.mockImplementation((data: any) => {
       return Promise.resolve({ ...mockWorkflowApp, ...data })
     })
-    mockTypeOrmService.workflowAppData.findOne.mockImplementation(({ where }: any) => {
-      if (where.ofAppId === TEST_APP_ID && where.version === 'draft')
-        return Promise.resolve(mockDraftData)
-      if (where.ofAppId === TEST_APP_ID && where.version === 'v1.0.0')
-        return Promise.resolve(mockPublishedData)
-      if (where.ofAppId === TEST_APP_ID && where.version?._type === 'not')
-        return Promise.resolve(mockPublishedData)
-      return Promise.resolve(null)
-    })
-    mockTypeOrmService.workflowAppData.find.mockImplementation(({ where }: any) => {
-      if (where.ofAppId === TEST_APP_ID)
-        return Promise.resolve([mockDraftData, mockPublishedData])
-      return Promise.resolve([])
-    })
+    mockTypeOrmService.workflowAppData.findOne.mockImplementation(
+      ({ where }: any) => {
+        if (where.ofAppId === TEST_APP_ID && where.version === 'draft')
+          return Promise.resolve(mockDraftData)
+        if (where.ofAppId === TEST_APP_ID && where.version === 'v1.0.0')
+          return Promise.resolve(mockPublishedData)
+        if (where.ofAppId === TEST_APP_ID && where.version?._type === 'not')
+          return Promise.resolve(mockPublishedData)
+        return Promise.resolve(null)
+      },
+    )
+    mockTypeOrmService.workflowAppData.find.mockImplementation(
+      ({ where }: any) => {
+        if (where.ofAppId === TEST_APP_ID)
+          return Promise.resolve([mockDraftData, mockPublishedData])
+        return Promise.resolve([])
+      },
+    )
     mockTypeOrmService.workflowAppData.save.mockImplementation((data: any) => {
-      return Promise.resolve({ ...mockDraftData, ...data, lastUpdateAt: new Date() })
+      return Promise.resolve({
+        ...mockDraftData,
+        ...data,
+        lastUpdateAt: new Date(),
+      })
     })
     mockTypeOrmService.workflowAppData.count.mockResolvedValue(0)
   })
@@ -256,8 +288,7 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/workflow/apps')
+      const res = await request(app.getHttpServer()).get('/workflow/apps')
 
       expect(res.status).toBe(401)
     })
@@ -289,8 +320,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/${TEST_APP_ID}`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/${TEST_APP_ID}`,
+      )
 
       expect(res.status).toBe(401)
     })
@@ -343,8 +375,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/${TEST_APP_ID}/draft`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/${TEST_APP_ID}/draft`,
+      )
 
       expect(res.status).toBe(401)
     })
@@ -356,7 +389,14 @@ describe('WorkflowController (e2e)', () => {
   describe('POST /workflow/:appId/sync', () => {
     const syncPayload = {
       ofAppId: TEST_APP_ID,
-      nodes: [{ id: 'node-2', type: 'component', position: { x: 100, y: 100 }, data: {} }],
+      nodes: [
+        {
+          id: 'node-2',
+          type: 'component',
+          position: { x: 100, y: 100 },
+          data: {},
+        },
+      ],
       edges: [{ id: 'edge-1', source: 'node-1', target: 'node-2' }],
       envs: [],
     }
@@ -495,8 +535,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/${TEST_APP_ID}/versions`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/${TEST_APP_ID}/versions`,
+      )
 
       expect(res.status).toBe(401)
     })
@@ -537,8 +578,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/${TEST_APP_ID}/version/v1.0.0`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/${TEST_APP_ID}/version/v1.0.0`,
+      )
 
       expect(res.status).toBe(401)
     })
@@ -602,8 +644,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/${TEST_APP_ID}/last-version`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/${TEST_APP_ID}/last-version`,
+      )
 
       expect(res.status).toBe(401)
     })
