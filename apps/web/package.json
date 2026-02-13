@@ -29,7 +29,6 @@
     "dayjs": "^1.11.19",
     "immer": "^11.0.0",
     "lexical": "^0.39.0",
-    "lodash-es": "^4.17.21",
     "monaco-editor": "^0.55.1",
     "next": "16.0.7",
     "react": "19.2.1",
@@ -47,10 +46,8 @@
     "@types/react-dom": "^19",
     "eslint-config-next": "16.0.3",
     "eslint-plugin-react-hooks": "^7.0.1",
-
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
-    "typescript": "^5",
-    "vitest": "^4.0.18"
+    "typescript": "^5"
   }
 }

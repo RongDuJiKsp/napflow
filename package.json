@@ -19,10 +19,12 @@
     "eslint-plugin-oxlint": "^1.29.0",
     "eslint-plugin-sonarjs": "^3.0.5",
     "globals": "^16.5.0",
-    "type-fest": "^5.3.1"
+    "type-fest": "^5.3.1",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "datastructures-js": "^13.0.0",
+    "lodash-es": "^4.17.21",
     "ring-buffer-ts": "^1.2.0",
     "zod": "^4.1.12",
     "zod-deep-partial": "^1.2.0"
