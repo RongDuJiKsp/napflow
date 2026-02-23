@@ -100,7 +100,8 @@ export class NapcatWsAdapter implements BotInstance {
   async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
     this.logger.log('Bootstrap plugins...')
     this.plugins = []
-    for (const app of this.bindingApps) {
+    for (const appBinding of await this.bridge.getBindingsInfo(this.botConfigDB.recordId) ?? []) {
+      const app = appBinding.appPublish
       if (!app.nodes || !app.edges) {
         this.logger.warn(
           `App ${app.ofAppId}@${app.version} has no nodes or edges. Skip.`,
@@ -109,7 +110,7 @@ export class NapcatWsAdapter implements BotInstance {
       }
       const bindingConfig = await this.bridge.getBindingConfig(
         this.botConfigDB.recordId,
-        app.ofAppId,
+        appBinding.bindingId,
       )
       this.plugins.push(
         new NapcatWsTriggerPlugin(
