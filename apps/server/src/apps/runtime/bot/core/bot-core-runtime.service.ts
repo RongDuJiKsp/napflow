@@ -1,20 +1,12 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type { BotAdapterFactory, BotInstance } from '../adapter/_base'
-import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcatws'
-import type { BotAdapterClass, BotState } from '@shared/common/bot/base'
-import { AdapterTag, BotRunningState, BotRunningStateUtils } from '@shared/common/bot/base'
-import { BotCoreRuntimeError } from '../../middleware/bot-core-runtime.filter'
+import type { BotInstance } from '../adapter/_base'
+import type { BotState } from '@shared/common/bot/base'
+import { BotRunningState, BotRunningStateUtils } from '@shared/common/bot/base'
 import { BotSignal } from '@shared/common/bot/base'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 import { AppConfigService } from '@/src/apps/app-config/app-config.service'
-
-export const adapterFactory: Record<AdapterTag, BotAdapterFactory> = {
-  [AdapterTag.napcatWs]: NapcatWsFactory,
-}
-export const adapterClassMeta: Record<AdapterTag, BotAdapterClass> = {
-  [AdapterTag.napcatWs]: NapcatWsAdapter,
-}
+import { BotFactoryService } from './bot-factory.service'
 
 @Injectable()
 export class BotCoreRuntimeService {
@@ -22,8 +14,10 @@ export class BotCoreRuntimeService {
 
   constructor(
     @Inject(TypeOrmService) private readonly db: TypeOrmService,
-    @Inject(BotBridgeForBotService) private readonly bridge: BotBridgeForBotService,
+    @Inject(BotBridgeForBotService)
+    private readonly bridge: BotBridgeForBotService,
     @Inject(AppConfigService) private readonly config: AppConfigService,
+    @Inject(BotFactoryService) private readonly botFactory: BotFactoryService,
   ) {}
 
   get botIds() {
@@ -35,7 +29,9 @@ export class BotCoreRuntimeService {
   }
 
   get botEntities() {
-    return Array.from(this.botInstanceMap.entries()).map(([botId, botInstance]) => ({ botId, botInstance }))
+    return Array.from(this.botInstanceMap.entries()).map(
+      ([botId, botInstance]) => ({ botId, botInstance }),
+    )
   }
 
   botState(botId: string): BotState {
@@ -50,13 +46,13 @@ export class BotCoreRuntimeService {
 
   async runBot(botId: string) {
     const botInstance = this.botInstanceMap.get(botId)
-    if (botInstance && BotRunningStateUtils.isRunning(botInstance.runningState().runningState)) return
+    if (
+      botInstance
+      && BotRunningStateUtils.isRunning(botInstance.runningState().runningState)
+    )
+      return
 
-    const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
-    if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
-
-      // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
-    const adapter = await adapterFactory[botRecord.adapterTag](botRecord, await this.bridge.getBotBindingWorkflow(botId) || [], this.config)
+    const adapter = await this.botFactory.createBot(botId)
     this.botInstanceMap.set(botId, adapter)
   }
 

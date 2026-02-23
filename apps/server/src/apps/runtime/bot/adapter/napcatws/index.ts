@@ -15,6 +15,7 @@ import { NapcatWsTriggerPlugin } from './plugin'
 import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import { NapcatWsSdk } from './sdk'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
+import type { BotBridgeForBotService } from '../../bridge/bot-bridge-for-bot'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
@@ -29,6 +30,7 @@ export class NapcatWsAdapter implements BotInstance {
   readonly botConfigDB: BotRecordEntity
   readonly bindingApps: WorkflowAppDataEntity[]
   readonly config: AppConfigService
+  readonly bridge: BotBridgeForBotService
   // db computed
   private readonly logger: Logger
   // conn instances
@@ -43,10 +45,16 @@ export class NapcatWsAdapter implements BotInstance {
     return `${NapcatWsAdapter.name}-${this.botConfigDB.name}`
   }
 
-  constructor(db: BotRecordEntity, binding: WorkflowAppDataEntity[], cfg: AppConfigService) {
+  constructor(
+    db: BotRecordEntity,
+    binding: WorkflowAppDataEntity[],
+    cfg: AppConfigService,
+    bridge: BotBridgeForBotService,
+  ) {
     this.config = cfg
     this.botConfigDB = db
     this.bindingApps = binding
+    this.bridge = bridge
     this.botConfigSnapshot = ZodCheckNapcatWsAdapterConfig.safeParse(
       db.adapterConfig,
     ).data // 配置有问题先init完 等bootstrap时再抛错
@@ -68,7 +76,7 @@ export class NapcatWsAdapter implements BotInstance {
   }
 
   get runningStateEnum(): BotRunningState {
-    if(!this.healthChecker || !this.sdkConn) return BotRunningState.killed
+    if (!this.healthChecker || !this.sdkConn) return BotRunningState.killed
     if (!this.healthChecker?.isConnetUpstream) return BotRunningState.offline
     return BotRunningState.running
   }
@@ -92,18 +100,33 @@ export class NapcatWsAdapter implements BotInstance {
   async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
     this.logger.log('Bootstrap plugins...')
     this.plugins = []
-    for(const app of this.bindingApps) {
-      if(!app.nodes || !app.edges) {
-        this.logger.warn(`App ${app.ofAppId}@${app.version} has no nodes or edges. Skip.`)
+    for (const app of this.bindingApps) {
+      if (!app.nodes || !app.edges) {
+        this.logger.warn(
+          `App ${app.ofAppId}@${app.version} has no nodes or edges. Skip.`,
+        )
         continue
       }
-      this.plugins.push(new NapcatWsTriggerPlugin(app.nodes, app.edges))
+      const bindingConfig = await this.bridge.getBindingConfig(
+        this.botConfigDB.recordId,
+        app.ofAppId,
+      )
+      this.plugins.push(
+        new NapcatWsTriggerPlugin(
+          app.nodes,
+          app.edges,
+          app.envs || [],
+          bindingConfig || {},
+        ),
+      )
     }
   }
 
-  async bootstrapSDKAndService(cfg: NonNullable<typeof this.botConfigSnapshot>) {
+  async bootstrapSDKAndService(
+    cfg: NonNullable<typeof this.botConfigSnapshot>,
+  ) {
     this.logger.log('Bootstrap SDK...')
-     // init sdk
+    // init sdk
     this.sdkConn = new NapcatWsSdk({
       baseUrl: cfg.endpoint.wsUrl,
       accessToken: cfg.endpoint.token,
@@ -115,11 +138,16 @@ export class NapcatWsAdapter implements BotInstance {
     })
     this.logger.log('SDK inited')
     // init services
-    this.healthChecker = new NCCHealthChecker(this.sdkConn, cfg, this.botName, this.plugins || [])
+    this.healthChecker = new NCCHealthChecker(
+      this.sdkConn,
+      cfg,
+      this.botName,
+      this.plugins || [],
+    )
 
     this.registerable.forEach(s => s.register())
     this.logger.log('service is registered')
-      // finish
+    // finish
     await this.sdkConn.connect()
     this.logger.log('conn created')
 
@@ -162,5 +190,9 @@ export class NapcatWsAdapter implements BotInstance {
     this.logger.log('conn closed')
   }
 }
-export const NapcatWsFactory: BotAdapterFactory = async (db, binding, cfg) =>
-  await new NapcatWsAdapter(db, binding, cfg).bootstrap()
+export const NapcatWsFactory: BotAdapterFactory = async (
+  db,
+  binding,
+  cfg,
+  bridge,
+) => await new NapcatWsAdapter(db, binding, cfg, bridge).bootstrap()

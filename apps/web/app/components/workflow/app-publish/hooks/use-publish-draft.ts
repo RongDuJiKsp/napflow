@@ -1,11 +1,17 @@
 import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
 import { useCallback, useMemo, useState } from 'react'
 import { useAppParam } from '../../hooks/use-app-param'
-import type { WorkflowAppData, WorkflowAppDraft } from '@shared/common/workflow/base'
+import type {
+  WorkflowAppData,
+  WorkflowAppDraft,
+} from '@shared/common/workflow/base'
 import { pick } from 'lodash-es'
 import { useResetState } from 'ahooks'
 import type { WorkflowPublishResp } from '@shared/data-transfer/workflow/info'
-import { type WorkflowPublishReq, ZodCheckWorkflowPublishReq } from '@shared/data-transfer/workflow/info'
+import {
+  type WorkflowPublishReq,
+  ZodCheckWorkflowPublishReq,
+} from '@shared/data-transfer/workflow/info'
 import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
 import { jsonQ } from '@/utils/net'
@@ -55,13 +61,20 @@ export const usePublishDraftSteps = () => {
   }
 }
 
-const getAsDraft = (data?: WorkflowAppData): WorkflowAppDraft | undefined => data ? pick(data, ['ofAppId', 'nodes', 'edges']) : undefined
+const getAsDraft = (data?: WorkflowAppData): WorkflowAppDraft | undefined =>
+  data ? pick(data, ['ofAppId', 'nodes', 'edges', 'envs']) : undefined
 
 export const usePublishDiff = () => {
   const { appId } = useAppParam()
   const { isLoading, data } = useAppVersionsQuery(appId)
-  const draftVersion = useMemo(() => data?.find(item => item.version === 'draft'), [data])
-  const latestData = useMemo(() => data?.findLast(item => item.version !== 'draft'), [data])
+  const draftVersion = useMemo(
+    () => data?.find(item => item.version === 'draft'),
+    [data],
+  )
+  const latestData = useMemo(
+    () => data?.findLast(item => item.version !== 'draft'),
+    [data],
+  )
 
   const draft = draftVersion ? getAsDraft(draftVersion) : null
   const draftJson = JSON.stringify(draft || {}, null, 2)
@@ -81,21 +94,32 @@ export const usePublishDiff = () => {
 export const usePublishDesctionForm = (afterSuccess?: () => void) => {
   const { appId } = useAppParam()
 
-  const [description, setDescription, resetDescription] = useResetState<WorkflowPublishReq>({ version: '', description: '' })
+  const [description, setDescription, resetDescription]
+    = useResetState<WorkflowPublishReq>({ version: '', description: '' })
 
   const handleVersionChange = useAreaChangeHandler(setDescription, 'version')
-  const handleDescriptionChange = useAreaChangeHandler(setDescription, 'description')
+  const handleDescriptionChange = useAreaChangeHandler(
+    setDescription,
+    'description',
+  )
 
-  const fetchSubmitPublish = useCallback(async (data: WorkflowPublishReq) =>
-    await jsonQ.Post<WorkflowPublishResp>(`/workflow/${appId}/publish`, data),
-  [appId])
-  const submitForm = useSubmitZod<WorkflowPublishReq, WorkflowPublishResp>(description, ZodCheckWorkflowPublishReq, fetchSubmitPublish, {
-    successText: '发布成功',
-    errorText: '发布失败',
-  })
-  const handleSubmit = useCallback (async () => {
+  const fetchSubmitPublish = useCallback(
+    async (data: WorkflowPublishReq) =>
+      await jsonQ.Post<WorkflowPublishResp>(`/workflow/${appId}/publish`, data),
+    [appId],
+  )
+  const submitForm = useSubmitZod<WorkflowPublishReq, WorkflowPublishResp>(
+    description,
+    ZodCheckWorkflowPublishReq,
+    fetchSubmitPublish,
+    {
+      successText: '发布成功',
+      errorText: '发布失败',
+    },
+  )
+  const handleSubmit = useCallback(async () => {
     const resp = await submitForm()
-    if(resp?.statusCode === Code.Ok) {
+    if (resp?.statusCode === Code.Ok) {
       resetDescription()
       afterSuccess?.()
     }

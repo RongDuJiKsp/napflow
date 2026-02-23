@@ -10,7 +10,10 @@ import { Resp } from '@shared/data-transfer/_base'
 export class HealthCheckController {
   private readonly logger = new Logger(HealthCheckController.name)
 
-  constructor(@Inject(HealthCheckService) private readonly healthCheckService: HealthCheckService) {}
+  constructor(
+    @Inject(HealthCheckService)
+    private readonly healthCheckService: HealthCheckService,
+  ) {}
 
   @Get('samples')
   @AllowUserGroup(UserRole.User)

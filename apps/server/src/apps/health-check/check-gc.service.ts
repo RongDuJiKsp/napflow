@@ -2,12 +2,19 @@ import { Injectable } from '@nestjs/common'
 import { PerformanceObserver } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
-import type { GCMetric, GCSnapshot, GCStatistics } from '@shared/common/health-check/gc'
+import type {
+  GCMetric,
+  GCSnapshot,
+  GCStatistics,
+} from '@shared/common/health-check/gc'
 
 @Injectable()
 export class CheckGcService {
   private readonly maxStorageSize = 200
-  private metrics: RingBuffer<GCMetric> = new RingBuffer<GCMetric>(this.maxStorageSize)
+  private metrics: RingBuffer<GCMetric> = new RingBuffer<GCMetric>(
+    this.maxStorageSize,
+  )
+
   private observer: PerformanceObserver
 
   initializeGCObserver(): void {
@@ -48,13 +55,18 @@ export class CheckGcService {
    */
   collectSnapshot(timeWindowMs: number): GCSnapshot {
     const now = Date.now() / 1000
-    const windowStart = now - (timeWindowMs / 1000)
+    const windowStart = now - timeWindowMs / 1000
 
     // 获取时间窗口内的GC事件
-    const recentGCs = this.metrics.toArray().filter(gc => gc.timestamp >= windowStart)
+    const recentGCs = this.metrics
+      .toArray()
+      .filter(gc => gc.timestamp >= windowStart)
 
     // 计算GC压力
-    const pressureScore = this.calculateGCPressureScore(recentGCs, timeWindowMs)
+    const pressureScore = this.calculateGCPressureScore(
+      recentGCs,
+      timeWindowMs,
+    )
 
     return {
       recentGCs,
@@ -63,9 +75,11 @@ export class CheckGcService {
     }
   }
 
-  private calculateGCPressureScore(gcEvents: GCMetric[], timeWindowMs: number): number {
-    if (gcEvents.length === 0)
-      return 100
+  private calculateGCPressureScore(
+    gcEvents: GCMetric[],
+    timeWindowMs: number,
+  ): number {
+    if (gcEvents.length === 0) return 100
 
     const totalDuration = gcEvents.reduce((sum, gc) => sum + gc.duration, 0)
     const gcTimeRatio = totalDuration / timeWindowMs
@@ -74,8 +88,10 @@ export class CheckGcService {
     let score = 100
 
     // 基于GC时间占比评分
-    if (gcTimeRatio > 0.1) score -= 40 // 10%以上时间在GC
-    else if (gcTimeRatio > 0.05) score -= 20 // 5%以上时间在GC
+    if (gcTimeRatio > 0.1)
+      score -= 40 // 10%以上时间在GC
+    else if (gcTimeRatio > 0.05)
+      score -= 20 // 5%以上时间在GC
     else if (gcTimeRatio > 0.02) score -= 10 // 2%以上时间在GC
 
     // 基于GC频率评分
@@ -85,7 +101,8 @@ export class CheckGcService {
 
     // 基于单次GC持续时间评分
     const avgDuration = totalDuration / frequency
-    if (avgDuration > 100) score -= 20 // 平均超过100ms
+    if (avgDuration > 100)
+      score -= 20 // 平均超过100ms
     else if (avgDuration > 50) score -= 10 // 平均超过50ms
 
     score = Math.max(0, score)
@@ -118,8 +135,7 @@ export class CheckGcService {
    * 销毁观察器
    */
   destroy(): void {
-    if (this.observer)
-      this.observer.disconnect()
+    if (this.observer) this.observer.disconnect()
   }
 
   /**
@@ -146,13 +162,16 @@ export class CheckGcService {
 
     return {
       frequency: gcSnapshot.recentGCs.length,
-      duration: durations.length > 0 ? {
-        min: ss.min(durations),
-        max: ss.max(durations),
-        mean: ss.mean(durations),
-        median: ss.median(durations),
-        p95: ss.quantile(durations, 0.95),
-      } : null,
+      duration:
+        durations.length > 0
+          ? {
+            min: ss.min(durations),
+            max: ss.max(durations),
+            mean: ss.mean(durations),
+            median: ss.median(durations),
+            p95: ss.quantile(durations, 0.95),
+          }
+          : null,
       typeFrequency,
       pressureScore: gcSnapshot.pressureScore,
     }

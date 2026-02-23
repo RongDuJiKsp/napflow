@@ -4,9 +4,9 @@ import {
   type NodeEditorStoreShape,
   createNodeEditorStore,
 } from '../store/node-editor'
-import { createContext, useContext } from 'react'
 import type { StickyNodeStoreShape } from '../store/sticky-node'
 import { createStickyNodeStore } from '../store/sticky-node'
+import { createParamContext } from '@/utils/react'
 
 type Shape = NodeEditorStoreShape & StickyNodeStoreShape
 export const createEditorStore = () => {
@@ -16,12 +16,7 @@ export const createEditorStore = () => {
   }))
 }
 
-export const EditorStoreContext = createContext<StoreApi<Shape> | null>(null)
+const { context: EditorStoreContext, useContextHook: useEditorStore }
+  = createParamContext<StoreApi<Shape>>('editor-store')
 
-export const useEditorStore = () => {
-  const store = useContext(EditorStoreContext)
-  if (!store)
-    throw new Error('useEditorStore must be used within a EditorStoreProvider')
-
-  return store
-}
+export { EditorStoreContext, useEditorStore }

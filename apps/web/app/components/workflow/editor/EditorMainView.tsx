@@ -16,6 +16,7 @@ import {
   useStoreNodesState,
 } from './hooks/use-reactflow-ext'
 import NodeEditSiderbar from './component-nodes/mainview/node-edit-siderbar'
+import WorkflowEnv from './mainview/workflow-env'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id="editor-wrapper" className="h-full">
@@ -23,6 +24,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
       <NodeContextMenu />
       <StickyNode />
       <NodeEditSiderbar />
+      <WorkflowEnv />
       {children}
     </div>
   )

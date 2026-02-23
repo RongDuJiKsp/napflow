@@ -1,13 +1,23 @@
 import z from 'zod'
-import { ZodCheckWorkflowApp, ZodCheckWorkflowAppData, ZodCheckWorkflowAppDraft, ZodCheckWorkflowAppVersionMeta } from '../../common/workflow/base'
+import {
+  ZodCheckWorkflowApp,
+  ZodCheckWorkflowAppData,
+  ZodCheckWorkflowAppDraft,
+  ZodCheckWorkflowAppVersionMeta,
+} from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create
-export const ZodCheckCreateWorkflowReq = ZodCheckWorkflowApp.pick({ appName: true, appDescription: true })
+export const ZodCheckCreateWorkflowReq = ZodCheckWorkflowApp.pick({
+  appName: true,
+  appDescription: true,
+})
 export type CreateWorkflowReq = z.infer<typeof ZodCheckCreateWorkflowReq>
-export const ZodCheckCreateWorkflowResp = defineZodResp(z.object({
-  appId: z.string(),
-}))
+export const ZodCheckCreateWorkflowResp = defineZodResp(
+  z.object({
+    appId: z.string(),
+  }),
+)
 export type CreateWorkflowResp = z.infer<typeof ZodCheckCreateWorkflowResp>
 
 // @/workflow/:appId
@@ -23,15 +33,25 @@ export const ZodCheckLoadDraftResp = defineZodResp(ZodCheckWorkflowAppDraft)
 export type LoadDraftResp = z.infer<typeof ZodCheckLoadDraftResp>
 
 // @/workflow/:appId/versions
-export const ZodCheckGetVersionsResp = defineZodResp(z.array(ZodCheckWorkflowAppData))
+export const ZodCheckGetVersionsResp = defineZodResp(
+  z.array(ZodCheckWorkflowAppData),
+)
 export type GetVersionsResp = z.infer<typeof ZodCheckGetVersionsResp>
 
+// @/workflow/:appId/version/:version
+export const ZodCheckGetVersionResp = defineZodResp(ZodCheckWorkflowAppData)
+export type GetVersionResp = z.infer<typeof ZodCheckGetVersionResp>
+
 // @/workflow/:appId/version-meta
-export const ZodCheckGetVersionMetaResp = defineZodResp(ZodCheckWorkflowAppVersionMeta)
+export const ZodCheckGetVersionMetaResp = defineZodResp(
+  ZodCheckWorkflowAppVersionMeta,
+)
 export type GetVersionMetaResp = z.infer<typeof ZodCheckGetVersionMetaResp>
 
 // @/workflow/:appId/last-version
-export const ZodCheckGetLastVersionResp = defineZodResp(ZodCheckWorkflowAppData)
+export const ZodCheckGetLastVersionResp = defineZodResp(
+  ZodCheckWorkflowAppData,
+)
 export type GetLastVersionResp = z.infer<typeof ZodCheckGetLastVersionResp>
 
 // @/workflow/:appId/publish
@@ -40,5 +60,7 @@ export const ZodCheckWorkflowPublishReq = z.object({
   description: z.string().min(1).max(50),
 })
 export type WorkflowPublishReq = z.infer<typeof ZodCheckWorkflowPublishReq>
-export const ZodCheckWorkflowPublishResp = defineZodResp(ZodCheckWorkflowAppData)
+export const ZodCheckWorkflowPublishResp = defineZodResp(
+  ZodCheckWorkflowAppData,
+)
 export type WorkflowPublishResp = z.infer<typeof ZodCheckWorkflowPublishResp>

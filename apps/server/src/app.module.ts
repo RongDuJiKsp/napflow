@@ -8,6 +8,7 @@ import { DbModule } from './apps/db/db.module'
 import { ZodModule } from './apps/zod/zod.module'
 import { RuntimeModule } from './apps/runtime/runtime.module'
 import { HealthCheckModule } from './apps/health-check/health-check.module'
+import { CommModule } from './apps/middleware/comm.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { HealthCheckModule } from './apps/health-check/health-check.module'
     // ---------------------- 库Wrapper模块 ----------------------
     ZodModule.forRoot(),
     // ---------------------- 应用模块 ----------------------
+    CommModule.forRoot(),
     AccountModule.forRoot(),
     WorkflowModule,
     RuntimeModule,

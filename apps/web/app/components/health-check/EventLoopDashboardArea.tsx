@@ -39,21 +39,29 @@ const EventLoopChart = () => {
     })
   }, [data])
 
-  const config = useLineGraphConfig(chartData, { fmtAxis: fmtMsAxis, fmtTooltip: fmtMsTooltip })
+  const config = useLineGraphConfig(chartData, {
+    fmtAxis: fmtMsAxis,
+    fmtTooltip: fmtMsTooltip,
+  })
 
-  if (chartData.length === 0)
-    return <div className="text-gray-400 text-center py-8">暂无事件循环数据</div>
+  if (chartData.length === 0) {
+    return (
+      <div className="text-gray-400 text-center py-8">暂无事件循环数据</div>
+    )
+  }
 
   return <Line {...config} />
 }
 
 const EventLoopDashboardArea = () => {
-  return <>
-    {/* 事件循环图表 */}
-    <ChartCard title="事件循环延迟趋势" >
-      <EventLoopChart />
-    </ChartCard>
-  </>
+  return (
+    <>
+      {/* 事件循环图表 */}
+      <ChartCard title="事件循环延迟趋势">
+        <EventLoopChart />
+      </ChartCard>
+    </>
+  )
 }
 
 export default memo(EventLoopDashboardArea)

@@ -41,13 +41,13 @@ const HealthCheckDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <GaugeDashboardArea/>
+        <GaugeDashboardArea />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CpuDashboardArea/>
-        <EventLoopDashboardArea/>
-        <MemoryDashboardArea/>
-        <GcDashboardArea/>
+        <CpuDashboardArea />
+        <EventLoopDashboardArea />
+        <MemoryDashboardArea />
+        <GcDashboardArea />
       </div>
     </div>
   )

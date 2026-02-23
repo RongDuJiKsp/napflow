@@ -7,18 +7,24 @@ export enum NodeClassic {
 }
 
 // node和edge里面许多需要透传的data 所以使用looseObject
-export const ZodCheckNode = z.looseObject({
-  id: z.string(),
-  position: ZodCheckXYPosition,
-  data: z.any(),
-  type: z.enum(NodeClassic),
-}).catchall(z.any())
+export const ZodCheckNode = z
+  .looseObject({
+    id: z.string(),
+    position: ZodCheckXYPosition,
+    data: z.any(),
+    type: z.enum(NodeClassic),
+  })
+  .catchall(z.any())
 
 export type Node = z.infer<typeof ZodCheckNode>
 
-export const ZodCheckEdge = z.looseObject({
-  id: z.string(),
-  source: z.string(),
-  target: z.string(),
-}).catchall(z.any())
+export const ZodCheckEdge = z
+  .looseObject({
+    id: z.string(),
+    source: z.string(),
+    target: z.string(),
+    sourceHandle: z.string().optional().nullable(),
+    targetHandle: z.string().optional().nullable(),
+  })
+  .catchall(z.any())
 export type Edge = z.infer<typeof ZodCheckEdge>

@@ -6,11 +6,11 @@ export enum AdapterTag {
 
 // 带一些meta方便create
 export type BotAdapter = {
-  readonly tag: AdapterTag
-  readonly desc: string
+  readonly tag: AdapterTag;
+  readonly desc: string;
 }
 export type BotAdapterClass = {
-  readonly meta: BotAdapter
+  readonly meta: BotAdapter;
 }
 
 // bot状态
@@ -23,8 +23,10 @@ export enum BotRunningState {
 }
 export const BotRunningStateUtils = {
   runningStates: [BotRunningState.running, BotRunningState.offline],
-  isRunning: (state: BotRunningState) => BotRunningStateUtils.runningStates.includes(state),
-  isStoped: (state: BotRunningState) => !BotRunningStateUtils.runningStates.includes(state),
+  isRunning: (state: BotRunningState) =>
+    BotRunningStateUtils.runningStates.includes(state),
+  isStoped: (state: BotRunningState) =>
+    !BotRunningStateUtils.runningStates.includes(state),
 }
 
 // 上游服务状态

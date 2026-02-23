@@ -1,10 +1,17 @@
 import z from 'zod'
-import { ZodCheckWorkflowApp, ZodCheckWorkflowAppVersionInfos } from '../../common/workflow/base'
+import { zodDeepPartial } from 'zod-deep-partial'
+import {
+  ZodCheckWorkflowApp,
+  ZodCheckWorkflowAppVersionInfos,
+} from '../../common/workflow/base'
 import { defineZodResp } from '../_base'
-export const ZodCheckBotBridgeBindReq = z.array(z.object({
-  appId: z.string(),
-  appVersion: z.string(),
-}))
+import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+export const ZodCheckBotBridgeBindReq = z.array(
+  z.object({
+    appId: z.string(),
+    appVersion: z.string(),
+  }),
+)
 export type BotBridgeBindReq = z.infer<typeof ZodCheckBotBridgeBindReq>
 
 export const ZodCheckBotBridgeUnbindReq = z.object({
@@ -13,12 +20,28 @@ export const ZodCheckBotBridgeUnbindReq = z.object({
 export type BotBridgeUnbindReq = z.infer<typeof ZodCheckBotBridgeUnbindReq>
 
 export const ZodCheckBotBridgeBindStatusResp = defineZodResp(
-  z.array(z.object({
-    appId: z.string(),
-    version: z.string(),
-    bindingId: z.string(),
-    app: ZodCheckWorkflowApp,
-    appPublish: ZodCheckWorkflowAppVersionInfos,
-  })),
+  z.array(
+    z.object({
+      appId: z.string(),
+      version: z.string(),
+      bindingId: z.string(),
+      app: ZodCheckWorkflowApp,
+      appPublish: ZodCheckWorkflowAppVersionInfos,
+    }),
+  ),
 )
-export type BotBridgeBindStatusResp = z.infer<typeof ZodCheckBotBridgeBindStatusResp>
+export type BotBridgeBindStatusResp = z.infer<
+  typeof ZodCheckBotBridgeBindStatusResp
+>
+
+export const ZodCheckConfigBotWorkflowAppBindingConfigReq = zodDeepPartial(
+  ZodCheckBotWorkflowAppBindingConfig,
+)
+export type ConfigBotWorkflowAppBindingConfigReq = z.infer<
+  typeof ZodCheckConfigBotWorkflowAppBindingConfigReq
+>
+
+export const ZodCheckBotBindingConfigResp = defineZodResp(
+  ZodCheckBotWorkflowAppBindingConfig,
+)
+export type BotBindingConfigResp = z.infer<typeof ZodCheckBotBindingConfigResp>

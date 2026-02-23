@@ -1,5 +1,8 @@
 import { jsonQ } from '@/utils/net'
-import type { AccountInfoListQuery, AccountInfoListResp } from '@shared/data-transfer/account/account'
+import type {
+  AccountInfoListQuery,
+  AccountInfoListResp,
+} from '@shared/data-transfer/account/account'
 import type { AccountInfo, UserRole } from '@shared/common/account/base'
 import { useQuery } from '@tanstack/react-query'
 import { defineQueryFn } from './_base'
@@ -10,14 +13,19 @@ import { defineQueryFn } from './_base'
  * @param roles 角色列表 过滤选项：只展示包含指定角色的账户
  */
 export const useAccountsQuery = (isDisabled?: boolean, roles?: UserRole[]) => {
-  const queryParams: Omit<AccountInfoListQuery, 'roles'> & { roles?: string } = {
-    isDisabled,
-    roles: roles?.join(','),
-  }
+  const queryParams: Omit<AccountInfoListQuery, 'roles'> & { roles?: string }
+    = {
+      isDisabled,
+      roles: roles?.join(','),
+    }
   return useQuery({
     queryKey: ['accounts', queryParams],
-    queryFn: defineQueryFn<AccountInfoListResp, AccountInfo[]>(async () => await jsonQ.Get<AccountInfoListResp>('/account/account', {
-      params: queryParams,
-    }), { errMsgFallback: '获取账户列表失败' }),
+    queryFn: defineQueryFn<AccountInfoListResp, AccountInfo[]>(
+      async () =>
+        await jsonQ.Get<AccountInfoListResp>('/account/account', {
+          params: queryParams,
+        }),
+      { errMsgFallback: '获取账户列表失败' },
+    ),
   })
 }

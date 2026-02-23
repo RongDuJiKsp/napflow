@@ -10,6 +10,8 @@ import { defineQueryFn } from './_base'
 export const useBotsQuery = () => {
   return useQuery({
     queryKey: ['bots'],
-    queryFn: defineQueryFn<GetAllBotsResp, CommonBotInfo[]>(async () => await jsonQ.Get<GetAllBotsResp>('/bots/list')),
+    queryFn: defineQueryFn<GetAllBotsResp, CommonBotInfo[]>(
+      async () => await jsonQ.Get<GetAllBotsResp>('/bots/list'),
+    ),
   })
 }

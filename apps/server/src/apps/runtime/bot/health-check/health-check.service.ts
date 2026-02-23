@@ -2,7 +2,10 @@ import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
 import { RingBuffer } from 'ring-buffer-ts'
-import type { BotPluginStatusSnapshot, BotPluginStatusStatics } from '@shared/common/bot/health-check'
+import type {
+  BotPluginStatusSnapshot,
+  BotPluginStatusStatics,
+} from '@shared/common/bot/health-check'
 import * as ss from 'simple-statistics'
 @Injectable()
 export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
@@ -12,13 +15,23 @@ export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
   private readonly botHealthCheckInterval = 10 * 1e3
   private readonly botHealthCheckStaticsInterval = 60 * 1e3
 
-  private readonly botSnapshotBuf: Record<string, RingBuffer<BotPluginStatusSnapshot>> = {}
-  private readonly botStaticsBuf: Record<string, RingBuffer<BotPluginStatusStatics>> = {}
+  private readonly botSnapshotBuf: Record<
+    string,
+    RingBuffer<BotPluginStatusSnapshot>
+  > = {}
+
+  private readonly botStaticsBuf: Record<
+    string,
+    RingBuffer<BotPluginStatusStatics>
+  > = {}
 
   private recordInterval_: NodeJS.Timeout | null = null
   private staticsInterval_: NodeJS.Timeout | null = null
 
-  constructor(@Inject(BotCoreRuntimeService) private readonly botCoreRuntimeService: BotCoreRuntimeService) {}
+  constructor(
+    @Inject(BotCoreRuntimeService)
+    private readonly botCoreRuntimeService: BotCoreRuntimeService,
+  ) {}
 
   async onModuleInit() {
     this.startBotHealthCheck()
@@ -38,37 +51,40 @@ export class BotHealthCheckService implements OnModuleInit, OnModuleDestroy {
   }
 
   destroyService() {
-    if(this.recordInterval_) clearInterval(this.recordInterval_)
-    if(this.staticsInterval_) clearInterval(this.staticsInterval_)
+    if (this.recordInterval_) clearInterval(this.recordInterval_)
+    if (this.staticsInterval_) clearInterval(this.staticsInterval_)
   }
 
   // snapshot 从bot中获取
   private recordSnapshots() {
     // 这里只管塞就行了 recordStatics会自动GC
     for (const bot of this.botCoreRuntimeService.botEntities) {
-      if (!this.botSnapshotBuf[bot.botId])
-        this.botSnapshotBuf[bot.botId] = new RingBuffer<BotPluginStatusSnapshot>(this.snapshotBufsize)
+      if (!this.botSnapshotBuf[bot.botId]) {
+        this.botSnapshotBuf[bot.botId]
+          = new RingBuffer<BotPluginStatusSnapshot>(this.snapshotBufsize)
+      }
 
       const buf = this.botSnapshotBuf[bot.botId]
       const snapshot = bot.botInstance.sourceSnapshot()
-      if(!snapshot)
-        continue
+      if (!snapshot) continue
       buf.add(snapshot)
     }
   }
 
   // statics 从snapshot中计算
   private recordStatics() {
-    for(const [botId, rec] of Object.entries(this.botSnapshotBuf)) {
-      if (!this.botStaticsBuf[botId])
-        this.botStaticsBuf[botId] = new RingBuffer<BotPluginStatusStatics>(this.bufSize)
+    for (const [botId, rec] of Object.entries(this.botSnapshotBuf)) {
+      if (!this.botStaticsBuf[botId]) {
+        this.botStaticsBuf[botId] = new RingBuffer<BotPluginStatusStatics>(
+          this.bufSize,
+        )
+      }
 
       const buf = this.botStaticsBuf[botId]
       const snapArr = rec.toArray()
       delete this.botSnapshotBuf[botId]
 
-      if(snapArr.length === 0)
-        continue
+      if (snapArr.length === 0) continue
 
       const taskQueueLength = snapArr.map(snap => snap.taskQueueLength)
       const nodeQueueLength = snapArr.map(snap => snap.nodeQueueLength)

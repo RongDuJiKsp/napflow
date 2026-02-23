@@ -11,7 +11,6 @@ import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
 export type SelectPair = {
   appId: string;
   version: string;
-
 }
 
 export type SelectedItem = SelectPair & {
@@ -38,7 +37,8 @@ export const useBindingMarket = (onClose?: () => void) => {
 
   const handleAddItem = useCallback(({ appId, version }: SelectPair) => {
     setSelectedItems((prev) => {
-      if (prev.some(item => item.appId === appId && item.version === version)) return prev
+      if (prev.some(item => item.appId === appId && item.version === version))
+        return prev
       return [...prev, { appId, version }]
     })
   }, [])
@@ -51,12 +51,28 @@ export const useBindingMarket = (onClose?: () => void) => {
     )
   }, [])
 
-  const req = useMemo(() => selectedItems.map(item => ({ appId: item.appId, appVersion: item.version })), [selectedItems])
-  const doFetch = useCallback(async (data: BotBridgeBindReq) => await jsonQ.Post<NullResp>(`/bot-bridge/${botId}/bindmany`, data), [botId])
-  const doSubmit = useSubmitZod<BotBridgeBindReq, NullResp>(req, ZodCheckBotBridgeBindReq, doFetch, { successText: '绑定成功', errorText: '绑定失败' })
+  const req = useMemo(
+    () =>
+      selectedItems.map(item => ({
+        appId: item.appId,
+        appVersion: item.version,
+      })),
+    [selectedItems],
+  )
+  const doFetch = useCallback(
+    async (data: BotBridgeBindReq) =>
+      await jsonQ.Post<NullResp>(`/bot-bridge/${botId}/bindmany`, data),
+    [botId],
+  )
+  const doSubmit = useSubmitZod<BotBridgeBindReq, NullResp>(
+    req,
+    ZodCheckBotBridgeBindReq,
+    doFetch,
+    { successText: '绑定成功', errorText: '绑定失败' },
+  )
 
   const handleConfirm = useCallback(async () => {
-    if((await doSubmit())?.statusCode === Code.Ok) {
+    if ((await doSubmit())?.statusCode === Code.Ok) {
       await refetch()
       onClose?.()
     }

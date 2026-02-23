@@ -23,7 +23,13 @@ export const EmptyState = () => {
 }
 
 // 卡片容器组件
-export const ChartCard = ({ title, children }: { title: string; children: React.ReactNode }) => {
+export const ChartCard = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
       <h3 className="text-base font-semibold text-gray-800 mb-3">{title}</h3>
@@ -39,19 +45,23 @@ export const StatCard = ({
   unit,
   description,
 }: {
-  title: string
-  value: string | number
-  unit?: string
-  description?: string
+  title: string;
+  value: string | number;
+  unit?: string;
+  description?: string;
 }) => {
   return (
     <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
       <div className="text-xs text-gray-500 mb-1">{title}</div>
       <div className="text-2xl font-bold text-gray-800">
         {value}
-        {unit && <span className="text-sm font-normal text-gray-500 ml-1">{unit}</span>}
+        {unit && (
+          <span className="text-sm font-normal text-gray-500 ml-1">{unit}</span>
+        )}
       </div>
-      {description && <div className="text-xs text-gray-400 mt-1">{description}</div>}
+      {description && (
+        <div className="text-xs text-gray-400 mt-1">{description}</div>
+      )}
     </div>
   )
 }

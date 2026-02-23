@@ -3,7 +3,11 @@ import type z from 'zod'
 import type { ComponentWithClass } from '@/utils/type'
 import type { ComponentType, FC } from 'react'
 import type { NodeProps } from '@xyflow/react'
-import type { ComponentNodeMeta, ComponentNodesEnum, Var } from '@shared/common/workflow/component-node'
+import type {
+  ComponentNodeMeta,
+  ComponentNodesEnum,
+  Var,
+} from '@shared/common/workflow/component-node'
 
 // data实例
 export type ComponentNodeDataExtra = {
@@ -36,6 +40,8 @@ export type ComponentCreator<T = unknown> = {
   prevNodes?: ComponentNodesEnum[]; // 前置可接受的节点类型
   nextNodes?: ComponentNodesEnum[]; // 后置可接受的节点类型
   env?: Var[];
+  mutiPrevHandles?: boolean;
+  mutiNextHandles?: boolean;
 }
 
 // contextMenu

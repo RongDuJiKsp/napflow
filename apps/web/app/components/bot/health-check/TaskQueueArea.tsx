@@ -31,8 +31,11 @@ const TaskQueueChart = () => {
 
   const config = useLineGraphConfig(chartData)
 
-  if (chartData.length === 0)
-    return <div className="text-gray-400 text-center py-8">暂无任务队列数据</div>
+  if (chartData.length === 0) {
+    return (
+      <div className="text-gray-400 text-center py-8">暂无任务队列数据</div>
+    )
+  }
 
   return <Line {...config} />
 }

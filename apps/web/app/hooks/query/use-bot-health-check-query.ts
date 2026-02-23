@@ -12,6 +12,11 @@ import type { BotPluginStatusStatics } from '@shared/common/bot/health-check'
 export const useBotHealthCheckQuery = (botId: string) => {
   return useQuery({
     queryKey: ['bot-health-check', botId],
-    queryFn: defineQueryFn<BotHealthSamplesResp, BotPluginStatusStatics[]>(async () => await jsonQ.Get<BotHealthSamplesResp>(`/bot-health-check/${botId}/sample`)),
+    queryFn: defineQueryFn<BotHealthSamplesResp, BotPluginStatusStatics[]>(
+      async () =>
+        await jsonQ.Get<BotHealthSamplesResp>(
+          `/bot-health-check/${botId}/sample`,
+        ),
+    ),
   })
 }

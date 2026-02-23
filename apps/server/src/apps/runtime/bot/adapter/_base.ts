@@ -3,6 +3,7 @@ import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
 import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
+import type { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 
 // 可被数据库存储的Bot实例
 export type BotDBInstance = {
@@ -21,7 +22,8 @@ export type BotInstance = BotAdapter & BotDBInstance & BotHealthCheckable
 export type BotAdapterFactory = (
   entity: BotRecordEntity,
   bindings: WorkflowAppDataEntity[],
-  config: AppConfigService,
+  configService: AppConfigService,
+  bindingBridgeService: BotBridgeForBotService,
 ) => BotInstance | Promise<BotInstance>
 
 export type Registerable = {

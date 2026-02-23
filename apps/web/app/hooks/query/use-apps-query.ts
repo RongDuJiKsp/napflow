@@ -11,6 +11,12 @@ import { defineQueryFn } from './_base'
 export const useAppsQuery = (onlySelf?: boolean) => {
   return useQuery({
     queryKey: ['apps', onlySelf],
-    queryFn: defineQueryFn<GetAppsResp, WorkflowApp[]>(async () => await jsonQ.Get<GetAppsResp>('/workflow/apps', { params: { onlySelf } }), { errMsgFallback: '获取插件列表失败' }),
+    queryFn: defineQueryFn<GetAppsResp, WorkflowApp[]>(
+      async () =>
+        await jsonQ.Get<GetAppsResp>('/workflow/apps', {
+          params: { onlySelf },
+        }),
+      { errMsgFallback: '获取插件列表失败' },
+    ),
   })
 }

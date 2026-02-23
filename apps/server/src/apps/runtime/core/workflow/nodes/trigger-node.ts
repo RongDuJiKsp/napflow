@@ -1,4 +1,4 @@
-import z from 'zod'
+import type z from 'zod'
 import type { CommNodeType, CommTrigger } from '../node'
 import { CommNodeRole, TriggerOnEvents } from '../node'
 import { CommNode } from '../node'
@@ -6,27 +6,30 @@ import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-nod
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { raiseErrors } from '../../../utils/errors'
+import { TriggerDataRawSchema } from '@shared/common/workflow/node-data/trigger'
 
-export enum TriggerEndpoint {
-  Group = 'group',
-  Friend = 'friend',
-}
-export const TriggerDataSchema = ZodCheckComponentNodeMeta.extend({
-  on: z.enum(TriggerEndpoint),
-  userId: z.string().optional(),
-  groupId: z.string().optional(),
-})
-export type TriggerData = z.infer<typeof TriggerDataSchema>
+// 使用 MetaSchema.extend(sharedSchema) 做兼容
+export const TriggerDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+  TriggerDataRawSchema.shape,
+)
 
-export class TriggerNode extends CommNode<TriggerData> implements CommTrigger {
+export type TriggerDataCtx = z.infer<typeof TriggerDataCtxSchema>
+
+export class TriggerNode
+  extends CommNode<TriggerDataCtx>
+  implements CommTrigger {
   readonly role = CommNodeRole.Trigger
   readonly triggerEv: TriggerOnEvents = TriggerOnEvents.ChatMessage
 
-  constructor(data: CommNodeType<TriggerData>) {
+  constructor(data: CommNodeType<TriggerDataCtx>) {
     super(data)
   }
 
-  onThread(thread: WorkflowThread, _nextTask: WillTask, _nkv: Record<string, any>): void | Promise<void> {
+  onThread(
+    thread: WorkflowThread,
+    _nextTask: WillTask,
+    _nkv: Record<string, any>,
+  ): void | Promise<void> {
     raiseErrors(thread, TriggerNode)
   }
 }

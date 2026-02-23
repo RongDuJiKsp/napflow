@@ -10,16 +10,28 @@ export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { editNode } = useStoreImmerCurd()
   const handleConnenct = useCallback(
-    (source: ComponentNode, target: ComponentNode) => {
+    (
+      source: ComponentNode,
+      target: ComponentNode,
+      sourceHandle: string | null,
+      targetHandle: string | null,
+    ) => {
       const sourceCreator = ComponentNodeCreatorMap[source.data.type]
       const targetCreator = ComponentNodeCreatorMap[target.data.type]
+
       if (
         !sourceCreator.nextNodes?.includes(target.data.type)
         || !targetCreator.prevNodes?.includes(source.data.type)
       )
         return
+
       reactflow.addEdges(
-        createWorkflowEdge({ source: source.id, target: target.id }),
+        createWorkflowEdge({
+          source: source.id,
+          target: target.id,
+          sourceHandle,
+          targetHandle,
+        }),
       )
     },
     [reactflow],

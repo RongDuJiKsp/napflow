@@ -2,7 +2,10 @@ import { useCallback } from 'react'
 import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
 import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
 import type { ComponentNode } from '../../../types'
-import type { ReplyData, ReplyTarget } from '../creator'
+import type {
+  ReplyData,
+  ReplyTarget,
+} from '@shared/common/workflow/node-data/reply'
 import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 
 export const useReplyCurd = (id: string) => {

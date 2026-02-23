@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query'
 export const useHealthSamplesQuery = () => {
   return useQuery({
     queryKey: ['health-samples'],
-    queryFn: defineQueryFn<HealthCheckSamplesResp, AggregatedMetrics[]>(async () => await jsonQ.Get<HealthCheckSamplesResp>('/health/samples')),
+    queryFn: defineQueryFn<HealthCheckSamplesResp, AggregatedMetrics[]>(
+      async () => await jsonQ.Get<HealthCheckSamplesResp>('/health/samples'),
+    ),
   })
 }

@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
+import type { Var } from '@shared/common/workflow/component-node'
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity {
   @PrimaryColumn({ generated: 'uuid' })
@@ -65,4 +66,7 @@ export class WorkflowAppDataEntity extends BaseEntity {
 
   @DefaultNullColumn({ type: 'json' })
   edges: Edge[] | null
+
+  @DefaultNullColumn({ type: 'json' })
+  envs: Var[] | null
 }

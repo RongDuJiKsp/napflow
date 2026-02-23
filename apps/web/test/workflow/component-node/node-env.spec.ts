@@ -1,11 +1,9 @@
 import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
-import type {
-  ComponentNode,
-} from '@/app/components/workflow/editor/component-nodes/types'
+import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
 import type { Var } from '@shared/common/workflow/component-node'
 import { VarTypes } from '@shared/common/workflow/component-node'
 import type { WorkflowEdge } from '@/app/components/workflow/editor/types'
-
+import { describe, expect, test } from 'vitest'
 describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   type TestNode = {
     id: string;
