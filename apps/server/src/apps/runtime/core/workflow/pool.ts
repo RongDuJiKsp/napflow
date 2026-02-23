@@ -149,21 +149,12 @@ export class WorkflowThread<SDK = unknown> {
       this.availableNodes.enqueue(startNode)
   }
 
-  async tick(nextTask: WillTask) {
-    if (this.shouldBeKill()) {
-      this.logger.debug('thread killed')
-      nextTask.abort()
-      this.unmount()
-      return
-    }
-    const currNode = this.availableNodes.dequeue()
-    if (!currNode) {
-      nextTask.abort()
-      this.logger.debug('no more node to run,exiting')
-      this.unmount()
-      return
-    }
+  private async execNode(currNode: CommNode, nextTask: WillTask) {
+    this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
+    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
+  }
 
+  private async readyExecNext(currNode: CommNode) {
     for (const nextNode of this.plugin.nodeGraph.get(currNode)?.next ?? []) {
       if (!this.mayBeNextNodeDegree.has(nextNode)) {
         this.mayBeNextNodeDegree.set(
@@ -186,9 +177,27 @@ export class WorkflowThread<SDK = unknown> {
         }
       }
     }
+  }
 
-    this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
-    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
+  async tick(nextTask: WillTask) {
+    if (this.shouldBeKill()) {
+      this.logger.debug('thread killed')
+      nextTask.abort()
+      this.unmount()
+      return
+    }
+    const currNode = this.availableNodes.dequeue()
+    if (!currNode) {
+      nextTask.abort()
+      this.logger.debug('no more node to run,exiting')
+      this.unmount()
+      return
+    }
+
+    // 注意 补药调换顺序
+
+    await this.readyExecNext(currNode)
+    await this.execNode(currNode, nextTask)
   }
 
   private shouldBeKill() {
@@ -213,5 +222,23 @@ export class WorkflowThread<SDK = unknown> {
 
   getLogger(klass: Class<CommNode>): Logger {
     return new Logger(`${WorkflowThread.name}::${klass.name}`)
+  }
+
+  removeQueue(toRemoveNodeId: string[]) {
+    const toRemoveSet = new Set(toRemoveNodeId)
+    for (const target of toRemoveNodeId)
+      this.mayBeNextNodeDegree.delete(this.plugin.commNodeCache[target])
+    const toRepushArr = <CommNode[]>[]
+    for(let item = this.availableNodes.dequeue(); !!item; item = this.availableNodes.dequeue()) {
+      if(!item)
+        break
+
+      if(toRemoveSet.has(item.id))
+        continue
+
+      toRepushArr.push(item)
+    }
+    for(const i of toRepushArr)
+      this.availableNodes.enqueue(i)
   }
 }

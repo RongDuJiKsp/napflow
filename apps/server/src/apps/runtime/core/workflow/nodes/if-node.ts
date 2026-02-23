@@ -75,7 +75,10 @@ export class IfNode extends CommNode<IfDataCtx> {
       // 没有对应的边 不管
       if (!branchEdge) continue
       // 没有condition为else 结束
-      if (!branch.condition) break
+      if (!branch.condition) {
+        needToDeleteQueues.delete(branchEdge.target)
+        break
+      }
       //
       const [varNodeIndex, ...varNames] = branch.condition.variable.split('.')
       const value = thread.nodeKv[varNodeIndex][varNames.join('.')]
@@ -92,7 +95,6 @@ export class IfNode extends CommNode<IfDataCtx> {
       }
     }
     // 删除不需要执行的节点
-    for (const target of needToDeleteQueues)
-      thread.mayBeNextNodeDegree.delete(thread.plugin.commNodeCache[target])
+    thread.removeQueue(Array.from(needToDeleteQueues))
   }
 }
