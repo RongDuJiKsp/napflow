@@ -227,4 +227,40 @@ cd apps/server && pnpm test
 cd apps/server && pnpm test:e2e
 ```
 
+### 发布指引
+
+项目通过 **Git Tag** 触发 CI/CD 自动构建 Docker 镜像并推送至 DockerHub。提供两种发布方式：
+
+#### 正式发布
+
+基于 `package.json` 中的 `version` 字段创建正式版本标签（如 `v0.1.1`）：
+
+```bash
+pnpm release
+```
+
+> ⚠️ 发布前请确保 `package.json` 中的 `version` 已更新为目标版本号，且该版本标签尚未存在。
+
+#### 快照发布（Snapshot）
+
+创建带日期和序号的快照版本标签，适用于开发/测试阶段的预发布。标签格式为 `v{version}-snapshot-{YYMMDD}{NN}`：
+
+```bash
+pnpm release:snapshot
+```
+
+脚本会自动：
+1. 读取 `package.json` 中的版本号
+2. 拼接当天日期（`YYMMDD` 格式）
+3. 统计当天已有的快照标签数量，自动递增序号（两位数，从 `01` 开始）
+4. 创建标签并推送到远程仓库
+
+示例（假设版本为 `0.1.1`，日期为 `2026-02-24`）：
+
+| 执行次数 | 生成的 Tag |
+|---------|-----------|
+| 第 1 次 | `v0.1.1-snapshot-26022401` |
+| 第 2 次 | `v0.1.1-snapshot-26022402` |
+| 第 3 次 | `v0.1.1-snapshot-26022403` |
+
 
