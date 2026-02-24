@@ -11,6 +11,8 @@ import type { ComponentNode } from '../../../types'
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const handleAddLoopNode = useCallback((loopNode: WorkflowNode) => {
+    // 设置容器节点的初始宽高，配合 NodeResizer 使用
+    loopNode.style = { ...loopNode.style, width: 500, height: 150 }
     reactflow.addNodes(loopNode)
     const loopStartNode = createComponentNode<LoopStartData>(ComponentNodesEnum.LoopStart)
       // 使用 ReactFlow 的 parentId 属性建立父子关系

@@ -3,7 +3,7 @@ import { memo, useCallback } from 'react'
 import { COMPONENT_NODE_PANEL_ID, ComponentNodeCreatorMap } from './constants'
 import type { ComponentNodeFc } from './types'
 import { twMerge } from 'tailwind-merge'
-import { Handle, Position } from '@xyflow/react'
+import { Handle, NodeResizer, Position } from '@xyflow/react'
 import { useContextMenu } from 'react-contexify'
 import ComponentNodeEnvProvider from './providers/ComponentNodeEnvProvider'
 
@@ -25,7 +25,7 @@ const ComponentNodesNodeCore: ComponentNodeFc<unknown> = (props) => {
     <div
       className={twMerge(
         isContainer && [
-          'min-w-[500px] min-h-[300px]',
+          'w-full h-full',
           'rounded-2xl border-2 border-dashed border-purple-300',
           'bg-purple-50/30',
           selected && 'border-purple-500 shadow-md bg-purple-50/50',
@@ -42,6 +42,16 @@ const ComponentNodesNodeCore: ComponentNodeFc<unknown> = (props) => {
       )}
       onContextMenu={handleContextMenu}
     >
+      {/* 容器节点的 NodeResizer：允许拖拽调整大小 */}
+      {isContainer && (
+        <NodeResizer
+          isVisible={selected}
+          minWidth={500}
+          minHeight={150}
+          lineClassName="!border-purple-400"
+          handleClassName="!w-2.5 !h-2.5 !bg-purple-400 !border-2 !border-white !rounded-sm"
+        />
+      )}
       {/* 头部：图标 + 标题 + expanded 配置 */}
       <div
         className={twMerge(
