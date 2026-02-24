@@ -5,7 +5,12 @@ export enum ComponentNodesEnum {
   Trigger = 'trigger',
   Reply = 'reply',
   If = 'if',
+  Loop = 'loop',
+  LoopStart = 'loop-start',
 }
+
+// loop-start 节点只能作为 loop 节点的子节点被自动创建，不出现在菜单中
+export const hiddenNodeTypes = new Set<ComponentNodesEnum>([ComponentNodesEnum.LoopStart])
 // node env
 export enum VarTypes {
   String = 'string',

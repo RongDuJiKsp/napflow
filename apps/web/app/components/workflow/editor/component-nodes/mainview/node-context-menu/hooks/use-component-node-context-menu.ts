@@ -4,6 +4,8 @@ import type { ComponentNodeProps } from '../../../types'
 import { useComponentNodeOperations } from '../../../hooks/use-component-node-operations'
 import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 import { useComponentNodeCurd } from '../../../hooks/use-component-node-curd'
+import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+
 type HandlerProps = ItemParams<ComponentNodeProps>
 
 export const useComponentNodeContextMenu = () => {
@@ -11,6 +13,7 @@ export const useComponentNodeContextMenu = () => {
   const { handleDeleteNode, handleFoldUnfoldNode }
     = useComponentNodeOperations()
   const { submitSyncDraft } = useWorkflowDraft()
+
   const handleDeleteItem = useCallback(
     ({ props }: HandlerProps) => {
       const node = getNode(props?.id)
@@ -36,8 +39,19 @@ export const useComponentNodeContextMenu = () => {
     },
     [handleFoldUnfoldNode, getNode, submitSyncDraft],
   )
+
+  /** 判断右键的节点是否是 loop 节点 */
+  const isLoopNode = useCallback(
+    ({ props }: Omit<HandlerProps, 'event'>): boolean => {
+      const node = getNode(props?.id)
+      return node?.data.type === ComponentNodesEnum.Loop
+    },
+    [getNode],
+  )
+
   return {
     handleDeleteItem,
     handleFoldUnfoldItem,
+    isLoopNode,
   }
 }

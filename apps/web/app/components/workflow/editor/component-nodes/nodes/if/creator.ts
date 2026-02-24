@@ -31,7 +31,7 @@ export const IfNodeCreator: ComponentCreator<IfData> = {
   icon: RiGitBranchLine,
   nodeComponent: IfNode,
   editPanelComponent: IfPanel,
-  prevNodes: [ComponentNodesEnum.Trigger, ComponentNodesEnum.Reply],
-  nextNodes: [ComponentNodesEnum.Reply],
+  prevNodes: [ComponentNodesEnum.Trigger, ComponentNodesEnum.Reply, ComponentNodesEnum.LoopStart],
+  nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.Loop],
   mutiNextHandles: true,
 }

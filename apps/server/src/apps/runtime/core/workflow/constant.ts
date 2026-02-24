@@ -3,6 +3,8 @@ import type { CommNode, CommNodeType } from './node'
 import { TriggerDataCtxSchema, TriggerNode } from './nodes/trigger-node'
 import { ReplyDataCtxSchema, ReplyNode } from './nodes/reply-node'
 import { IfDataCtxSchema, IfNode } from './nodes/if-node'
+import { LoopDataCtxSchema, LoopNode } from './nodes/loop-node'
+import { LoopStartDataCtxSchema, LoopStartNode } from './nodes/loop-start-node'
 import type { Class } from 'type-fest'
 import type z from 'zod'
 
@@ -10,6 +12,8 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.Trigger]: TriggerNode,
   [ComponentNodesEnum.Reply]: ReplyNode,
   [ComponentNodesEnum.If]: IfNode,
+  [ComponentNodesEnum.Loop]: LoopNode,
+  [ComponentNodesEnum.LoopStart]: LoopStartNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -19,4 +23,6 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.Trigger]: TriggerDataCtxSchema,
   [ComponentNodesEnum.Reply]: ReplyDataCtxSchema,
   [ComponentNodesEnum.If]: IfDataCtxSchema,
+  [ComponentNodesEnum.Loop]: LoopDataCtxSchema,
+  [ComponentNodesEnum.LoopStart]: LoopStartDataCtxSchema,
 }

@@ -20,7 +20,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
   nodeComponent: TriggerNode,
   editPanelComponent: TriggerPanel,
   prevNodes: [],
-  nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.If],
+  nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.If, ComponentNodesEnum.Loop],
   env: [
     { type: VarTypes.String, name: 'trigger.triggerid' },
     { type: VarTypes.Number, name: 'trigger.uid' },

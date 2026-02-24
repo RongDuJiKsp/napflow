@@ -7,6 +7,10 @@ import { useReactFlow } from '@xyflow/react'
 import type { WorkflowEdge, WorkflowNode, WorkflowProps } from '../../../types'
 import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 import { overwrite } from '@/utils/comm'
+import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { NodeClassic } from '@shared/common/workflow/core'
+import type { ComponentNode } from '../../../component-nodes/types'
+import { useLoopNodeOperator } from '../../../component-nodes/nodes/loop/hooks/use-loop-operator'
 
 export const useStickyNode = () => {
   const editorStore = useEditorStore()
@@ -44,19 +48,29 @@ export const useStickyNode = () => {
 
 export const useStickyEventsRegister = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const { handleAddLoopNode } = useLoopNodeOperator()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
   useEventListener('click', (e) => {
     const { stickyElement, removeStickyElement } = editorStore.getState()
     if (!stickyElement) return
-    reactflow.addNodes(
-      overwrite(stickyElement, {
-        position: reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY }),
-        data: {
-          _beforeCreate: false,
-        },
-      }),
+    const position = reactflow.screenToFlowPosition({ x: e.pageX, y: e.pageY })
+    const placedNode = overwrite(stickyElement, {
+      position,
+      data: {
+        _beforeCreate: false,
+      },
+    })
+
+    // 如果放置的是 Loop 节点，调用loop operations
+    if (
+      placedNode.type === NodeClassic.Component
+      && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Loop
     )
+      handleAddLoopNode(placedNode)
+    else
+      reactflow.addNodes(placedNode)
+
     removeStickyElement()
     submitSyncDraft()
   })

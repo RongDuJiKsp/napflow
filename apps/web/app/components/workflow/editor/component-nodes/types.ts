@@ -42,6 +42,7 @@ export type ComponentCreator<T = unknown> = {
   env?: Var[];
   mutiPrevHandles?: boolean;
   mutiNextHandles?: boolean;
+  isContainer?: boolean; // 是否是容器类节点（如 loop），容器节点用框包住子节点
 }
 
 // contextMenu
