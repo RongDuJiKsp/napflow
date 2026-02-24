@@ -11,6 +11,7 @@ import { useStore } from 'zustand'
 import { StickyNode } from './mainview/sticky-node'
 import { useWorkflowViewOperations } from './hooks/use-workflow-view-operations'
 import NodeContextMenu from './component-nodes/mainview/node-context-menu'
+import NoteContextMenu from './note/context-menu'
 import {
   useStoreEdgesState,
   useStoreNodesState,
@@ -22,6 +23,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
     <div id="editor-wrapper" className="h-full">
       <EditorPanelContextMenu />
       <NodeContextMenu />
+      <NoteContextMenu />
       <StickyNode />
       <NodeEditSiderbar />
       <WorkflowEnv />

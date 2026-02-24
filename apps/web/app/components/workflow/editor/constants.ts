@@ -4,6 +4,7 @@ import NoteNode from './note/node'
 import type { WorkflowReactComponent } from './types'
 
 export const EDITOR_PANEL_ID = 'editor-panel'
+export const NOTE_NODE_PANEL_ID = 'note-node-panel'
 
 export const nodeTypes = {
   [NodeClassic.Component]: ComponentNodesNode,
