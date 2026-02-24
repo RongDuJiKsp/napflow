@@ -90,5 +90,26 @@ export const useLoopNodeOperator = () => {
     },
     [reactflow],
   )
-  return { handleAddLoopNode, handleAddNodeToLoop }
+
+  /** 删除 Loop 节点及其所有子节点和相关边 */
+  const handleDeleteLoopNode = useCallback(
+    (loopNodeId: string) => {
+      const allNodes = reactflow.getNodes()
+
+      // 收集 loop 节点本身和所有子节点 ID
+      const toDeleteIds = new Set<string>([loopNodeId])
+      for (const n of allNodes) {
+        if (n.parentId === loopNodeId)
+          toDeleteIds.add(n.id)
+      }
+
+      reactflow.setEdges(edges =>
+        edges.filter(e => !toDeleteIds.has(e.source) && !toDeleteIds.has(e.target)),
+      )
+      reactflow.setNodes(nodes => nodes.filter(n => !toDeleteIds.has(n.id)))
+    },
+    [reactflow],
+  )
+
+  return { handleAddLoopNode, handleAddNodeToLoop, handleDeleteLoopNode }
 }

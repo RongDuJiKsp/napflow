@@ -6,10 +6,12 @@ import { createWorkflowEdge } from '../../utils/nodes'
 import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
 
 export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { editNode } = useStoreImmerCurd()
+  const { handleDeleteLoopNode } = useLoopNodeOperator()
   const handleConnenct = useCallback(
     (
       source: ComponentNode,
@@ -39,24 +41,18 @@ export const useComponentNodeOperations = () => {
   )
   const handleDeleteNode = useCallback(
     (node: ComponentNode) => {
-      // 收集需要删除的节点 ID
-      const toDeleteIds = new Set<string>([node.id])
-
-      // 如果删除的是 Loop 容器节点，同时删除其所有子节点
+      // Loop 节点需要连带删除子节点
       if (node.data.type === ComponentNodesEnum.Loop) {
-        const allNodes = reactflow.getNodes()
-        for (const n of allNodes) {
-          if (n.parentId === node.id)
-            toDeleteIds.add(n.id)
-        }
+        handleDeleteLoopNode(node.id)
+        return
       }
-
+      const nodeId = node.id
       reactflow.setEdges(edges =>
-        edges.filter(e => !toDeleteIds.has(e.source) && !toDeleteIds.has(e.target)),
+        edges.filter(e => e.source !== nodeId && e.target !== nodeId),
       )
-      reactflow.setNodes(nodes => nodes.filter(n => !toDeleteIds.has(n.id)))
+      reactflow.setNodes(nodes => nodes.filter(n => n.id !== nodeId))
     },
-    [reactflow],
+    [reactflow, handleDeleteLoopNode],
   )
   const handleFoldUnfoldNode = useCallback(
     (node: ComponentNode) => {
