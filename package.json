@@ -1,11 +1,13 @@
 {
   "name": "napflow",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "",
   "scripts": {
     "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
     "image:server": "docker build -f apps/server/Dockerfile .  -t napflow/server",
-    "test": "vitest"
+    "test": "vitest",
+    "release:snapshot": "TAG=v$(node -p \"require('./package.json').version\")-snapshot-$(date +%y%m%d%H) && echo \"Creating tag: $TAG\" && git tag $TAG && git push origin $TAG",
+    "release": "TAG=v$(node -p \"require('./package.json').version\") && echo \"Creating tag: $TAG\" && git tag $TAG && git push origin $TAG"
   },
   "keywords": [],
   "author": "",
