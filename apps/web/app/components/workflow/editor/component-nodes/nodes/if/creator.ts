@@ -35,6 +35,7 @@ export const IfNodeCreator: ComponentCreator<IfData> = {
     ComponentNodesEnum.Trigger,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.LoopStart,
+    ComponentNodesEnum.Loop,
   ],
   nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.Loop],
   mutiNextHandles: true,
