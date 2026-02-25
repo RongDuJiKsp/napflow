@@ -1,24 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NapFlow Web
+
+NapFlow 前端应用（Next.js），包含工作流编辑器、Bot 管理、插件发布与健康监控等界面。
+
+## 技术栈
+
+| 类别 | 技术 |
+|------|------|
+| 框架 | **Next.js 16**（App Router）+ **React 19** |
+| UI 组件 | **HeroUI**、**Ant Design 6**、**Headless UI** |
+| 样式 | **Tailwind CSS 4** |
+| 工作流编辑器 | **@xyflow/react**（React Flow）|
+| 代码编辑/对比 | **Monaco Editor** |
+| 富文本输入 | **Lexical** |
+| 状态管理 | **Zustand** + **Immer** |
+| 数据请求 | **TanStack React Query** + **Alova** |
+| 图表 | **Ant Design Charts** |
+| 工具库 | **ahooks**、**dayjs**、**tailwind-merge** |
+| 图标 | **Remix Icon**（@remixicon/react）|
+
+## 环境变量
+
+前端环境变量通过 `process.env.XXX` 读取，其中 `NEXT_PUBLIC_` 前缀的变量会被注入到浏览器端代码中。
+
+| 变量名 | 说明 | 读取位置 | 默认值 | 是否必填 |
+|--------|------|----------|--------|----------|
+| `SERVER_URL` | 后端服务地址，用于 Next.js rewrites 代理转发 | `next.config.ts` | `http://localhost:8848` | 否 |
+| `NEXT_PUBLIC_API_URL` | 前端请求的 API 基础路径。以 `/` 开头时启用 Next.js 代理转发到 `SERVER_URL` | `config/env.ts`、`next.config.ts` | `/api` | 否 |
+| `NEXT_PUBLIC_NODE_ENV` | 前端运行环境标识，导出 `isDevelopment` / `isProduction` | `config/env.ts` | 自动取 `$NODE_ENV` | 否 |
+| `STRENGTH_PASSWORD_LENGTH` | 前端密码强度校验的最小长度，正整数字符串 | `app/components/_base/constants.ts` | `8` | 否 |
+
+> **说明**：当 `NEXT_PUBLIC_API_URL` 以 `/` 开头时，Next.js 会通过 rewrites 将 `/api/*` 的请求代理转发到 `SERVER_URL`，适用于前后端分离部署时解决跨域问题。如果将 `NEXT_PUBLIC_API_URL` 设置为完整的后端地址（如 `http://localhost:8848`），则前端会直接请求后端，不经过代理。
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
