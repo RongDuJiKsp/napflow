@@ -48,7 +48,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group bg-linear-to-br from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
+      className="group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
     >
       {/* 头部信息 */}
       <div
@@ -117,6 +117,9 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
           </>
         )}
       </div>
+
+      {/* 悬停效果 */}
+      <div className="absolute inset-0 rounded-xl bg-linear-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
 
       {/* 操作 */}
       <div className="flex justify-end">
