@@ -1,31 +1,30 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { Item, Menu } from 'react-contexify'
 import { NOTE_NODE_PANEL_ID } from '../constants'
 import type { ItemParams } from 'react-contexify'
-import { useReactFlow } from '@xyflow/react'
-import type { WorkflowEdge, WorkflowNode } from '../types'
 import { useWorkflowDraft } from '../hooks/use-workflow-draft'
 import { RiDeleteBin2Line, RiEditLine } from '@remixicon/react'
+import { useNoteNodeOperation } from './hooks/use-note-node-operation'
 
-type NoteHandlerProps = ItemParams<{ id: string; onToggleEdit: () => void }>
+type NoteOperators = {
+  onToggleEdit: () => void
+}
+type NoteHandlerProps = ItemParams<{ id: string } & NoteOperators>
 
 const NoteContextMenu = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { submitSyncDraft } = useWorkflowDraft()
+  const { deleteNoteNode } = useNoteNodeOperation()
 
-  const handleToggleEdit = ({ props }: NoteHandlerProps) => {
+  const handleToggleEdit = useCallback(({ props }: NoteHandlerProps) => {
     props?.onToggleEdit?.()
-  }
+  }, [])
 
-  const handleDelete = ({ props }: NoteHandlerProps) => {
+  const handleDelete = useCallback(({ props }: NoteHandlerProps) => {
     if (!props?.id) return
     const nodeId = props.id
-    reactflow.setEdges(edges =>
-      edges.filter(e => e.source !== nodeId && e.target !== nodeId),
-    )
-    reactflow.setNodes(nodes => nodes.filter(n => n.id !== nodeId))
+    deleteNoteNode(nodeId)
     submitSyncDraft()
-  }
+  }, [deleteNoteNode, submitSyncDraft])
 
   return (
     <Menu id={NOTE_NODE_PANEL_ID}>
