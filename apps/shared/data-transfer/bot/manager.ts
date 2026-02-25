@@ -26,3 +26,10 @@ export const ZodCheckCreateBotResp = defineZodResp(
   }),
 )
 export type CreateBotResp = z.infer<typeof ZodCheckCreateBotResp>
+
+// @/bots/:botId/update
+export const ZodCheckUpdateBotReq = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+})
+export type UpdateBotReq = z.infer<typeof ZodCheckUpdateBotReq>

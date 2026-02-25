@@ -18,9 +18,11 @@ import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
 import {
   type CreateBotReq,
+  type UpdateBotReq,
   ZodCheckCreateBotReq,
   ZodCheckCreateBotResp,
   ZodCheckGetAllBotsResp,
+  ZodCheckUpdateBotReq,
 } from '@shared/data-transfer/bot/manager'
 import { ZodBody } from '@/src/decorator/zod'
 
@@ -93,6 +95,17 @@ export class BotManagerController {
   @ZodSerializerDto(ZodCheckNullResp)
   async reloadBot(@Param('botId') botId: string) {
     await this.botCoreRuntimeService.reloadBot(botId)
+    return Resp.ok()
+  }
+
+  @Post(':botId/update')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async updateBot(
+    @Param('botId') botId: string,
+    @ZodBody({ zod: ZodCheckUpdateBotReq }) req: UpdateBotReq,
+  ) {
+    await this.botManagerService.updateBot(botId, req)
     return Resp.ok()
   }
 }
