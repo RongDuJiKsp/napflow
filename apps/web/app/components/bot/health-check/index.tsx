@@ -7,6 +7,7 @@ import { formatTimestamp } from '../../health-check/utils'
 import { EmptyState, LoadingState } from '../../health-check/common'
 import NodeQueueArea from './NodeQueueArea'
 import TaskQueueArea from './TaskQueueArea'
+import BotOperatePanel from './BotOperatePanel'
 import { useHealthCheck } from './hooks/use-health-check'
 
 const BotHealthCheck = () => {
@@ -16,18 +17,20 @@ const BotHealthCheck = () => {
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Bot健康监控</h2>
+      <div className="p-6 space-y-6">
+        <h2 className="text-xl font-bold text-gray-800">Bot健康监控</h2>
         <LoadingState />
+        <BotOperatePanel />
       </div>
     )
   }
 
   if (!data || data.length === 0) {
     return (
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Bot健康监控</h2>
+      <div className="p-6 space-y-6">
+        <h2 className="text-xl font-bold text-gray-800">Bot健康监控</h2>
         <EmptyState />
+        <BotOperatePanel />
       </div>
     )
   }
@@ -46,6 +49,8 @@ const BotHealthCheck = () => {
         <NodeQueueArea />
         <TaskQueueArea />
       </div>
+
+      <BotOperatePanel />
     </div>
   )
 }

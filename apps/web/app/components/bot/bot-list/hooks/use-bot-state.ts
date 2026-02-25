@@ -35,8 +35,8 @@ const getStatusColor = (state: BotRunningState) => {
   }
 }
 
-export const useBotState = (bot: CommonBotInfo) => {
-  const state = bot.state.runningState
+export const useBotState = (bot?: CommonBotInfo) => {
+  const state = bot?.state.runningState ?? BotRunningState.stopped
   const isBotCanStart = [
     BotRunningState.stopped,
     BotRunningState.killed,
