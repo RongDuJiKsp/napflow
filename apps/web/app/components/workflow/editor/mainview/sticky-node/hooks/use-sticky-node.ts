@@ -68,8 +68,7 @@ export const useStickyEventsRegister = () => {
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Loop
     )
       handleAddLoopNode(placedNode)
-    else
-      reactflow.addNodes(placedNode)
+    else reactflow.addNodes(placedNode)
 
     removeStickyElement()
     submitSyncDraft()

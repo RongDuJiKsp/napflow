@@ -7,11 +7,14 @@ import { NodeClassic } from '@shared/common/workflow/core'
 export const useNoteNodeOperation = () => {
   const { deleteNode } = useCommNodeOperation()
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const deleteNoteNode = useCallback((nodeId: string) => {
-    const node = reactflow.getNode(nodeId)
-    if (!node || node.type !== NodeClassic.Note) return
-    deleteNode(node)
-  }, [deleteNode, reactflow])
+  const deleteNoteNode = useCallback(
+    (nodeId: string) => {
+      const node = reactflow.getNode(nodeId)
+      if (!node || node.type !== NodeClassic.Note) return
+      deleteNode(node)
+    },
+    [deleteNode, reactflow],
+  )
   return {
     deleteNoteNode,
   }

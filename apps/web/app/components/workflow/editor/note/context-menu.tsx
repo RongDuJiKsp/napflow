@@ -7,7 +7,7 @@ import { RiDeleteBin2Line, RiEditLine } from '@remixicon/react'
 import { useNoteNodeOperation } from './hooks/use-note-node-operation'
 
 type NoteOperators = {
-  onToggleEdit: () => void
+  onToggleEdit: () => void;
 }
 type NoteHandlerProps = ItemParams<{ id: string } & NoteOperators>
 
@@ -19,12 +19,15 @@ const NoteContextMenu = () => {
     props?.onToggleEdit?.()
   }, [])
 
-  const handleDelete = useCallback(({ props }: NoteHandlerProps) => {
-    if (!props?.id) return
-    const nodeId = props.id
-    deleteNoteNode(nodeId)
-    submitSyncDraft()
-  }, [deleteNoteNode, submitSyncDraft])
+  const handleDelete = useCallback(
+    ({ props }: NoteHandlerProps) => {
+      if (!props?.id) return
+      const nodeId = props.id
+      deleteNoteNode(nodeId)
+      submitSyncDraft()
+    },
+    [deleteNoteNode, submitSyncDraft],
+  )
 
   return (
     <Menu id={NOTE_NODE_PANEL_ID}>

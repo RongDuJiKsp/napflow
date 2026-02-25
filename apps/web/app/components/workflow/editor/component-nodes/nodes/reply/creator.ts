@@ -25,5 +25,9 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,
   ],
-  nextNodes: [ComponentNodesEnum.Reply, ComponentNodesEnum.If, ComponentNodesEnum.Loop],
+  nextNodes: [
+    ComponentNodesEnum.Reply,
+    ComponentNodesEnum.If,
+    ComponentNodesEnum.Loop,
+  ],
 }

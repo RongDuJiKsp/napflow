@@ -10,31 +10,38 @@ import type { ComponentNode } from '../../../types'
 
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const handleAddLoopNode = useCallback((loopNode: WorkflowNode) => {
-    // 设置容器节点的初始宽高，配合 NodeResizer 使用
-    loopNode.style = { ...loopNode.style, width: 500, height: 150 }
-    reactflow.addNodes(loopNode)
-    const loopStartNode = createComponentNode<LoopStartData>(ComponentNodesEnum.LoopStart)
+  const handleAddLoopNode = useCallback(
+    (loopNode: WorkflowNode) => {
+      // 设置容器节点的初始宽高，配合 NodeResizer 使用
+      loopNode.style = { ...loopNode.style, width: 500, height: 150 }
+      reactflow.addNodes(loopNode)
+      const loopStartNode = createComponentNode<LoopStartData>(
+        ComponentNodesEnum.LoopStart,
+      )
       // 使用 ReactFlow 的 parentId 属性建立父子关系
-    loopStartNode.parentId = loopNode.id
+      loopStartNode.parentId = loopNode.id
       // loop-start 放置在容器内部左上方（相对于父节点的坐标）
-    loopStartNode.position = {
-      x: 40,
-      y: 60,
-    }
+      loopStartNode.position = {
+        x: 40,
+        y: 60,
+      }
       // 子节点不超出容器范围
-    loopStartNode.extent = 'parent'
-    reactflow.addNodes(loopStartNode)
-  }, [reactflow])
+      loopStartNode.extent = 'parent'
+      reactflow.addNodes(loopStartNode)
+    },
+    [reactflow],
+  )
 
-    /** 在 loop 内部链路末尾添加一个新节点 */
+  /** 在 loop 内部链路末尾添加一个新节点 */
   const handleAddNodeToLoop = useCallback(
     (loopNodeId: string, nodeType: ComponentNodesEnum) => {
       const allNodes = reactflow.getNodes()
       const allEdges = reactflow.getEdges()
 
       // 找到 loop 内的所有子节点
-      const childNodes = allNodes.filter(n => n.parentId === loopNodeId) as ComponentNode[]
+      const childNodes = allNodes.filter(
+        n => n.parentId === loopNodeId,
+      ) as ComponentNode[]
       if (childNodes.length === 0) return
 
       // 找到 loop-start 节点
@@ -61,13 +68,16 @@ export const useLoopNodeOperator = () => {
       if (!lastNode) return
 
       // 检查连接合法性：末尾节点的 nextNodes 是否包含新节点类型
-      const lastCreator = ComponentNodeCreatorMap[(lastNode.data).type as ComponentNodesEnum]
+      const lastCreator
+        = ComponentNodeCreatorMap[lastNode.data.type as ComponentNodesEnum]
       const newCreator = ComponentNodeCreatorMap[nodeType]
       if (
         !lastCreator.nextNodes?.includes(nodeType)
-        || !newCreator.prevNodes?.includes((lastNode.data).type as ComponentNodesEnum)
+        || !newCreator.prevNodes?.includes(
+          lastNode.data.type as ComponentNodesEnum,
+        )
       ) {
-        console.warn(`无法在 ${(lastNode.data).type} 后面添加 ${nodeType}`)
+        console.warn(`无法在 ${lastNode.data.type} 后面添加 ${nodeType}`)
         return
       }
 
@@ -100,15 +110,17 @@ export const useLoopNodeOperator = () => {
 
       // 收集 loop 节点本身和所有子节点 ID
       const toDeleteIds = new Set<string>([loopNodeId])
-      for (const n of allNodes) {
-        if (n.parentId === loopNodeId)
-          toDeleteIds.add(n.id)
-      }
+      for (const n of allNodes)
+        if (n.parentId === loopNodeId) toDeleteIds.add(n.id)
 
       reactflow.setEdges(edges =>
-        edges.filter(e => !toDeleteIds.has(e.source) && !toDeleteIds.has(e.target)),
+        edges.filter(
+          e => !toDeleteIds.has(e.source) && !toDeleteIds.has(e.target),
+        ),
       )
-      reactflow.setNodes(nodes => nodes.filter(n => !toDeleteIds.has(n.id)))
+      reactflow.setNodes(nodes =>
+        nodes.filter(n => !toDeleteIds.has(n.id)),
+      )
     },
     [reactflow],
   )

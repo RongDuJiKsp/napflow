@@ -56,12 +56,15 @@ const ComponentNodesNodeCore: ComponentNodeFc<unknown> = (props) => {
       <div
         className={twMerge(
           'flex items-center gap-3',
-          isContainer && 'justify-between px-4 py-2 bg-linear-to-r from-purple-100/80 to-pink-100/80 rounded-t-2xl border-b border-purple-200/60',
+          isContainer
+            && 'justify-between px-4 py-2 bg-linear-to-r from-purple-100/80 to-pink-100/80 rounded-t-2xl border-b border-purple-200/60',
         )}
       >
         <div className="flex items-center gap-2">
           <creator.icon className="h-4 w-4 text-purple-600" />
-          <span className="text-sm font-medium text-gray-900">{data.title}</span>
+          <span className="text-sm font-medium text-gray-900">
+            {data.title}
+          </span>
         </div>
         {/* 容器节点的 expanded 配置显示在头部右侧 */}
         {isContainer && data.expanded && (

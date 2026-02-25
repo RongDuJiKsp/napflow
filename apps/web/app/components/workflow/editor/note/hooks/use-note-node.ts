@@ -17,13 +17,13 @@ export const useNoteNode = (id: string) => {
     setEditing(prev => !prev)
   }, [])
 
-      // 切换到编辑模式时自动 focus
+  // 切换到编辑模式时自动 focus
   useEffect(() => {
     if (editing) {
-          // 使用 requestAnimationFrame 确保 DOM 已更新
+      // 使用 requestAnimationFrame 确保 DOM 已更新
       requestAnimationFrame(() => {
         textareaRef.current?.focus()
-            // 光标移到末尾
+        // 光标移到末尾
         const len = textareaRef.current?.value.length ?? 0
         textareaRef.current?.setSelectionRange(len, len)
       })

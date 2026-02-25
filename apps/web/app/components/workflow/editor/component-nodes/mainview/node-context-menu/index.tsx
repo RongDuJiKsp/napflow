@@ -1,8 +1,15 @@
 import { memo } from 'react'
 import { Item, Menu, Submenu } from 'react-contexify'
-import { COMPONENT_NODE_PANEL_ID, ComponentNodeCreatorMap } from '../../constants'
+import {
+  COMPONENT_NODE_PANEL_ID,
+  ComponentNodeCreatorMap,
+} from '../../constants'
 import { useComponentNodeContextMenu } from './hooks/use-component-node-context-menu'
-import { RiAddLine, RiDeleteBin2Line, RiExpandLeftRightLine } from '@remixicon/react'
+import {
+  RiAddLine,
+  RiDeleteBin2Line,
+  RiExpandLeftRightLine,
+} from '@remixicon/react'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { useNorReturnFn } from '@/app/hooks/utils/use-callbacker'
 import { useLoopNodeOperator } from '../../nodes/loop/hooks/use-loop-operator'
@@ -11,7 +18,9 @@ import { useLoopNodeOperator } from '../../nodes/loop/hooks/use-loop-operator'
 const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   .filter(([key]) => {
     const k = key as ComponentNodesEnum
-    return k !== ComponentNodesEnum.LoopStart && k !== ComponentNodesEnum.Trigger
+    return (
+      k !== ComponentNodesEnum.LoopStart && k !== ComponentNodesEnum.Trigger
+    )
   })
   .map(([key, value]) => ({
     type: key as ComponentNodesEnum,
@@ -48,8 +57,7 @@ const ComponentNodeContext = () => {
           <Item
             key={item.type}
             onClick={({ props }) => {
-              if (props?.id)
-                handleAddNodeToLoop(props.id, item.type)
+              if (props?.id) handleAddNodeToLoop(props.id, item.type)
             }}
           >
             <div className="flex gap-3 items-center w-full">

@@ -23,10 +23,22 @@ export const useCommNodeOperation = () => {
     (nodeId: string) => {
       const nodes = reactflow.getNodes()
       const edges = reactflow.getEdges()
-      const targetNodes = new Set(nodes.filter(n => n.parentId === nodeId || n.id === nodeId).map(n => n.id))
-      const targetEdges = new Set(edges.filter(e => targetNodes.has(e.source) || targetNodes.has(e.target)).map(e => e.id))
-      reactflow.setEdges(edges => edges.filter(e => !targetEdges.has(e.id)))
-      reactflow.setNodes(nodes => nodes.filter(n => !targetNodes.has(n.id)))
+      const targetNodes = new Set(
+        nodes
+          .filter(n => n.parentId === nodeId || n.id === nodeId)
+          .map(n => n.id),
+      )
+      const targetEdges = new Set(
+        edges
+          .filter(e => targetNodes.has(e.source) || targetNodes.has(e.target))
+          .map(e => e.id),
+      )
+      reactflow.setEdges(edges =>
+        edges.filter(e => !targetEdges.has(e.id)),
+      )
+      reactflow.setNodes(nodes =>
+        nodes.filter(n => !targetNodes.has(n.id)),
+      )
     },
     [reactflow],
   )

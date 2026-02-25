@@ -28,7 +28,7 @@ const UserInfo = () => {
     <div>
       <Menu>
         {/* 神了 button有水合err a没有 */}
-        <MenuButton as='a'>
+        <MenuButton as="a">
           <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 transition-colors duration-200">
             <div className="w-8 h-8 bg-linear-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-semibold text-sm">
               {user?.nickname?.charAt(0) || 'U'}

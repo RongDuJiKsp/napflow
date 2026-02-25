@@ -40,24 +40,26 @@ const NoteNode: WorkflowFc<NoteData> = ({ id, data, selected, dragging }) => {
         lineClassName="!border-amber-400"
         handleClassName="!w-2.5 !h-2.5 !bg-amber-400 !border-2 !border-white !rounded-sm"
       />
-      {editing && (<textarea
-        ref={textareaRef}
-        className={twMerge(
-          'w-full h-full bg-transparent outline-none resize-none',
-          'text-sm text-gray-700 leading-relaxed',
-          'placeholder:text-amber-300',
-        )}
-        value={data.content}
-        onChange={handleInputChange}
-        onBlur={handleBlur}
-        placeholder="输入备注内容..."
-        onMouseDown={stopPropagation}
-      />)
-      }
-      {!editing && (<div className="w-full h-full text-sm text-gray-700 leading-relaxed whitespace-pre-wrap wrap-break-word overflow-auto">
-        {data.content}
-      </div>)
-      }
+      {editing && (
+        <textarea
+          ref={textareaRef}
+          className={twMerge(
+            'w-full h-full bg-transparent outline-none resize-none',
+            'text-sm text-gray-700 leading-relaxed',
+            'placeholder:text-amber-300',
+          )}
+          value={data.content}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          placeholder="输入备注内容..."
+          onMouseDown={stopPropagation}
+        />
+      )}
+      {!editing && (
+        <div className="w-full h-full text-sm text-gray-700 leading-relaxed whitespace-pre-wrap wrap-break-word overflow-auto">
+          {data.content}
+        </div>
+      )}
     </div>
   )
 }
