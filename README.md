@@ -165,6 +165,96 @@ napflow/
 - **pnpm** >= 10
 - **MySQL** 数据库
 
+### 环境变量配置
+
+项目前后端各自通过 `.env` 文件管理环境变量。环境变量文件按以下优先级加载（前面的优先级更高）：
+
+```
+.env.{NODE_ENV}.local  →  .env.{NODE_ENV}  →  .env.local  →  .env
+```
+
+#### .env 文件清单
+
+| 文件路径 | 用途 | 是否纳入版本控制 |
+|----------|------|:----------------:|
+| `apps/web/.env` | 前端基础配置 | ✅ 是 |
+| `apps/web/.env.development` | 前端开发模式覆盖 | ✅ 是 |
+| `apps/web/.env.production` | 前端生产模式覆盖 | ✅ 是 |
+| `apps/web/.env*.local` | 前端本地私有覆盖 | ❌ 否（.gitignore） |
+| `apps/server/.env` | 后端基础配置 | ✅ 是 |
+| `apps/server/.env.development` | 后端开发模式覆盖 | ✅ 是 |
+| `apps/server/.env.production` | 后端生产模式覆盖 | ✅ 是 |
+| `apps/server/.env.local` | 后端本地私有覆盖（存放数据库密码等敏感信息） | ❌ 否（.gitignore） |
+
+#### 前端环境变量（apps/web）
+
+前端环境变量通过 `process.env.XXX` 读取，其中 `NEXT_PUBLIC_` 前缀的变量会被注入到浏览器端代码中。
+
+| 变量名 | 说明 | 读取位置 | 默认值 | 是否必填 |
+|--------|------|----------|--------|----------|
+| `SERVER_URL` | 后端服务地址，用于 Next.js rewrites 代理转发 | `next.config.ts` | `http://localhost:8848` | 否 |
+| `NEXT_PUBLIC_API_URL` | 前端请求的 API 基础路径。以 `/` 开头时启用 Next.js 代理转发到 `SERVER_URL` | `config/env.ts`、`next.config.ts` | `/api` | 否 |
+| `NEXT_PUBLIC_NODE_ENV` | 前端运行环境标识，导出 `isDevelopment` / `isProduction` | `config/env.ts` | 自动取 `$NODE_ENV` | 否 |
+| `STRENGTH_PASSWORD_LENGTH` | 前端密码强度校验的最小长度，正整数字符串 | `app/components/_base/constants.ts` | `8` | 否 |
+
+> **说明**：当 `NEXT_PUBLIC_API_URL` 以 `/` 开头时，Next.js 会通过 rewrites 将 `/api/*` 的请求代理转发到 `SERVER_URL`，适用于前后端分离部署时解决跨域问题。如果将 `NEXT_PUBLIC_API_URL` 设置为完整的后端地址（如 `http://localhost:8848`），则前端会直接请求后端，不经过代理。
+
+#### 后端环境变量（apps/server）
+
+后端环境变量由 `AppConfigService`（`src/apps/app-config/app-config.service.ts`）通过 Zod Schema 统一解析校验，启动时如果必填项缺失或格式错误会直接报错退出。
+
+| 变量名 | 说明 | 默认值 | 是否必填 |
+|--------|------|--------|----------|
+| `HOST_NAME` | 服务监听的主机名 | `localhost` | 否 |
+| `PORT` | 服务监听的端口号 | `3000` | 否 |
+| `MYSQL_USERNAME` | MySQL 数据库用户名 | — | **是** |
+| `MYSQL_PWD` | MySQL 数据库密码 | — | **是** |
+| `MYSQL_HOSTPORT` | MySQL 数据库地址（`host:port` 格式） | `localhost:3306` | 否 |
+| `MYSQL_DATABASE` | MySQL 数据库名称（不存在时自动创建） | `napflow_db` | 否 |
+| `ACC_ROOT_EMAIL` | 初始 Root 管理员邮箱（需符合邮箱格式） | — | **是** |
+| `ACC_ROOT_NICKNAME` | 初始 Root 管理员昵称 | — | **是** |
+| `ACC_ROOT_PASSWORD` | 初始 Root 管理员密码 | — | **是** |
+| `SYNC_ROOT_ACCOUNT_FLAG` | 启用后每次启动同步 Root 账户为当前配置值；未设置时仅在不存在时创建 | 未设置（不启用） | 否 |
+| `JWT_SECRET_KEY` | JWT 签名密钥。未设置时每次启动随机生成，重启后已签发 Token 失效 | 随机 32 字节 hex | 否 |
+
+此外，`src/config/env.ts` 还导出了 `NODE_ENV`（默认 `production`）和 `IS_NODE_ENV_PROD` 供内部使用。
+
+#### 最小配置示例
+
+**前端** `apps/web/.env`（通常无需修改，直接使用默认值即可）：
+
+```bash
+SERVER_URL=http://localhost:8848
+NEXT_PUBLIC_API_URL=/api
+NEXT_PUBLIC_NODE_ENV=$NODE_ENV
+```
+
+**后端** `apps/server/.env`：
+
+```bash
+HOST_NAME=127.0.0.1
+PORT=8848
+ACC_ROOT_EMAIL=root@napflow.com
+ACC_ROOT_NICKNAME=rootUser
+ACC_ROOT_PASSWORD=root
+```
+
+**后端** `apps/server/.env.local`（存放数据库敏感配置，不纳入版本控制）：
+
+```bash
+MYSQL_USERNAME=root
+MYSQL_PWD=yourpassword
+MYSQL_HOSTPORT=localhost:3306
+```
+
+**后端** `apps/server/.env.development`（开发模式下固定 JWT 密钥，防止热重载后 Token 失效）：
+
+```bash
+JWT_SECRET_KEY=abcdef123456
+```
+
+> **注意**：生产环境建议通过 Docker 环境变量或 `.env.production` 文件注入敏感配置，不要将真实密码提交到版本控制中。各 `.env` 文件中已包含详细的注释说明，可直接查看对应文件了解更多信息。
+
 ### 安装依赖
 
 ```bash
