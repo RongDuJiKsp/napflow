@@ -7,9 +7,12 @@ import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { createWorkflowEdge } from '../../../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../../../constants'
 import type { ComponentNode } from '../../../types'
+import { useCommNodeOperation } from '../../../../hooks/use-comm-node-operation'
+import { NodeClassic } from '@shared/common/workflow/core'
 
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const { deleteNodeAndChildren } = useCommNodeOperation()
   const handleAddLoopNode = useCallback(
     (loopNode: WorkflowNode) => {
       // 设置容器节点的初始宽高，配合 NodeResizer 使用
@@ -106,23 +109,11 @@ export const useLoopNodeOperator = () => {
   /** 删除 Loop 节点及其所有子节点和相关边 */
   const handleDeleteLoopNode = useCallback(
     (loopNodeId: string) => {
-      const allNodes = reactflow.getNodes()
-
-      // 收集 loop 节点本身和所有子节点 ID
-      const toDeleteIds = new Set<string>([loopNodeId])
-      for (const n of allNodes)
-        if (n.parentId === loopNodeId) toDeleteIds.add(n.id)
-
-      reactflow.setEdges(edges =>
-        edges.filter(
-          e => !toDeleteIds.has(e.source) && !toDeleteIds.has(e.target),
-        ),
-      )
-      reactflow.setNodes(nodes =>
-        nodes.filter(n => !toDeleteIds.has(n.id)),
-      )
+      const loopNode = reactflow.getNode(loopNodeId)
+      if (!loopNode || loopNode.type !== NodeClassic.Component || (loopNode as ComponentNode).data.type !== ComponentNodesEnum.LoopStart) return
+      deleteNodeAndChildren(loopNode)
     },
-    [reactflow],
+    [deleteNodeAndChildren, reactflow],
   )
 
   return { handleAddLoopNode, handleAddNodeToLoop, handleDeleteLoopNode }
