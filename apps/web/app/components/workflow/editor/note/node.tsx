@@ -3,6 +3,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import type { NoteData } from './type'
 import type { WorkflowFc, WorkflowNode } from '../types'
 import { twMerge } from 'tailwind-merge'
+import { NodeResizer } from '@xyflow/react'
 import { useContextMenu } from 'react-contexify'
 import { NOTE_NODE_PANEL_ID } from '../constants'
 import { useStoreImmerCurd } from '../hooks/use-reactflow-ext'
@@ -57,7 +58,7 @@ const NoteNode: WorkflowFc<NoteData> = ({ id, data, selected, dragging }) => {
   return (
     <div
       className={twMerge(
-        'min-w-[120px] min-h-12 px-4 py-3',
+        'w-full h-full min-w-[120px] min-h-12 px-4 py-3',
         'bg-amber-50/80 rounded-lg border border-amber-200',
         'shadow-sm transition-all duration-200',
         'hover:shadow-md hover:border-amber-300',
@@ -68,28 +69,32 @@ const NoteNode: WorkflowFc<NoteData> = ({ id, data, selected, dragging }) => {
       onContextMenu={handleContextMenu}
       onDoubleClick={!editing ? toggleEdit : undefined}
     >
-      {editing
-        ? (
-          <textarea
-            ref={textareaRef}
-            className={twMerge(
-              'w-full min-h-[60px] bg-transparent outline-none resize-both',
-              'text-sm text-gray-700 leading-relaxed',
-              'placeholder:text-amber-300',
-            )}
-            value={data.content}
-            onChange={e => handleContentChange(e.target.value)}
-            onBlur={handleBlur}
-            placeholder="输入备注内容..."
-              // 阻止拖拽事件冒泡，避免编辑时拖动节点
-            onMouseDown={e => e.stopPropagation()}
-          />
-        )
-        : (
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap wrap-break-word min-h-5">
-            {data.content || <span className="text-amber-300 italic">空备注</span>}
-          </div>
+      <NodeResizer
+        isVisible={selected}
+        minWidth={120}
+        minHeight={48}
+        lineClassName="!border-amber-400"
+        handleClassName="!w-2.5 !h-2.5 !bg-amber-400 !border-2 !border-white !rounded-sm"
+      />
+      {editing && (<textarea
+        ref={textareaRef}
+        className={twMerge(
+          'w-full h-full bg-transparent outline-none resize-none',
+          'text-sm text-gray-700 leading-relaxed',
+          'placeholder:text-amber-300',
         )}
+        value={data.content}
+        onChange={e => handleContentChange(e.target.value)}
+        onBlur={handleBlur}
+        placeholder="输入备注内容..."
+              // 阻止拖拽事件冒泡，避免编辑时拖动节点
+        onMouseDown={e => e.stopPropagation()}
+      />)
+      }
+      {!editing && (<div className="w-full h-full text-sm text-gray-700 leading-relaxed whitespace-pre-wrap wrap-break-word overflow-auto">
+        {data.content}
+      </div>)
+      }
     </div>
   )
 }
