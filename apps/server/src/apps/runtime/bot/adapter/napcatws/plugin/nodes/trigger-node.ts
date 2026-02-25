@@ -25,20 +25,14 @@ export class NcTriggerNode extends TriggerNode {
       _nextTask.abort()
       return
     }
-    if (
-      this.data.on === TriggerOn.Friend
-      && thread.kv.uid !== uid
-    ) {
+    if (this.data.on === TriggerOn.Friend && thread.kv.uid !== uid) {
       this.logger.debug(
         `Task not a friend ${uid} message(${thread.kv.uid}), exiting`,
       )
       _nextTask.abort()
       return
     }
-    if (
-      this.data.on === TriggerOn.Group
-      && thread.kv.gid !== gid
-    ) {
+    if (this.data.on === TriggerOn.Group && thread.kv.gid !== gid) {
       this.logger.debug(
         `Task not a group ${gid} message(${thread.kv.gid}), exiting`,
       )

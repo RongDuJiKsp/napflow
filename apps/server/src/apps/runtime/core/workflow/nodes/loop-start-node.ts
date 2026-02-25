@@ -1,4 +1,6 @@
-import { ZodCheckComponentNodeMeta, VarTypes } from '@shared/common/workflow/component-node'
+import {
+  ZodCheckComponentNodeMeta,
+} from '@shared/common/workflow/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'

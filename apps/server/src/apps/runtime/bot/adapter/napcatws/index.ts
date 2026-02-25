@@ -100,7 +100,9 @@ export class NapcatWsAdapter implements BotInstance {
   async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
     this.logger.log('Bootstrap plugins...')
     this.plugins = []
-    for (const appBinding of await this.bridge.getBindingsInfo(this.botConfigDB.recordId) ?? []) {
+    for (const appBinding of (await this.bridge.getBindingsInfo(
+      this.botConfigDB.recordId,
+    )) ?? []) {
       const app = appBinding.appPublish
       if (!app.nodes || !app.edges) {
         this.logger.warn(

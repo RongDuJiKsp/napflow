@@ -229,16 +229,17 @@ export class WorkflowThread<SDK = unknown> {
     for (const target of toRemoveNodeId)
       this.mayBeNextNodeDegree.delete(this.plugin.commNodeCache[target])
     const toRepushArr = <CommNode[]>[]
-    for(let item = this.availableNodes.dequeue(); !!item; item = this.availableNodes.dequeue()) {
-      if(!item)
-        break
+    for (
+      let item = this.availableNodes.dequeue();
+      !!item;
+      item = this.availableNodes.dequeue()
+    ) {
+      if (!item) break
 
-      if(toRemoveSet.has(item.id))
-        continue
+      if (toRemoveSet.has(item.id)) continue
 
       toRepushArr.push(item)
     }
-    for(const i of toRepushArr)
-      this.availableNodes.enqueue(i)
+    for (const i of toRepushArr) this.availableNodes.enqueue(i)
   }
 }
