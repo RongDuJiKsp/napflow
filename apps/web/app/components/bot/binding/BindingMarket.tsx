@@ -31,7 +31,7 @@ const AppList = ({
 }) => {
   return (
     <div className="w-1/3 border-r border-gray-200 pr-6">
-      <h3 className="text-sm font-semibold text-purple-700 mb-4">可用插件</h3>
+      <h3 className="text-sm font-semibold text-gray-800 mb-4">可用插件</h3>
       <div className="space-y-2 max-h-[400px] overflow-y-auto">
         {apps.map(app => (
           <div
@@ -39,8 +39,8 @@ const AppList = ({
             className={twMerge(
               'p-3 rounded-lg border cursor-pointer transition-all duration-200',
               selectedAppId === app.appId
-                ? 'border-purple-300 bg-purple-50 shadow-md'
-                : 'border-gray-200 hover:border-purple-200 hover:bg-purple-25',
+                ? 'border-blue-300 bg-blue-50 shadow-md'
+                : 'border-gray-200 hover:border-blue-200 hover:bg-blue-50/30',
             )}
             onClick={() => onAppSelect(app.appId)}
           >
@@ -74,7 +74,7 @@ const AppVersionList = ({
         .map(version => (
           <div
             key={version.version}
-            className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors duration-200 cursor-pointer"
+            className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors duration-200 cursor-pointer"
             onClick={() => onSelect({ appId, version: version.version })}
           >
             <div className="flex-1">
@@ -87,7 +87,7 @@ const AppVersionList = ({
                 </div>
               )}
             </div>
-            <RiAddLine className="w-4 h-4 text-purple-500" />
+            <RiAddLine className="w-4 h-4 text-blue-500" />
           </div>
         ))}
     </div>
@@ -105,7 +105,7 @@ const SelectedList = ({
 }) => {
   return (
     <div className="w-1/3">
-      <h3 className="text-sm font-semibold text-purple-700 mb-4">
+      <h3 className="text-sm font-semibold text-gray-800 mb-4">
         已选插件版本
       </h3>
       <div className="space-y-2 max-h-[400px] overflow-y-auto">
@@ -176,11 +176,11 @@ const BingingDialogInner = ({ onClose }: { onClose?: () => void }) => {
   return (
     <DialogPanel className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden w-full max-w-6xl max-h-[80vh]">
       {/* Header */}
-      <div className="px-6 pb-2 pt-4 bg-linear-to-r from-purple-50 to-pink-50">
+      <div className="px-6 pb-2 pt-4 bg-gray-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <RiPuzzleLine className="w-6 h-6 text-purple-600" />
-            <DialogTitle className="text-lg font-semibold text-purple-700">
+            <RiPuzzleLine className="w-6 h-6 text-gray-600" />
+            <DialogTitle className="text-lg font-semibold text-gray-800">
               绑定插件到Bot
             </DialogTitle>
           </div>
@@ -204,7 +204,7 @@ const BingingDialogInner = ({ onClose }: { onClose?: () => void }) => {
 
         {/* 中间：版本列表 */}
         <div className="w-1/3 border-r border-gray-200 pr-6">
-          <h3 className="text-sm font-semibold text-purple-700 mb-4">
+          <h3 className="text-sm font-semibold text-gray-800 mb-4">
             {selectedApp ? `${selectedApp.appName} 版本` : '选择插件查看版本'}
           </h3>
           <div className="max-h-[400px] overflow-y-auto">
@@ -236,8 +236,8 @@ const BindingMarket = () => {
   if (apps === undefined) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="flex items-center space-x-3 text-purple-600">
-          <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+        <div className="flex items-center space-x-3 text-blue-600">
+          <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
           <span className="text-sm font-medium">加载插件列表中...</span>
         </div>
       </div>
@@ -248,9 +248,9 @@ const BindingMarket = () => {
     <div>
       <Button
         className={twMerge(
-          'flex gap-2 bg-linear-to-r from-purple-500 to-pink-500',
+          'flex gap-2 bg-linear-to-r from-blue-500 to-indigo-500',
           'text-white shadow-lg hover:shadow-xl',
-          'hover:from-purple-600 hover:to-pink-600',
+          'hover:from-blue-600 hover:to-indigo-600',
           'transition-all duration-200',
         )}
         onPress={dispatchDialog.setTrue}
