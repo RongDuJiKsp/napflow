@@ -14,7 +14,7 @@ export const useWorkflowAppDraftQuery = (
 ) => {
   return useQuery({
     ...options,
-    queryKey: ['workflow-app-data-draft', appId],
+    queryKey: ['workflow-app-draft', appId],
     queryFn: defineQueryFn<LoadDraftResp, WorkflowAppDraft>(
       async () => await jsonQ.Get<LoadDraftResp>(`/workflow/${appId}/draft`),
     ),
