@@ -22,7 +22,7 @@ const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   .filter(([key]) => {
     const k = key as ComponentNodesEnum
     return (
-      k !== ComponentNodesEnum.LoopStart && k !== ComponentNodesEnum.Trigger
+      ![ComponentNodesEnum.LoopStart, ComponentNodesEnum.Trigger, ComponentNodesEnum.Loop].includes(k)
     )
   })
   .map(([key, value]) => ({
