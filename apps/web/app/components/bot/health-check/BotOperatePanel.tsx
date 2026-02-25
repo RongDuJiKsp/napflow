@@ -10,10 +10,10 @@ const OperateButton = ({
   disabled,
   theme,
 }: {
-  title: string
-  onClick: () => void
-  disabled?: boolean
-  theme: 'start' | 'stop' | 'kill' | 'reload'
+  title: string;
+  onClick: () => void;
+  disabled?: boolean;
+  theme: 'start' | 'stop' | 'kill' | 'reload';
 }) => {
   const themeStyles = {
     start: {
@@ -53,14 +53,8 @@ const OperateButton = ({
 }
 
 const BotOperatePanel = () => {
-  const {
-    currentBot,
-    botState,
-    startBot,
-    stopBot,
-    killBot,
-    reloadBot,
-  } = useDashboardBotOperate()
+  const { currentBot, botState, startBot, stopBot, killBot, reloadBot }
+    = useDashboardBotOperate()
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 p-5 shadow-sm">

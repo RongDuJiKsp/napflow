@@ -47,18 +47,13 @@ export const useEditBot = () => {
     [botId],
   )
 
-  const handleSubmit = useSubmitZod(
-    formValue,
-    ZodCheckUpdateBotReq,
-    submitFn,
-    {
-      successText: '更新Bot信息成功',
-      errorText: '提交失败',
-      afterSuccess: () => {
-        refetch()
-      },
+  const handleSubmit = useSubmitZod(formValue, ZodCheckUpdateBotReq, submitFn, {
+    successText: '更新Bot信息成功',
+    errorText: '提交失败',
+    afterSuccess: () => {
+      refetch()
     },
-  )
+  })
 
   return {
     currentBot,

@@ -27,32 +27,32 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 ## 技术栈
 
-| 类别 | 技术 |
-|------|------|
-| 框架 | **NestJS 11** |
-| 数据库 | **MySQL**（TypeORM）|
-| 认证 | **JWT**（jsonwebtoken）+ **bcrypt** |
-| 数据校验 | **Zod** + **nestjs-zod** |
-| Bot 协议 | **@rdjksp/node-napcat-ts** |
-| 统计分析 | **simple-statistics** |
+| 类别     | 技术                                |
+| -------- | ----------------------------------- |
+| 框架     | **NestJS 11**                       |
+| 数据库   | **MySQL**（TypeORM）                |
+| 认证     | **JWT**（jsonwebtoken）+ **bcrypt** |
+| 数据校验 | **Zod** + **nestjs-zod**            |
+| Bot 协议 | **@rdjksp/node-napcat-ts**          |
+| 统计分析 | **simple-statistics**               |
 
 ## 环境变量
 
 后端环境变量由 `AppConfigService`（`src/apps/app-config/app-config.service.ts`）通过 Zod Schema 统一解析校验，启动时如果必填项缺失或格式错误会直接报错退出。
 
-| 变量名 | 说明 | 默认值 | 是否必填 |
-|--------|------|--------|----------|
-| `HOST_NAME` | 服务监听的主机名 | `localhost` | 否 |
-| `PORT` | 服务监听的端口号 | `3000` | 否 |
-| `MYSQL_USERNAME` | MySQL 数据库用户名 | — | **是** |
-| `MYSQL_PWD` | MySQL 数据库密码 | — | **是** |
-| `MYSQL_HOSTPORT` | MySQL 数据库地址（`host:port` 格式） | `localhost:3306` | 否 |
-| `MYSQL_DATABASE` | MySQL 数据库名称（不存在时自动创建） | `napflow_db` | 否 |
-| `ACC_ROOT_EMAIL` | 初始 Root 管理员邮箱（需符合邮箱格式） | — | **是** |
-| `ACC_ROOT_NICKNAME` | 初始 Root 管理员昵称 | — | **是** |
-| `ACC_ROOT_PASSWORD` | 初始 Root 管理员密码 | — | **是** |
-| `SYNC_ROOT_ACCOUNT_FLAG` | 启用后每次启动同步 Root 账户为当前配置值；未设置时仅在不存在时创建 | 未设置（不启用） | 否 |
-| `JWT_SECRET_KEY` | JWT 签名密钥。未设置时每次启动随机生成，重启后已签发 Token 失效 | 随机 32 字节 hex | 否 |
+| 变量名                   | 说明                                                               | 默认值           | 是否必填 |
+| ------------------------ | ------------------------------------------------------------------ | ---------------- | -------- |
+| `HOST_NAME`              | 服务监听的主机名                                                   | `localhost`      | 否       |
+| `PORT`                   | 服务监听的端口号                                                   | `3000`           | 否       |
+| `MYSQL_USERNAME`         | MySQL 数据库用户名                                                 | —                | **是**   |
+| `MYSQL_PWD`              | MySQL 数据库密码                                                   | —                | **是**   |
+| `MYSQL_HOSTPORT`         | MySQL 数据库地址（`host:port` 格式）                               | `localhost:3306` | 否       |
+| `MYSQL_DATABASE`         | MySQL 数据库名称（不存在时自动创建）                               | `napflow_db`     | 否       |
+| `ACC_ROOT_EMAIL`         | 初始 Root 管理员邮箱（需符合邮箱格式）                             | —                | **是**   |
+| `ACC_ROOT_NICKNAME`      | 初始 Root 管理员昵称                                               | —                | **是**   |
+| `ACC_ROOT_PASSWORD`      | 初始 Root 管理员密码                                               | —                | **是**   |
+| `SYNC_ROOT_ACCOUNT_FLAG` | 启用后每次启动同步 Root 账户为当前配置值；未设置时仅在不存在时创建 | 未设置（不启用） | 否       |
+| `JWT_SECRET_KEY`         | JWT 签名密钥。未设置时每次启动随机生成，重启后已签发 Token 失效    | 随机 32 字节 hex | 否       |
 
 此外，`src/config/env.ts` 还导出了 `NODE_ENV`（默认 `production`）和 `IS_NODE_ENV_PROD` 供内部使用。
 

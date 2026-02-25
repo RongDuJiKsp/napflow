@@ -105,9 +105,7 @@ const SelectedList = ({
 }) => {
   return (
     <div className="w-1/3">
-      <h3 className="text-sm font-semibold text-gray-800 mb-4">
-        已选插件版本
-      </h3>
+      <h3 className="text-sm font-semibold text-gray-800 mb-4">已选插件版本</h3>
       <div className="space-y-2 max-h-[400px] overflow-y-auto">
         {selectedItems.length === 0 ? (
           <div className="text-center text-gray-500 py-8">暂无选择</div>

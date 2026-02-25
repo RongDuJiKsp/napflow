@@ -8,7 +8,9 @@ import WorkflowSideMenus from '@/app/components/workflow/side-menus'
 export default async function Page() {
   return (
     <StoreOutsideProvider>
-      <WorkflowSideMenus elements={[AppSettings, WorkflowEnvButton, AppPublish]}>
+      <WorkflowSideMenus
+        elements={[AppSettings, WorkflowEnvButton, AppPublish]}
+      >
         <div className="w-full h-main overflow-hidden">
           <Editor />
         </div>

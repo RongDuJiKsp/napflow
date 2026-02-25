@@ -21,9 +21,11 @@ type ContextMenuProps = ItemParams<{ id: string }>
 const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   .filter(([key]) => {
     const k = key as ComponentNodesEnum
-    return (
-      ![ComponentNodesEnum.LoopStart, ComponentNodesEnum.Trigger, ComponentNodesEnum.Loop].includes(k)
-    )
+    return ![
+      ComponentNodesEnum.LoopStart,
+      ComponentNodesEnum.Trigger,
+      ComponentNodesEnum.Loop,
+    ].includes(k)
   })
   .map(([key, value]) => ({
     type: key as ComponentNodesEnum,
@@ -38,11 +40,14 @@ const ComponentNodeContext = () => {
 
   const hiddenLoopNode = useNorReturnFn(isLoopNode)
 
-  const getContextHandler = useCallback((contextEnum: ComponentNodesEnum) => {
-    return ({ props }: ContextMenuProps) => {
-      if (props?.id) handleAddNodeToLoop(props.id, contextEnum)
-    }
-  }, [handleAddNodeToLoop])
+  const getContextHandler = useCallback(
+    (contextEnum: ComponentNodesEnum) => {
+      return ({ props }: ContextMenuProps) => {
+        if (props?.id) handleAddNodeToLoop(props.id, contextEnum)
+      }
+    },
+    [handleAddNodeToLoop],
+  )
   return (
     <Menu id={COMPONENT_NODE_PANEL_ID}>
       <Item onClick={handleFoldUnfoldItem}>
@@ -62,10 +67,7 @@ const ComponentNodeContext = () => {
         hidden={hiddenLoopNode}
       >
         {loopAddableNodeTypes.map(item => (
-          <Item
-            key={item.type}
-            onClick={getContextHandler(item.type)}
-          >
+          <Item key={item.type} onClick={getContextHandler(item.type)}>
             <div className="flex gap-3 items-center w-full">
               <item.creator.icon className="w-5 h-5" />
               <span className="text-md">{item.creator.label}</span>

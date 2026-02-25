@@ -1,7 +1,10 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import type { Account } from '@shared/common/account/base'
-import type { CreateBotReq, UpdateBotReq } from '@shared/data-transfer/bot/manager'
+import type {
+  CreateBotReq,
+  UpdateBotReq,
+} from '@shared/data-transfer/bot/manager'
 import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
 import { BotRunningState } from '@shared/common/bot/base'
 import { BotFactoryService } from '../core/bot-factory.service'

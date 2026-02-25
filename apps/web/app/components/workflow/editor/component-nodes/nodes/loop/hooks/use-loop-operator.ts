@@ -110,7 +110,12 @@ export const useLoopNodeOperator = () => {
   const handleDeleteLoopNode = useCallback(
     (loopNodeId: string) => {
       const loopNode = reactflow.getNode(loopNodeId)
-      if (!loopNode || loopNode.type !== NodeClassic.Component || (loopNode as ComponentNode).data.type !== ComponentNodesEnum.Loop) return
+      if (
+        !loopNode
+        || loopNode.type !== NodeClassic.Component
+        || (loopNode as ComponentNode).data.type !== ComponentNodesEnum.Loop
+      )
+        return
       deleteNodeAndChildren(loopNode)
     },
     [deleteNodeAndChildren, reactflow],

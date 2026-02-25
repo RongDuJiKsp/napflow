@@ -6,12 +6,8 @@ import { Button, Input, Label, TextArea, TextField } from '@heroui/react'
 import { useEditBot } from './hooks/use-edit-bot'
 
 const EditBot = () => {
-  const {
-    formValue,
-    handleChangeName,
-    handleChangeDescription,
-    handleSubmit,
-  } = useEditBot()
+  const { formValue, handleChangeName, handleChangeDescription, handleSubmit }
+    = useEditBot()
 
   return (
     <div className="p-6 space-y-6">

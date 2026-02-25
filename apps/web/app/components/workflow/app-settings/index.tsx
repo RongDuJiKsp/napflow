@@ -24,11 +24,7 @@ const AppSettings = () => {
           <span>设置</span>
         </div>
       </Button>
-      <Dialog
-        open={isOpen}
-        onClose={handleClose}
-        className="relative z-50"
-      >
+      <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
         {/* Background */}
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -52,7 +48,10 @@ const AppSettings = () => {
             </div>
             {/* Content */}
             <div className="px-12 pt-3 pb-4 flex flex-col gap-3">
-              <TextField value={formValue.appName} onChange={handleChangeAppName}>
+              <TextField
+                value={formValue.appName}
+                onChange={handleChangeAppName}
+              >
                 <Label isRequired>工作流名称</Label>
                 <Input maxLength={20} />
               </TextField>
