@@ -26,4 +26,12 @@ export class WorkflowService {
   async getApps(creator?: string) {
     return await this.db.workflowApp.find({ where: { createdBy: creator } })
   }
+
+  async updateApp(appId: string, appName: string, appDescription: string) {
+    const app = await this.db.workflowApp.findOne({ where: { appId } })
+    if (!app) return null
+    app.appName = appName
+    app.appDescription = appDescription
+    return await this.db.workflowApp.save(app)
+  }
 }

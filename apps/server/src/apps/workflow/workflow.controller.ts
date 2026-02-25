@@ -12,6 +12,7 @@ import {
 import { type Account, UserRole } from '@shared/common/account/base'
 import type {
   CreateWorkflowReq,
+  UpdateWorkflowReq,
   WorkflowPublishReq,
 } from '@shared/data-transfer/workflow/info'
 import {
@@ -24,6 +25,8 @@ import {
   ZodCheckGetVersionResp,
   ZodCheckGetVersionsResp,
   ZodCheckLoadDraftResp,
+  ZodCheckUpdateWorkflowReq,
+  ZodCheckUpdateWorkflowResp,
   ZodCheckWorkflowPublishReq,
   ZodCheckWorkflowPublishResp,
 } from '@shared/data-transfer/workflow/info'
@@ -150,6 +153,22 @@ export class WorkflowController {
     const data = await this.workflowDataService.getLastestPublish(appId)
     if (!data) return Resp.error('App Version Not Found', Code.NotFound)
     return Resp.ok(data)
+  }
+
+  @Post(':appId/update')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckUpdateWorkflowResp)
+  async updateApp(
+    @Param('appId') appId: string,
+    @ZodBody({ zod: ZodCheckUpdateWorkflowReq }) req: UpdateWorkflowReq,
+  ) {
+    const app = await this.workflowService.updateApp(
+      appId,
+      req.appName,
+      req.appDescription,
+    )
+    if (!app) return Resp.error('App Not Found', Code.NotFound)
+    return Resp.ok(app)
   }
 
   @Get(':appId')

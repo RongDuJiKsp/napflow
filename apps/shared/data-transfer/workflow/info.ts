@@ -64,3 +64,12 @@ export const ZodCheckWorkflowPublishResp = defineZodResp(
   ZodCheckWorkflowAppData,
 )
 export type WorkflowPublishResp = z.infer<typeof ZodCheckWorkflowPublishResp>
+
+// @/workflow/:appId/update
+export const ZodCheckUpdateWorkflowReq = z.object({
+  appName: z.string().min(1).max(20),
+  appDescription: z.string().min(1).max(50),
+})
+export type UpdateWorkflowReq = z.infer<typeof ZodCheckUpdateWorkflowReq>
+export const ZodCheckUpdateWorkflowResp = defineZodResp(ZodCheckWorkflowApp)
+export type UpdateWorkflowResp = z.infer<typeof ZodCheckUpdateWorkflowResp>
