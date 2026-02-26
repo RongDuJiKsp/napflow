@@ -12,7 +12,7 @@ export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { editNode } = useStoreImmerCurd()
   const { handleDeleteLoopNode } = useLoopNodeOperator()
-  const handleConnenct = useCallback(
+  const handleConnect = useCallback(
     (
       source: ComponentNode,
       target: ComponentNode,
@@ -67,7 +67,7 @@ export const useComponentNodeOperations = () => {
     [editNode],
   )
   return {
-    handleConnenct,
+    handleConnect,
     handleDeleteNode,
     handleFoldUnfoldNode,
   }

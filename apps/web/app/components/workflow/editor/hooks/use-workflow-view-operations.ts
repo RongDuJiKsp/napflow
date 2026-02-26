@@ -48,7 +48,7 @@ export const useWorkflowViewOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
-  const { handleConnenct: handleComponentNodeConnect }
+  const { handleConnect: handleComponentNodeConnect }
     = useComponentNodeOperations()
 
   const handleConnect = useCallback(
