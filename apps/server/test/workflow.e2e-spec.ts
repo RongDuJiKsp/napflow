@@ -24,6 +24,7 @@ import {
  *   POST /workflow/create                   - 创建 Workflow 应用
  *   GET  /workflow/apps                     - 获取应用列表
  *   GET  /workflow/:appId                   - 获取单个应用
+ *   POST /workflow/:appId/update            - 更新工作流应用信息
  *   GET  /workflow/:appId/draft             - 加载草稿
  *   POST /workflow/:appId/sync              - 同步草稿
  *   POST /workflow/:appId/publish           - 发布草稿
@@ -323,6 +324,110 @@ describe('WorkflowController (e2e)', () => {
       const res = await request(app.getHttpServer()).get(
         `/workflow/${TEST_APP_ID}`,
       )
+
+      expect(res.status).toBe(401)
+    })
+  })
+
+  // =====================================================================
+  // POST /workflow/:appId/update — 更新工作流应用信息
+  // =====================================================================
+  describe('POST /workflow/:appId/update', () => {
+    it('已认证用户应能成功更新工作流应用的名称和描述', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '更新后的名称', appDescription: '更新后的描述' })
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(res.body.data).toHaveProperty('appId', TEST_APP_ID)
+      expect(mockTypeOrmService.workflowApp.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          appName: '更新后的名称',
+          appDescription: '更新后的描述',
+        }),
+      )
+    })
+
+    it('应用不存在时应返回 NotFound', async () => {
+      mockTypeOrmService.workflowApp.findOne.mockResolvedValueOnce(null)
+
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '新名称', appDescription: '新描述' })
+
+      expect(res.body.statusCode).toBe(Code.NotFound)
+      expect(res.body.message).toContain('App Not Found')
+    })
+
+    it('缺少必填字段 appName 时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appDescription: '只有描述' })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('缺少必填字段 appDescription 时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '只有名称' })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('appName 为空字符串时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '', appDescription: '描述' })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('appDescription 为空字符串时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '名称', appDescription: '' })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('appName 超过 20 字符时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '名'.repeat(21), appDescription: '描述' })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('appDescription 超过 50 字符时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '名称', appDescription: '描'.repeat(51) })
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('请求体为空时应返回错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({})
+
+      expect(res.status).not.toBe(200)
+    })
+
+    it('未认证用户应返回 401', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/update`)
+        .send({ appName: '新名称', appDescription: '新描述' })
 
       expect(res.status).toBe(401)
     })
