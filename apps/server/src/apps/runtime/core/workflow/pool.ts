@@ -280,8 +280,4 @@ export class WorkflowThread<SDK = unknown> {
   getLogger(klass: Class<CommNode>): Logger {
     return new Logger(`${WorkflowThread.name}::${klass.name}`)
   }
-
-  removeQueue(toRemoveNodeId: string[]) {
-    this.graphRunner.removeQueue(toRemoveNodeId)
-  }
 }

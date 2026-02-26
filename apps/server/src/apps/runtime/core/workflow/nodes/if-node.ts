@@ -95,6 +95,6 @@ export class IfNode extends CommNode<IfDataCtx> {
       }
     }
     // 删除不需要执行的节点
-    thread.removeQueue(Array.from(needToDeleteQueues))
+    thread.graphRunner.removeQueue(Array.from(needToDeleteQueues))
   }
 }
