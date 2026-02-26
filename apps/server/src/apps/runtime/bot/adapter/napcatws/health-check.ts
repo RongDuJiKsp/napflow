@@ -86,7 +86,7 @@ export class NCCHealthChecker implements Registerable {
       nodeQueueLength: this.plugins
         .map(plugin =>
           plugin.threadList.reduce(
-            (acc, cur) => acc + cur.availableNodes.size(),
+            (acc, cur) => acc + cur.graphRunner.size(),
             0,
           ),
         )

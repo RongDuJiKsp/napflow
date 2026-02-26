@@ -21,6 +21,91 @@ import type { Class } from 'type-fest'
 export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
 }
+
+/**
+ * @description 图运行器 托管节点执行队列和入度管理，负责获取下一个需要执行的节点
+ */
+export class GraphRunner {
+  private readonly availableNodes = new Queue<CommNode>()
+  private readonly mayBeNextNodeDegree: Map<CommNode, number> = new Map()
+
+  constructor(
+    private readonly nodeGraph: ReadonlyMap<
+      CommNode,
+      { prev: CommNode[]; next: CommNode[] }
+    >,
+    private readonly commNodeCache: Record<string, CommNode>,
+  ) {}
+
+  enqueue(node: CommNode) {
+    this.availableNodes.enqueue(node)
+  }
+
+  /** 当前待执行队列的节点数量 */
+  size(): number {
+    return this.availableNodes.size()
+  }
+
+  /** 是否还有待执行的节点 */
+  hasNext(): boolean {
+    return this.availableNodes.size() > 0
+  }
+
+  /** 获取下一个需要执行的节点，同时准备好后续节点的入度计算，无节点时返回 null */
+  next(): CommNode | null {
+    const currNode = this.availableNodes.dequeue()
+    if (!currNode) return null
+    this.readyExecNext(currNode)
+    return currNode
+  }
+
+  /** 从队列中移除指定节点 */
+  removeQueue(toRemoveNodeId: string[]) {
+    const toRemoveSet = new Set(toRemoveNodeId)
+    for (const target of toRemoveNodeId)
+      this.mayBeNextNodeDegree.delete(this.commNodeCache[target])
+    const toRepushArr = <CommNode[]>[]
+    for (
+      let item = this.availableNodes.dequeue();
+      !!item;
+      item = this.availableNodes.dequeue()
+    ) {
+      if (!item) break
+
+      if (toRemoveSet.has(item.id)) continue
+
+      toRepushArr.push(item)
+    }
+    for (const i of toRepushArr) this.availableNodes.enqueue(i)
+  }
+
+  /** 根据当前节点的后继，更新入度并将就绪节点加入队列 */
+  private readyExecNext(currNode: CommNode) {
+    for (const nextNode of this.nodeGraph.get(currNode)?.next ?? []) {
+      if (!this.mayBeNextNodeDegree.has(nextNode)) {
+        this.mayBeNextNodeDegree.set(
+          nextNode,
+          this.nodeGraph.get(nextNode)!.prev.length,
+        )
+      }
+
+      if (this.mayBeNextNodeDegree.has(nextNode)) {
+        const degree = this.mayBeNextNodeDegree.get(nextNode)!
+        if (degree > 1) {
+          this.mayBeNextNodeDegree.set(nextNode, degree - 1)
+        }
+        else if (degree === 1) {
+          this.availableNodes.enqueue(nextNode)
+          this.mayBeNextNodeDegree.delete(nextNode)
+        }
+        else {
+          throw new Error('degree must be greater than 0')
+        }
+      }
+    }
+  }
+}
+
 /**
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
@@ -129,14 +214,14 @@ export class WorkflowThread<SDK = unknown> {
   readonly plugin: CommPlugin<SDK>
 
   // 运行时图数据
-  readonly availableNodes = new Queue<CommNode>()
-  readonly mayBeNextNodeDegree: Map<CommNode, number> = new Map()
+  readonly graphRunner: GraphRunner
 
   readonly logger = new Logger(`${WorkflowThread.name}#${this.id}`)
 
   constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin<SDK>) {
     this.triggerEndpoint = triggerEndpoint
     this.plugin = plugin
+    this.graphRunner = new GraphRunner(plugin.nodeGraph, plugin.commNodeCache)
 
     this.logger.debug(`thread created by${triggerEndpoint}`)
     // 将endpoints初始化到节点
@@ -146,37 +231,12 @@ export class WorkflowThread<SDK = unknown> {
   private applyEndPoints() {
     const startNode = this.plugin.graphHead
     if (startNode.triggerEv === this.triggerEndpoint)
-      this.availableNodes.enqueue(startNode)
+      this.graphRunner.enqueue(startNode)
   }
 
   private async execNode(currNode: CommNode, nextTask: WillTask) {
     this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
     currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
-  }
-
-  private async readyExecNext(currNode: CommNode) {
-    for (const nextNode of this.plugin.nodeGraph.get(currNode)?.next ?? []) {
-      if (!this.mayBeNextNodeDegree.has(nextNode)) {
-        this.mayBeNextNodeDegree.set(
-          nextNode,
-          this.plugin.nodeGraph.get(nextNode)!.prev.length,
-        )
-      }
-
-      if (this.mayBeNextNodeDegree.has(nextNode)) {
-        const degree = this.mayBeNextNodeDegree.get(nextNode)!
-        if (degree > 1) {
-          this.mayBeNextNodeDegree.set(nextNode, degree - 1)
-        }
-        else if (degree === 1) {
-          this.availableNodes.enqueue(nextNode)
-          this.mayBeNextNodeDegree.delete(nextNode)
-        }
-        else {
-          throw new Error('degree must be greater than 0')
-        }
-      }
-    }
   }
 
   async tick(nextTask: WillTask) {
@@ -186,7 +246,7 @@ export class WorkflowThread<SDK = unknown> {
       this.unmount()
       return
     }
-    const currNode = this.availableNodes.dequeue()
+    const currNode = this.graphRunner.next()
     if (!currNode) {
       nextTask.abort()
       this.logger.debug('no more node to run,exiting')
@@ -194,9 +254,6 @@ export class WorkflowThread<SDK = unknown> {
       return
     }
 
-    // 注意 补药调换顺序
-
-    await this.readyExecNext(currNode)
     await this.execNode(currNode, nextTask)
   }
 
@@ -225,21 +282,6 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   removeQueue(toRemoveNodeId: string[]) {
-    const toRemoveSet = new Set(toRemoveNodeId)
-    for (const target of toRemoveNodeId)
-      this.mayBeNextNodeDegree.delete(this.plugin.commNodeCache[target])
-    const toRepushArr = <CommNode[]>[]
-    for (
-      let item = this.availableNodes.dequeue();
-      !!item;
-      item = this.availableNodes.dequeue()
-    ) {
-      if (!item) break
-
-      if (toRemoveSet.has(item.id)) continue
-
-      toRepushArr.push(item)
-    }
-    for (const i of toRepushArr) this.availableNodes.enqueue(i)
+    this.graphRunner.removeQueue(toRemoveNodeId)
   }
 }
