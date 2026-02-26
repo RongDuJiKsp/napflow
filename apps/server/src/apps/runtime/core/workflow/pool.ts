@@ -10,7 +10,7 @@ import {
 } from '@shared/common/workflow/core'
 import type { NodeKlassMap } from './constant'
 import { NodeSchemaMap } from './constant'
-import { buildNeighGraph } from '@/src/utils/algorithm'
+import { buildIdCache, buildNeighGraph } from '@/src/utils/algorithm'
 import { merge } from 'lodash-es'
 import { Queue } from 'datastructures-js'
 import { Logger } from '@nestjs/common'
@@ -148,11 +148,11 @@ export class CommPlugin<SDK = unknown> {
       )
     // 过滤出组件边
     const commIds = new Set(commNodes.map(node => node.id))
-    const CommEdges = edges
+    const commEdges = edges
       .filter(edge => commIds.has(edge.source) && commIds.has(edge.target))
       .map(edge => new CommEdge(edge))
     // 构建邻居图
-    this.nodeGraph = buildNeighGraph<CommNode, CommEdge>(commNodes, CommEdges)
+    this.nodeGraph = buildNeighGraph<CommNode, CommEdge>(commNodes, commEdges)
     // 获取图头
     const triggers = commNodes.filter(
       node => node.role === CommNodeRole.Trigger,
@@ -161,13 +161,9 @@ export class CommPlugin<SDK = unknown> {
       throw new Error('Workflow must have exactly one trigger node')
     this.graphHead = triggers[0]
     this.commNodes = commNodes
-    this.commNodeCache = Object.fromEntries(
-      commNodes.map(node => [node.id, node]),
-    )
-    this.commEdges = CommEdges
-    this.commEdgeCache = Object.fromEntries(
-      CommEdges.map(edge => [edge.id, edge]),
-    )
+    this.commNodeCache = buildIdCache(commNodes)
+    this.commEdges = commEdges
+    this.commEdgeCache = buildIdCache(commEdges)
   }
 
   get threadList() {

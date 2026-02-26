@@ -29,3 +29,5 @@ export const buildNeighGraph = <Node extends MetaNode, Edge extends MetaEdge>(
 
   return graph
 }
+
+export const buildIdCache = <T extends { id: string }>(arr: T[]) => Object.fromEntries(arr.map(item => [item.id, item]))

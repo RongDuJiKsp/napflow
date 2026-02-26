@@ -47,6 +47,7 @@ export abstract class CommNode<
   readonly id: string
   // 只有组件节点能跑 所以type固定为Component
   readonly type: NodeClassic.Component
+  readonly parentId?: string
   readonly data: T
   abstract readonly role: CommNodeRole
 
