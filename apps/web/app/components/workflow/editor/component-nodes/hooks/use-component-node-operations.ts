@@ -22,10 +22,14 @@ export const useComponentNodeOperations = () => {
       const sourceCreator = ComponentNodeCreatorMap[source.data.type]
       const targetCreator = ComponentNodeCreatorMap[target.data.type]
 
+      // 查create表允许的前置后置节点 不允许则结束
       if (
         !sourceCreator.nextNodes?.includes(target.data.type)
         || !targetCreator.prevNodes?.includes(source.data.type)
       )
+        return
+      // 父节点不一致的节点不允许连接
+      if(source.parentId !== target.parentId)
         return
 
       reactflow.addEdges(
