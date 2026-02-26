@@ -28,7 +28,15 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
 /**
  * Runtime 端点 E2E 测试
  *
- * 着重测试 Manager 与 Bot 实例的交互部分：
+ * 测试控制器：
+ *   BotManagerController    - 路由 /bots
+ *
+ * Mock：
+ *   数据库层（botRecord / workflowApp / workflowAppData 仓库）
+ *   BotFactory.createBot（spyOn，控制 bot 实例创建）
+ *   BotCoreRuntime.botInstanceMap（直接访问私有属性，控制运行时状态）
+ *
+ * 覆盖端点：
  *   POST /bots/create          - 创建 Bot 记录
  *   GET  /bots/list             - 获取 Bot 列表（含运行状态）
  *   POST /bots/:botId/run       - 启动 Bot（manager → factory → botInstance）

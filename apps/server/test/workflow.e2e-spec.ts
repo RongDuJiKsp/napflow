@@ -20,7 +20,13 @@ import {
 /**
  * Workflow 端点 E2E 测试
  *
- * 覆盖端点:
+ * 测试控制器：
+ *   WorkflowController    - 路由 /workflow
+ *
+ * Mock：
+ *   数据库层（workflowApp / workflowAppData / botRecord 仓库）
+ *
+ * 覆盖端点：
  *   POST /workflow/create                   - 创建 Workflow 应用
  *   GET  /workflow/apps                     - 获取应用列表
  *   GET  /workflow/:appId                   - 获取单个应用

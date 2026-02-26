@@ -24,7 +24,15 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
 /**
  * Runtime 插件绑定 E2E 测试
  *
- * 着重测试 BotBridge（插件绑定）功能是否正常：
+ * 测试控制器：
+ *   BotBridgeController     - 路由 /bot-bridge
+ *
+ * Mock：
+ *   数据库层（botRecord / workflowApp / workflowAppData 仓库）
+ *   BotFactory.createBot（spyOn，辅助 startBot）
+ *   BotCoreRuntime.botInstanceMap（直接访问私有属性，模拟运行中状态）
+ *
+ * 覆盖端点：
  *   POST /bot-bridge/:botId/bindmany                  - 批量绑定插件（workflow app）
  *   POST /bot-bridge/:botId/unbindmany                - 批量解绑插件
  *   GET  /bot-bridge/:botId/binding                   - 获取绑定列表
