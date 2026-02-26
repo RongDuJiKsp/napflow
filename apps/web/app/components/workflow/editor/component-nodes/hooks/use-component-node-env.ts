@@ -46,6 +46,7 @@ export const getNodeEnvMap = (
     },
     {} as Record<string, string[]>,
   )
+
   const nodesMap = nodes.reduce(
     (acc, cur) => {
       acc[cur.id] = cur
@@ -53,6 +54,17 @@ export const getNodeEnvMap = (
     },
     {} as Record<string, ComponentNode>,
   )
+
+  // 对于有 parentId 的子节点（如 loop-start），将父节点视为其虚拟前驱，
+  // 使得子节点能继承父节点（如 loop）的 env
+  for (const node of nodes) {
+    if (node.parentId && nodesMap[node.parentId]) {
+      prevNodeIdMap[node.id] = prevNodeIdMap[node.id] || []
+      prevNodeIdMap[node.id].push(node.parentId)
+      nextNodeIdMap[node.parentId] = nextNodeIdMap[node.parentId] || []
+      nextNodeIdMap[node.parentId].push(node.id)
+    }
+  }
 
   const states = {
     indgreeMap: Object.fromEntries(
