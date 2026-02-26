@@ -35,6 +35,7 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
  *   POST /bots/:botId/stop      - 停止 Bot（manager → botInstance.signal(SIGSTOP)）
  *   POST /bots/:botId/kill      - 强制终止 Bot（manager → botInstance.signal(SIGKILL)）
  *   POST /bots/:botId/reload    - 重载 Bot（删除旧实例 → 重新创建）
+ *   POST /bots/:botId/update    - 更新 Bot 记录（名称与描述）
  */
 describe('Runtime BotManager (e2e)', () => {
   let app: INestApplication<App>
@@ -401,6 +402,78 @@ describe('Runtime BotManager (e2e)', () => {
 
       expect(res.body.statusCode).toBe(Code.Ok)
       expect(botFactoryService.createBot).toHaveBeenCalledWith(TEST_BOT_ID)
+    })
+  })
+
+  // ========== POST /bots/:botId/update ==========
+  describe('POST /bots/:botId/update', () => {
+    it('应当成功更新 Bot 的名称和描述', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({
+          name: '更新后的机器人名称',
+          description: '更新后的机器人描述',
+        })
+        .expect(201)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(mockTypeOrmService.botRecord.findOne).toHaveBeenCalledWith({
+        where: { recordId: TEST_BOT_ID },
+      })
+      expect(mockTypeOrmService.botRecord.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: '更新后的机器人名称',
+          description: '更新后的机器人描述',
+        }),
+      )
+    })
+
+    it('Bot 记录不存在时应返回 NotFound 错误', async () => {
+      mockTypeOrmService.botRecord.findOne.mockResolvedValueOnce(null)
+
+      const res = await request(app.getHttpServer())
+        .post('/bots/non-existent-bot/update')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({
+          name: '任意名称',
+          description: '任意描述',
+        })
+        .expect(400)
+
+      expect(res.body.statusCode).toBe(Code.NotFound)
+    })
+
+    it('缺少 name 字段时应返回参数校验错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({
+          description: '只有描述没有名称',
+        })
+
+      expect(res.body.statusCode).toBe(Code.BadRequest)
+    })
+
+    it('缺少 description 字段时应返回参数校验错误', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/update`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({
+          name: '只有名称没有描述',
+        })
+
+      expect(res.body.statusCode).toBe(Code.BadRequest)
+    })
+
+    it('未认证时应返回 401', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/update`)
+        .send({
+          name: '新名称',
+          description: '新描述',
+        })
+      expect(res.status).toBe(401)
     })
   })
 
