@@ -13,7 +13,7 @@ COPY apps/shared  apps/shared/
 RUN pnpm install --frozen-lockfile
 # copy files
 # configs
-COPY apps/server/tsconfig.json apps/server/tsconfig.build.json apps/server/nest-cli.json  apps/server/
+COPY apps/server/tsconfig.json apps/server/tsconfig.build.json apps/server/nest-cli.json apps/server/vitest.config.ts  apps/server/
 COPY apps/server/.env apps/server/.env.production apps/server/
 COPY apps/server/eslint.config.mjs apps/server/
 # code
