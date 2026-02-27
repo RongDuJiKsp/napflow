@@ -16,9 +16,9 @@ export type VarCtx = Var & {
 export const getCommVarCtxName = (varctx: VarCtx): VarCtxName => {
   return `${varctx.source.id}.${varctx.name}`
 }
-export const getNodeEnvMap = (
+export const getNodeEnvMap = <GEdge extends WorkflowEdge>(
   nodes: ComponentNode[],
-  edges: WorkflowEdge[],
+  edges: GEdge[],
 ) => {
   // 检查每个节点的变量名称是否重复 重复的节点没法判断
   for (const node of nodes) {

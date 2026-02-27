@@ -8,9 +8,9 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 
-export const checkAfterConnMakeCycle = (
-  nodes: WorkflowNode[],
-  edges: WorkflowEdge[],
+export const checkAfterConnMakeCycle = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+  nodes: GNode[],
+  edges: GEdge[],
   newConn: { sourceId: string; targetId: string },
 ): boolean => {
   // 构建邻接表（包含现有边 + 新连接）
