@@ -15,7 +15,7 @@ import {
   createBaseMockTypeOrmService,
   createE2EApp,
   createTokenFactory,
-} from './test-utils'
+} from './utils/nest-init'
 
 /**
  * Workflow 端点 E2E 测试

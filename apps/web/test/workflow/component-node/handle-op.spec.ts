@@ -1,18 +1,7 @@
 import { checkAfterConnMakeCycle } from '@components/workflow/editor/hooks/use-workflow-view-operations'
-import type {
-  WorkflowEdge,
-  WorkflowNode,
-} from '@/app/components/workflow/editor/types'
+import type { TestEdge, TestNode, WorkflowEdge, WorkflowNode } from '../../utils'
 import { describe, expect, test } from 'vitest'
 describe('测试checkAfterConnMakeCycle能否正确检测添加新连接后是否形成环', () => {
-  type TestNode = {
-    id: string;
-  }
-  type TestEdge = {
-    source: string;
-    target: string;
-  }
-
   test('无环：简单两节点连接', () => {
     const nodes: TestNode[] = [{ id: '1' }, { id: '2' }]
     const edges: TestEdge[] = []

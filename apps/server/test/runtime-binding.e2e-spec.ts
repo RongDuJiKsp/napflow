@@ -16,7 +16,7 @@ import {
   createBaseMockTypeOrmService,
   createE2EApp,
   createTokenFactory,
-} from './test-utils'
+} from './utils/nest-init'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'

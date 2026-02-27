@@ -13,7 +13,7 @@ import type { App } from 'supertest/types'
 import { UserRole } from '@shared/common/account/base'
 import { Code } from '@shared/data-transfer/_base'
 import bcryptjs from 'bcryptjs'
-import { createE2EApp, createTokenFactory } from './test-utils'
+import { createE2EApp, createTokenFactory } from './utils/nest-init'
 
 /**
  * Account 端点 E2E 测试

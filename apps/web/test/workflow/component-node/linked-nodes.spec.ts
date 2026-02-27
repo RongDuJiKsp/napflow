@@ -1,21 +1,10 @@
 import {
-  getLinkedNodes,
   getLinkedLastNode,
+  getLinkedNodes,
 } from '@/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator'
-import type { WorkflowEdge, WorkflowNode } from '@/app/components/workflow/editor/types'
+import type { TestEdge, WorkflowEdge, WorkflowNode } from '../../utils'
+import { createPositionNode as node } from '../../utils'
 import { describe, expect, test } from 'vitest'
-
-type TestNode = {
-  id: string
-  position: { x: number; y: number }
-}
-
-type TestEdge = {
-  source: string
-  target: string
-}
-
-const node = (id: string): TestNode => ({ id, position: { x: 0, y: 0 } })
 
 describe('getLinkedNodes', () => {
   test('单个节点、无边，返回仅包含 headNode 的数组', () => {

@@ -4,9 +4,9 @@ import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
 import type { INestApplication } from '@nestjs/common'
 import type { App } from 'supertest/types'
-import { AppModule } from './../src/app.module'
-import { TypeOrmService } from './../src/apps/db/typeorm.service'
-import { JwtService } from './../src/apps/account/jwt.service'
+import { AppModule } from '../../src/app.module'
+import { TypeOrmService } from '../../src/apps/db/typeorm.service'
+import { JwtService } from '../../src/apps/account/jwt.service'
 import { UserRole } from '@shared/common/account/base'
 
 export type E2EContext = {
