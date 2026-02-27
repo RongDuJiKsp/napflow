@@ -10,6 +10,45 @@ import type { ComponentNode } from '../../../types'
 import { useCommNodeOperation } from '../../../../hooks/use-comm-node-operation'
 import { NodeClassic } from '@shared/common/workflow/core'
 
+/**
+ * 从 headNode 开始，沿边依次遍历，返回整条链路上的所有节点（包含 headNode 自身）
+ * 仅在 nodes 范围内查找后继节点
+ */
+const getLinkedNodes = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+  nodes: GNode[],
+  edges: GEdge[],
+  headNode: GNode,
+): GNode[] => {
+  const nodeMap = new Map(nodes.map(n => [n.id, n]))
+  const result: GNode[] = [headNode]
+  let currentId = headNode.id
+
+  while (true) {
+    const nextEdge = edges.find(
+      e => e.source === currentId && nodeMap.has(e.target),
+    )
+    if (!nextEdge) break
+    const nextNode = nodeMap.get(nextEdge.target)!
+    result.push(nextNode)
+    currentId = nextEdge.target
+  }
+
+  return result
+}
+
+/**
+ * 从 headNode 开始，沿边走到链路末尾，返回最后一个节点
+ * 仅在 nodes 范围内查找后继节点
+ */
+const getLinkedLastNode = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+  nodes: GNode[],
+  edges: GEdge[],
+  headNode: GNode,
+): GNode => {
+  const linkedNodes = getLinkedNodes(nodes, edges, headNode)
+  return linkedNodes[linkedNodes.length - 1]
+}
+
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { deleteNodeAndChildren } = useCommNodeOperation()
@@ -53,21 +92,8 @@ export const useLoopNodeOperator = () => {
       )
       if (!loopStartNode) return
 
-      // 构建子节点 ID 集合
-      const childIdSet = new Set(childNodes.map(n => n.id))
-
       // 从 loop-start 开始沿边走到链路末尾
-      let currentId = loopStartNode.id
-      while (true) {
-        const nextEdge = allEdges.find(
-          e => e.source === currentId && childIdSet.has(e.target),
-        )
-        if (!nextEdge) break
-        currentId = nextEdge.target
-      }
-
-      // currentId 就是链路末尾节点
-      const lastNode = childNodes.find(n => n.id === currentId)
+      const lastNode = getLinkedLastNode(childNodes, allEdges, loopStartNode)
       if (!lastNode) return
 
       // 检查连接合法性：末尾节点的 nextNodes 是否包含新节点类型
