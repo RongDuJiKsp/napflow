@@ -369,15 +369,15 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/:botId/reload - 核心：删除旧实例后重新创建 ==========
+  // ========== POST /bots/:botId/reload - 核心：正在运行的 bot reload 无作用，已停止的 bot 才会重新创建 ==========
   describe('POST /bots/:botId/reload', () => {
-    it('应当删除旧实例并重新通过 factory 创建新实例', async () => {
-      const oldInstance = createMockBotInstance()
-      const newInstance = createMockBotInstance()
+    it('bot 正在运行时 reload 不应有任何作用', async () => {
+      const runningInstance = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
 
       const createBotSpy = vi.spyOn(botFactoryService, 'createBot')
-      createBotSpy.mockResolvedValueOnce(oldInstance)
-      createBotSpy.mockResolvedValueOnce(newInstance)
+      createBotSpy.mockResolvedValueOnce(runningInstance)
 
       // 先启动 bot
       await request(app.getHttpServer())
@@ -387,7 +387,36 @@ describe('Runtime BotManager (e2e)', () => {
 
       expect(createBotSpy).toHaveBeenCalledTimes(1)
 
-      // 执行 reload
+      // 执行 reload - 因为 bot 正在运行，reload 不应有任何作用
+      const res = await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      // factory 不应被再次调用（仍然只有启动时的1次）
+      expect(createBotSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('bot 已停止时 reload 应当删除旧实例并重新创建', async () => {
+      const stoppedInstance = createMockBotInstance({
+        runningState: BotRunningState.stopped,
+      })
+      const newInstance = createMockBotInstance()
+
+      const createBotSpy = vi.spyOn(botFactoryService, 'createBot')
+      createBotSpy.mockResolvedValueOnce(stoppedInstance)
+      createBotSpy.mockResolvedValueOnce(newInstance)
+
+      // 先启动 bot（模拟一个已停止的实例）
+      await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/run`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      expect(createBotSpy).toHaveBeenCalledTimes(1)
+
+      // 执行 reload - 因为 bot 已停止，应当删除旧实例并重新创建
       const res = await request(app.getHttpServer())
         .post(`/bots/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
@@ -549,8 +578,36 @@ describe('Runtime BotManager (e2e)', () => {
       expect(mockInstance.signal).not.toHaveBeenCalledWith(BotSignal.SIGSTOP)
     })
 
-    it('run → reload 应当删除旧实例并创建新实例', async () => {
-      const oldInstance = createMockBotInstance()
+    it('run → reload 对正在运行的 bot 不应有任何作用', async () => {
+      const runningInstance = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
+
+      const createBotSpy = vi.spyOn(botFactoryService, 'createBot')
+      createBotSpy.mockResolvedValueOnce(runningInstance)
+
+      // 启动
+      await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/run`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      // reload - bot 正在运行，reload 无任何作用
+      await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      // factory 只被调用一次（启动时），reload 不会再次调用
+      expect(createBotSpy).toHaveBeenCalledTimes(1)
+      // 旧实例也不会收到任何 signal
+      expect(runningInstance.signal).not.toHaveBeenCalled()
+    })
+
+    it('run → stop → reload 应当删除旧实例并创建新实例', async () => {
+      const oldInstance = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
       const newInstance = createMockBotInstance()
 
       const createBotSpy = vi.spyOn(botFactoryService, 'createBot')
@@ -563,16 +620,27 @@ describe('Runtime BotManager (e2e)', () => {
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
-      // reload - 旧实例被移除，新实例被创建
+      // 停止 bot
+      await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/stop`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      expect(oldInstance.signal).toHaveBeenCalledWith(BotSignal.SIGSTOP);
+
+      // 模拟 stop 后状态变为 stopped
+      (oldInstance.runningState as any) = vi.fn().mockReturnValue({
+        runningState: BotRunningState.stopped,
+      })
+
+      // reload - bot 已停止，应当删除旧实例并创建新实例
       await request(app.getHttpServer())
         .post(`/bots/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
-      // factory 被调用两次
+      // factory 被调用两次（启动 + reload）
       expect(createBotSpy).toHaveBeenCalledTimes(2)
-      // reload 不会对旧实例发送 signal（直接 delete，区别于 stop）
-      expect(oldInstance.signal).not.toHaveBeenCalled()
     })
 
     it('多个 bot 实例的指令应当互不影响', async () => {

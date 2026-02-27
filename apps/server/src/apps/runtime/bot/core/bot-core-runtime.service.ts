@@ -69,6 +69,9 @@ export class BotCoreRuntimeService {
   }
 
   async reloadBot(botId: string) {
+    if(BotRunningStateUtils.isRunning(this.botInstanceMap.get(botId)?.runningState().runningState ?? BotRunningState.stopped))
+      return
+
     this.botInstanceMap.delete(botId)
     await this.runBot(botId)
   }
