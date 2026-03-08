@@ -1,12 +1,10 @@
 packages:
   - apps/*
 
-ignoredBuiltDependencies:
-  - '@swc/core'
-
 onlyBuiltDependencies:
   - '@nestjs/core'
   - bcrypt
   - core-js
   - sharp
   - unrs-resolver
+  - '@swc/core'
