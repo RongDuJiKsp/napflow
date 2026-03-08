@@ -8,6 +8,14 @@ import { Item, Menu, useContextMenu } from 'react-contexify'
 import { useBotInfoOperator, useBotOperate } from './hooks/use-bot-operate'
 import { dateFmt } from '@/utils/date'
 import { useRouter } from 'next/navigation'
+import {
+  RiCloseCircleLine,
+  RiDeleteBin2Line,
+  RiEditLine,
+  RiPlayCircleLine,
+  RiRefreshLine,
+  RiStopCircleLine,
+} from '@remixicon/react'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
@@ -116,28 +124,48 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
       </div>
       <Menu id={menuId}>
         <Item onClick={startBot} disabled={!isBotCanStart}>
-          启动Bot
+          <div className="flex gap-2 items-center">
+            <RiPlayCircleLine className="h-5 w-5" />
+            <div>启动Bot</div>
+          </div>
         </Item>
         <Item onClick={stopBot} disabled={!isBotCanStop}>
-          停止Bot
+          <div className="flex gap-2 items-center">
+            <RiStopCircleLine className="h-5 w-5" />
+            <div>停止Bot</div>
+          </div>
         </Item>
         <Item
           onClick={killBot}
           disabled={!isBotCanKill}
           className="contexify-item-danger"
         >
-          杀死Bot
+          <div className="flex gap-2 items-center">
+            <RiCloseCircleLine className="h-5 w-5" />
+            <div>杀死Bot</div>
+          </div>
         </Item>
         <Item
           onClick={reloadBot}
           disabled={!isBotCanForcePull}
           className="contexify-item-danger"
         >
-          重拉Bot
+          <div className="flex gap-2 items-center">
+            <RiRefreshLine className="h-5 w-5" />
+            <div>重拉Bot</div>
+          </div>
         </Item>
-        <Item onClick={editBot}>编辑Bot</Item>
+        <Item onClick={editBot}>
+          <div className="flex gap-2 items-center">
+            <RiEditLine className="h-5 w-5" />
+            <div>编辑Bot</div>
+          </div>
+        </Item>
         <Item onClick={deleteBot} className="contexify-item-danger">
-          删除Bot
+          <div className="flex gap-2 items-center">
+            <RiDeleteBin2Line className="h-5 w-5" />
+            <div>删除Bot</div>
+          </div>
         </Item>
       </Menu>
     </>
