@@ -46,12 +46,12 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
     <>
       <div
         onContextMenu={handleContextMenu}
-        className="group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
+        onClick={handleClick}
+        className="cursor-pointer group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
       >
         {/* 头部信息 */}
         <div
           className="flex items-center justify-between mb-3 cursor-pointer"
-          onClick={handleClick}
         >
           <div className="flex items-center">
             <div
@@ -86,11 +86,11 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
         </div>
 
         {/* 详细信息 */}
-        <div className="flex flex-col justify-start h-[4lh]">
+        <div className="flex flex-col justify-start h-[6lh]">
           <p
             className={twMerge(
-              'text-purple-700 text-sm mb-2 min-h-[2lh]',
-              'line-clamp-2',
+              'text-purple-700 text-sm mb-2 h-[4lh]',
+              'line-clamp-4 text-ellipsis overflow-hidden',
             )}
           >
             {item.botDesc}
