@@ -47,5 +47,6 @@ export class NcTriggerNode extends TriggerNode {
       nkv['trigger.uid'] = Number(thread.kv.uid)
     nkv['trigger.messageid'] = thread.kv.messageid
     nkv['trigger.msgreadable'] = thread.kv.hmsg
+    nkv['trigger.senderuid'] = Number(thread.kv.senderuid)
   }
 }

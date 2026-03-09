@@ -30,6 +30,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
     { type: VarTypes.Number, name: 'trigger.uid' },
     { type: VarTypes.Number, name: 'trigger.gid' },
     { type: VarTypes.Number, name: 'trigger.messageid' },
+    { type: VarTypes.Number, name: 'trigger.senderuid' },
     { type: VarTypes.String, name: 'trigger.msgreadable' },
   ],
 }

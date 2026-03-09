@@ -26,6 +26,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
           gid: String(msg.group_id),
           hmsg: await sdk.parseChain(msg.message),
           messageid: String(msg.message_id),
+          senderuid: String(msg.sender.user_id),
         })
       }),
       sdk.subscribe('message.private', async (msg) => {
@@ -33,6 +34,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
           uid: String(msg.user_id),
           hmsg: await sdk.parseChain(msg.message),
           messageid: String(msg.message_id),
+          senderuid: String(msg.sender.user_id),
         })
       }),
     ]
