@@ -31,6 +31,7 @@ import {
  *   GET  /workflow/apps                     - 获取应用列表
  *   GET  /workflow/:appId                   - 获取单个应用
  *   POST /workflow/:appId/update            - 更新工作流应用信息
+ *   POST /workflow/:appId/delete            - 删除工作流应用
  *   GET  /workflow/:appId/draft             - 加载草稿
  *   POST /workflow/:appId/sync              - 同步草稿
  *   POST /workflow/:appId/publish           - 发布草稿
@@ -434,6 +435,43 @@ describe('WorkflowController (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/workflow/${TEST_APP_ID}/update`)
         .send({ appName: '新名称', appDescription: '新描述' })
+
+      expect(res.status).toBe(401)
+    })
+  })
+
+  // =====================================================================
+  // POST /workflow/:appId/delete — 删除工作流应用
+  // =====================================================================
+  describe('POST /workflow/:appId/delete', () => {
+    it('已认证用户应能成功删除工作流应用', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/delete`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(mockTypeOrmService.workflowApp.delete).toHaveBeenCalledWith({
+        appId: TEST_APP_ID,
+      })
+    })
+
+    it('应用不存在时应返回 NotFound', async () => {
+      mockTypeOrmService.workflowApp.delete.mockResolvedValueOnce({
+        affected: 0,
+      })
+
+      const res = await request(app.getHttpServer())
+        .post('/workflow/00000000-0000-0000-0000-000000000000/delete')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+
+      expect(res.body.statusCode).toBe(Code.NotFound)
+      expect(res.body.message).toContain('App Not Found')
+    })
+
+    it('未认证用户应返回 401', async () => {
+      const res = await request(app.getHttpServer()).post(
+        `/workflow/${TEST_APP_ID}/delete`,
+      )
 
       expect(res.status).toBe(401)
     })
