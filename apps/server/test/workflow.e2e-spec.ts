@@ -89,13 +89,11 @@ describe('WorkflowController (e2e)', () => {
     envs: [],
   }
 
-  let workflowAppDatas: Array<typeof mockDraftData | typeof mockPublishedData> = []
+  let workflowAppDatas: Array<typeof mockDraftData | typeof mockPublishedData>
+    = []
 
   function resetWorkflowAppDatas() {
-    workflowAppDatas = [
-      { ...mockDraftData },
-      { ...mockPublishedData },
-    ]
+    workflowAppDatas = [{ ...mockDraftData }, { ...mockPublishedData }]
   }
 
   // ---------- Mock TypeOrmService ----------
@@ -146,16 +144,22 @@ describe('WorkflowController (e2e)', () => {
       findOne: vi.fn().mockImplementation(({ where }: any) => {
         if (where.version?._type === 'not') {
           const published = workflowAppDatas
-            .filter(item => item.ofAppId === where.ofAppId && item.version !== 'draft')
-            .sort((a, b) =>
-              new Date(b.publishAt ?? 0).getTime() - new Date(a.publishAt ?? 0).getTime(),
+            .filter(
+              item =>
+                item.ofAppId === where.ofAppId && item.version !== 'draft',
+            )
+            .sort(
+              (a, b) =>
+                new Date(b.publishAt ?? 0).getTime()
+                - new Date(a.publishAt ?? 0).getTime(),
             )
           return Promise.resolve(published[0] ?? null)
         }
 
         return Promise.resolve(
           workflowAppDatas.find(
-            item => item.ofAppId === where.ofAppId && item.version === where.version,
+            item =>
+              item.ofAppId === where.ofAppId && item.version === where.version,
           ) ?? null,
         )
       }),
@@ -172,21 +176,18 @@ describe('WorkflowController (e2e)', () => {
         }
 
         const index = workflowAppDatas.findIndex(
-          item => item.ofAppId === saved.ofAppId && item.version === saved.version,
+          item =>
+            item.ofAppId === saved.ofAppId && item.version === saved.version,
         )
-        if (index >= 0)
-          workflowAppDatas[index] = saved
-        else
-          workflowAppDatas.push(saved)
+        if (index >= 0) workflowAppDatas[index] = saved
+        else workflowAppDatas.push(saved)
 
         return Promise.resolve(saved)
       }),
       count: vi.fn().mockImplementation(({ where }: any) => {
-        const count = workflowAppDatas.filter(item => {
-          if (where.ofAppId && item.ofAppId !== where.ofAppId)
-            return false
-          if (where.version && item.version !== where.version)
-            return false
+        const count = workflowAppDatas.filter((item) => {
+          if (where.ofAppId && item.ofAppId !== where.ofAppId) return false
+          if (where.version && item.version !== where.version) return false
           return true
         }).length
         return Promise.resolve(count)
@@ -251,27 +252,35 @@ describe('WorkflowController (e2e)', () => {
       workflowApps.push(created)
       return Promise.resolve(created)
     })
-    mockTypeOrmService.workflowApp.delete.mockImplementation(({ appId }: any) => {
-      const previousLength = workflowApps.length
-      workflowApps = workflowApps.filter(app => app.appId !== appId)
-      return Promise.resolve({
-        affected: previousLength === workflowApps.length ? 0 : 1,
-      })
-    })
+    mockTypeOrmService.workflowApp.delete.mockImplementation(
+      ({ appId }: any) => {
+        const previousLength = workflowApps.length
+        workflowApps = workflowApps.filter(app => app.appId !== appId)
+        return Promise.resolve({
+          affected: previousLength === workflowApps.length ? 0 : 1,
+        })
+      },
+    )
     mockTypeOrmService.workflowAppData.findOne.mockImplementation(
       ({ where }: any) => {
         if (where.version?._type === 'not') {
           const published = workflowAppDatas
-            .filter(item => item.ofAppId === where.ofAppId && item.version !== 'draft')
-            .sort((a, b) =>
-              new Date(b.publishAt ?? 0).getTime() - new Date(a.publishAt ?? 0).getTime(),
+            .filter(
+              item =>
+                item.ofAppId === where.ofAppId && item.version !== 'draft',
+            )
+            .sort(
+              (a, b) =>
+                new Date(b.publishAt ?? 0).getTime()
+                - new Date(a.publishAt ?? 0).getTime(),
             )
           return Promise.resolve(published[0] ?? null)
         }
 
         return Promise.resolve(
           workflowAppDatas.find(
-            item => item.ofAppId === where.ofAppId && item.version === where.version,
+            item =>
+              item.ofAppId === where.ofAppId && item.version === where.version,
           ) ?? null,
         )
       },
@@ -291,25 +300,24 @@ describe('WorkflowController (e2e)', () => {
       }
 
       const index = workflowAppDatas.findIndex(
-        item => item.ofAppId === saved.ofAppId && item.version === saved.version,
+        item =>
+          item.ofAppId === saved.ofAppId && item.version === saved.version,
       )
-      if (index >= 0)
-        workflowAppDatas[index] = saved
-      else
-        workflowAppDatas.push(saved)
+      if (index >= 0) workflowAppDatas[index] = saved
+      else workflowAppDatas.push(saved)
 
       return Promise.resolve(saved)
     })
-    mockTypeOrmService.workflowAppData.count.mockImplementation(({ where }: any) => {
-      const count = workflowAppDatas.filter(item => {
-        if (where.ofAppId && item.ofAppId !== where.ofAppId)
-          return false
-        if (where.version && item.version !== where.version)
-          return false
-        return true
-      }).length
-      return Promise.resolve(count)
-    })
+    mockTypeOrmService.workflowAppData.count.mockImplementation(
+      ({ where }: any) => {
+        const count = workflowAppDatas.filter((item) => {
+          if (where.ofAppId && item.ofAppId !== where.ofAppId) return false
+          if (where.version && item.version !== where.version) return false
+          return true
+        }).length
+        return Promise.resolve(count)
+      },
+    )
   })
 
   // =====================================================================
@@ -605,7 +613,9 @@ describe('WorkflowController (e2e)', () => {
         .set('Authorization', `Bearer ${getUserToken()}`)
       expect(listAfterCreate.body.statusCode).toBe(Code.Ok)
       expect(
-        listAfterCreate.body.data.some((app: any) => app.appId === createdAppId),
+        listAfterCreate.body.data.some(
+          (app: any) => app.appId === createdAppId,
+        ),
       ).toBe(true)
 
       const getAfterCreate = await request(app.getHttpServer())
@@ -624,7 +634,9 @@ describe('WorkflowController (e2e)', () => {
         .set('Authorization', `Bearer ${getUserToken()}`)
       expect(listAfterDelete.body.statusCode).toBe(Code.Ok)
       expect(
-        listAfterDelete.body.data.some((app: any) => app.appId === createdAppId),
+        listAfterDelete.body.data.some(
+          (app: any) => app.appId === createdAppId,
+        ),
       ).toBe(false)
 
       const getAfterDelete = await request(app.getHttpServer())
@@ -980,7 +992,9 @@ describe('WorkflowController (e2e)', () => {
         .set('Authorization', `Bearer ${getUserToken()}`)
       expect(versionsRes.body.statusCode).toBe(Code.Ok)
       expect(
-        versionsRes.body.data.some((item: any) => item.version === publishVersion),
+        versionsRes.body.data.some(
+          (item: any) => item.version === publishVersion,
+        ),
       ).toBe(true)
 
       // 3. 版本元信息应可读
@@ -1002,7 +1016,10 @@ describe('WorkflowController (e2e)', () => {
         .get(`/workflow/${TEST_APP_ID}/last-version`)
         .set('Authorization', `Bearer ${getUserToken()}`)
       expect(lastVersionRes.body.statusCode).toBe(Code.Ok)
-      expect(lastVersionRes.body.data).toHaveProperty('version', publishVersion)
+      expect(lastVersionRes.body.data).toHaveProperty(
+        'version',
+        publishVersion,
+      )
     })
   })
 })

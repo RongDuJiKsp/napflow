@@ -125,7 +125,9 @@ describe('AccountController (e2e)', () => {
           updatedAt: new Date(),
           disabledAt: data.disabledAt ?? null,
         }
-        const index = mutableUsers.findIndex(u => u.email === savedUser.email)
+        const index = mutableUsers.findIndex(
+          u => u.email === savedUser.email,
+        )
         if (index >= 0) {
           mutableUsers[index] = {
             ...mutableUsers[index],
@@ -139,16 +141,14 @@ describe('AccountController (e2e)', () => {
       }),
       update: vi.fn().mockImplementation((where: any, data: any) => {
         const target = mutableUsers.find(u => u.email === where.email)
-        if (!target)
-          return Promise.resolve({ affected: 0 })
+        if (!target) return Promise.resolve({ affected: 0 })
 
         Object.assign(target, data, { updatedAt: new Date() })
         return Promise.resolve({ affected: 1 })
       }),
       softDelete: vi.fn().mockImplementation((where: any) => {
         const target = mutableUsers.find(u => u.email === where.email)
-        if (!target)
-          return Promise.resolve({ affected: 0 })
+        if (!target) return Promise.resolve({ affected: 0 })
 
         target.disabledAt = new Date()
         target.updatedAt = new Date()

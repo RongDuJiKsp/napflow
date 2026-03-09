@@ -7,32 +7,32 @@ import type {
  * 基础测试节点类型，仅包含 id
  */
 export type TestNode = {
-  id: string
+  id: string;
 }
 
 /**
  * 带环境变量数据的测试节点类型，用于 node-env 相关测试
  */
 export type TestNodeWithData<T = any> = {
-  id: string
-  parentId?: string
-  data: T
+  id: string;
+  parentId?: string;
+  data: T;
 }
 
 /**
  * 带位置信息的测试节点类型，用于 linked-nodes 相关测试
  */
 export type TestNodeWithPosition = {
-  id: string
-  position: { x: number; y: number }
+  id: string;
+  position: { x: number; y: number };
 }
 
 /**
  * 通用测试边类型
  */
 export type TestEdge = {
-  source: string
-  target: string
+  source: string;
+  target: string;
 }
 
 /**

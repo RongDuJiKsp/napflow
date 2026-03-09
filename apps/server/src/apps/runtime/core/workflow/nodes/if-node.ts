@@ -86,12 +86,7 @@ export class IfNode extends CommNode<IfDataCtx> {
       const conditionValue = compileTemplate(branch.condition.value, thread)
       // 判断条件是否成立
       // 如果成立 则执行对应的边
-      if (
-        OperatorChecker[branch.condition.operator](
-          value,
-          conditionValue,
-        )
-      ) {
+      if (OperatorChecker[branch.condition.operator](value, conditionValue)) {
         needToDeleteQueues.delete(branchEdge.target)
         break
       }

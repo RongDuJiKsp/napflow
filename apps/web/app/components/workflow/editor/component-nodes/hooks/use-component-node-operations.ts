@@ -29,8 +29,7 @@ export const useComponentNodeOperations = () => {
       )
         return
       // 父节点不一致的节点不允许连接
-      if(source.parentId !== target.parentId)
-        return
+      if (source.parentId !== target.parentId) return
 
       reactflow.addEdges(
         createWorkflowEdge({

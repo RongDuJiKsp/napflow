@@ -29,7 +29,7 @@ export class LoopStartNode extends CommNode<LoopStartDataCtx> {
     _nkv: Record<string, any>,
   ): void | Promise<void> {
     // 判断一下有没有父节点
-    if(!this.parentId) {
+    if (!this.parentId) {
       this.logger.error('loop start node must have parent')
       _nextTask.abort()
       return

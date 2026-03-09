@@ -369,9 +369,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
-      { source: 'trigger', target: 'loop' },
-    ]
+    const edges: TestEdge[] = [{ source: 'trigger', target: 'loop' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -416,9 +414,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       {
         id: 'loop',
         data: {
-          vars: [
-            { name: 'index', type: VarTypes.Number },
-          ],
+          vars: [{ name: 'index', type: VarTypes.Number }],
           title: '循环节点',
         },
       },
@@ -544,9 +540,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
-      { source: '1', target: '2' },
-    ]
+    const edges: TestEdge[] = [{ source: '1', target: '2' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],

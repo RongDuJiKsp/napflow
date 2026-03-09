@@ -42,26 +42,26 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 ### 数据库表概览
 
-| 表名                  | 对应实体                  | 描述                               |
-| --------------------- | ------------------------- | ---------------------------------- |
-| `users`               | `UserEntity`              | 用户账户表，存储系统用户基本信息   |
-| `user_groups`         | `UserGroupEntity`         | 用户角色分组表，记录用户的角色归属 |
-| `apps`                | `WorkflowAppEntity`       | 工作流应用表，存储工作流应用元信息 |
-| `app_datas`           | `WorkflowAppDataEntity`   | 工作流应用数据表，存储工作流的版本化数据（节点、边、环境变量等） |
-| `bot_record_entity`   | `BotRecordEntity`         | 机器人记录表，存储已配置的机器人 endpoint 信息 |
+| 表名                | 对应实体                | 描述                                                             |
+| ------------------- | ----------------------- | ---------------------------------------------------------------- |
+| `users`             | `UserEntity`            | 用户账户表，存储系统用户基本信息                                 |
+| `user_groups`       | `UserGroupEntity`       | 用户角色分组表，记录用户的角色归属                               |
+| `apps`              | `WorkflowAppEntity`     | 工作流应用表，存储工作流应用元信息                               |
+| `app_datas`         | `WorkflowAppDataEntity` | 工作流应用数据表，存储工作流的版本化数据（节点、边、环境变量等） |
+| `bot_record_entity` | `BotRecordEntity`       | 机器人记录表，存储已配置的机器人 endpoint 信息                   |
 
 ### 表结构详情
 
 #### `users` — 用户账户表
 
-| 列名         | 类型         | 约束                       | 描述             |
-| ------------ | ------------ | -------------------------- | ---------------- |
-| `email`      | `varchar`    | **PK**，NOT NULL           | 用户邮箱（主键） |
-| `nickname`   | `varchar`    | NOT NULL                   | 用户昵称         |
-| `password`   | `varchar`    | NOT NULL                   | 用户密码（加密存储） |
-| `createdAt`  | `datetime`   | NOT NULL，自动生成         | 创建时间         |
-| `updatedAt`  | `datetime`   | NOT NULL，自动更新         | 更新时间         |
-| `disabledAt` | `datetime`   | 可为 NULL（软删除标记）    | 禁用/删除时间    |
+| 列名         | 类型       | 约束                    | 描述                 |
+| ------------ | ---------- | ----------------------- | -------------------- |
+| `email`      | `varchar`  | **PK**，NOT NULL        | 用户邮箱（主键）     |
+| `nickname`   | `varchar`  | NOT NULL                | 用户昵称             |
+| `password`   | `varchar`  | NOT NULL                | 用户密码（加密存储） |
+| `createdAt`  | `datetime` | NOT NULL，自动生成      | 创建时间             |
+| `updatedAt`  | `datetime` | NOT NULL，自动更新      | 更新时间             |
+| `disabledAt` | `datetime` | 可为 NULL（软删除标记） | 禁用/删除时间        |
 
 **关系**：一对多关联 `user_groups`（`cascade: true`）
 
@@ -69,11 +69,11 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 #### `user_groups` — 用户角色分组表
 
-| 列名        | 类型                         | 约束                       | 描述                                    |
-| ----------- | ---------------------------- | -------------------------- | --------------------------------------- |
-| `ofUser`    | `varchar`                    | **PK**（联合主键），NOT NULL | 所属用户邮箱                            |
-| `groupType` | `enum('Admin', 'User')`      | **PK**（联合主键），NOT NULL | 角色类型（`Admin` = 管理员，`User` = 普通用户） |
-| `createdAt` | `datetime`                   | NOT NULL，自动生成         | 创建时间                                |
+| 列名        | 类型                    | 约束                         | 描述                                            |
+| ----------- | ----------------------- | ---------------------------- | ----------------------------------------------- |
+| `ofUser`    | `varchar`               | **PK**（联合主键），NOT NULL | 所属用户邮箱                                    |
+| `groupType` | `enum('Admin', 'User')` | **PK**（联合主键），NOT NULL | 角色类型（`Admin` = 管理员，`User` = 普通用户） |
+| `createdAt` | `datetime`              | NOT NULL，自动生成           | 创建时间                                        |
 
 **外键约束**：`ofUser` → `users.email`（多对一关联 `users` 表）
 
@@ -81,13 +81,13 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 #### `apps` — 工作流应用表
 
-| 列名             | 类型       | 约束                       | 描述                   |
-| ---------------- | ---------- | -------------------------- | ---------------------- |
-| `appId`          | `varchar`  | **PK**，自动生成 UUID      | 应用唯一标识           |
-| `appName`        | `varchar`  | NOT NULL                   | 应用名称               |
-| `appDescription` | `varchar`  | NOT NULL                   | 应用描述               |
-| `createdAt`      | `datetime` | NOT NULL，自动生成         | 创建时间               |
-| `createdBy`      | `varchar`  | NOT NULL                   | 创建者                 |
+| 列名             | 类型       | 约束                  | 描述         |
+| ---------------- | ---------- | --------------------- | ------------ |
+| `appId`          | `varchar`  | **PK**，自动生成 UUID | 应用唯一标识 |
+| `appName`        | `varchar`  | NOT NULL              | 应用名称     |
+| `appDescription` | `varchar`  | NOT NULL              | 应用描述     |
+| `createdAt`      | `datetime` | NOT NULL，自动生成    | 创建时间     |
+| `createdBy`      | `varchar`  | NOT NULL              | 创建者       |
 
 **关系**：一对多关联 `app_datas`
 
@@ -95,17 +95,17 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 #### `app_datas` — 工作流应用数据表
 
-| 列名                 | 类型       | 约束                          | 描述                       |
-| -------------------- | ---------- | ----------------------------- | -------------------------- |
-| `version`            | `varchar`  | **PK**（联合主键），NOT NULL  | 版本号                     |
-| `ofAppId`            | `varchar`  | **PK**（联合主键），NOT NULL  | 所属应用 ID                |
-| `publishDescription` | `varchar`  | 可为 NULL，默认 NULL          | 发布描述                   |
-| `publishAt`          | `datetime` | 可为 NULL，默认 NULL          | 发布时间                   |
-| `publishBy`          | `varchar`  | 可为 NULL，默认 NULL          | 发布者                     |
-| `lastUpdateAt`       | `datetime` | NOT NULL，自动更新            | 最后更新时间               |
-| `nodes`              | `json`     | 可为 NULL，默认 NULL          | 工作流节点数据（JSON 数组）|
-| `edges`              | `json`     | 可为 NULL，默认 NULL          | 工作流边数据（JSON 数组）  |
-| `envs`               | `json`     | 可为 NULL，默认 NULL          | 环境变量数据（JSON 数组）  |
+| 列名                 | 类型       | 约束                         | 描述                        |
+| -------------------- | ---------- | ---------------------------- | --------------------------- |
+| `version`            | `varchar`  | **PK**（联合主键），NOT NULL | 版本号                      |
+| `ofAppId`            | `varchar`  | **PK**（联合主键），NOT NULL | 所属应用 ID                 |
+| `publishDescription` | `varchar`  | 可为 NULL，默认 NULL         | 发布描述                    |
+| `publishAt`          | `datetime` | 可为 NULL，默认 NULL         | 发布时间                    |
+| `publishBy`          | `varchar`  | 可为 NULL，默认 NULL         | 发布者                      |
+| `lastUpdateAt`       | `datetime` | NOT NULL，自动更新           | 最后更新时间                |
+| `nodes`              | `json`     | 可为 NULL，默认 NULL         | 工作流节点数据（JSON 数组） |
+| `edges`              | `json`     | 可为 NULL，默认 NULL         | 工作流边数据（JSON 数组）   |
+| `envs`               | `json`     | 可为 NULL，默认 NULL         | 环境变量数据（JSON 数组）   |
 
 **外键约束**：`ofAppId` → `apps.appId`（多对一关联 `apps` 表，**级联删除**：删除应用时自动删除其所有版本数据）
 
@@ -113,16 +113,16 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 #### `bot_record_entity` — 机器人记录表
 
-| 列名                  | 类型                    | 约束                       | 描述                                  |
-| --------------------- | ----------------------- | -------------------------- | ------------------------------------- |
-| `recordId`            | `varchar`               | **PK**，自动生成 UUID      | 记录唯一标识                          |
-| `name`                | `varchar`               | NOT NULL                   | 机器人名称                            |
-| `description`         | `varchar`               | NOT NULL                   | 机器人描述                            |
-| `commonAdapterConfig` | `json`                  | NOT NULL                   | 通用适配器配置（含自动启动、绑定工作流等） |
-| `adapterTag`          | `enum('0')`             | NOT NULL                   | 适配器标签（目前仅 `napcatWs = 0`）  |
-| `adapterConfig`       | `json`                  | NOT NULL                   | 适配器专用配置                        |
-| `createdAt`           | `datetime`              | NOT NULL，自动生成         | 创建时间                              |
-| `createdBy`           | `varchar`               | NOT NULL                   | 创建者                                |
+| 列名                  | 类型        | 约束                  | 描述                                       |
+| --------------------- | ----------- | --------------------- | ------------------------------------------ |
+| `recordId`            | `varchar`   | **PK**，自动生成 UUID | 记录唯一标识                               |
+| `name`                | `varchar`   | NOT NULL              | 机器人名称                                 |
+| `description`         | `varchar`   | NOT NULL              | 机器人描述                                 |
+| `commonAdapterConfig` | `json`      | NOT NULL              | 通用适配器配置（含自动启动、绑定工作流等） |
+| `adapterTag`          | `enum('0')` | NOT NULL              | 适配器标签（目前仅 `napcatWs = 0`）        |
+| `adapterConfig`       | `json`      | NOT NULL              | 适配器专用配置                             |
+| `createdAt`           | `datetime`  | NOT NULL，自动生成    | 创建时间                                   |
+| `createdBy`           | `varchar`   | NOT NULL              | 创建者                                     |
 
 **关系**：无外键约束
 

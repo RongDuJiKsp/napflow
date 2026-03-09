@@ -58,9 +58,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
         className="cursor-pointer group relative bg-linear-to-r from-purple-100 to-pink-100 rounded-xl border border-pink-200 p-4 shadow-sm transition-all duration-200 hover:shadow-lg hover:border-purple-300  flex justify-between flex-col h-52"
       >
         {/* 头部信息 */}
-        <div
-          className="flex items-center justify-between mb-3 cursor-pointer"
-        >
+        <div className="flex items-center justify-between mb-3 cursor-pointer">
           <div className="flex items-center">
             <div
               className={twMerge(

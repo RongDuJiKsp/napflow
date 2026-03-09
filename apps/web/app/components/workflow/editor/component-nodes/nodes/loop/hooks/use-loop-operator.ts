@@ -14,7 +14,10 @@ import { NodeClassic } from '@shared/common/workflow/core'
  * 从 headNode 开始，沿边依次遍历，返回整条链路上的所有节点（包含 headNode 自身）
  * 仅在 nodes 范围内查找后继节点
  */
-export const getLinkedNodes = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+export const getLinkedNodes = <
+  GNode extends WorkflowNode,
+  GEdge extends WorkflowEdge,
+>(
   nodes: GNode[],
   edges: GEdge[],
   headNode: GNode,
@@ -40,7 +43,10 @@ export const getLinkedNodes = <GNode extends WorkflowNode, GEdge extends Workflo
  * 从 headNode 开始，沿边走到链路末尾，返回最后一个节点
  * 仅在 nodes 范围内查找后继节点
  */
-export const getLinkedLastNode = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+export const getLinkedLastNode = <
+  GNode extends WorkflowNode,
+  GEdge extends WorkflowEdge,
+>(
   nodes: GNode[],
   edges: GEdge[],
   headNode: GNode,
@@ -97,14 +103,11 @@ export const useLoopNodeOperator = () => {
       if (!lastNode) return
 
       // 检查连接合法性：末尾节点的 nextNodes 是否包含新节点类型
-      const lastCreator
-        = ComponentNodeCreatorMap[lastNode.data.type]
+      const lastCreator = ComponentNodeCreatorMap[lastNode.data.type]
       const newCreator = ComponentNodeCreatorMap[nodeType]
       if (
         !lastCreator.nextNodes?.includes(nodeType)
-        || !newCreator.prevNodes?.includes(
-          lastNode.data.type,
-        )
+        || !newCreator.prevNodes?.includes(lastNode.data.type)
       ) {
         console.warn(`无法在 ${lastNode.data.type} 后面添加 ${nodeType}`)
         return
