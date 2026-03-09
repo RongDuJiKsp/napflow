@@ -72,7 +72,7 @@ export const usePublishDiff = () => {
     [data],
   )
   const latestData = useMemo(
-    () => data?.findLast(item => item.version !== 'draft'),
+    () => data?.find(item => item.version !== 'draft'),
     [data],
   )
 
