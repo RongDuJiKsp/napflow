@@ -7,6 +7,7 @@ import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingItem } from './hooks/use-binding-item'
 import BindingConfigButton from './BindingConfigButton'
+import { dateFmt } from '@/utils/date'
 
 type BindingItem = NonNullable<
   ReturnType<typeof useBindingBotQuery>['data']
@@ -120,16 +121,7 @@ const BindingListItem = ({ item }: { item: BindingItem }) => {
               <div className="text-gray-500">发布时间</div>
               <div className="text-gray-700">
                 {item.appPublish.publishAt
-                  ? new Date(item.appPublish.publishAt).toLocaleDateString(
-                    'zh-CN',
-                    {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    },
-                  )
+                  ? dateFmt(item.appPublish.publishAt)
                   : '-'}
               </div>
             </div>
