@@ -86,7 +86,6 @@ export class IfNode extends CommNode<IfDataCtx> {
       const conditionValue = compileTemplate(branch.condition.value, thread)
       // 判断条件是否成立
       // 如果成立 则执行对应的边
-      console.log(`IfNode ${this.id} condition check: variable=${branch.condition.variable} operator=${branch.condition.operator} value=${branch.condition.value} actualValue=${value}`)
       if (
         OperatorChecker[branch.condition.operator](
           value,
