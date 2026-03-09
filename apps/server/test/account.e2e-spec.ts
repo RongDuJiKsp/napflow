@@ -92,28 +92,66 @@ describe('AccountController (e2e)', () => {
   }
 
   const allMockUsers = [mockUserAdmin, mockUserNormal, mockUserDisabled]
+  let mutableUsers: typeof allMockUsers = []
+
+  function resetMutableUsers() {
+    mutableUsers = allMockUsers.map(user => ({
+      ...user,
+      userGroup: user.userGroup.map(group => ({ ...group })),
+    }))
+  }
 
   // ---------- Mock TypeOrmService ----------
   const mockTypeOrmService = {
     user: {
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        const user = allMockUsers.find(u => u.email === where.email)
+        const user = mutableUsers.find(u => u.email === where.email)
         return Promise.resolve(user ?? null)
       }),
       find: vi.fn().mockImplementation((_opts?: any) => {
-        return Promise.resolve(allMockUsers)
+        return Promise.resolve(mutableUsers)
       }),
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({
+        const savedUser = {
           ...data,
+          userGroup: data.userGroup ?? [
+            {
+              ofUser: data.email,
+              groupType: UserRole.User,
+              createdAt: new Date(),
+            },
+          ],
           createdAt: new Date(),
           updatedAt: new Date(),
-        })
+          disabledAt: data.disabledAt ?? null,
+        }
+        const index = mutableUsers.findIndex(u => u.email === savedUser.email)
+        if (index >= 0) {
+          mutableUsers[index] = {
+            ...mutableUsers[index],
+            ...savedUser,
+          }
+        }
+        else {
+          mutableUsers.push(savedUser as any)
+        }
+        return Promise.resolve(savedUser)
       }),
-      update: vi.fn().mockImplementation((_where: any, _data: any) => {
+      update: vi.fn().mockImplementation((where: any, data: any) => {
+        const target = mutableUsers.find(u => u.email === where.email)
+        if (!target)
+          return Promise.resolve({ affected: 0 })
+
+        Object.assign(target, data, { updatedAt: new Date() })
         return Promise.resolve({ affected: 1 })
       }),
-      softDelete: vi.fn().mockImplementation((_where: any) => {
+      softDelete: vi.fn().mockImplementation((where: any) => {
+        const target = mutableUsers.find(u => u.email === where.email)
+        if (!target)
+          return Promise.resolve({ affected: 0 })
+
+        target.disabledAt = new Date()
+        target.updatedAt = new Date()
         return Promise.resolve({ affected: 1 })
       }),
     },
@@ -158,6 +196,7 @@ describe('AccountController (e2e)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    resetMutableUsers()
   })
 
   // =====================================================================
@@ -667,6 +706,51 @@ describe('AccountController (e2e)', () => {
         .send({ email: 'user@test.com' })
 
       expect(res.status).toBe(401)
+    })
+  })
+
+  // =====================================================================
+  // 联动场景 - 创建 / 查询 / 禁用 / 登录校验
+  // =====================================================================
+  describe('Account 联动请求场景', () => {
+    it('create -> account-info -> disable -> login 应体现禁用后的登录限制', async () => {
+      const email = 'linked-user@test.com'
+      const password = 'linkedPassword123'
+
+      // 1. 创建账户
+      mockTypeOrmService.user.findOne.mockResolvedValueOnce(null)
+      const createRes = await request(app.getHttpServer())
+        .post('/account/create')
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+        .send({
+          email,
+          nickname: 'LinkedUser',
+          password,
+        })
+      expect(createRes.body.statusCode).toBe(Code.Ok)
+
+      // 2. 创建后可查询到账户信息
+      const infoRes = await request(app.getHttpServer())
+        .get('/account/account-info')
+        .query({ email })
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+      expect(infoRes.body.statusCode).toBe(Code.Ok)
+      expect(infoRes.body.data).toHaveProperty('email', email)
+
+      // 3. 禁用账户
+      const disableRes = await request(app.getHttpServer())
+        .post('/account/disable')
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+        .send({ email })
+      expect(disableRes.body.statusCode).toBe(Code.Ok)
+
+      // 4. 禁用后登录应被拒绝
+      const loginRes = await request(app.getHttpServer())
+        .post('/account/login')
+        .send({ email, password })
+
+      expect(loginRes.body.statusCode).toBe(Code.Forbidden)
+      expect(loginRes.body.message).toContain('用户已被禁用')
     })
   })
 })

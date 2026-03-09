@@ -55,6 +55,12 @@ describe('WorkflowController (e2e)', () => {
     createdBy: 'user@test.com',
   }
 
+  let workflowApps: Array<typeof mockWorkflowApp> = []
+
+  function resetWorkflowApps() {
+    workflowApps = [{ ...mockWorkflowApp }]
+  }
+
   const mockDraftData = {
     version: 'draft',
     ofAppId: TEST_APP_ID,
@@ -83,6 +89,15 @@ describe('WorkflowController (e2e)', () => {
     envs: [],
   }
 
+  let workflowAppDatas: Array<typeof mockDraftData | typeof mockPublishedData> = []
+
+  function resetWorkflowAppDatas() {
+    workflowAppDatas = [
+      { ...mockDraftData },
+      { ...mockPublishedData },
+    ]
+  }
+
   // ---------- Mock TypeOrmService ----------
   const mockTypeOrmService = {
     // account 相关（jwt 认证需要）
@@ -90,47 +105,92 @@ describe('WorkflowController (e2e)', () => {
     // workflow 相关
     workflowApp: {
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({ ...mockWorkflowApp, ...data })
+        const index = workflowApps.findIndex(a => a.appId === data.appId)
+        if (index >= 0) {
+          workflowApps[index] = {
+            ...workflowApps[index],
+            ...data,
+          }
+          return Promise.resolve(workflowApps[index])
+        }
+
+        const created = {
+          ...mockWorkflowApp,
+          ...data,
+        }
+        workflowApps.push(created)
+        return Promise.resolve(created)
       }),
-      delete: vi.fn().mockResolvedValue({ affected: 1 }),
+      delete: vi.fn().mockImplementation(({ appId }: any) => {
+        const previousLength = workflowApps.length
+        workflowApps = workflowApps.filter(app => app.appId !== appId)
+        return Promise.resolve({
+          affected: previousLength === workflowApps.length ? 0 : 1,
+        })
+      }),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.appId === TEST_APP_ID)
-          return Promise.resolve(mockWorkflowApp)
-        return Promise.resolve(null)
+        return Promise.resolve(
+          workflowApps.find(a => a.appId === where.appId) ?? null,
+        )
       }),
       find: vi.fn().mockImplementation(({ where }: any) => {
         if (where?.createdBy) {
           return Promise.resolve(
-            [mockWorkflowApp].filter(a => a.createdBy === where.createdBy),
+            workflowApps.filter(a => a.createdBy === where.createdBy),
           )
         }
-        return Promise.resolve([mockWorkflowApp])
+        return Promise.resolve([...workflowApps])
       }),
     },
     workflowAppData: {
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.ofAppId === TEST_APP_ID && where.version === 'draft')
-          return Promise.resolve(mockDraftData)
-        if (where.ofAppId === TEST_APP_ID && where.version === 'v1.0.0')
-          return Promise.resolve(mockPublishedData)
-        // 用于 getLastestPublish — version: Not('draft')
-        if (where.ofAppId === TEST_APP_ID && where.version?._type === 'not')
-          return Promise.resolve(mockPublishedData)
-        return Promise.resolve(null)
+        if (where.version?._type === 'not') {
+          const published = workflowAppDatas
+            .filter(item => item.ofAppId === where.ofAppId && item.version !== 'draft')
+            .sort((a, b) =>
+              new Date(b.publishAt ?? 0).getTime() - new Date(a.publishAt ?? 0).getTime(),
+            )
+          return Promise.resolve(published[0] ?? null)
+        }
+
+        return Promise.resolve(
+          workflowAppDatas.find(
+            item => item.ofAppId === where.ofAppId && item.version === where.version,
+          ) ?? null,
+        )
       }),
       find: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.ofAppId === TEST_APP_ID)
-          return Promise.resolve([mockDraftData, mockPublishedData])
-        return Promise.resolve([])
+        return Promise.resolve(
+          workflowAppDatas.filter(item => item.ofAppId === where.ofAppId),
+        )
       }),
       save: vi.fn().mockImplementation((data: any) => {
-        return Promise.resolve({
+        const saved = {
           ...mockDraftData,
           ...data,
           lastUpdateAt: new Date(),
-        })
+        }
+
+        const index = workflowAppDatas.findIndex(
+          item => item.ofAppId === saved.ofAppId && item.version === saved.version,
+        )
+        if (index >= 0)
+          workflowAppDatas[index] = saved
+        else
+          workflowAppDatas.push(saved)
+
+        return Promise.resolve(saved)
       }),
-      count: vi.fn().mockResolvedValue(0),
+      count: vi.fn().mockImplementation(({ where }: any) => {
+        const count = workflowAppDatas.filter(item => {
+          if (where.ofAppId && item.ofAppId !== where.ofAppId)
+            return false
+          if (where.version && item.version !== where.version)
+            return false
+          return true
+        }).length
+        return Promise.resolve(count)
+      }),
     },
     // bot 相关（可能在 AppModule 中被引用）
     botRecord: {
@@ -155,52 +215,101 @@ describe('WorkflowController (e2e)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    resetWorkflowApps()
+    resetWorkflowAppDatas()
 
     // 重置默认 mock 行为
     mockTypeOrmService.workflowApp.findOne.mockImplementation(
       ({ where }: any) => {
-        if (where.appId === TEST_APP_ID)
-          return Promise.resolve(mockWorkflowApp)
-        return Promise.resolve(null)
+        return Promise.resolve(
+          workflowApps.find(a => a.appId === where.appId) ?? null,
+        )
       },
     )
     mockTypeOrmService.workflowApp.find.mockImplementation(({ where }: any) => {
       if (where?.createdBy) {
         return Promise.resolve(
-          [mockWorkflowApp].filter(a => a.createdBy === where.createdBy),
+          workflowApps.filter(a => a.createdBy === where.createdBy),
         )
       }
-      return Promise.resolve([mockWorkflowApp])
+      return Promise.resolve([...workflowApps])
     })
     mockTypeOrmService.workflowApp.save.mockImplementation((data: any) => {
-      return Promise.resolve({ ...mockWorkflowApp, ...data })
+      const index = workflowApps.findIndex(a => a.appId === data.appId)
+      if (index >= 0) {
+        workflowApps[index] = {
+          ...workflowApps[index],
+          ...data,
+        }
+        return Promise.resolve(workflowApps[index])
+      }
+
+      const created = {
+        ...mockWorkflowApp,
+        ...data,
+      }
+      workflowApps.push(created)
+      return Promise.resolve(created)
+    })
+    mockTypeOrmService.workflowApp.delete.mockImplementation(({ appId }: any) => {
+      const previousLength = workflowApps.length
+      workflowApps = workflowApps.filter(app => app.appId !== appId)
+      return Promise.resolve({
+        affected: previousLength === workflowApps.length ? 0 : 1,
+      })
     })
     mockTypeOrmService.workflowAppData.findOne.mockImplementation(
       ({ where }: any) => {
-        if (where.ofAppId === TEST_APP_ID && where.version === 'draft')
-          return Promise.resolve(mockDraftData)
-        if (where.ofAppId === TEST_APP_ID && where.version === 'v1.0.0')
-          return Promise.resolve(mockPublishedData)
-        if (where.ofAppId === TEST_APP_ID && where.version?._type === 'not')
-          return Promise.resolve(mockPublishedData)
-        return Promise.resolve(null)
+        if (where.version?._type === 'not') {
+          const published = workflowAppDatas
+            .filter(item => item.ofAppId === where.ofAppId && item.version !== 'draft')
+            .sort((a, b) =>
+              new Date(b.publishAt ?? 0).getTime() - new Date(a.publishAt ?? 0).getTime(),
+            )
+          return Promise.resolve(published[0] ?? null)
+        }
+
+        return Promise.resolve(
+          workflowAppDatas.find(
+            item => item.ofAppId === where.ofAppId && item.version === where.version,
+          ) ?? null,
+        )
       },
     )
     mockTypeOrmService.workflowAppData.find.mockImplementation(
       ({ where }: any) => {
-        if (where.ofAppId === TEST_APP_ID)
-          return Promise.resolve([mockDraftData, mockPublishedData])
-        return Promise.resolve([])
+        return Promise.resolve(
+          workflowAppDatas.filter(item => item.ofAppId === where.ofAppId),
+        )
       },
     )
     mockTypeOrmService.workflowAppData.save.mockImplementation((data: any) => {
-      return Promise.resolve({
+      const saved = {
         ...mockDraftData,
         ...data,
         lastUpdateAt: new Date(),
-      })
+      }
+
+      const index = workflowAppDatas.findIndex(
+        item => item.ofAppId === saved.ofAppId && item.version === saved.version,
+      )
+      if (index >= 0)
+        workflowAppDatas[index] = saved
+      else
+        workflowAppDatas.push(saved)
+
+      return Promise.resolve(saved)
     })
-    mockTypeOrmService.workflowAppData.count.mockResolvedValue(0)
+    mockTypeOrmService.workflowAppData.count.mockImplementation(({ where }: any) => {
+      const count = workflowAppDatas.filter(item => {
+        if (where.ofAppId && item.ofAppId !== where.ofAppId)
+          return false
+        if (where.version && item.version !== where.version)
+          return false
+        return true
+      }).length
+      return Promise.resolve(count)
+    })
   })
 
   // =====================================================================
@@ -474,6 +583,55 @@ describe('WorkflowController (e2e)', () => {
       )
 
       expect(res.status).toBe(401)
+    })
+  })
+
+  // =====================================================================
+  // 联动场景 - 创建 / 查询 / 删除 / 再查询
+  // =====================================================================
+  describe('Workflow 联动请求场景', () => {
+    it('create -> get -> delete -> get 应体现完整生命周期', async () => {
+      const createRes = await request(app.getHttpServer())
+        .post('/workflow/create')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ appName: '联动工作流', appDescription: '用于联动验证' })
+
+      expect(createRes.body.statusCode).toBe(Code.Ok)
+      const createdAppId = createRes.body.data.appId as string
+      expect(createdAppId).toBeTruthy()
+
+      const listAfterCreate = await request(app.getHttpServer())
+        .get('/workflow/apps')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(listAfterCreate.body.statusCode).toBe(Code.Ok)
+      expect(
+        listAfterCreate.body.data.some((app: any) => app.appId === createdAppId),
+      ).toBe(true)
+
+      const getAfterCreate = await request(app.getHttpServer())
+        .get(`/workflow/${createdAppId}`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(getAfterCreate.body.statusCode).toBe(Code.Ok)
+      expect(getAfterCreate.body.data).toHaveProperty('appId', createdAppId)
+
+      const deleteRes = await request(app.getHttpServer())
+        .post(`/workflow/${createdAppId}/delete`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(deleteRes.body.statusCode).toBe(Code.Ok)
+
+      const listAfterDelete = await request(app.getHttpServer())
+        .get('/workflow/apps')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(listAfterDelete.body.statusCode).toBe(Code.Ok)
+      expect(
+        listAfterDelete.body.data.some((app: any) => app.appId === createdAppId),
+      ).toBe(false)
+
+      const getAfterDelete = await request(app.getHttpServer())
+        .get(`/workflow/${createdAppId}`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(getAfterDelete.body.statusCode).toBe(Code.NotFound)
+      expect(getAfterDelete.body.message).toContain('App Not Found')
     })
   })
 
@@ -798,6 +956,53 @@ describe('WorkflowController (e2e)', () => {
       )
 
       expect(res.status).toBe(401)
+    })
+  })
+
+  // =====================================================================
+  // 联动场景 - 发布目录链路
+  // =====================================================================
+  describe('Workflow 发布目录联动场景', () => {
+    it('publish -> versions -> version-meta -> version -> last-version 应联动一致', async () => {
+      const publishVersion = 'v2.1.0'
+      const publishDescription = '联动发布验证'
+
+      // 1. 发布新版本
+      const publishRes = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/publish`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ version: publishVersion, description: publishDescription })
+      expect(publishRes.body.statusCode).toBe(Code.Ok)
+
+      // 2. 发布目录（版本列表）应包含新版本
+      const versionsRes = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/versions`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(versionsRes.body.statusCode).toBe(Code.Ok)
+      expect(
+        versionsRes.body.data.some((item: any) => item.version === publishVersion),
+      ).toBe(true)
+
+      // 3. 版本元信息应可读
+      const metaRes = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/version-meta`)
+        .query({ version: publishVersion })
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(metaRes.body.statusCode).toBe(Code.Ok)
+
+      // 4. 指定版本详情应可读且版本号一致
+      const versionRes = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/version/${publishVersion}`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(versionRes.body.statusCode).toBe(Code.Ok)
+      expect(versionRes.body.data).toHaveProperty('version', publishVersion)
+
+      // 5. 最新版本应切换到刚发布的版本
+      const lastVersionRes = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/last-version`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+      expect(lastVersionRes.body.statusCode).toBe(Code.Ok)
+      expect(lastVersionRes.body.data).toHaveProperty('version', publishVersion)
     })
   })
 })
