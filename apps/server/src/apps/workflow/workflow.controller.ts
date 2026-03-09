@@ -171,6 +171,15 @@ export class WorkflowController {
     return Resp.ok(app)
   }
 
+  @Post(':appId/delete')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async deleteApp(@Param('appId') appId: string) {
+    const result = await this.workflowService.deleteApp(appId)
+    if (!result.affected) return Resp.error('App Not Found', Code.NotFound)
+    return Resp.ok()
+  }
+
   @Get(':appId')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckGetAppResp)
