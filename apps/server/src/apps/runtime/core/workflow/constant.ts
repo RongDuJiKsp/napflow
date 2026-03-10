@@ -5,6 +5,11 @@ import { ReplyDataCtxSchema, ReplyNode } from './nodes/reply-node'
 import { IfDataCtxSchema, IfNode } from './nodes/if-node'
 import { LoopDataCtxSchema, LoopNode } from './nodes/loop-node'
 import { LoopStartDataCtxSchema, LoopStartNode } from './nodes/loop-start-node'
+import { IterateDataCtxSchema, IterateNode } from './nodes/iterate-node'
+import {
+  IterateStartDataCtxSchema,
+  IterateStartNode,
+} from './nodes/iterate-start-node'
 import type { Class } from 'type-fest'
 import type z from 'zod'
 
@@ -14,6 +19,8 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.If]: IfNode,
   [ComponentNodesEnum.Loop]: LoopNode,
   [ComponentNodesEnum.LoopStart]: LoopStartNode,
+  [ComponentNodesEnum.Iterate]: IterateNode,
+  [ComponentNodesEnum.IterateStart]: IterateStartNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -25,4 +32,6 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.If]: IfDataCtxSchema,
   [ComponentNodesEnum.Loop]: LoopDataCtxSchema,
   [ComponentNodesEnum.LoopStart]: LoopStartDataCtxSchema,
+  [ComponentNodesEnum.Iterate]: IterateDataCtxSchema,
+  [ComponentNodesEnum.IterateStart]: IterateStartDataCtxSchema,
 }

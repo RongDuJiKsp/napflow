@@ -7,11 +7,14 @@ export enum ComponentNodesEnum {
   If = 'if',
   Loop = 'loop',
   LoopStart = 'loop-start',
+  Iterate = 'iterate',
+  IterateStart = 'iterate-start',
 }
 
-// loop-start 节点只能作为 loop 节点的子节点被自动创建，不出现在菜单中
+// x-start 节点只能作为 x 节点的子节点被自动创建，不出现在菜单中
 export const hiddenNodeTypes = new Set<ComponentNodesEnum>([
   ComponentNodesEnum.LoopStart,
+  ComponentNodesEnum.IterateStart,
 ])
 // node env
 export enum VarTypes {

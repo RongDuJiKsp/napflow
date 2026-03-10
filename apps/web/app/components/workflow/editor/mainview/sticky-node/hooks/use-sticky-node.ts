@@ -11,6 +11,7 @@ import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { NodeClassic } from '@shared/common/workflow/core'
 import type { ComponentNode } from '../../../component-nodes/types'
 import { useLoopNodeOperator } from '../../../component-nodes/nodes/loop/hooks/use-loop-operator'
+import { useIterateNodeOperator } from '../../../component-nodes/nodes/iterate/hooks/use-iterate-operator'
 
 export const useStickyNode = () => {
   const editorStore = useEditorStore()
@@ -49,6 +50,7 @@ export const useStickyNode = () => {
 export const useStickyEventsRegister = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { handleAddLoopNode } = useLoopNodeOperator()
+  const { handleAddIterateNode } = useIterateNodeOperator()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
   useEventListener('click', (e) => {
@@ -68,6 +70,12 @@ export const useStickyEventsRegister = () => {
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Loop
     )
       handleAddLoopNode(placedNode)
+          // 如果放置的是 Iterate  operations
+    else if (
+      placedNode.type === NodeClassic.Component
+      && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Iterate
+    )
+      handleAddIterateNode(placedNode)
     else reactflow.addNodes(placedNode)
 
     removeStickyElement()

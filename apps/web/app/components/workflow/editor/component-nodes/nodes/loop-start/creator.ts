@@ -22,6 +22,7 @@ export const LoopStartNodeCreator: ComponentCreator<LoopStartData> = {
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.Loop,
+    ComponentNodesEnum.Iterate,
   ],
   env: [
     { type: VarTypes.Number, name: 'loop.index' },

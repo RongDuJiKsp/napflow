@@ -7,11 +7,13 @@ import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
+import { useIterateNodeOperator } from '../nodes/iterate/hooks/use-iterate-operator'
 
 export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { editNode } = useStoreImmerCurd()
   const { handleDeleteLoopNode } = useLoopNodeOperator()
+  const { handleDeleteIterateNode } = useIterateNodeOperator()
   const handleConnect = useCallback(
     (
       source: ComponentNode,
@@ -49,13 +51,17 @@ export const useComponentNodeOperations = () => {
         handleDeleteLoopNode(node.id)
         return
       }
+      if (node.data.type === ComponentNodesEnum.Iterate) {
+        handleDeleteIterateNode(node.id)
+        return
+      }
       const nodeId = node.id
       reactflow.setEdges(edges =>
         edges.filter(e => e.source !== nodeId && e.target !== nodeId),
       )
       reactflow.setNodes(nodes => nodes.filter(n => n.id !== nodeId))
     },
-    [reactflow, handleDeleteLoopNode],
+    [reactflow, handleDeleteIterateNode, handleDeleteLoopNode],
   )
   const handleFoldUnfoldNode = useCallback(
     (node: ComponentNode) => {

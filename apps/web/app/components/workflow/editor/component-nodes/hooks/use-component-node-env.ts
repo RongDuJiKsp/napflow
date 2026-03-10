@@ -2,10 +2,15 @@ import { uniqBy } from 'lodash-es'
 import type { WorkflowEdge } from '../../types'
 import { Queue } from 'datastructures-js'
 import { createContext, useContext, useMemo } from 'react'
-import type { Var } from '@shared/common/workflow/component-node'
+import {
+  ComponentNodesEnum,
+  type Var,
+  VarTypes,
+} from '@shared/common/workflow/component-node'
 import type { ComponentNode } from '../types'
 import { useWorkflowExtStore } from '../../hooks/use-workflow-ext-state'
 import { useStore } from 'zustand'
+import type { IterateData } from '@shared/common/workflow/node-data/iterate'
 export type VarCtxName = string
 export type VarCtx = Var & {
   source: {
@@ -13,9 +18,43 @@ export type VarCtx = Var & {
     title: string;
   };
 }
-export const getCommVarCtxName = (varctx: VarCtx): VarCtxName => {
-  return `${varctx.source.id}.${varctx.name}`
+export const getVarCtxName = (sourceId: string, name: string): VarCtxName => {
+  return `${sourceId}.${name}`
 }
+export const getCommVarCtxName = (varctx: VarCtx): VarCtxName => {
+  return getVarCtxName(varctx.source.id, varctx.name)
+}
+
+/**
+ * @description 获取Array类型的Item类型
+ */
+export const getArrayElementVarType = (
+  type: Var['type'],
+): VarTypes.String | VarTypes.Number => {
+  if (type === VarTypes.NumberArray) return VarTypes.Number
+  else if (type === VarTypes.StringArray) return VarTypes.String
+  throw new Error(`Unsupported array type: ${type}`)
+}
+
+
+/**
+ * @description 处理 迭代器起点 这一特殊节点 这个节点的env需要从parent的env里根据 表单项sourceVarName计算得到
+ */
+export const getIterateStartOutputVars = (node: ComponentNode, nodesMap: Record<string, ComponentNode>, envCache: Record<string, VarCtx[]>): Var[] => {
+  if (!node.parentId) return node.data.vars
+  const parentNode = nodesMap[node.parentId]
+  if (!parentNode || parentNode.data.type !== ComponentNodesEnum.Iterate)
+    return node.data.vars
+  const parentIterateNode = parentNode as ComponentNode<IterateData>
+  const parentIterateVars = envCache[parentNode.id]! // 这里有向图一定是父节点指向子节点的 之前拓扑排序时保证了父节点在子节点之前处理完 所以父节点的envCache一定已经计算好了
+  const sourceVar = parentIterateVars.find(v => getCommVarCtxName(v) === parentIterateNode.data.sourceVarName)
+  if (!sourceVar) return []
+  return [{
+    name: 'iter.item',
+    type: getArrayElementVarType(sourceVar.type),
+  }]
+}
+
 export const getNodeEnvMap = <GEdge extends WorkflowEdge>(
   nodes: ComponentNode[],
   edges: GEdge[],
@@ -72,6 +111,13 @@ export const getNodeEnvMap = <GEdge extends WorkflowEdge>(
     ),
     envCache: {} as Record<string, VarCtx[]>,
   }
+
+  const getNodeOutputVars = (node: ComponentNode): Var[] => {
+    if (node.data.type === ComponentNodesEnum.IterateStart)
+      return getIterateStartOutputVars(node, nodesMap, states.envCache)
+    return node.data.vars
+  }
+
   const queue = new Queue<ComponentNode>(
     nodes.filter(node => !states.indgreeMap[node.id]),
   )
@@ -88,7 +134,7 @@ export const getNodeEnvMap = <GEdge extends WorkflowEdge>(
       ...(prevNodeIdMap[node.id]
         ?.map(id => nodesMap[id])
         .map((prevNode): VarCtx[] =>
-          prevNode.data.vars.map(v => ({
+          getNodeOutputVars(prevNode).map(v => ({
             ...v,
             source: { id: prevNode.id, title: prevNode.data.title },
           })),

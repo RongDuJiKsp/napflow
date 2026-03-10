@@ -24,11 +24,14 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,
+    ComponentNodesEnum.IterateStart,
     ComponentNodesEnum.Loop,
+    ComponentNodesEnum.Iterate,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.Loop,
+    ComponentNodesEnum.Iterate,
   ],
 }

@@ -14,6 +14,7 @@ import {
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { useNorReturnFn } from '@/app/hooks/utils/use-callbacker'
 import { useLoopNodeOperator } from '../../nodes/loop/hooks/use-loop-operator'
+import { useIterateNodeOperator } from '../../nodes/iterate/hooks/use-iterate-operator'
 
 type ContextMenuProps = ItemParams<{ id: string }>
 
@@ -23,8 +24,10 @@ const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
     const k = key as ComponentNodesEnum
     return ![
       ComponentNodesEnum.LoopStart,
+      ComponentNodesEnum.IterateStart,
       ComponentNodesEnum.Trigger,
       ComponentNodesEnum.Loop,
+      ComponentNodesEnum.Iterate,
     ].includes(k)
   })
   .map(([key, value]) => ({
@@ -33,20 +36,26 @@ const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   }))
 
 const ComponentNodeContext = () => {
-  const { handleFoldUnfoldItem, handleDeleteItem, isLoopNode }
+  const { handleFoldUnfoldItem, handleDeleteItem, isContainerNode }
     = useComponentNodeContextMenu()
 
   const { handleAddNodeToLoop } = useLoopNodeOperator()
+  const { handleAddNodeToIterate } = useIterateNodeOperator()
 
-  const hiddenLoopNode = useNorReturnFn(isLoopNode)
+  const hiddenLoopNode = useNorReturnFn(isContainerNode)
 
   const getContextHandler = useCallback(
     (contextEnum: ComponentNodesEnum) => {
       return ({ props }: ContextMenuProps) => {
-        if (props?.id) handleAddNodeToLoop(props.id, contextEnum)
+        if (!props?.id) return
+        const containerType = props.data?.data.type as ComponentNodesEnum
+        if (containerType === ComponentNodesEnum.Loop)
+          handleAddNodeToLoop(props.id, contextEnum)
+        else if (containerType === ComponentNodesEnum.Iterate)
+          handleAddNodeToIterate(props.id, contextEnum)
       }
     },
-    [handleAddNodeToLoop],
+    [handleAddNodeToIterate, handleAddNodeToLoop],
   )
   return (
     <Menu id={COMPONENT_NODE_PANEL_ID}>

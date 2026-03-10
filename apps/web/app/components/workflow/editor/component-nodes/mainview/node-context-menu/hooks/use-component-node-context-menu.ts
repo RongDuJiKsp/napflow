@@ -40,11 +40,13 @@ export const useComponentNodeContextMenu = () => {
     [handleFoldUnfoldNode, getNode, submitSyncDraft],
   )
 
-  /** 判断右键的节点是否是 loop 节点 */
-  const isLoopNode = useCallback(
+  /** 判断右键的节点是否是容器节点 */
+  const isContainerNode = useCallback(
     ({ props }: Omit<HandlerProps, 'event'>): boolean => {
       const node = getNode(props?.id)
-      return node?.data.type === ComponentNodesEnum.Loop
+      return [ComponentNodesEnum.Loop, ComponentNodesEnum.Iterate].includes(
+        node?.data.type as ComponentNodesEnum,
+      )
     },
     [getNode],
   )
@@ -52,6 +54,6 @@ export const useComponentNodeContextMenu = () => {
   return {
     handleDeleteItem,
     handleFoldUnfoldItem,
-    isLoopNode,
+    isContainerNode,
   }
 }
