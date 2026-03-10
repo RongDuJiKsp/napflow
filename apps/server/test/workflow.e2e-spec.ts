@@ -742,6 +742,87 @@ describe('WorkflowController (e2e)', () => {
 
       expect(res.status).toBe(401)
     })
+
+    it('draft -> sync1 -> draft(1) -> sync2 -> draft(2且不等于1)', async () => {
+      // 1. draft: 应该是可读取的 draft，且无错误
+      const draft0 = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/draft`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(200)
+
+      expect(draft0.body.statusCode).toBe(Code.Ok)
+      expect(draft0.body.data).toHaveProperty('ofAppId', TEST_APP_ID)
+
+      const payload1 = {
+        ofAppId: TEST_APP_ID,
+        nodes: [
+          {
+            id: 'node-sync-1',
+            type: 'component',
+            position: { x: 100, y: 100 },
+            data: { label: 'sync-1' },
+          },
+        ],
+        edges: [{ id: 'edge-sync-1', source: 'node-1', target: 'node-sync-1' }],
+        envs: [{ name: 'region', type: 'string' }],
+      }
+
+      const payload2 = {
+        ofAppId: TEST_APP_ID,
+        nodes: [
+          {
+            id: 'node-sync-2',
+            type: 'component',
+            position: { x: 220, y: 220 },
+            data: { label: 'sync-2' },
+          },
+        ],
+        edges: [],
+        envs: [{ name: 'retry', type: 'number' }],
+      }
+
+      // 2. sync 1
+      const sync1 = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/sync`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send(payload1)
+        .expect(201)
+      expect(sync1.body.statusCode).toBe(Code.Ok)
+
+      // 3. draft 应该等于 payload1
+      const draft1 = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/draft`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(200)
+
+      expect(draft1.body.statusCode).toBe(Code.Ok)
+      expect(draft1.body.data.nodes).toEqual(payload1.nodes)
+      expect(draft1.body.data.edges).toEqual(payload1.edges)
+      expect(draft1.body.data.envs).toEqual(payload1.envs)
+
+      // 4. sync 2
+      const sync2 = await request(app.getHttpServer())
+        .post(`/workflow/${TEST_APP_ID}/sync`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send(payload2)
+        .expect(201)
+      expect(sync2.body.statusCode).toBe(Code.Ok)
+
+      // 5. draft 应该等于 payload2，且不等于 payload1
+      const draft2 = await request(app.getHttpServer())
+        .get(`/workflow/${TEST_APP_ID}/draft`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(200)
+
+      expect(draft2.body.statusCode).toBe(Code.Ok)
+      expect(draft2.body.data.nodes).toEqual(payload2.nodes)
+      expect(draft2.body.data.edges).toEqual(payload2.edges)
+      expect(draft2.body.data.envs).toEqual(payload2.envs)
+
+      expect(draft2.body.data.nodes).not.toEqual(payload1.nodes)
+      expect(draft2.body.data.edges).not.toEqual(payload1.edges)
+      expect(draft2.body.data.envs).not.toEqual(payload1.envs)
+    })
   })
 
   // =====================================================================

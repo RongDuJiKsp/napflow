@@ -665,6 +665,23 @@ describe('AccountController (e2e)', () => {
 
       expect(res.status).toBe(401)
     })
+
+    it('降级最后一个管理员时应返回错误', async () => {
+      mockTypeOrmService.userGroup.find.mockResolvedValueOnce([
+        { ofUser: 'admin@test.com' },
+      ])
+
+      const res = await request(app.getHttpServer())
+        .post('/account/downgrade')
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+        .send({
+          email: 'admin@test.com',
+          groupType: [UserRole.Admin],
+        })
+
+      expect(res.status).toBe(400)
+      expect(res.body.message).toContain('不能降级最后一个管理员')
+    })
   })
 
   // =====================================================================
@@ -751,6 +768,64 @@ describe('AccountController (e2e)', () => {
 
       expect(loginRes.body.statusCode).toBe(Code.Forbidden)
       expect(loginRes.body.message).toContain('用户已被禁用')
+    })
+
+    it('login -> disable -> cur-account(旧token) 应体现当前 token 可用性行为', async () => {
+      // 1. 先登录获得用户 token
+      const loginRes = await request(app.getHttpServer())
+        .post('/account/login')
+        .send({ email: 'user@test.com', password: 'password123' })
+      expect(loginRes.body.statusCode).toBe(Code.Ok)
+      const oldToken = loginRes.body.data.token as string
+      expect(oldToken).toBeTruthy()
+
+      // 2. 管理员禁用该用户
+      const disableRes = await request(app.getHttpServer())
+        .post('/account/disable')
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+        .send({ email: 'user@test.com' })
+      expect(disableRes.body.statusCode).toBe(Code.Ok)
+
+      // 3. 使用禁用前签发的 token 访问受保护接口
+      const curAccountRes = await request(app.getHttpServer())
+        .get('/account/cur-account')
+        .set('Authorization', `Bearer ${oldToken}`)
+
+      // 当前实现下，guard 仅校验 token 角色，不校验 disabledAt
+      expect(curAccountRes.body.statusCode).toBe(Code.Ok)
+      expect(curAccountRes.body.data).toHaveProperty('email', 'user@test.com')
+    })
+
+    it('login(old) -> change-password -> login(old fail) -> login(new ok)', async () => {
+      const email = 'user@test.com'
+      const oldPassword = 'password123'
+      const newPassword = 'newPassword789'
+
+      // 1. 旧密码可登录
+      const oldLogin = await request(app.getHttpServer())
+        .post('/account/login')
+        .send({ email, password: oldPassword })
+      expect(oldLogin.body.statusCode).toBe(Code.Ok)
+
+      // 2. 使用旧密码鉴权，修改为新密码
+      const changeRes = await request(app.getHttpServer())
+        .post('/account/change-password')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .send({ originPassword: oldPassword, password: newPassword })
+      expect(changeRes.body.statusCode).toBe(Code.Ok)
+
+      // 3. 旧密码登录失败
+      const oldLoginAfterChange = await request(app.getHttpServer())
+        .post('/account/login')
+        .send({ email, password: oldPassword })
+      expect(oldLoginAfterChange.body.statusCode).toBe(Code.NotFound)
+
+      // 4. 新密码登录成功
+      const newLogin = await request(app.getHttpServer())
+        .post('/account/login')
+        .send({ email, password: newPassword })
+      expect(newLogin.body.statusCode).toBe(Code.Ok)
+      expect(newLogin.body.data).toHaveProperty('token')
     })
   })
 })

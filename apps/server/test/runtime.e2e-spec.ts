@@ -254,6 +254,33 @@ describe('Runtime BotManager (e2e)', () => {
       const res = await request(app.getHttpServer()).get('/bots/list')
       expect(res.status).toBe(401)
     })
+
+    it('应支持 isRunning + adapterTag 组合筛选', async () => {
+      mockTypeOrmService.botRecord.find.mockResolvedValue([
+        mockBotRecord,
+        mockBotRecord2,
+      ])
+
+      const runningInstance = createMockBotInstance({ botRecord: mockBotRecord })
+      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(runningInstance)
+
+      // 仅启动第一个 bot，第二个保持 stopped
+      await request(app.getHttpServer())
+        .post(`/bots/${TEST_BOT_ID}/run`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      const res = await request(app.getHttpServer())
+        .get('/bots/list')
+        .query({ isRunning: true, adapterTag: 'napcatWs' })
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(200)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(Array.isArray(res.body.data)).toBe(true)
+      expect(res.body.data.length).toBe(1)
+      expect(res.body.data[0]).toHaveProperty('botId', TEST_BOT_ID)
+    })
   })
 
   // ========== POST /bots/:botId/run - 核心：Manager 创建 Bot 实例 ==========
