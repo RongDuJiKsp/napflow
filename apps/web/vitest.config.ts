@@ -12,6 +12,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     include: ['**/*.spec.ts'],
+    exclude: ['**\/node_modules/**', '**\/.git/**', '**\/e2e/**'],
     coverage: {
       provider: 'v8',
     },
