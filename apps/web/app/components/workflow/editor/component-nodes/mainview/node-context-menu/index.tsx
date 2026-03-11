@@ -15,8 +15,9 @@ import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { useNorReturnFn } from '@/app/hooks/utils/use-callbacker'
 import { useLoopNodeOperator } from '../../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../../nodes/iterate/hooks/use-iterate-operator'
+import type { ComponentNodeProps } from '../../types'
 
-type ContextMenuProps = ItemParams<{ id: string }>
+type ContextMenuProps = ItemParams<ComponentNodeProps>
 
 // loop 内部可添加的节点类型（排除 loop-start 和 trigger）
 const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
@@ -48,7 +49,7 @@ const ComponentNodeContext = () => {
     (contextEnum: ComponentNodesEnum) => {
       return ({ props }: ContextMenuProps) => {
         if (!props?.id) return
-        const containerType = props.data?.data.type as ComponentNodesEnum
+        const containerType = props.data.type
         if (containerType === ComponentNodesEnum.Loop)
           handleAddNodeToLoop(props.id, contextEnum)
         else if (containerType === ComponentNodesEnum.Iterate)
