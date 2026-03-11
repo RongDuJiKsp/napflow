@@ -36,23 +36,23 @@ export const getArrayElementVarType = (
   throw new Error(`Unsupported array type: ${type}`)
 }
 
-
 /**
  * @description 处理 迭代器起点 这一特殊节点 这个节点的env需要从parent的env里根据 表单项sourceVarName计算得到
  */
 export const getIterateStartOutputVars = (node: ComponentNode, nodesMap: Record<string, ComponentNode>, envCache: Record<string, VarCtx[]>): Var[] => {
-  if (!node.parentId) return node.data.vars
+  const originalVars = node.data.vars || []
+  if (!node.parentId) return originalVars
   const parentNode = nodesMap[node.parentId]
   if (!parentNode || parentNode.data.type !== ComponentNodesEnum.Iterate)
-    return node.data.vars
+    return originalVars
   const parentIterateNode = parentNode as ComponentNode<IterateData>
   const parentIterateVars = envCache[parentNode.id]! // 这里有向图一定是父节点指向子节点的 之前拓扑排序时保证了父节点在子节点之前处理完 所以父节点的envCache一定已经计算好了
   const sourceVar = parentIterateVars.find(v => getCommVarCtxName(v) === parentIterateNode.data.sourceVarName)
-  if (!sourceVar) return []
+  if (!sourceVar) return originalVars
   return [{
     name: 'iter.item',
-    type: getArrayElementVarType(sourceVar.type),
-  }]
+    type: getArrayElementVarType(sourceVar.type) as VarTypes,
+  }].concat(...originalVars)
 }
 
 export const getNodeEnvMap = <GEdge extends WorkflowEdge>(

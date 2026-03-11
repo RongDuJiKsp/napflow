@@ -1,13 +1,14 @@
 import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
 import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
 import type { Var } from '@shared/common/workflow/component-node'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-node'
 import type { TestEdge, TestNodeWithData, WorkflowEdge } from '../../utils'
 import { describe, expect, test } from 'vitest'
 
 type TestNode = TestNodeWithData<{
   title: string;
   vars: Var[];
+  sourceVarName?: string;
 }>
 
 describe('测试getNodeEnvMap能否正确收集节点的env', () => {
@@ -595,6 +596,124 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         name: 'maxIndex',
         type: VarTypes.Number,
         source: { id: 'loop', title: '循环节点' },
+      },
+    ])
+  })
+
+  test('iterate-start 后续节点的 iter.item 类型跟随 StringArray 推导为 String', () => {
+    const nodes: TestNode[] = [
+      {
+        id: 'trigger',
+        data: {
+          vars: [{ name: 'arr', type: VarTypes.StringArray }],
+          title: '触发器',
+        },
+      },
+      {
+        id: 'iterate',
+        data: {
+          vars: [],
+          title: '迭代节点',
+          sourceVarName: 'trigger.arr',
+          type: ComponentNodesEnum.Iterate,
+        },
+      },
+      {
+        id: 'iterate-start',
+        parentId: 'iterate',
+        data: {
+          vars: [],
+          title: '迭代起点',
+          type: ComponentNodesEnum.IterateStart,
+        },
+      },
+      {
+        id: 'inner-node',
+        data: {
+          vars: [],
+          title: '内部节点',
+        },
+      },
+    ]
+    const edges: TestEdge[] = [
+      { source: 'trigger', target: 'iterate' },
+      { source: 'iterate-start', target: 'inner-node' },
+    ]
+
+    const result = getNodeEnvMap(
+      nodes as ComponentNode[],
+      edges as WorkflowEdge[],
+    )
+
+    expect(result['inner-node']).toEqual([
+      {
+        name: 'arr',
+        type: VarTypes.StringArray,
+        source: { id: 'trigger', title: '触发器' },
+      },
+      {
+        name: 'iter.item',
+        type: VarTypes.String,
+        source: { id: 'iterate-start', title: '迭代起点' },
+      },
+    ])
+  })
+
+  test('iterate-start 后续节点的 iter.item 类型跟随 NumberArray 推导为 Number', () => {
+    const nodes: TestNode[] = [
+      {
+        id: 'trigger',
+        data: {
+          vars: [{ name: 'nums', type: VarTypes.NumberArray }],
+          title: '触发器',
+        },
+      },
+      {
+        id: 'iterate',
+        data: {
+          vars: [],
+          title: '迭代节点',
+          sourceVarName: 'trigger.nums',
+          type: ComponentNodesEnum.Iterate,
+        },
+      },
+      {
+        id: 'iterate-start',
+        parentId: 'iterate',
+        data: {
+          vars: [],
+          title: '迭代起点',
+          type: ComponentNodesEnum.IterateStart,
+        },
+      },
+      {
+        id: 'inner-node',
+        data: {
+          vars: [],
+          title: '内部节点',
+        },
+      },
+    ]
+    const edges: TestEdge[] = [
+      { source: 'trigger', target: 'iterate' },
+      { source: 'iterate-start', target: 'inner-node' },
+    ]
+
+    const result = getNodeEnvMap(
+      nodes as ComponentNode[],
+      edges as WorkflowEdge[],
+    )
+
+    expect(result['inner-node']).toEqual([
+      {
+        name: 'nums',
+        type: VarTypes.NumberArray,
+        source: { id: 'trigger', title: '触发器' },
+      },
+      {
+        name: 'iter.item',
+        type: VarTypes.Number,
+        source: { id: 'iterate-start', title: '迭代起点' },
       },
     ])
   })
