@@ -37,7 +37,12 @@ const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   }))
 
 const ComponentNodeContext = () => {
-  const { handleFoldUnfoldItem, handleDeleteItem, isContainerNode }
+  const {
+    handleFoldUnfoldItem,
+    handleDeleteItem,
+    isContainerNode,
+    isStartNode,
+  }
     = useComponentNodeContextMenu()
 
   const { handleAddNodeToLoop } = useLoopNodeOperator()
@@ -85,7 +90,11 @@ const ComponentNodeContext = () => {
           </Item>
         ))}
       </Submenu>
-      <Item onClick={handleDeleteItem} className="contexify-item-danger">
+      <Item
+        onClick={handleDeleteItem}
+        className="contexify-item-danger"
+        hidden={isStartNode}
+      >
         <div className="flex gap-2 items-center">
           <RiDeleteBin2Line className="h-5 w-5" />
           <div>删除节点</div>
