@@ -9,11 +9,11 @@
     "lint": "eslint --fix",
     "lint:prettier": "npx prettier --write .",
     "lint:all": "pnpm lint:prettier&& pnpm lint",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:cov": "vitest run --coverage",
+    "test": "npx vitest run",
+    "test:watch": "npx vitest",
+    "test:cov": "npx vitest run --coverage",
     "test:debug": "node --inspect-brk node_modules/.bin/vitest --run --no-file-parallelism",
-    "test:e2e": "vitest run --config ./vitest.config.ts test/"
+    "test:e2e": "npx vitest run --config ./vitest.config.ts test/"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.9",
