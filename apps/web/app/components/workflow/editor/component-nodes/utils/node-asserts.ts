@@ -11,26 +11,34 @@ import type { WorkflowNode } from '../../types'
 import { safeAssertIsComponentNode } from '../../utils/node-asserts'
 
 export type NodeDataTypeForEnum = {
-  [ComponentNodesEnum.Trigger]: TriggerData
-  [ComponentNodesEnum.If]: IfData
-  [ComponentNodesEnum.Iterate]: IterateData
-  [ComponentNodesEnum.IterateStart]: IterateStartData
-  [ComponentNodesEnum.Loop]: LoopData
-  [ComponentNodesEnum.LoopStart]: LoopStartData
-  [ComponentNodesEnum.Reply]: ReplyData
+  [ComponentNodesEnum.Trigger]: TriggerData;
+  [ComponentNodesEnum.If]: IfData;
+  [ComponentNodesEnum.Iterate]: IterateData;
+  [ComponentNodesEnum.IterateStart]: IterateStartData;
+  [ComponentNodesEnum.Loop]: LoopData;
+  [ComponentNodesEnum.LoopStart]: LoopStartData;
+  [ComponentNodesEnum.Reply]: ReplyData;
 }
 
 export type NodeTypeForEnum = {
-  [K in ComponentNodesEnum]: ComponentNode<NodeDataTypeForEnum[K]>
+  [K in ComponentNodesEnum]: ComponentNode<NodeDataTypeForEnum[K]>;
 }
 
-export const safeAssertComponentNode = <E extends ComponentNodesEnum>(type: E, node?: ComponentNode): NodeTypeForEnum[E] | null => {
-  if(!node || node.data.type !== type) return null
+export const safeAssertComponentNode = <E extends ComponentNodesEnum>(
+  type: E,
+  node?: ComponentNode,
+): NodeTypeForEnum[E] | null => {
+  if (!node || node.data.type !== type) return null
   return node as NodeTypeForEnum[E]
 }
 
-export const safeAssertWorkflowNodeAsComponentNode = <E extends ComponentNodesEnum>(type: E, node?: WorkflowNode): NodeTypeForEnum[E] | null => {
+export const safeAssertWorkflowNodeAsComponentNode = <
+  E extends ComponentNodesEnum,
+>(
+  type: E,
+  node?: WorkflowNode,
+): NodeTypeForEnum[E] | null => {
   const componentNode = safeAssertIsComponentNode(node)
-  if(!componentNode) return null
+  if (!componentNode) return null
   return safeAssertComponentNode(type, componentNode)
 }

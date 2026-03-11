@@ -20,7 +20,10 @@ export const createComponentNode = <T>(
   })
 }
 
-export const createComponentSubNode = <T>(parentNode: ComponentNode, nodeClassic: ComponentNodesEnum): ComponentNode<T> => {
+export const createComponentSubNode = <T>(
+  parentNode: ComponentNode,
+  nodeClassic: ComponentNodesEnum,
+): ComponentNode<T> => {
   const subNode = createComponentNode<T>(nodeClassic)
   subNode.parentId = parentNode.id
   subNode.extent = 'parent'

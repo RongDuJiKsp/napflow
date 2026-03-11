@@ -2,7 +2,10 @@ import type { WorkflowNode } from '@/test/utils'
 import type { Var } from '@shared/common/workflow/component-node'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { useNodes } from '@xyflow/react'
-import { getIterateStartOutputVar, useComponentNodeEnv } from '../../../hooks/use-component-node-env'
+import {
+  getIterateStartOutputVar,
+  useComponentNodeEnv,
+} from '../../../hooks/use-component-node-env'
 import { safeAssertWorkflowNodeAsComponentNode } from '../../../utils/node-asserts'
 
 export const useIterateStartOutputVars = (id: string): Var[] => {
@@ -10,7 +13,10 @@ export const useIterateStartOutputVars = (id: string): Var[] => {
   const currentNode = nodes.find(n => n.id === id)
   const parentNode = nodes.find(n => n.id === currentNode?.parentId)
   const { vars } = useComponentNodeEnv(parentNode?.id || '')
-  const parentIteratorNode = safeAssertWorkflowNodeAsComponentNode(ComponentNodesEnum.Iterate, parentNode)
+  const parentIteratorNode = safeAssertWorkflowNodeAsComponentNode(
+    ComponentNodesEnum.Iterate,
+    parentNode,
+  )
   if (!parentIteratorNode) return []
   const outputVar = getIterateStartOutputVar(parentIteratorNode, vars)
   return [outputVar].filter(Boolean) as Var[]

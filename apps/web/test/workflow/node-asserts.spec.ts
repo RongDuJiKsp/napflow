@@ -26,7 +26,9 @@ describe('workflow node asserts', () => {
 
   test('safeAssertWorkflowNode: type 匹配时返回原节点', () => {
     const componentNode = createWorkflowNode(NodeClassic.Component)
-    expect(safeAssertWorkflowNode(NodeClassic.Component, componentNode)).toBe(componentNode)
+    expect(safeAssertWorkflowNode(NodeClassic.Component, componentNode)).toBe(
+      componentNode,
+    )
   })
 
   test('safeAssertIsComponentNode: 仅在组件节点时返回节点', () => {

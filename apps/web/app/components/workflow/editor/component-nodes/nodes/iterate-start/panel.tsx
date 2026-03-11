@@ -4,8 +4,11 @@ import type { IterateStartData } from '@shared/common/workflow/node-data/iterate
 import ProviderEnv from '../../common/provider-env'
 import { useIterateStartOutputVars } from './hooks/use-iterate-start-output-vars'
 
-const IterateStartPanel: ComponentPanelFc<IterateStartData> = ({ id, data }) => {
-  const iterateStartVars = useIterateStartOutputVars (id)
+const IterateStartPanel: ComponentPanelFc<IterateStartData> = ({
+  id,
+  data,
+}) => {
+  const iterateStartVars = useIterateStartOutputVars(id)
 
   return (
     <div className="flex flex-col gap-3">

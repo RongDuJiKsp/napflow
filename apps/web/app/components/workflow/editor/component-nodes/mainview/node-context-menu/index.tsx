@@ -42,8 +42,7 @@ const ComponentNodeContext = () => {
     handleDeleteItem,
     isContainerNode,
     isStartNode,
-  }
-    = useComponentNodeContextMenu()
+  } = useComponentNodeContextMenu()
 
   const { handleAddNodeToLoop } = useLoopNodeOperator()
   const { handleAddNodeToIterate } = useIterateNodeOperator()

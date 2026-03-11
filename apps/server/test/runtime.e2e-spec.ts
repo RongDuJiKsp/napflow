@@ -261,8 +261,12 @@ describe('Runtime BotManager (e2e)', () => {
         mockBotRecord2,
       ])
 
-      const runningInstance = createMockBotInstance({ botRecord: mockBotRecord })
-      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(runningInstance)
+      const runningInstance = createMockBotInstance({
+        botRecord: mockBotRecord,
+      })
+      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(
+        runningInstance,
+      )
 
       // 仅启动第一个 bot，第二个保持 stopped
       await request(app.getHttpServer())

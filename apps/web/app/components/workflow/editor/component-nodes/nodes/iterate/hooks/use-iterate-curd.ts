@@ -13,7 +13,8 @@ export const useIterateCurd = (id: string) => {
   const arrayVars = useMemo(
     () =>
       vars.filter(
-        v => v.type === VarTypes.StringArray || v.type === VarTypes.NumberArray,
+        v =>
+          v.type === VarTypes.StringArray || v.type === VarTypes.NumberArray,
       ),
     [vars],
   )

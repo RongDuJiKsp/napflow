@@ -23,7 +23,6 @@ export const useCommNodeOperation = () => {
   return {
     deleteNodeById,
     deleteNode,
-
   }
 }
 

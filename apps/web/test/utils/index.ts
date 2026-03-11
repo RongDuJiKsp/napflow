@@ -12,7 +12,7 @@ export type GraphNode = {
  */
 export type TestNode = GraphNode & {
   parentId?: string;
-  type: NodeClassic
+  type: NodeClassic;
 }
 
 /**

@@ -43,7 +43,13 @@ const VarItem = ({ varCtx }: { varCtx: VarCtx }) => (
 )
 
 // ─── 已选变量的显示组件 ───
-const SelectedVarDisplay = ({ variable, vars }: { variable: string; vars: VarCtx[] }) => {
+const SelectedVarDisplay = ({
+  variable,
+  vars,
+}: {
+  variable: string;
+  vars: VarCtx[];
+}) => {
   const found = useMemo(
     () => vars.find(v => getCommVarCtxName(v) === variable),
     [vars, variable],
@@ -70,9 +76,9 @@ const SelectedVarDisplay = ({ variable, vars }: { variable: string; vars: VarCtx
 
 // ─── 变量选择器 ───
 type VarSelectProps = {
-  value: string
-  vars: VarCtx[]
-  onChange: (value: string) => void
+  value: string;
+  vars: VarCtx[];
+  onChange: (value: string) => void;
 }
 
 const VarSelect = ({ value, vars, onChange }: VarSelectProps) => {
@@ -87,15 +93,17 @@ const VarSelect = ({ value, vars, onChange }: VarSelectProps) => {
     return Array.from(map.entries())
   }, [vars])
 
-  const handleChange = useCallback<NonNullable<SelectProps<object>['onChange']>>((v) => {
-    onChange(v?.toString() || '')
-  }, [onChange])
+  const handleChange = useCallback<
+    NonNullable<SelectProps<object>['onChange']>
+  >(
+    (v) => {
+      onChange(v?.toString() || '')
+    },
+    [onChange],
+  )
 
   return (
-    <Select
-      value={value}
-      onChange={handleChange}
-    >
+    <Select value={value} onChange={handleChange}>
       <Select.Trigger className="border-purple-200 hover:border-purple-400 transition-colors rounded-lg">
         {value ? (
           <SelectedVarDisplay variable={value} vars={vars} />

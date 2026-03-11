@@ -80,14 +80,17 @@ export const useComponentNodeOperations = () => {
 
 export const useComponentContainerNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const moveConstructorNodeAndChildren = useCallback((parentNode: ComponentNode, subNode: ComponentNode) => {
-    parentNode.style = { ...parentNode.style, width: 500, height: 150 }
-    subNode.position = {
-      x: 40,
-      y: 60,
-    }
-    reactflow.addNodes(parentNode)
-    reactflow.addNodes(subNode)
-  }, [reactflow])
+  const moveConstructorNodeAndChildren = useCallback(
+    (parentNode: ComponentNode, subNode: ComponentNode) => {
+      parentNode.style = { ...parentNode.style, width: 500, height: 150 }
+      subNode.position = {
+        x: 40,
+        y: 60,
+      }
+      reactflow.addNodes(parentNode)
+      reactflow.addNodes(subNode)
+    },
+    [reactflow],
+  )
   return { moveConstructorNodeAndChildren }
 }

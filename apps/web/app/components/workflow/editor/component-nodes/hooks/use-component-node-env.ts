@@ -37,8 +37,13 @@ export const getArrayElementVarType = (
   throw new Error(`Unsupported array type: ${type}`)
 }
 
-export const getIterateStartOutputVar = (parentNode: ComponentNode<IterateData>, parentVars: VarCtx[]): Var | null => {
-  const sourceVar = parentVars.find(v => getCommVarCtxName(v) === parentNode.data.sourceVarName)
+export const getIterateStartOutputVar = (
+  parentNode: ComponentNode<IterateData>,
+  parentVars: VarCtx[],
+): Var | null => {
+  const sourceVar = parentVars.find(
+    v => getCommVarCtxName(v) === parentNode.data.sourceVarName,
+  )
   if (!sourceVar) return null
   return {
     name: 'iter.item',
@@ -49,14 +54,24 @@ export const getIterateStartOutputVar = (parentNode: ComponentNode<IterateData>,
 /**
  * @description 处理 迭代器起点 这一特殊节点 这个节点的env需要从parent的env里根据 表单项sourceVarName计算得到
  */
-export const getIterateStartOutputVars = (node: ComponentNode, nodesMap: Record<string, ComponentNode>, envCache: Record<string, VarCtx[]>): Var[] => {
+export const getIterateStartOutputVars = (
+  node: ComponentNode,
+  nodesMap: Record<string, ComponentNode>,
+  envCache: Record<string, VarCtx[]>,
+): Var[] => {
   const originalVars = node.data.vars || []
   if (!node.parentId) return originalVars
-  const parentIterateNode = safeAssertComponentNode(ComponentNodesEnum.Iterate, nodesMap[node.parentId])
+  const parentIterateNode = safeAssertComponentNode(
+    ComponentNodesEnum.Iterate,
+    nodesMap[node.parentId],
+  )
   if (!parentIterateNode) return originalVars
   const parentIterateVars = envCache[parentIterateNode.id]! // 这里有向图一定是父节点指向子节点的 之前拓扑排序时保证了父节点在子节点之前处理完 所以父节点的envCache一定已经计算好了
-  const iterateStartVar = getIterateStartOutputVar(parentIterateNode, parentIterateVars)
-  return[...originalVars, iterateStartVar].filter(Boolean) as Var[]
+  const iterateStartVar = getIterateStartOutputVar(
+    parentIterateNode,
+    parentIterateVars,
+  )
+  return [...originalVars, iterateStartVar].filter(Boolean) as Var[]
 }
 
 export const getNodeEnvMap = <GEdge extends WorkflowEdge>(

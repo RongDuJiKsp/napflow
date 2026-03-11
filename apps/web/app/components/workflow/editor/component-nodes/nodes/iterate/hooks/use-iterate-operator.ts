@@ -1,7 +1,10 @@
 import { useReactFlow } from '@xyflow/react'
 import type { WorkflowEdge, WorkflowNode } from '../../../../types'
 import { useCallback } from 'react'
-import { createComponentNode, createComponentSubNode } from '../../../utils/node'
+import {
+  createComponentNode,
+  createComponentSubNode,
+} from '../../../utils/node'
 import type { IterateStartData } from '@shared/common/workflow/node-data/iterate-start'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { createWorkflowEdge } from '../../../../utils/nodes'
@@ -14,13 +17,17 @@ import { useComponentContainerNodeOperations } from '../../../hooks/use-componen
 
 export const useIterateNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const { moveConstructorNodeAndChildren } = useComponentContainerNodeOperations()
+  const { moveConstructorNodeAndChildren }
+    = useComponentContainerNodeOperations()
   const { deleteNodeAndChildren } = useCommContainerNodeOperation()
 
   // 从一个未加入到 reactflow 画板的 iterate 节点移动构造节点并且放入画板
   const handleMoveConstructorIterateNode = useCallback(
     (node: WorkflowNode) => {
-      const iterateNode = safeAssertWorkflowNodeAsComponentNode(ComponentNodesEnum.Iterate, node)
+      const iterateNode = safeAssertWorkflowNodeAsComponentNode(
+        ComponentNodesEnum.Iterate,
+        node,
+      )
       if (!iterateNode) {
         console.warn('节点类型错误，无法移动构造节点')
         return
@@ -49,7 +56,11 @@ export const useIterateNodeOperator = () => {
       )
       if (!iterateStartNode) return
 
-      const lastNode = getLinkedLastNode(childNodes, allEdges, iterateStartNode)
+      const lastNode = getLinkedLastNode(
+        childNodes,
+        allEdges,
+        iterateStartNode,
+      )
       if (!lastNode) return
 
       const lastCreator = ComponentNodeCreatorMap[lastNode.data.type]
@@ -83,9 +94,11 @@ export const useIterateNodeOperator = () => {
 
   const handleDeleteIterateNode = useCallback(
     (iterateNodeId: string) => {
-      const iterateNode = safeAssertWorkflowNodeAsComponentNode(ComponentNodesEnum.Iterate, reactflow.getNode(iterateNodeId))
-      if (!iterateNode)
-        return
+      const iterateNode = safeAssertWorkflowNodeAsComponentNode(
+        ComponentNodesEnum.Iterate,
+        reactflow.getNode(iterateNodeId),
+      )
+      if (!iterateNode) return
       deleteNodeAndChildren(iterateNode)
     },
     [deleteNodeAndChildren, reactflow],

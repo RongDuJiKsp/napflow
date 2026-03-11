@@ -54,8 +54,10 @@ export const useWorkflowViewOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
-  const { handleConnect: handleComponentNodeConnect, handleDeleteNode: handleComponentNodeDelete }
-    = useComponentNodeOperations()
+  const {
+    handleConnect: handleComponentNodeConnect,
+    handleDeleteNode: handleComponentNodeDelete,
+  } = useComponentNodeOperations()
   const { deleteNode: deleteCommNode } = useCommNodeOperation()
 
   const handleConnect = useCallback(
@@ -136,10 +138,13 @@ export const useWorkflowViewOperations = () => {
   )
 
   const handleDeleteSelectedElements = useCallback(() => {
-    const selectedNodes = reactflow.getNodes().filter(n => n.selected).filter((x) => {
-      const compNode = safeAssertIsComponentNode(x)
-      return !compNode || !hiddenNodeTypes.has(compNode.data.type)
-    })
+    const selectedNodes = reactflow
+      .getNodes()
+      .filter(n => n.selected)
+      .filter((x) => {
+        const compNode = safeAssertIsComponentNode(x)
+        return !compNode || !hiddenNodeTypes.has(compNode.data.type)
+      })
     const selectedEdges = reactflow.getEdges().filter(e => e.selected)
     if (selectedNodes.length === 0 && selectedEdges.length === 0) return
 

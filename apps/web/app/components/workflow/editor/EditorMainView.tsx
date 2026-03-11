@@ -65,8 +65,11 @@ const EditorMainView = ({
   // sticky node
   const handleMouseMove = useStore(editorStore, state => state.handleMove)
   // operator
-  const { handleConnect, handleNodesChange: handleNodesChangeForOperator, handleDeleteSelectedElements }
-    = useWorkflowViewOperations()
+  const {
+    handleConnect,
+    handleNodesChange: handleNodesChangeForOperator,
+    handleDeleteSelectedElements,
+  } = useWorkflowViewOperations()
 
   // merge muti changes
   const handleNodesChange = useCallback<OnNodesChange<WorkflowNode>>(

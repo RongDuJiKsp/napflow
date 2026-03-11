@@ -70,7 +70,7 @@ export const useStickyEventsRegister = () => {
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Loop
     )
       handleAddLoopNode(placedNode)
-          // 如果放置的是 Iterate  operations
+    // 如果放置的是 Iterate  operations
     else if (
       placedNode.type === NodeClassic.Component
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Iterate
