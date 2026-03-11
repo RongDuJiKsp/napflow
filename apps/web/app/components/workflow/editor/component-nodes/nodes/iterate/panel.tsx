@@ -1,9 +1,8 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback } from 'react'
 import type { ComponentPanelFc } from '../../types'
 import type { IterateData } from '@shared/common/workflow/node-data/iterate'
 import { Label, ListBox, Select, type SelectProps } from '@heroui/react'
 import { useIterateCurd } from './hooks/use-iterate-curd'
-import { useComponentNodeEnv } from '../../hooks/use-component-node-env'
 import {
   type Var,
   VarTypes,
@@ -25,16 +24,7 @@ const typeLabels: Record<Var['type'], string> = {
 }
 
 const IteratePanel: ComponentPanelFc<IterateData> = ({ id, data }) => {
-  const { vars } = useComponentNodeEnv(id)
-  const { handleSourceVarNameChange } = useIterateCurd(id)
-
-  const arrayVars = useMemo(
-    () =>
-      vars.filter(
-        v => v.type === VarTypes.StringArray || v.type === VarTypes.NumberArray,
-      ),
-    [vars],
-  )
+  const { arrayVars, handleSourceVarNameChange } = useIterateCurd(id)
 
   const handleSelectChange = useCallback<NonNullable<SelectProps<object>['onChange']>>(
     (ev) => {
