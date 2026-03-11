@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import type { ComponentPanelFc } from '../../types'
 import type { IterateData } from '@shared/common/workflow/node-data/iterate'
-import { Label, ListBox, Select ,type SelectProps} from '@heroui/react'
+import { Label, ListBox, Select, type SelectProps } from '@heroui/react'
 import { useIterateCurd } from './hooks/use-iterate-curd'
 import { useComponentNodeEnv } from '../../hooks/use-component-node-env'
 import {

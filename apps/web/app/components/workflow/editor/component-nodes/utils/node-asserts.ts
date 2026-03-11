@@ -7,6 +7,8 @@ import type { LoopStartData } from '@shared/common/workflow/node-data/loop-start
 import type { ReplyData } from '@shared/common/workflow/node-data/reply'
 import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 import type { ComponentNode } from '../types'
+import type { WorkflowNode } from '../../types'
+import { safeAssertIsComponentNode } from '../../utils/node-asserts'
 
 export type NodeDataTypeForEnum = {
   [ComponentNodesEnum.Trigger]: TriggerData
@@ -25,4 +27,10 @@ export type NodeTypeForEnum = {
 export const safeAssertComponentNode = <E extends ComponentNodesEnum>(type: E, node?: ComponentNode): NodeTypeForEnum[E] | null => {
   if(!node || node.data.type !== type) return null
   return node as NodeTypeForEnum[E]
+}
+
+export const safeAssertWorkflowNodeAsComponentNode = <E extends ComponentNodesEnum>(type: E, node?: WorkflowNode): NodeTypeForEnum[E] | null => {
+  const componentNode = safeAssertIsComponentNode(node)
+  if(!componentNode) return null
+  return safeAssertComponentNode(type, componentNode)
 }
