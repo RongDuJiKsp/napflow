@@ -19,6 +19,16 @@ export const useCommNodeOperation = () => {
     },
     [deleteNodeById],
   )
+
+  return {
+    deleteNodeById,
+    deleteNode,
+
+  }
+}
+
+export const useCommContainerNodeOperation = () => {
+  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const deleteNodeAndChildrenById = useCallback(
     (nodeId: string) => {
       const nodes = reactflow.getNodes()
@@ -49,8 +59,6 @@ export const useCommNodeOperation = () => {
     [deleteNodeAndChildrenById],
   )
   return {
-    deleteNodeById,
-    deleteNode,
     deleteNodeAndChildrenById,
     deleteNodeAndChildren,
   }

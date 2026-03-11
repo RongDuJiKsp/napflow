@@ -7,13 +7,13 @@ import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { createWorkflowEdge } from '../../../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../../../constants'
 import type { ComponentNode } from '../../../types'
-import { useCommNodeOperation } from '../../../../hooks/use-comm-node-operation'
+import { useCommContainerNodeOperation } from '../../../../hooks/use-comm-node-operation'
 import { NodeClassic } from '@shared/common/workflow/core'
 import { getLinkedLastNode } from '../../loop/hooks/use-loop-operator'
 
 export const useIterateNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const { deleteNodeAndChildren } = useCommNodeOperation()
+  const { deleteNodeAndChildren } = useCommContainerNodeOperation()
 
   const handleAddIterateNode = useCallback(
     (iterateNode: WorkflowNode) => {
