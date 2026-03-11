@@ -31,8 +31,7 @@ export class LoopNode extends CommNode<LoopDataCtx> {
     _nextTask: WillTask,
     _nkv: Record<string, any>,
   ): void | Promise<void> {
-    // 更新循环索引
-    // 注意这里的 ?? 一定不能被 || 代替
+    // 更新循环索引  注意这里的 ?? 一定不能被 || 代替
     _nkv['loop.index'] = (_nkv['loop.index'] ?? -1) + 1
     _nkv['loop.maxIndex'] = this.data.maxCount
     if (_nkv['loop.index'] >= this.data.maxCount) return
