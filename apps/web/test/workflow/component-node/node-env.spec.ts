@@ -5,20 +5,22 @@ import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-
 import type { TestEdge, TestNodeWithData, WorkflowEdge } from '../../utils'
 import { describe, expect, test } from 'vitest'
 
-type TestNode = TestNodeWithData<{
+type TestComponentNode = TestNodeWithData<{
   title: string;
   vars: Var[];
   sourceVarName?: string;
+  type: ComponentNodesEnum
 }>
 
 describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   test('正常收集', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点Id1',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -26,9 +28,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'a', type: VarTypes.Number }],
           title: '节点Id2',
+          type: ComponentNodesEnum.Reply,
         },
       },
-      { id: '3', data: { title: '', vars: [] } },
+      {
+        id: '3',
+        data: { title: '', vars: [], type: ComponentNodesEnum.Reply },
+      },
     ]
     const edges: TestEdge[] = [
       {
@@ -58,7 +64,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('空节点和空边', () => {
-    const nodes: TestNode[] = []
+    const nodes: TestComponentNode[] = []
     const edges: TestEdge[] = []
     expect(
       getNodeEnvMap(nodes as ComponentNode[], edges as WorkflowEdge[]),
@@ -66,14 +72,22 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('只有节点没有边', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
-        data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
+        data: {
+          vars: [{ name: 'a', type: VarTypes.String }],
+          title: '节点1',
+          type: ComponentNodesEnum.Trigger,
+        },
       },
       {
         id: '2',
-        data: { vars: [{ name: 'b', type: VarTypes.Number }], title: '节点2' },
+        data: {
+          vars: [{ name: 'b', type: VarTypes.Number }],
+          title: '节点2',
+          type: ComponentNodesEnum.Reply,
+        },
       },
     ]
     const edges: TestEdge[] = []
@@ -86,12 +100,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('链式结构', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
         data: {
           vars: [{ name: 'var1', type: VarTypes.String }],
           title: '节点1',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -99,6 +114,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'var2', type: VarTypes.Number }],
           title: '节点2',
+          type: ComponentNodesEnum.Reply,
         },
       },
       {
@@ -106,6 +122,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'var3', type: VarTypes.String }],
           title: '节点3',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
@@ -140,22 +157,43 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('多前置节点和多后置节点', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
-        data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
+        data: {
+          vars: [{ name: 'a', type: VarTypes.String }],
+          title: '节点1',
+          type: ComponentNodesEnum.Trigger,
+        },
       },
       {
         id: '2',
-        data: { vars: [{ name: 'b', type: VarTypes.Number }], title: '节点2' },
+        data: {
+          vars: [{ name: 'b', type: VarTypes.Number }],
+          title: '节点2',
+          type: ComponentNodesEnum.Trigger,
+        },
       },
       {
         id: '3',
-        data: { vars: [{ name: 'c', type: VarTypes.String }], title: '节点3' },
+        data: {
+          vars: [{ name: 'c', type: VarTypes.String }],
+          title: '节点3',
+          type: ComponentNodesEnum.Trigger,
+        },
       },
-      { id: '4', data: { title: '合并节点', vars: [] } },
-      { id: '5', data: { title: '后置节点1', vars: [] } },
-      { id: '6', data: { title: '后置节点2', vars: [] } },
+      {
+        id: '4',
+        data: { title: '合并节点', vars: [], type: ComponentNodesEnum.If },
+      },
+      {
+        id: '5',
+        data: { title: '后置节点1', vars: [], type: ComponentNodesEnum.Reply },
+      },
+      {
+        id: '6',
+        data: { title: '后置节点2', vars: [], type: ComponentNodesEnum.Reply },
+      },
     ]
     const edges: TestEdge[] = [
       { source: '1', target: '4' },
@@ -190,21 +228,30 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('孤立节点', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
-        data: { vars: [{ name: 'a', type: VarTypes.String }], title: '节点1' },
+        data: {
+          vars: [{ name: 'a', type: VarTypes.String }],
+          title: '节点1',
+          type: ComponentNodesEnum.Trigger,
+        },
       },
       {
         id: '2',
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
           title: '孤立节点',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
         id: '3',
-        data: { vars: [{ name: 'c', type: VarTypes.String }], title: '节点3' },
+        data: {
+          vars: [{ name: 'c', type: VarTypes.String }],
+          title: '节点3',
+          type: ComponentNodesEnum.Reply,
+        },
       },
     ]
     const edges: TestEdge[] = [{ source: '1', target: '3' }]
@@ -224,12 +271,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('重复变量名在不同节点', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
         data: {
           vars: [{ name: 'shared', type: VarTypes.String }],
           title: '节点1',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -237,9 +285,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'shared', type: VarTypes.Number }],
           title: '节点2',
+          type: ComponentNodesEnum.Trigger,
         },
       },
-      { id: '3', data: { title: '合并节点', vars: [] } },
+      {
+        id: '3',
+        data: { title: '合并节点', vars: [], type: ComponentNodesEnum.If },
+      },
     ]
     const edges: TestEdge[] = [
       { source: '1', target: '3' },
@@ -264,12 +316,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('复杂嵌套结构', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'start',
         data: {
           vars: [{ name: 'input', type: VarTypes.String }],
           title: '开始节点',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -277,6 +330,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'temp1', type: VarTypes.Number }],
           title: '处理1',
+          type: ComponentNodesEnum.If,
         },
       },
       {
@@ -284,14 +338,19 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'temp2', type: VarTypes.String }],
           title: '处理2',
+          type: ComponentNodesEnum.If,
         },
       },
-      { id: 'merge', data: { title: '合并', vars: [] } },
+      {
+        id: 'merge',
+        data: { title: '合并', vars: [], type: ComponentNodesEnum.If },
+      },
       {
         id: 'end',
         data: {
           vars: [{ name: 'output', type: VarTypes.String }],
           title: '结束',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
@@ -343,12 +402,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('loop-start 通过 parentId 继承 loop 节点的 env', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
         data: {
           vars: [{ name: 'input', type: VarTypes.String }],
           title: '触发器',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -359,6 +419,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
             { name: 'maxIndex', type: VarTypes.Number },
           ],
           title: '循环节点',
+          type: ComponentNodesEnum.Loop,
         },
       },
       {
@@ -367,6 +428,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
           title: '循环开始',
+          type: ComponentNodesEnum.LoopStart,
         },
       },
     ]
@@ -404,12 +466,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('loop-start 后的子节点能读取完整的 env 链', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
         data: {
           vars: [{ name: 'userInput', type: VarTypes.String }],
           title: '触发器',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -417,6 +480,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'index', type: VarTypes.Number }],
           title: '循环节点',
+          type: ComponentNodesEnum.Loop,
         },
       },
       {
@@ -425,6 +489,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
           title: '循环开始',
+          type: ComponentNodesEnum.LoopStart,
         },
       },
       {
@@ -432,6 +497,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'result', type: VarTypes.String }],
           title: '内部节点',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
@@ -464,12 +530,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('多个前驱节点汇入 loop 时，loop-start 能继承所有 env', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'node-a',
         data: {
           vars: [{ name: 'varA', type: VarTypes.String }],
           title: '节点A',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -477,6 +544,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'varB', type: VarTypes.Number }],
           title: '节点B',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -484,6 +552,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'loopVar', type: VarTypes.Number }],
           title: '循环节点',
+          type: ComponentNodesEnum.Loop,
         },
       },
       {
@@ -492,6 +561,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
           title: '循环开始',
+          type: ComponentNodesEnum.LoopStart,
         },
       },
     ]
@@ -524,12 +594,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('parentId 指向不存在的节点时不影响正常逻辑', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: '1',
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点1',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -538,6 +609,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
           title: '节点2',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
@@ -558,7 +630,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('loop-start 无外部前驱时仅继承 loop 自身 vars', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'loop',
         data: {
@@ -567,6 +639,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
             { name: 'maxIndex', type: VarTypes.Number },
           ],
           title: '循环节点',
+          type: ComponentNodesEnum.Loop,
         },
       },
       {
@@ -575,6 +648,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
           title: '循环开始',
+          type: ComponentNodesEnum.LoopStart,
         },
       },
     ]
@@ -601,12 +675,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('iterate-start 后续节点的 iter.item 类型跟随 StringArray 推导为 String', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
         data: {
           vars: [{ name: 'arr', type: VarTypes.StringArray }],
           title: '触发器',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -632,6 +707,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [],
           title: '内部节点',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
@@ -660,12 +736,13 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
   })
 
   test('iterate-start 后续节点的 iter.item 类型跟随 NumberArray 推导为 Number', () => {
-    const nodes: TestNode[] = [
+    const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
         data: {
           vars: [{ name: 'nums', type: VarTypes.NumberArray }],
           title: '触发器',
+          type: ComponentNodesEnum.Trigger,
         },
       },
       {
@@ -691,6 +768,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         data: {
           vars: [],
           title: '内部节点',
+          type: ComponentNodesEnum.Reply,
         },
       },
     ]
