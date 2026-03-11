@@ -8,6 +8,8 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 import { useCommNodeOperation } from './use-comm-node-operation'
+import { hiddenNodeTypes } from '@shared/common/workflow/component-node'
+import { safeAssertIsComponentNode } from '../utils/node-asserts'
 
 export const checkAfterConnMakeCycle = <
   GNode extends WorkflowNode,
@@ -134,7 +136,10 @@ export const useWorkflowViewOperations = () => {
   )
 
   const handleDeleteSelectedElements = useCallback(() => {
-    const selectedNodes = reactflow.getNodes().filter(n => n.selected)
+    const selectedNodes = reactflow.getNodes().filter(n => n.selected).filter((x) => {
+      const compNode = safeAssertIsComponentNode(x)
+      return !compNode || !hiddenNodeTypes.has(compNode.data.type)
+    })
     const selectedEdges = reactflow.getEdges().filter(e => e.selected)
     if (selectedNodes.length === 0 && selectedEdges.length === 0) return
 
