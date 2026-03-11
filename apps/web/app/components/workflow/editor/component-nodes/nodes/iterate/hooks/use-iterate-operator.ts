@@ -10,6 +10,7 @@ import type { ComponentNode } from '../../../types'
 import { useCommContainerNodeOperation } from '../../../../hooks/use-comm-node-operation'
 import { NodeClassic } from '@shared/common/workflow/core'
 import { getLinkedLastNode } from '../../loop/hooks/use-loop-operator'
+import { safeAssertWorkflowNodeAsComponentNode } from '../../../utils/node-asserts'
 
 export const useIterateNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
@@ -82,12 +83,8 @@ export const useIterateNodeOperator = () => {
 
   const handleDeleteIterateNode = useCallback(
     (iterateNodeId: string) => {
-      const iterateNode = reactflow.getNode(iterateNodeId)
-      if (
-        !iterateNode
-        || iterateNode.type !== NodeClassic.Component
-        || (iterateNode as ComponentNode).data.type !== ComponentNodesEnum.Iterate
-      )
+      const iterateNode = safeAssertWorkflowNodeAsComponentNode(ComponentNodesEnum.Iterate, reactflow.getNode(iterateNodeId))
+      if ( !iterateNode)
         return
       deleteNodeAndChildren(iterateNode)
     },
