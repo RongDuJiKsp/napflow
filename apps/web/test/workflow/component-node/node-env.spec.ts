@@ -2,7 +2,8 @@ import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/
 import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
 import type { Var } from '@shared/common/workflow/component-node'
 import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-node'
-import type { TestEdge, TestNodeWithData, WorkflowEdge } from '../../utils'
+import { NodeClassic } from '@shared/common/workflow/core'
+import type { GraphEdge, TestNodeWithData, WorkflowEdge } from '../../utils'
 import { describe, expect, test } from 'vitest'
 
 type TestComponentNode = TestNodeWithData<{
@@ -17,6 +18,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点Id1',
@@ -25,6 +27,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.Number }],
           title: '节点Id2',
@@ -33,10 +36,11 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '3',
+        type: NodeClassic.Component,
         data: { title: '', vars: [], type: ComponentNodesEnum.Reply },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       {
         source: '1',
         target: '3',
@@ -65,7 +69,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
 
   test('空节点和空边', () => {
     const nodes: TestComponentNode[] = []
-    const edges: TestEdge[] = []
+    const edges: GraphEdge[] = []
     expect(
       getNodeEnvMap(nodes as ComponentNode[], edges as WorkflowEdge[]),
     ).toEqual({})
@@ -75,6 +79,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点1',
@@ -83,6 +88,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
           title: '节点2',
@@ -90,7 +96,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = []
+    const edges: GraphEdge[] = []
     expect(
       getNodeEnvMap(nodes as ComponentNode[], edges as WorkflowEdge[]),
     ).toEqual({
@@ -103,6 +109,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'var1', type: VarTypes.String }],
           title: '节点1',
@@ -111,6 +118,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'var2', type: VarTypes.Number }],
           title: '节点2',
@@ -119,6 +127,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '3',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'var3', type: VarTypes.String }],
           title: '节点3',
@@ -126,7 +135,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: '1', target: '2' },
       { source: '2', target: '3' },
     ]
@@ -160,6 +169,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点1',
@@ -168,6 +178,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
           title: '节点2',
@@ -176,6 +187,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '3',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'c', type: VarTypes.String }],
           title: '节点3',
@@ -184,18 +196,21 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '4',
+        type: NodeClassic.Component,
         data: { title: '合并节点', vars: [], type: ComponentNodesEnum.If },
       },
       {
         id: '5',
+        type: NodeClassic.Component,
         data: { title: '后置节点1', vars: [], type: ComponentNodesEnum.Reply },
       },
       {
         id: '6',
+        type: NodeClassic.Component,
         data: { title: '后置节点2', vars: [], type: ComponentNodesEnum.Reply },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: '1', target: '4' },
       { source: '2', target: '4' },
       { source: '3', target: '4' },
@@ -231,6 +246,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点1',
@@ -239,6 +255,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
           title: '孤立节点',
@@ -247,6 +264,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '3',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'c', type: VarTypes.String }],
           title: '节点3',
@@ -254,7 +272,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [{ source: '1', target: '3' }]
+    const edges: GraphEdge[] = [{ source: '1', target: '3' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -274,6 +292,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'shared', type: VarTypes.String }],
           title: '节点1',
@@ -282,6 +301,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'shared', type: VarTypes.Number }],
           title: '节点2',
@@ -290,10 +310,11 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '3',
+        type: NodeClassic.Component,
         data: { title: '合并节点', vars: [], type: ComponentNodesEnum.If },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: '1', target: '3' },
       { source: '2', target: '3' },
     ]
@@ -319,6 +340,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'start',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'input', type: VarTypes.String }],
           title: '开始节点',
@@ -327,6 +349,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'process1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'temp1', type: VarTypes.Number }],
           title: '处理1',
@@ -335,6 +358,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'process2',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'temp2', type: VarTypes.String }],
           title: '处理2',
@@ -343,10 +367,12 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'merge',
+        type: NodeClassic.Component,
         data: { title: '合并', vars: [], type: ComponentNodesEnum.If },
       },
       {
         id: 'end',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'output', type: VarTypes.String }],
           title: '结束',
@@ -354,7 +380,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'start', target: 'process1' },
       { source: 'start', target: 'process2' },
       { source: 'process1', target: 'merge' },
@@ -405,6 +431,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'input', type: VarTypes.String }],
           title: '触发器',
@@ -413,6 +440,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop',
+        type: NodeClassic.Component,
         data: {
           vars: [
             { name: 'index', type: VarTypes.Number },
@@ -424,6 +452,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop-start',
+        type: NodeClassic.Component,
         parentId: 'loop',
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
@@ -432,7 +461,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [{ source: 'trigger', target: 'loop' }]
+    const edges: GraphEdge[] = [{ source: 'trigger', target: 'loop' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -469,6 +498,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'userInput', type: VarTypes.String }],
           title: '触发器',
@@ -477,6 +507,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'index', type: VarTypes.Number }],
           title: '循环节点',
@@ -485,6 +516,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop-start',
+        type: NodeClassic.Component,
         parentId: 'loop',
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
@@ -494,6 +526,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'inner-node',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'result', type: VarTypes.String }],
           title: '内部节点',
@@ -501,7 +534,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'trigger', target: 'loop' },
       { source: 'loop-start', target: 'inner-node' },
     ]
@@ -533,6 +566,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'node-a',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'varA', type: VarTypes.String }],
           title: '节点A',
@@ -541,6 +575,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'node-b',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'varB', type: VarTypes.Number }],
           title: '节点B',
@@ -549,6 +584,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'loopVar', type: VarTypes.Number }],
           title: '循环节点',
@@ -557,6 +593,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop-start',
+        type: NodeClassic.Component,
         parentId: 'loop',
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
@@ -565,7 +602,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'node-a', target: 'loop' },
       { source: 'node-b', target: 'loop' },
     ]
@@ -597,6 +634,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: '1',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'a', type: VarTypes.String }],
           title: '节点1',
@@ -605,6 +643,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: '2',
+        type: NodeClassic.Component,
         parentId: 'non-existent',
         data: {
           vars: [{ name: 'b', type: VarTypes.Number }],
@@ -613,7 +652,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [{ source: '1', target: '2' }]
+    const edges: GraphEdge[] = [{ source: '1', target: '2' }]
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -633,6 +672,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'loop',
+        type: NodeClassic.Component,
         data: {
           vars: [
             { name: 'index', type: VarTypes.Number },
@@ -644,6 +684,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'loop-start',
+        type: NodeClassic.Component,
         parentId: 'loop',
         data: {
           vars: [{ name: 'item', type: VarTypes.String }],
@@ -652,7 +693,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = []
+    const edges: GraphEdge[] = []
     const result = getNodeEnvMap(
       nodes as ComponentNode[],
       edges as WorkflowEdge[],
@@ -678,6 +719,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'arr', type: VarTypes.StringArray }],
           title: '触发器',
@@ -686,6 +728,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'iterate',
+        type: NodeClassic.Component,
         data: {
           vars: [],
           title: '迭代节点',
@@ -695,6 +738,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'iterate-start',
+        type: NodeClassic.Component,
         parentId: 'iterate',
         data: {
           vars: [],
@@ -704,6 +748,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'inner-node',
+        type: NodeClassic.Component,
         data: {
           vars: [],
           title: '内部节点',
@@ -711,7 +756,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'trigger', target: 'iterate' },
       { source: 'iterate-start', target: 'inner-node' },
     ]
@@ -739,6 +784,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
     const nodes: TestComponentNode[] = [
       {
         id: 'trigger',
+        type: NodeClassic.Component,
         data: {
           vars: [{ name: 'nums', type: VarTypes.NumberArray }],
           title: '触发器',
@@ -747,6 +793,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'iterate',
+        type: NodeClassic.Component,
         data: {
           vars: [],
           title: '迭代节点',
@@ -756,6 +803,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'iterate-start',
+        type: NodeClassic.Component,
         parentId: 'iterate',
         data: {
           vars: [],
@@ -765,6 +813,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
       },
       {
         id: 'inner-node',
+        type: NodeClassic.Component,
         data: {
           vars: [],
           title: '内部节点',
@@ -772,7 +821,7 @@ describe('测试getNodeEnvMap能否正确收集节点的env', () => {
         },
       },
     ]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'trigger', target: 'iterate' },
       { source: 'iterate-start', target: 'inner-node' },
     ]

@@ -2,35 +2,38 @@ import type {
   WorkflowEdge,
   WorkflowNode,
 } from '@/app/components/workflow/editor/types'
+import { NodeClassic } from '@shared/common/workflow/core'
 
-/**
- * 基础测试节点类型，仅包含 id
- */
-export type TestNode = {
+export type GraphNode = {
   id: string;
+}
+/**
+ * 基础测试节点类型，不含data
+ */
+export type TestNode = GraphNode & {
+  parentId?: string;
+  type: NodeClassic
 }
 
 /**
  * 带环境变量数据的测试节点类型，用于 node-env 相关测试
  */
-export type TestNodeWithData<T = any> = {
+export type TestNodeWithData<T = any> = TestNode & {
   id: string;
-  parentId?: string;
   data: T;
 }
 
 /**
  * 带位置信息的测试节点类型，用于 linked-nodes 相关测试
  */
-export type TestNodeWithPosition = {
-  id: string;
+export type TestNodeWithPosition = TestNode & {
   position: { x: number; y: number };
 }
 
 /**
  * 通用测试边类型
  */
-export type TestEdge = {
+export type GraphEdge = {
   source: string;
   target: string;
 }
@@ -41,6 +44,7 @@ export type TestEdge = {
 export const createPositionNode = (id: string): TestNodeWithPosition => ({
   id,
   position: { x: 0, y: 0 },
+  type: NodeClassic.Component, // 默认类型，可根据需要调整
 })
 
 // 重新导出类型，方便测试文件统一导入

@@ -2,14 +2,14 @@ import {
   getLinkedLastNode,
   getLinkedNodes,
 } from '@/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator'
-import type { TestEdge, WorkflowEdge, WorkflowNode } from '../../utils'
+import type { GraphEdge, WorkflowEdge, WorkflowNode } from '../../utils'
 import { createPositionNode as node } from '../../utils'
 import { describe, expect, test } from 'vitest'
 
 describe('getLinkedNodes', () => {
   test('单个节点、无边，返回仅包含 headNode 的数组', () => {
     const nodes = [node('A')]
-    const edges: TestEdge[] = []
+    const edges: GraphEdge[] = []
     const result = getLinkedNodes(
       nodes as WorkflowNode[],
       edges as WorkflowEdge[],
@@ -20,7 +20,7 @@ describe('getLinkedNodes', () => {
 
   test('线性链路 A -> B -> C，从 A 开始返回 [A, B, C]', () => {
     const nodes = [node('A'), node('B'), node('C')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' },
     ]
@@ -34,7 +34,7 @@ describe('getLinkedNodes', () => {
 
   test('从中间节点开始，只返回后续链路', () => {
     const nodes = [node('A'), node('B'), node('C')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' },
     ]
@@ -48,7 +48,7 @@ describe('getLinkedNodes', () => {
 
   test('存在分支时，只沿第一条匹配的边走', () => {
     const nodes = [node('A'), node('B'), node('C')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'A', target: 'C' },
     ]
@@ -63,7 +63,7 @@ describe('getLinkedNodes', () => {
 
   test('边的 target 不在 nodes 范围内时停止', () => {
     const nodes = [node('A'), node('B')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' }, // C 不在 nodes 中
     ]
@@ -78,7 +78,7 @@ describe('getLinkedNodes', () => {
   test('长链路正确遍历', () => {
     const ids = ['N1', 'N2', 'N3', 'N4', 'N5']
     const nodes = ids.map(id => node(id))
-    const edges: TestEdge[] = ids.slice(0, -1).map((id, i) => ({
+    const edges: GraphEdge[] = ids.slice(0, -1).map((id, i) => ({
       source: id,
       target: ids[i + 1],
     }))
@@ -92,7 +92,7 @@ describe('getLinkedNodes', () => {
 
   test('存在无关边时不受影响', () => {
     const nodes = [node('A'), node('B')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'X', target: 'Y' }, // 无关边
       { source: 'A', target: 'B' },
       { source: 'Y', target: 'A' }, // 无关边
@@ -120,7 +120,7 @@ describe('getLinkedNodes', () => {
 describe('getLinkedLastNode', () => {
   test('单个节点、无边，返回 headNode 自身', () => {
     const nodes = [node('A')]
-    const edges: TestEdge[] = []
+    const edges: GraphEdge[] = []
     const result = getLinkedLastNode(
       nodes as WorkflowNode[],
       edges as WorkflowEdge[],
@@ -131,7 +131,7 @@ describe('getLinkedLastNode', () => {
 
   test('线性链路 A -> B -> C，返回末尾节点 C', () => {
     const nodes = [node('A'), node('B'), node('C')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' },
     ]
@@ -145,7 +145,7 @@ describe('getLinkedLastNode', () => {
 
   test('从中间节点开始，返回链路末尾', () => {
     const nodes = [node('A'), node('B'), node('C')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' },
     ]
@@ -159,7 +159,7 @@ describe('getLinkedLastNode', () => {
 
   test('边的 target 不在 nodes 范围内时返回当前末尾', () => {
     const nodes = [node('A'), node('B')]
-    const edges: TestEdge[] = [
+    const edges: GraphEdge[] = [
       { source: 'A', target: 'B' },
       { source: 'B', target: 'C' },
     ]
@@ -174,7 +174,7 @@ describe('getLinkedLastNode', () => {
   test('长链路返回最后一个节点', () => {
     const ids = ['N1', 'N2', 'N3', 'N4', 'N5']
     const nodes = ids.map(id => node(id))
-    const edges: TestEdge[] = ids.slice(0, -1).map((id, i) => ({
+    const edges: GraphEdge[] = ids.slice(0, -1).map((id, i) => ({
       source: id,
       target: ids[i + 1],
     }))
