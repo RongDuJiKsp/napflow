@@ -1,9 +1,8 @@
 import { NodeClassic } from '@shared/common/workflow/core'
 import { createWorkflowNode } from '../utils/nodes'
-import type { NoteData } from './type'
-import type { WorkflowNode } from '../types'
+import type { NoteData, NoteNode } from './type'
 
-export const createNoteNode = (): WorkflowNode<NoteData> => {
+export const createNoteNode = (): NoteNode => {
   return createWorkflowNode<NoteData>({
     type: NodeClassic.Note,
     data: {
