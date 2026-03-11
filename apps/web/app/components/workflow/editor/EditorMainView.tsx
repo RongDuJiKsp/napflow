@@ -18,6 +18,7 @@ import {
 } from './hooks/use-reactflow-ext'
 import NodeEditSiderbar from './component-nodes/mainview/node-edit-siderbar'
 import WorkflowEnv from './mainview/workflow-env'
+import { useKeyPress } from 'ahooks'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id="editor-wrapper" className="h-full">
@@ -64,7 +65,7 @@ const EditorMainView = ({
   // sticky node
   const handleMouseMove = useStore(editorStore, state => state.handleMove)
   // operator
-  const { handleConnect, handleNodesChange: handleNodesChangeForOperator }
+  const { handleConnect, handleNodesChange: handleNodesChangeForOperator, handleDeleteSelectedElements }
     = useWorkflowViewOperations()
 
   // merge muti changes
@@ -75,6 +76,8 @@ const EditorMainView = ({
     },
     [handleNodesChangeForStore, handleNodesChangeForOperator],
   )
+  // keysdown
+  useKeyPress('Delete', handleDeleteSelectedElements)
   return (
     <EditorLayout>
       <ReactFlow

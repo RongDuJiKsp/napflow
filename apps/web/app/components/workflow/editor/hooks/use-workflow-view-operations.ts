@@ -7,6 +7,7 @@ import { useComponentNodeOperations } from '../component-nodes/hooks/use-compone
 import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
+import { useCommNodeOperation } from './use-comm-node-operation'
 
 export const checkAfterConnMakeCycle = <
   GNode extends WorkflowNode,
@@ -51,8 +52,9 @@ export const useWorkflowViewOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
-  const { handleConnect: handleComponentNodeConnect }
+  const { handleConnect: handleComponentNodeConnect, handleDeleteNode: handleComponentNodeDelete }
     = useComponentNodeOperations()
+  const { deleteNode: deleteCommNode } = useCommNodeOperation()
 
   const handleConnect = useCallback(
     ({ source, target, sourceHandle, targetHandle }: Connection) => {
@@ -131,8 +133,32 @@ export const useWorkflowViewOperations = () => {
     [reactflow, handleSingleNodeSelect, handleNodesDeselect],
   )
 
+  const handleDeleteSelectedElements = useCallback(() => {
+    const selectedNodes = reactflow.getNodes().filter(n => n.selected)
+    const selectedEdges = reactflow.getEdges().filter(e => e.selected)
+    if (selectedNodes.length === 0 && selectedEdges.length === 0) return
+
+    if (selectedEdges.length > 0) {
+      const selectedEdgeIds = new Set(selectedEdges.map(e => e.id))
+      reactflow.setEdges(edges =>
+        edges.filter(edge => !selectedEdgeIds.has(edge.id)),
+      )
+    }
+
+    for (const node of selectedNodes) {
+      if (node.type === NodeClassic.Component) {
+        handleComponentNodeDelete(node as ComponentNode)
+        continue
+      }
+      deleteCommNode(node)
+    }
+
+    submitSyncDraft()
+  }, [reactflow, handleComponentNodeDelete, deleteCommNode, submitSyncDraft])
+
   return {
     handleConnect,
     handleNodesChange,
+    handleDeleteSelectedElements,
   }
 }
