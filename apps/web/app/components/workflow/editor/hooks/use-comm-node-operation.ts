@@ -52,12 +52,14 @@ export const useCommContainerNodeOperation = () => {
     },
     [reactflow],
   )
+
   const deleteNodeAndChildren = useCallback(
     (node: WorkflowNode) => {
       deleteNodeAndChildrenById(node.id)
     },
     [deleteNodeAndChildrenById],
   )
+
   return {
     deleteNodeAndChildrenById,
     deleteNodeAndChildren,

@@ -50,7 +50,7 @@ export const useStickyNode = () => {
 export const useStickyEventsRegister = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { handleAddLoopNode } = useLoopNodeOperator()
-  const { handleAddIterateNode } = useIterateNodeOperator()
+  const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
   useEventListener('click', (e) => {
@@ -75,7 +75,7 @@ export const useStickyEventsRegister = () => {
       placedNode.type === NodeClassic.Component
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Iterate
     )
-      handleAddIterateNode(placedNode)
+      handleMoveConstructorIterateNode(placedNode)
     else reactflow.addNodes(placedNode)
 
     removeStickyElement()
