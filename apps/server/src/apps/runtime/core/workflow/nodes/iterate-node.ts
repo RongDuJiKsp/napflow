@@ -36,7 +36,8 @@ export class IterateNode extends CommNode<IterateDataCtx> {
       return
     }
 
-    _nkv['iter.index'] = (_nkv['iter.index'] || -1) + 1
+    // 注意这里的 ?? 一定不能被 || 代替
+    _nkv['iter.index'] = (_nkv['iter.index'] ?? -1) + 1
     _nkv['iter.maxIndex'] = sourceArr.length - 1
     if (_nkv['iter.index'] >= sourceArr.length) return
     _nkv['iter.item'] = sourceArr[_nkv['iter.index']]
