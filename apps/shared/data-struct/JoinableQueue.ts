@@ -24,6 +24,16 @@ class JoinableQueue<T> extends Deque<T> {
     return new JoinableQueue<T>(this.toArray())
   }
 
+  enqueueNext(element: T): JoinableQueue<T> {
+    this.pushFront(element)
+    return this
+  }
+
+  enqueueNextMany(elements: T[]): JoinableQueue<T> {
+    for (let i = elements.length - 1; i >= 0; i--) this.enqueueNext(elements[i])
+    return this
+  }
+
   static fromArray<E>(elements: E[]): JoinableQueue<E> {
     return new JoinableQueue<E>(elements)
   }
