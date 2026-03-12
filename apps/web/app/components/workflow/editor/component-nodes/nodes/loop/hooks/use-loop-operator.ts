@@ -7,7 +7,7 @@ import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { createWorkflowEdge } from '../../../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../../../constants'
 import type { ComponentNode } from '../../../types'
-import { useCommNodeOperation } from '../../../../hooks/use-comm-node-operation'
+import { useCommContainerNodeOperation } from '../../../../hooks/use-comm-node-operation'
 import { NodeClassic } from '@shared/common/workflow/core'
 
 /**
@@ -57,7 +57,7 @@ export const getLinkedLastNode = <
 
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const { deleteNodeAndChildren } = useCommNodeOperation()
+  const { deleteNodeAndChildren } = useCommContainerNodeOperation()
   const handleAddLoopNode = useCallback(
     (loopNode: WorkflowNode) => {
       // 设置容器节点的初始宽高，配合 NodeResizer 使用
