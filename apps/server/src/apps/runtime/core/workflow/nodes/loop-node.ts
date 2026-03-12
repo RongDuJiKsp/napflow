@@ -5,10 +5,10 @@ import {
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
-import { GraphRunner, type WorkflowThread } from '../pool'
+import type { GraphRunner } from '../pool'
+import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { LoopDataRawSchema } from '@shared/common/workflow/node-data/loop'
-import { buildIdCache, buildNeighGraph } from '@/src/utils/algorithm'
 import { Logger } from '@nestjs/common'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
@@ -65,16 +65,6 @@ export class LoopNode extends CommNode<LoopDataCtx> {
 
   // 获取子图的 GraphRunner
   getRunner(thread: WorkflowThread): GraphRunner {
-    const subNodes = thread.plugin.commNodes.filter(
-      node => node.parentId === this.id,
-    )
-    const subNodeIdSet = new Set(subNodes.map(node => node.id))
-    const subEdges = thread.plugin.commEdges.filter(
-      edge => subNodeIdSet.has(edge.source) || subNodeIdSet.has(edge.target),
-    )
-    const subGraph = buildNeighGraph(subNodes, subEdges)
-    const subNodeCache = buildIdCache(subNodes)
-    const subGraphRunner = new GraphRunner(subGraph, subNodeCache)
-    return subGraphRunner
+    return thread.getSubGraphRunner(this.id)
   }
 }

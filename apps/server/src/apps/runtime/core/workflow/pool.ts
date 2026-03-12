@@ -194,6 +194,17 @@ export class CommPlugin<SDK = unknown> {
   unmount() {
     this.sdk = null
   }
+
+  getSubGraph(parentNodeId: string) {
+    const subNodes = this.commNodes.filter(
+      node => node.parentId === parentNodeId,
+    )
+    const subNodeIdSet = new Set(subNodes.map(node => node.id))
+    const subEdges = this.commEdges.filter(
+      edge => subNodeIdSet.has(edge.source) || subNodeIdSet.has(edge.target),
+    )
+    return buildNeighGraph(subNodes, subEdges)
+  }
 }
 
 /**
@@ -275,5 +286,15 @@ export class WorkflowThread<SDK = unknown> {
 
   getLogger(klass: Class<CommNode>): Logger {
     return new Logger(`${WorkflowThread.name}::${klass.name}`)
+  }
+
+  getSubGraphRunner(parentNodeId: string) {
+    const subNodes = this.plugin.commNodes.filter(
+      node => node.parentId === parentNodeId,
+    )
+    const subGraph = this.plugin.getSubGraph(parentNodeId)
+    const subNodeCache = buildIdCache(subNodes)
+    const subGraphRunner = new GraphRunner(subGraph, subNodeCache)
+    return subGraphRunner
   }
 }
