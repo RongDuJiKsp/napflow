@@ -12,7 +12,7 @@ import type { NodeKlassMap } from './constant'
 import { NodeSchemaMap } from './constant'
 import { buildIdCache, buildNeighGraph } from '@/src/utils/algorithm'
 import { merge } from 'lodash-es'
-import { Queue } from 'datastructures-js'
+import JoinableQueue from '@shared/data-struct/JoinableQueue'
 import { Logger } from '@nestjs/common'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
@@ -26,7 +26,7 @@ export type PluginConfigs = {
  * @description 图运行器 托管节点执行队列和入度管理，负责获取下一个需要执行的节点
  */
 export class GraphRunner {
-  private readonly availableNodes = new Queue<CommNode>()
+  private readonly availableNodes = new JoinableQueue<CommNode>()
   private readonly mayBeNextNodeDegree: Map<CommNode, number> = new Map()
 
   constructor(
