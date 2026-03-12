@@ -50,11 +50,9 @@ export class LoopNode extends CommNode<LoopDataCtx> {
     // 获取子图的 GraphRunner
     const subGraphRunner = this.getRunner(thread)
     subGraphRunner.enqueue(headNodes[0])
-    // 将子图的节点加入队列
-    for (const node of subGraphRunner.consumeAll())
-      thread.graphRunner.enqueue(node)
 
-    thread.graphRunner.enqueue(this) // loop节点自己也加入队列 通过读取nkv的循环索引来判断是否继续循环
+        // loop 节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
+    thread.graphRunner.enqueueNextMany([...subGraphRunner.consumeAll(), this])
   }
 
   // 获取子图的 GraphRunner

@@ -41,6 +41,14 @@ export class GraphRunner {
     this.availableNodes.enqueue(node)
   }
 
+  enqueueNext(node: CommNode) {
+    this.availableNodes.enqueueNext(node)
+  }
+
+  enqueueNextMany(nodes: CommNode[]) {
+    this.availableNodes.enqueueNextMany(nodes)
+  }
+
   /** 当前待执行队列的节点数量 */
   size(): number {
     return this.availableNodes.size()

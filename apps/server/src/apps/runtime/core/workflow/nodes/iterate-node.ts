@@ -56,10 +56,8 @@ export class IterateNode extends CommNode<IterateDataCtx> {
     const subGraphRunner = this.getRunner(thread)
     subGraphRunner.enqueue(headNodes[0])
 
-    for (const node of subGraphRunner.consumeAll())
-      thread.graphRunner.enqueue(node)
-
-    thread.graphRunner.enqueue(this)
+    // iterate节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
+    thread.graphRunner.enqueueNextMany([...subGraphRunner.consumeAll(), this])
   }
 
   private getIteratorTarget(thread: WorkflowThread): unknown {
