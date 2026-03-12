@@ -72,19 +72,9 @@ export class GraphRunner {
     const toRemoveSet = new Set(toRemoveNodeId)
     for (const target of toRemoveNodeId)
       this.mayBeNextNodeDegree.delete(this.commNodeCache[target])
-    const toRepushArr = <CommNode[]>[]
-    for (
-      let item = this.availableNodes.dequeue();
-      !!item;
-      item = this.availableNodes.dequeue()
-    ) {
-      if (!item) break
-
-      if (toRemoveSet.has(item.id)) continue
-
-      toRepushArr.push(item)
-    }
-    for (const i of toRepushArr) this.availableNodes.enqueue(i)
+    const toRepushArr = this.availableNodes.toArray().filter(item => !toRemoveSet.has(item.id))
+    this.availableNodes.clear()
+    this.availableNodes.enqueueNextMany(toRepushArr)
   }
 
   /** 根据当前节点的后继，更新入度并将就绪节点加入队列 */
