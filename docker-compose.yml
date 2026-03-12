@@ -1,0 +1,105 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: napflow-mysql
+    init: true
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-napflow_db}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:${MYSQL_BIND_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - napflow_net
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  server:
+    image: napflow-server:latest
+    pull_policy: never
+    container_name: napflow-server
+    init: true
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      HOST_NAME: 0.0.0.0
+      PORT: ${SERVER_PORT:-8848}
+      MYSQL_USERNAME: ${MYSQL_USER}
+      MYSQL_PWD: ${MYSQL_PASSWORD}
+      MYSQL_HOSTPORT: mysql:3306
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-napflow_db}
+      ACC_ROOT_EMAIL: ${ACC_ROOT_EMAIL}
+      ACC_ROOT_NICKNAME: ${ACC_ROOT_NICKNAME}
+      ACC_ROOT_PASSWORD: ${ACC_ROOT_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    ports:
+      - "${SERVER_BIND_IP:-0.0.0.0}:${SERVER_PORT:-8848}:8848"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - napflow_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    image: napflow-web:latest
+    pull_policy: never
+    container_name: napflow-web
+    init: true
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        SERVER_URL: http://server:8848
+    restart: unless-stopped
+    depends_on:
+      - server
+    environment:
+      NODE_ENV: production
+      SERVER_URL: http://server:8848
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      NEXT_PUBLIC_NODE_ENV: production
+    ports:
+      - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-3000}:3000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - napflow_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  mysql_data:
+
+networks:
+  napflow_net:
+    driver: bridge
