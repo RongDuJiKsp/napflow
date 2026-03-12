@@ -56,7 +56,8 @@ export class IterateNode extends CommNode<IterateDataCtx> {
     const subGraphRunner = this.getRunner(thread)
     subGraphRunner.enqueue(headNodes[0])
 
-    for (const node of subGraphRunner.consumeAll()) thread.graphRunner.enqueue(node)
+    for (const node of subGraphRunner.consumeAll())
+      thread.graphRunner.enqueue(node)
 
     thread.graphRunner.enqueue(this)
   }
