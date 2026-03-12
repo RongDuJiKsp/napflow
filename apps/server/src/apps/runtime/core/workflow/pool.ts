@@ -104,6 +104,16 @@ export class GraphRunner {
       }
     }
   }
+
+  consumeAll() {
+    const runableNodes: CommNode[] = []
+    while (this.hasNext()) {
+      const node = this.next()
+      if (!node) continue
+      runableNodes.push(node)
+    }
+    return runableNodes
+  }
 }
 
 /**
