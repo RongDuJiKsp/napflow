@@ -10,7 +10,7 @@ import {
 } from '@shared/common/workflow/core'
 import type { NodeKlassMap } from './constant'
 import { NodeSchemaMap } from './constant'
-import { buildIdCache, buildNeighGraph } from '@/src/utils/algorithm'
+import { buildIdCache, buildNeighGraph, getConnectedNodes } from '@/src/utils/algorithm'
 import { merge } from 'lodash-es'
 import JoinableQueue from '@shared/data-struct/JoinableQueue'
 import { Logger } from '@nestjs/common'
@@ -34,6 +34,8 @@ export class GraphRunner {
       CommNode,
       { prev: CommNode[]; next: CommNode[] }
     >,
+    // 如果传入了 mainGraphNodes 则只对这些节点进行入度管理，否则对所有节点进行入度管理
+    private readonly mainGraphNodes: Set<CommNode> | null,
     private readonly commNodeCache: Record<string, CommNode>,
   ) {}
 
@@ -63,7 +65,9 @@ export class GraphRunner {
   next(): CommNode | null {
     const currNode = this.availableNodes.dequeue()
     if (!currNode) return null
-    this.readyExecNext(currNode)
+    if (!this.mainGraphNodes || this.mainGraphNodes.has(currNode))
+      this.readyExecNext(currNode)
+
     return currNode
   }
 
@@ -131,6 +135,7 @@ export class CommPlugin<SDK = unknown> {
   readonly commEdges: CommEdge[]
   readonly commEdgeCache: Record<string, CommEdge>
   readonly graphHead: CommNode & CommTrigger
+  readonly graphHeadConnectedNodes: Set<CommNode>
   readonly configs: PluginConfigs
   sdk: SDK | null = null
 
@@ -172,6 +177,7 @@ export class CommPlugin<SDK = unknown> {
     this.commNodeCache = buildIdCache(commNodes)
     this.commEdges = commEdges
     this.commEdgeCache = buildIdCache(commEdges)
+    this.graphHeadConnectedNodes = getConnectedNodes(this.nodeGraph, this.graphHead.id)
   }
 
   get threadList() {
@@ -236,7 +242,7 @@ export class WorkflowThread<SDK = unknown> {
   constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin<SDK>) {
     this.triggerEndpoint = triggerEndpoint
     this.plugin = plugin
-    this.graphRunner = new GraphRunner(plugin.nodeGraph, plugin.commNodeCache)
+    this.graphRunner = new GraphRunner(plugin.nodeGraph, plugin.graphHeadConnectedNodes, plugin.commNodeCache)
 
     this.logger.debug(`thread created by${triggerEndpoint}`)
     // 将endpoints初始化到节点
@@ -302,7 +308,7 @@ export class WorkflowThread<SDK = unknown> {
     )
     const subGraph = this.plugin.getSubGraph(parentNodeId)
     const subNodeCache = buildIdCache(subNodes)
-    const subGraphRunner = new GraphRunner(subGraph, subNodeCache)
+    const subGraphRunner = new GraphRunner(subGraph, null, subNodeCache)
     return subGraphRunner
   }
 }

@@ -30,5 +30,25 @@ export const buildNeighGraph = <Node extends MetaNode, Edge extends MetaEdge>(
   return graph
 }
 
+export const getConnectedNodes = <Node extends MetaNode>(
+  graph: NeighGraph<Node>,
+  nodeId: string,
+): Set<Node> => {
+  const visited = new Set<Node>()
+  const startNode = [...graph.keys()].find(n => n.id === nodeId)
+  if (!startNode) return visited
+
+  const stack = [startNode]
+  while (stack.length > 0) {
+    const current = stack.pop()!
+    if (visited.has(current)) continue
+    visited.add(current)
+    const neighbors = graph.get(current)!
+    for (const n of neighbors.prev) if (!visited.has(n)) stack.push(n)
+    for (const n of neighbors.next) if (!visited.has(n)) stack.push(n)
+  }
+  return visited
+}
+
 export const buildIdCache = <T extends { id: string }>(arr: T[]) =>
   Object.fromEntries(arr.map(item => [item.id, item]))

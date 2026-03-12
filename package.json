@@ -30,6 +30,7 @@
     "datastructures-js": "^13.0.0",
     "dotenv": "^17.3.1",
     "lodash-es": "^4.17.23",
+    "mnemonist": "^0.40.3",
     "ring-buffer-ts": "^1.2.0",
     "zod": "^4.1.12",
     "zod-deep-partial": "^1.2.0"
