@@ -12,7 +12,7 @@ export const DifyInputEntrySchema = z.object({
 export type DifyInputEntry = z.infer<typeof DifyInputEntrySchema>
 
 export const DifyDataSchema = z.object({
-  mode: z.nativeEnum(DifyMode),
+  mode: z.enum(DifyMode),
   baseUrl: z.string().min(1, '请输入 Dify API 地址'),
   apiKey: z.string().min(1, '请输入 Dify API Key'),
   query: z.string().optional(),
