@@ -1,6 +1,6 @@
 {
   "name": "napflow",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
     "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
