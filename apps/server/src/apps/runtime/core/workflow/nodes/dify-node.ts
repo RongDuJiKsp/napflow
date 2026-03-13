@@ -44,8 +44,8 @@ export class DifyNode extends CommNode<DifyDataCtx> {
       compiledInputs[entry.key] = compileTemplate(entry.value, thread)
 
     const bodyObj = isChatflow
-      ? { inputs: {}, query, response_mode: 'blocking', conversation_id: '', user: 'napflow' }
-      : { inputs: compiledInputs, response_mode: 'blocking', user: 'napflow' }
+      ? { inputs: {}, query, response_mode: 'blocking', conversation_id: '', user: `napflow${this.id}${thread.id}` }
+      : { inputs: compiledInputs, response_mode: 'blocking', user: `napflow${this.id}${thread.id}` }
 
     let answer: string
     try {

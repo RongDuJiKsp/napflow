@@ -58,7 +58,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
             envs={vars}
             value={data.baseUrl}
             onChange={handleBaseUrlChange}
-            placeholder="例如：https://api.dify.ai，输入 $ 引用变量"
+            placeholder="例如：https://api.dify.ai/v1，输入 $ 引用变量"
             className={{
               contentEditable:
                 'text-sm border border-sky-200 rounded-lg focus:border-sky-500 focus:ring-1 focus:ring-sky-200 p-2 transition-all',
