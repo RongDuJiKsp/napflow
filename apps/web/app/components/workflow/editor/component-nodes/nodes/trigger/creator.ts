@@ -25,6 +25,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
     ComponentNodesEnum.If,
     ComponentNodesEnum.Loop,
     ComponentNodesEnum.Iterate,
+    ComponentNodesEnum.Dify,
   ],
   env: [
     { type: VarTypes.String, name: 'trigger.triggerid' },
