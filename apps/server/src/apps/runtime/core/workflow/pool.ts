@@ -257,7 +257,7 @@ export class WorkflowThread<SDK = unknown> {
 
   private async execNode(currNode: CommNode, nextTask: WillTask) {
     this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
-    currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
+    await currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
   }
 
   async tick(nextTask: WillTask) {

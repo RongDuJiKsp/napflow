@@ -7,6 +7,7 @@ import { LoopNode } from '@/src/apps/runtime/core/workflow/nodes/loop-node'
 import { LoopStartNode } from '@/src/apps/runtime/core/workflow/nodes/loop-start-node'
 import { IterateNode } from '@/src/apps/runtime/core/workflow/nodes/iterate-node'
 import { IterateStartNode } from '@/src/apps/runtime/core/workflow/nodes/iterate-start-node'
+import { DifyNode } from '@/src/apps/runtime/core/workflow/nodes/dify-node'
 
 export const NcKlassMap: typeof NodeKlassMap = {
   [ComponentNodesEnum.Trigger]: NcTriggerNode,
@@ -16,4 +17,5 @@ export const NcKlassMap: typeof NodeKlassMap = {
   [ComponentNodesEnum.LoopStart]: LoopStartNode,
   [ComponentNodesEnum.Iterate]: IterateNode,
   [ComponentNodesEnum.IterateStart]: IterateStartNode,
+  [ComponentNodesEnum.Dify]: DifyNode,
 }

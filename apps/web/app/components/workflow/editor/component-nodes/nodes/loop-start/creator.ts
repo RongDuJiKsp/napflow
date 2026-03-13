@@ -23,6 +23,7 @@ export const LoopStartNodeCreator: ComponentCreator<LoopStartData> = {
     ComponentNodesEnum.If,
     ComponentNodesEnum.Loop,
     ComponentNodesEnum.Iterate,
+    ComponentNodesEnum.Dify,
   ],
   env: [
     { type: VarTypes.Number, name: 'loop.index' },
