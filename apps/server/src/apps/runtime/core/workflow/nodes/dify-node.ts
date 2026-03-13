@@ -36,8 +36,8 @@ export class DifyNode extends CommNode<DifyDataCtx> {
     const base = baseUrl.replace(/\/$/, '')
     const isChatflow = this.data.mode === DifyMode.Chatflow
     const url = isChatflow
-      ? `${base}/v1/chat-messages`
-      : `${base}/v1/workflows/run`
+      ? `${base}/chat-messages`
+      : `${base}/workflows/run`
 
     const compiledInputs: Record<string, string> = {}
     for (const entry of this.data.inputs ?? [])
