@@ -3,14 +3,16 @@ import type { ComponentCreator } from '../../types'
 import DifyNode from './node'
 import DifyPanel from './panel'
 import { RiRobot2Line } from '@remixicon/react'
-import { DifyDataSchema } from '@shared/common/workflow/node-data/dify'
+import { DifyDataSchema, DifyMode } from '@shared/common/workflow/node-data/dify'
 import type { DifyData } from '@shared/common/workflow/node-data/dify'
 
 export const DifyNodeCreator: ComponentCreator<DifyData> = {
   create: () => ({
+    mode: DifyMode.Chatflow,
     baseUrl: '',
     apiKey: '',
     query: '',
+    inputs: [],
   }),
   schema: DifyDataSchema,
   label: '访问 Dify',
