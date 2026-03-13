@@ -9,6 +9,7 @@ export enum ComponentNodesEnum {
   LoopStart = 'loop-start',
   Iterate = 'iterate',
   IterateStart = 'iterate-start',
+  Dify = 'dify',
 }
 
 // x-start 节点只能作为 x 节点的子节点被自动创建，不出现在菜单中

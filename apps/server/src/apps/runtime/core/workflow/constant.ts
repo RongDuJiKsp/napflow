@@ -10,6 +10,7 @@ import {
   IterateStartDataCtxSchema,
   IterateStartNode,
 } from './nodes/iterate-start-node'
+import { DifyDataCtxSchema, DifyNode } from './nodes/dify-node'
 import type { Class } from 'type-fest'
 import type z from 'zod'
 
@@ -21,6 +22,7 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.LoopStart]: LoopStartNode,
   [ComponentNodesEnum.Iterate]: IterateNode,
   [ComponentNodesEnum.IterateStart]: IterateStartNode,
+  [ComponentNodesEnum.Dify]: DifyNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -34,4 +36,5 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.LoopStart]: LoopStartDataCtxSchema,
   [ComponentNodesEnum.Iterate]: IterateDataCtxSchema,
   [ComponentNodesEnum.IterateStart]: IterateStartDataCtxSchema,
+  [ComponentNodesEnum.Dify]: DifyDataCtxSchema,
 }
