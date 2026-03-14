@@ -7,6 +7,7 @@ import { LoopStartNodeCreator } from './nodes/loop-start/creator'
 import { IterateNodeCreator } from './nodes/iterate/creator'
 import { IterateStartNodeCreator } from './nodes/iterate-start/creator'
 import { DifyNodeCreator } from './nodes/dify/creator'
+import { JsonReadNodeCreator } from './nodes/json-read/creator'
 import type { ComponentCreator } from './types'
 
 export const COMPONENT_NODE_PANEL_ID = 'component-node-panel'
@@ -20,4 +21,5 @@ export const ComponentNodeCreatorMap = {
   [ComponentNodesEnum.Iterate]: IterateNodeCreator,
   [ComponentNodesEnum.IterateStart]: IterateStartNodeCreator,
   [ComponentNodesEnum.Dify]: DifyNodeCreator,
+  [ComponentNodesEnum.JsonRead]: JsonReadNodeCreator,
 } as Record<ComponentNodesEnum, ComponentCreator<unknown>>

@@ -24,6 +24,7 @@ export const LoopStartNodeCreator: ComponentCreator<LoopStartData> = {
     ComponentNodesEnum.Loop,
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
+    ComponentNodesEnum.JsonRead,
   ],
   env: [
     { type: VarTypes.Number, name: 'loop.index' },

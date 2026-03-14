@@ -11,6 +11,7 @@ import {
   IterateStartNode,
 } from './nodes/iterate-start-node'
 import { DifyDataCtxSchema, DifyNode } from './nodes/dify-node'
+import { JsonReadDataCtxSchema, JsonReadNode } from './nodes/json-read-node'
 import type { Class } from 'type-fest'
 import type z from 'zod'
 
@@ -23,6 +24,7 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.Iterate]: IterateNode,
   [ComponentNodesEnum.IterateStart]: IterateStartNode,
   [ComponentNodesEnum.Dify]: DifyNode,
+  [ComponentNodesEnum.JsonRead]: JsonReadNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -37,4 +39,5 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.Iterate]: IterateDataCtxSchema,
   [ComponentNodesEnum.IterateStart]: IterateStartDataCtxSchema,
   [ComponentNodesEnum.Dify]: DifyDataCtxSchema,
+  [ComponentNodesEnum.JsonRead]: JsonReadDataCtxSchema,
 }

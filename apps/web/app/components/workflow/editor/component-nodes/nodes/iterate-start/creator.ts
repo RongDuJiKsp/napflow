@@ -23,6 +23,7 @@ export const IterateStartNodeCreator: ComponentCreator<IterateStartData> = {
     ComponentNodesEnum.Loop,
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
+    ComponentNodesEnum.JsonRead,
   ],
   env: [{ type: VarTypes.String, name: 'iter.item' }],
 }

@@ -10,6 +10,7 @@ export enum ComponentNodesEnum {
   Iterate = 'iterate',
   IterateStart = 'iterate-start',
   Dify = 'dify',
+  JsonRead = 'json-read',
 }
 
 // x-start 节点只能作为 x 节点的子节点被自动创建，不出现在菜单中
