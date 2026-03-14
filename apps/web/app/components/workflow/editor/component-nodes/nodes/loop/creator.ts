@@ -22,6 +22,7 @@ export const LoopNodeCreator: ComponentCreator<LoopData> = {
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.IterateStart,
     ComponentNodesEnum.Dify,
+    ComponentNodesEnum.JsonRead,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
@@ -29,6 +30,7 @@ export const LoopNodeCreator: ComponentCreator<LoopData> = {
     ComponentNodesEnum.Loop,
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
+    ComponentNodesEnum.JsonRead,
   ],
   env: [],
   isContainer: true,
