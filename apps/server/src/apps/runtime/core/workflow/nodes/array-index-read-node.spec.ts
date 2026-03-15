@@ -72,7 +72,7 @@ describe('ArrayIndexReadNode', () => {
     expect(nkv.value).toBe(30)
   })
 
-  it('returns empty string when index is invalid', () => {
+  it('returns undefined when index is invalid', () => {
     const node = createNode('x')
     const nkv: Record<string, unknown> = {}
     const thread = {
@@ -87,7 +87,7 @@ describe('ArrayIndexReadNode', () => {
     expect(nkv.value).toBeUndefined()
   })
 
-  it('returns empty string when source is not array', () => {
+  it('returns undefined when source is not array', () => {
     const node = createNode('1')
     const nkv: Record<string, unknown> = {}
     const thread = {
