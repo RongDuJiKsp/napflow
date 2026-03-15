@@ -2,24 +2,24 @@ import {
   ComponentNodesEnum,
 } from '@shared/common/workflow/component-node'
 import type { ComponentCreator } from '../../types'
-import JsonReadNode from './node'
-import JsonReadPanel from './panel'
+import ArrayIndexReadNode from './node'
+import ArrayIndexReadPanel from './panel'
 import { RiFileList3Line } from '@remixicon/react'
 import {
-  type JsonReadData,
-  JsonReadDataSchema,
-} from '@shared/common/workflow/node-data/json-read'
+  type ArrayIndexReadData,
+  ArrayIndexReadDataSchema,
+} from '@shared/common/workflow/node-data/array-index-read'
 
-export const JsonReadNodeCreator: ComponentCreator<JsonReadData> = {
+export const ArrayIndexReadNodeCreator: ComponentCreator<ArrayIndexReadData> = {
   create: () => ({
     sourceVarName: '',
-    outputs: [],
+    index: '',
   }),
-  schema: JsonReadDataSchema,
-  label: 'JSON取字段',
+  schema: ArrayIndexReadDataSchema,
+  label: '数组取索引',
   icon: RiFileList3Line,
-  nodeComponent: JsonReadNode,
-  editPanelComponent: JsonReadPanel,
+  nodeComponent: ArrayIndexReadNode,
+  editPanelComponent: ArrayIndexReadPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
     ComponentNodesEnum.Reply,

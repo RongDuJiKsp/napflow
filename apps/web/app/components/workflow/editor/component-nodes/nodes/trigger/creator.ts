@@ -27,6 +27,7 @@ export const TriggerNodeCreator: ComponentCreator<TriggerData> = {
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
+    ComponentNodesEnum.ArrayIndexRead,
   ],
   env: [
     { type: VarTypes.String, name: 'trigger.triggerid' },

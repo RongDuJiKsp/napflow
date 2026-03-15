@@ -41,6 +41,7 @@ export const IfNodeCreator: ComponentCreator<IfData> = {
     ComponentNodesEnum.If,
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
+    ComponentNodesEnum.ArrayIndexRead,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
@@ -49,6 +50,7 @@ export const IfNodeCreator: ComponentCreator<IfData> = {
     ComponentNodesEnum.If,
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
+    ComponentNodesEnum.ArrayIndexRead,
   ],
   mutiNextHandles: true,
 }
