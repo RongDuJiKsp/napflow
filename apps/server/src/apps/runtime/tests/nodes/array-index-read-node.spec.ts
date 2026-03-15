@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { NodeClassic } from '@shared/common/workflow/core'
 import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-node'
 import { ArrayIndexReadNode } from '../../core/workflow/nodes/array-index-read-node'
+import { createMockNextTask, createTestThread } from '../utils/workflow-thread'
 
 describe('数组索引读取节点', () => {
   const createNode = (index: string) => {
@@ -20,31 +21,31 @@ describe('数组索引读取节点', () => {
   it('按数字索引从源数组读取元素', () => {
     const node = createNode('1')
     const nkv: Record<string, unknown> = {}
-    const thread = {
+    const { thread } = createTestThread({
       nodeKv: {
         trigger: {
           text: ['a', 'b', 'c'],
         },
       },
-    } as any
+    })
 
-    node.onThread(thread, {} as any, nkv)
+    node.onThread(thread, createMockNextTask() as any, nkv)
     expect(nkv.value).toBe('b')
   })
 
   it('支持在索引输入中使用变量引用', () => {
     const node = createNode('{{#trigger.index#}}')
     const nkv: Record<string, unknown> = {}
-    const thread = {
+    const { thread } = createTestThread({
       nodeKv: {
         trigger: {
           text: [10, 20, 30],
           index: 2,
         },
       },
-    } as any
+    })
 
-    node.onThread(thread, {} as any, nkv)
+    node.onThread(thread, createMockNextTask() as any, nkv)
     expect(nkv.value).toBe(30)
   })
 
@@ -60,45 +61,45 @@ describe('数组索引读取节点', () => {
       },
     })
     const nkv: Record<string, unknown> = {}
-    const thread = {
+    const { thread } = createTestThread({
       nodeKv: {
         trigger: {
           text: [10, 20, 30],
         },
       },
-    } as any
+    })
 
-    node.onThread(thread, {} as any, nkv)
+    node.onThread(thread, createMockNextTask() as any, nkv)
     expect(nkv.value).toBe(30)
   })
 
   it('索引无效时返回 undefined', () => {
     const node = createNode('x')
     const nkv: Record<string, unknown> = {}
-    const thread = {
+    const { thread } = createTestThread({
       nodeKv: {
         trigger: {
           text: ['a', 'b', 'c'],
         },
       },
-    } as any
+    })
 
-    node.onThread(thread, {} as any, nkv)
+    node.onThread(thread, createMockNextTask() as any, nkv)
     expect(nkv.value).toBeUndefined()
   })
 
   it('源数据不是数组时返回 undefined', () => {
     const node = createNode('1')
     const nkv: Record<string, unknown> = {}
-    const thread = {
+    const { thread } = createTestThread({
       nodeKv: {
         trigger: {
           text: 'abc',
         },
       },
-    } as any
+    })
 
-    node.onThread(thread, {} as any, nkv)
+    node.onThread(thread, createMockNextTask() as any, nkv)
     expect(nkv.value).toBeUndefined()
   })
 })
