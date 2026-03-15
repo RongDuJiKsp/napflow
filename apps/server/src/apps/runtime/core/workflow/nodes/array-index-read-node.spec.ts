@@ -45,7 +45,7 @@ describe('ArrayIndexReadNode', () => {
     } as any
 
     node.onThread(thread, {} as any, nkv)
-    expect(nkv.value).toBe('30')
+    expect(nkv.value).toBe(30)
   })
 
   it('reads numbers from source array into numeric var', () => {
