@@ -84,7 +84,7 @@ describe('ArrayIndexReadNode', () => {
     } as any
 
     node.onThread(thread, {} as any, nkv)
-    expect(nkv.value).toBe('')
+    expect(nkv.value).toBeUndefined()
   })
 
   it('returns empty string when source is not array', () => {
@@ -99,6 +99,6 @@ describe('ArrayIndexReadNode', () => {
     } as any
 
     node.onThread(thread, {} as any, nkv)
-    expect(nkv.value).toBe('')
+    expect(nkv.value).toBeUndefined()
   })
 })
