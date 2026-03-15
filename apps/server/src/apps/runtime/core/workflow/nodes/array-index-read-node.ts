@@ -27,7 +27,6 @@ export class ArrayIndexReadNode extends CommNode<ArrayIndexReadDataCtx> {
   ): void | Promise<void> {
     const sourceVarName = this.data.sourceVarName.trim()
     const rawIndex = compileTemplate(this.data.index, thread).trim()
-    nkv.value = ''
 
     if (!sourceVarName || !rawIndex) return
 
@@ -41,7 +40,6 @@ export class ArrayIndexReadNode extends CommNode<ArrayIndexReadDataCtx> {
     const index = Number(rawIndex)
     if (!Number.isInteger(index) || index < 0) return
 
-    const value = sourceRaw[index]
-    nkv.value = value == null ? '' : String(value)
+    nkv.value = sourceRaw[index]
   }
 }
