@@ -5,6 +5,7 @@ import { Label } from '@heroui/react'
 import VarSelect from '../../common/var-select'
 import InputWithEnv from '../../common/input-with-env'
 import { useArrayIndexReadCurd } from './hooks/use-array-index-read-curd'
+import ProviderEnv from '../../common/provider-env'
 
 const ArrayIndexReadPanel: ComponentPanelFc<ArrayIndexReadData> = ({ id, data }) => {
   const {
@@ -55,11 +56,8 @@ const ArrayIndexReadPanel: ComponentPanelFc<ArrayIndexReadData> = ({ id, data })
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-emerald-100 shadow-sm">
-        <Label className="text-emerald-600 text-xs font-semibold tracking-wide">
-          输出变量
-        </Label>
-        <span className="text-xs text-gray-500">固定为 value</span>
+      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-emerald-100 shadow-sm hover:shadow-md transition-shadow">
+        <ProviderEnv envs={data.vars} />
       </div>
     </div>
   )
