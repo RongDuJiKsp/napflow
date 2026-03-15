@@ -8,6 +8,7 @@ import type { ReplyData } from '@shared/common/workflow/node-data/reply'
 import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 import type { DifyData } from '@shared/common/workflow/node-data/dify'
 import type { JsonReadData } from '@shared/common/workflow/node-data/json-read'
+import type { ArrayIndexReadData } from '@shared/common/workflow/node-data/array-index-read'
 import type { ComponentNode } from '../types'
 import type { WorkflowNode } from '../../types'
 import { safeAssertIsComponentNode } from '../../utils/node-asserts'
@@ -22,6 +23,7 @@ export type NodeDataTypeForEnum = {
   [ComponentNodesEnum.Reply]: ReplyData;
   [ComponentNodesEnum.Dify]: DifyData;
   [ComponentNodesEnum.JsonRead]: JsonReadData;
+  [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadData;
 }
 
 export type NodeTypeForEnum = {

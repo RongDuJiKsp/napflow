@@ -29,6 +29,7 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
+    ComponentNodesEnum.ArrayIndexRead,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
@@ -37,5 +38,6 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
     ComponentNodesEnum.Iterate,
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
+    ComponentNodesEnum.ArrayIndexRead,
   ],
 }
