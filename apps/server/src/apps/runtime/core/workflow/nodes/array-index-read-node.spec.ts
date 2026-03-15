@@ -48,6 +48,30 @@ describe('ArrayIndexReadNode', () => {
     expect(nkv.value).toBe('30')
   })
 
+  it('reads numbers from source array into numeric var', () => {
+    const node = new ArrayIndexReadNode({
+      id: 'array-index-read',
+      type: NodeClassic.Component,
+      data: {
+        type: ComponentNodesEnum.ArrayIndexRead,
+        vars: [{ name: 'value', type: VarTypes.Number }],
+        sourceVarName: 'trigger.text',
+        index: '2',
+      },
+    })
+    const nkv: Record<string, unknown> = {}
+    const thread = {
+      nodeKv: {
+        trigger: {
+          text: [10, 20, 30],
+        },
+      },
+    } as any
+
+    node.onThread(thread, {} as any, nkv)
+    expect(nkv.value).toBe(30)
+  })
+
   it('returns empty string when index is invalid', () => {
     const node = createNode('x')
     const nkv: Record<string, unknown> = {}
