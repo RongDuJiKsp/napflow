@@ -1,13 +1,17 @@
 import type { ComponentCreator } from '../../types'
 import { RiTimerLine } from '@remixicon/react'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
-import type { TimerData } from '@shared/common/workflow/node-data/timer'
-import { TimerDataSchema } from '@shared/common/workflow/node-data/timer'
+import {
+  type TimerData,
+  TimerDataSchema,
+  TimerTriggerMode,
+} from '@shared/common/workflow/node-data/timer'
 import TimerNode from './node'
 import TimerPanel from './panel'
 
 export const TimerNodeCreator: ComponentCreator<TimerData> = {
   create: () => ({
+    mode: TimerTriggerMode.Schedule,
     timeExpr: '',
   }),
   schema: TimerDataSchema,
