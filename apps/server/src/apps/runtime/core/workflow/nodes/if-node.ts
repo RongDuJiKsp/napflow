@@ -5,12 +5,12 @@ import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { CompareOperator } from '@shared/common/workflow/node-data/if'
-import { IfDataRawSchema } from '@shared/common/workflow/node-data/if'
+import { IfDataSchema } from '@shared/common/workflow/node-data/if'
 import { compileTemplate } from '../../../utils/templates'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
 export const IfDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  IfDataRawSchema.shape,
+  IfDataSchema.shape,
 )
 
 export type IfDataCtx = z.infer<typeof IfDataCtxSchema>

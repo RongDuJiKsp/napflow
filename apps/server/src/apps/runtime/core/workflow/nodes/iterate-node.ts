@@ -8,11 +8,11 @@ import { CommNode, CommNodeRole } from '../node'
 import type { GraphRunner } from '../pool'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { IterateDataRawSchema } from '@shared/common/workflow/node-data/iterate'
+import { IterateDataSchema } from '@shared/common/workflow/node-data/iterate'
 import { Logger } from '@nestjs/common'
 
 export const IterateDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  IterateDataRawSchema.shape,
+  IterateDataSchema.shape,
 )
 
 export type IterateDataCtx = z.infer<typeof IterateDataCtxSchema>

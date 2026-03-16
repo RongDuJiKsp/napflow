@@ -8,12 +8,12 @@ import { CommNode, CommNodeRole } from '../node'
 import type { GraphRunner } from '../pool'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { LoopDataRawSchema } from '@shared/common/workflow/node-data/loop'
+import { LoopDataSchema } from '@shared/common/workflow/node-data/loop'
 import { Logger } from '@nestjs/common'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
 export const LoopDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  LoopDataRawSchema.shape,
+  LoopDataSchema.shape,
 )
 
 export type LoopDataCtx = z.infer<typeof LoopDataCtxSchema>

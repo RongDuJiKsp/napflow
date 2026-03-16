@@ -50,13 +50,9 @@ export const BranchSchema = z.object({
 })
 export type Branch = z.infer<typeof BranchSchema>
 
-// raw object schema，不含 superRefine，供 server 端 extend 使用
-export const IfDataRawSchema = z.object({
+export const IfDataSchema = z.object({
   branches: z.array(BranchSchema).min(1, '至少需要一个if条件'),
-})
-
-// if节点整体数据
-export const IfDataSchema = IfDataRawSchema.superRefine((data, ctx) => {
+}).superRefine((data, ctx) => {
   // 第一个必须是if
   if (data.branches[0]?.type !== BranchType.If) {
     ctx.addIssue({

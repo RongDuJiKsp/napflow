@@ -9,13 +9,10 @@ export const JsonReadOutputBindingSchema = z.object({
 
 export type JsonReadOutputBinding = z.infer<typeof JsonReadOutputBindingSchema>
 
-// raw object schema，不含 superRefine，供 server 端 extend 使用
-export const JsonReadDataRawSchema = z.object({
+export const JsonReadDataSchema = z.object({
   sourceVarName: z.string().min(1, '请选择一个字符串变量'),
   outputs: z.array(JsonReadOutputBindingSchema),
-})
-
-export const JsonReadDataSchema = JsonReadDataRawSchema.superRefine((data, ctx) => {
+}).superRefine((data, ctx) => {
   const names = new Set<string>()
   data.outputs.forEach((item, index) => {
     if (names.has(item.name)) {

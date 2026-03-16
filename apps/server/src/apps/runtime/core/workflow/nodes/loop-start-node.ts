@@ -4,13 +4,13 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { LoopStartDataRawSchema } from '@shared/common/workflow/node-data/loop-start'
+import { LoopStartDataSchema } from '@shared/common/workflow/node-data/loop-start'
 import { Logger } from '@nestjs/common'
 import { merge } from 'lodash-es'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
 export const LoopStartDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  LoopStartDataRawSchema.shape,
+  LoopStartDataSchema.shape,
 )
 
 export type LoopStartDataCtx = z.infer<typeof LoopStartDataCtxSchema>

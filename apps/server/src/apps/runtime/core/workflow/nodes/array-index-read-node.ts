@@ -4,11 +4,11 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { ArrayIndexReadDataRawSchema } from '@shared/common/workflow/node-data/array-index-read'
+import { ArrayIndexReadDataSchema } from '@shared/common/workflow/node-data/array-index-read'
 import { compileTemplate } from '../../../utils/templates'
 
 export const ArrayIndexReadDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  ArrayIndexReadDataRawSchema.shape,
+  ArrayIndexReadDataSchema.shape,
 )
 
 export type ArrayIndexReadDataCtx = z.infer<typeof ArrayIndexReadDataCtxSchema>

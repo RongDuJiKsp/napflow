@@ -4,12 +4,12 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { IterateStartDataRawSchema } from '@shared/common/workflow/node-data/iterate-start'
+import { IterateStartDataSchema } from '@shared/common/workflow/node-data/iterate-start'
 import { Logger } from '@nestjs/common'
 import { merge } from 'lodash-es'
 
 export const IterateStartDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  IterateStartDataRawSchema.shape,
+  IterateStartDataSchema.shape,
 )
 
 export type IterateStartDataCtx = z.infer<typeof IterateStartDataCtxSchema>

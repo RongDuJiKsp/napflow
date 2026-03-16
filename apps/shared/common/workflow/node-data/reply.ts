@@ -6,16 +6,13 @@ export enum ReplyTarget {
   triggerSource = 'triggerSource',
 }
 
-// raw object schema，不含 superRefine，供 server 端 extend 使用
-export const ReplyDataRawSchema = z.object({
+export const ReplyDataSchema = z.object({
   content: z.string(),
   replyTarget: z.enum(ReplyTarget),
   userId: z.string().optional(),
   groupId: z.string().optional(),
   triggerSourceId: z.string().optional(),
-})
-
-export const ReplyDataSchema = ReplyDataRawSchema.superRefine((data, ctx) => {
+}).superRefine((data, ctx) => {
   if (data.replyTarget === ReplyTarget.User) {
     if (!data.userId) {
       ctx.addIssue({

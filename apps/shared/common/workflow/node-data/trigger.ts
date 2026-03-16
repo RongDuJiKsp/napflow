@@ -5,14 +5,11 @@ export enum TriggerOn {
   Group = 'group',
 }
 
-// raw object schema，不含 superRefine，供 server 端 extend 使用
-export const TriggerDataRawSchema = z.object({
+export const TriggerDataSchema = z.object({
   on: z.enum(TriggerOn),
   userId: z.string().optional(),
   groupId: z.string().optional(),
-})
-
-export const TriggerDataSchema = TriggerDataRawSchema.superRefine(
+}).superRefine(
   (data, ctx) => {
     if (data.on === TriggerOn.Friend && !data.userId) {
       ctx.addIssue({
