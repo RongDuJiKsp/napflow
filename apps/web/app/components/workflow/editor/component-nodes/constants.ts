@@ -1,6 +1,7 @@
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import { ReplyNodeCreator } from './nodes/reply/creator'
 import { TriggerNodeCreator } from './nodes/trigger/creator'
+import { TimerNodeCreator } from './nodes/timer/creator'
 import { IfNodeCreator } from './nodes/if/creator'
 import { LoopNodeCreator } from './nodes/loop/creator'
 import { LoopStartNodeCreator } from './nodes/loop-start/creator'
@@ -15,6 +16,7 @@ export const COMPONENT_NODE_PANEL_ID = 'component-node-panel'
 
 export const ComponentNodeCreatorMap = {
   [ComponentNodesEnum.Trigger]: TriggerNodeCreator,
+  [ComponentNodesEnum.Timer]: TimerNodeCreator,
   [ComponentNodesEnum.Reply]: ReplyNodeCreator,
   [ComponentNodesEnum.If]: IfNodeCreator,
   [ComponentNodesEnum.Loop]: LoopNodeCreator,

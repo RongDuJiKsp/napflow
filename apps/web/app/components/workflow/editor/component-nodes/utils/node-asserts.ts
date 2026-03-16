@@ -9,12 +9,14 @@ import type { TriggerData } from '@shared/common/workflow/node-data/trigger'
 import type { DifyData } from '@shared/common/workflow/node-data/dify'
 import type { JsonReadData } from '@shared/common/workflow/node-data/json-read'
 import type { ArrayIndexReadData } from '@shared/common/workflow/node-data/array-index-read'
+import type { TimerData } from '@shared/common/workflow/node-data/timer'
 import type { ComponentNode } from '../types'
 import type { WorkflowNode } from '../../types'
 import { safeAssertIsComponentNode } from '../../utils/node-asserts'
 
 export type NodeDataTypeForEnum = {
   [ComponentNodesEnum.Trigger]: TriggerData;
+  [ComponentNodesEnum.Timer]: TimerData;
   [ComponentNodesEnum.If]: IfData;
   [ComponentNodesEnum.Iterate]: IterateData;
   [ComponentNodesEnum.IterateStart]: IterateStartData;

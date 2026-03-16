@@ -19,7 +19,7 @@ import type { ComponentNodeProps } from '../../types'
 
 type ContextMenuProps = ItemParams<ComponentNodeProps>
 
-// loop 内部可添加的节点类型（排除 loop-start 和 trigger）
+// loop 内部可添加的节点类型（排除 loop-start、trigger 和 timer）
 const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
   .filter(([key]) => {
     const k = key as ComponentNodesEnum
@@ -27,6 +27,7 @@ const loopAddableNodeTypes = Object.entries(ComponentNodeCreatorMap)
       ComponentNodesEnum.LoopStart,
       ComponentNodesEnum.IterateStart,
       ComponentNodesEnum.Trigger,
+      ComponentNodesEnum.Timer,
       ComponentNodesEnum.Loop,
       ComponentNodesEnum.Iterate,
     ].includes(k)

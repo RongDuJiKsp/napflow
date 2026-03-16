@@ -17,6 +17,7 @@ export const IterateNodeCreator: ComponentCreator<IterateData> = {
   editPanelComponent: IteratePanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.Loop,

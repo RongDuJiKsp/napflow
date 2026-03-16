@@ -22,6 +22,7 @@ export const JsonReadNodeCreator: ComponentCreator<JsonReadData> = {
   editPanelComponent: JsonReadPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,

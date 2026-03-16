@@ -22,6 +22,7 @@ export const ArrayIndexReadNodeCreator: ComponentCreator<ArrayIndexReadData> = {
   editPanelComponent: ArrayIndexReadPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,

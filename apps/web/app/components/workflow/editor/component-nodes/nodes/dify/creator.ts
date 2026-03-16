@@ -21,6 +21,7 @@ export const DifyNodeCreator: ComponentCreator<DifyData> = {
   editPanelComponent: DifyPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,
