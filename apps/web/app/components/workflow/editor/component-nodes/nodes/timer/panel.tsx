@@ -19,7 +19,7 @@ const TimerPanel: ComponentPanelFc<TimerData> = ({ id, data }) => {
             envs={vars}
             value={data.timeExpr || ''}
             onChange={handleTimeExprChange}
-            placeholder="输入 HH:mm 或 HH:mm:ss，输入 $ 引用变量"
+            placeholder="输入 HH:mm，输入 $ 引用变量"
             className={{
               contentEditable:
                 'text-sm border border-purple-200 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 p-2 transition-all',

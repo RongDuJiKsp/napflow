@@ -1,6 +1,6 @@
 import z from 'zod'
 
-const TimeExprSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/)
+const TimeExprSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)
 
 export const TimerDataSchema = z.object({
   timeExpr: z.string().superRefine((value, ctx) => {
@@ -18,7 +18,7 @@ export const TimerDataSchema = z.object({
     if (!TimeExprSchema.safeParse(value).success) {
       ctx.addIssue({
         code: 'custom',
-        message: 'timeExpr格式必须为HH:mm或HH:mm:ss，或使用变量引用',
+        message: 'timeExpr格式必须为HH:mm，或使用变量引用',
       })
     }
   }),
