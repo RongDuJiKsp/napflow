@@ -18,6 +18,7 @@ import {
 } from './nodes/array-index-read-node'
 import type { Class } from 'type-fest'
 import type z from 'zod'
+import { TimerDataCtxSchema, TimerNode } from './nodes/timer-node'
 
 export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.Trigger]: TriggerNode,
@@ -30,6 +31,7 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.Dify]: DifyNode,
   [ComponentNodesEnum.JsonRead]: JsonReadNode,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadNode,
+  [ComponentNodesEnum.Timer]: TimerNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -46,4 +48,5 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.Dify]: DifyDataCtxSchema,
   [ComponentNodesEnum.JsonRead]: JsonReadDataCtxSchema,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadDataCtxSchema,
+  [ComponentNodesEnum.Timer]: TimerDataCtxSchema,
 }
