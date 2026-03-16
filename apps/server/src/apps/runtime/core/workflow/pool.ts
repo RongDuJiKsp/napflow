@@ -30,7 +30,7 @@ export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
 }
 
-class CommPluginGraphManager {
+export class CommPluginGraphManager {
   readonly nodeGraph: ReadonlyMap<
     CommNode,
     { prev: CommNode[]; next: CommNode[] }
@@ -118,7 +118,7 @@ class CommPluginGraphManager {
   }
 }
 
-class CommPluginTaskManager<SDK = unknown> {
+export class CommPluginTaskManager<SDK = unknown> {
   readonly threads: Record<string, WorkflowThread<SDK>> = {}
   readonly tasks: Record<string, Task<() => void>> = {}
 
