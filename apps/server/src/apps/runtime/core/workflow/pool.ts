@@ -106,6 +106,16 @@ class CommPluginGraphManager {
     )
     return buildNeighGraph(subNodes, subEdges)
   }
+
+  getSubGraphRunner(parentNodeId: string) {
+    const subNodes = this.commNodes.filter(
+      node => node.parentId === parentNodeId,
+    )
+    const subGraph = this.getSubGraph(parentNodeId)
+    const subNodeCache = buildIdCache(subNodes)
+    const subGraphRunner = new GraphRunner(subGraph, null, subNodeCache)
+    return subGraphRunner
+  }
 }
 
 class CommPluginTaskManager<SDK = unknown> {
@@ -131,6 +141,14 @@ class CommPluginTaskManager<SDK = unknown> {
     }
 
     this.tasks[thread.id] = Task.submit(taskTick)
+  }
+
+  removeThread(threadId: string) {
+    delete this.threads[threadId]
+    if (this.tasks[threadId]) {
+      this.tasks[threadId].abort()
+      delete this.tasks[threadId]
+    }
   }
 }
 
@@ -350,7 +368,7 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private unmount() {
-    delete this.plugin.taskManager.threads[this.id]
+    this.plugin.taskManager.removeThread(this.id)
   }
 
   getLogger(klass: Class<CommNode>): Logger {
@@ -358,12 +376,6 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   getSubGraphRunner(parentNodeId: string) {
-    const subNodes = this.plugin.graphManager.commNodes.filter(
-      node => node.parentId === parentNodeId,
-    )
-    const subGraph = this.plugin.graphManager.getSubGraph(parentNodeId)
-    const subNodeCache = buildIdCache(subNodes)
-    const subGraphRunner = new GraphRunner(subGraph, null, subNodeCache)
-    return subGraphRunner
+    return this.plugin.graphManager.getSubGraphRunner(parentNodeId)
   }
 }
