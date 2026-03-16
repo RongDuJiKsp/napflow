@@ -22,6 +22,102 @@ export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
 }
 
+class CommPluginGraphManager {
+  readonly nodeGraph: ReadonlyMap<
+    CommNode,
+    { prev: CommNode[]; next: CommNode[] }
+  >
+
+  readonly commNodes: CommNode[]
+  readonly commNodeCache: Record<string, CommNode>
+  readonly commEdges: CommEdge[]
+  readonly commEdgeCache: Record<string, CommEdge>
+  readonly graphHead: CommNode & CommTrigger
+  readonly graphHeadConnectedNodes: Set<CommNode>
+
+  constructor(
+    readonly nodes: Node[],
+    readonly edges: Edge[],
+    readonly klassMap: typeof NodeKlassMap,
+  ) {
+    // 过滤出组件节点
+    const commNodes = nodes
+      .filter(node => node.type === NodeClassic.Component)
+      .map(node => node as CommNodeType)
+      .map(commNode =>
+        CommNode.parse(
+          defineCommNodeSchema(NodeSchemaMap[commNode.data.type]),
+          commNode,
+          klassMap[commNode.data.type],
+        ),
+      )
+
+    // 过滤出组件边
+    const commIds = new Set(commNodes.map(node => node.id))
+    const commEdges = edges
+      .filter(edge => commIds.has(edge.source) && commIds.has(edge.target))
+      .map(edge => new CommEdge(edge))
+
+    // 构建邻居图
+    this.nodeGraph = buildNeighGraph<CommNode, CommEdge>(commNodes, commEdges)
+
+    // 获取图头
+    const triggers = commNodes.filter(
+      node => node.role === CommNodeRole.Trigger,
+    ) as (CommNode & CommTrigger)[]
+    if (triggers.length === 0 || triggers.length > 1)
+      throw new Error('Workflow must have exactly one trigger node')
+
+    this.graphHead = triggers[0]
+    this.commNodes = commNodes
+    this.commNodeCache = buildIdCache(commNodes)
+    this.commEdges = commEdges
+    this.commEdgeCache = buildIdCache(commEdges)
+    this.graphHeadConnectedNodes = getConnectedNodes(this.nodeGraph, this.graphHead.id)
+  }
+
+  getSubGraph(parentNodeId: string) {
+    const subNodes = this.commNodes.filter(
+      node => node.parentId === parentNodeId,
+    )
+    const subNodeIdSet = new Set(subNodes.map(node => node.id))
+    const subEdges = this.commEdges.filter(
+      edge => subNodeIdSet.has(edge.source) || subNodeIdSet.has(edge.target),
+    )
+    return buildNeighGraph(subNodes, subEdges)
+  }
+}
+
+class CommPluginTaskManager<SDK = unknown> {
+  readonly threads: Record<string, WorkflowThread<SDK>> = {}
+  readonly tasks: Record<string, Task<() => void>> = {}
+
+  constructor(private readonly plugin: CommPlugin<SDK>) {}
+
+  get threadList() {
+    return Object.values(this.threads)
+  }
+
+  // 这里凡是被message触发就提交任务 该不该往下走交给Thread自己判断
+  onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
+    const thread = new WorkflowThread(endPoint, this.plugin)
+    this.threads[thread.id] = thread
+    merge(thread.kv, kv)
+    merge(thread.nodeKv, {
+      global: this.plugin.bindingConfig.envKV || {},
+    })
+
+    const taskTick = async () => {
+      delete this.tasks[thread.id]
+      const nextTask = Task.will(taskTick)
+      await thread.tick(nextTask)
+      nextTask.orSubmit(task => (this.tasks[thread.id] = task))
+    }
+
+    this.tasks[thread.id] = Task.submit(taskTick)
+  }
+}
+
 /**
  * @description 图运行器 托管节点执行队列和入度管理，负责获取下一个需要执行的节点
  */
@@ -122,20 +218,8 @@ export class GraphRunner {
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
 export class CommPlugin<SDK = unknown> {
-  readonly threads: Record<string, WorkflowThread> = {}
-  readonly tasks: Record<string, Task<() => void>> = {}
-  // 邻居图
-  readonly nodeGraph: ReadonlyMap<
-    CommNode,
-    { prev: CommNode[]; next: CommNode[] }
-  >
-
-  readonly commNodes: CommNode[]
-  readonly commNodeCache: Record<string, CommNode>
-  readonly commEdges: CommEdge[]
-  readonly commEdgeCache: Record<string, CommEdge>
-  readonly graphHead: CommNode & CommTrigger
-  readonly graphHeadConnectedNodes: Set<CommNode>
+  private readonly graphManager: CommPluginGraphManager
+  private readonly taskManager: CommPluginTaskManager<SDK>
   readonly configs: PluginConfigs
   sdk: SDK | null = null
 
@@ -148,57 +232,52 @@ export class CommPlugin<SDK = unknown> {
     configs: PluginConfigs = {},
   ) {
     this.configs = configs
-    // 过滤出组件节点
-    const commNodes = nodes
-      .filter(node => node.type === NodeClassic.Component)
-      .map(node => node as CommNodeType)
-      .map(commNode =>
-        CommNode.parse(
-          defineCommNodeSchema(NodeSchemaMap[commNode.data.type]),
-          commNode,
-          klassMap[commNode.data.type],
-        ),
-      )
-    // 过滤出组件边
-    const commIds = new Set(commNodes.map(node => node.id))
-    const commEdges = edges
-      .filter(edge => commIds.has(edge.source) && commIds.has(edge.target))
-      .map(edge => new CommEdge(edge))
-    // 构建邻居图
-    this.nodeGraph = buildNeighGraph<CommNode, CommEdge>(commNodes, commEdges)
-    // 获取图头
-    const triggers = commNodes.filter(
-      node => node.role === CommNodeRole.Trigger,
-    ) as (CommNode & CommTrigger)[]
-    if (triggers.length === 0 || triggers.length > 1)
-      throw new Error('Workflow must have exactly one trigger node')
-    this.graphHead = triggers[0]
-    this.commNodes = commNodes
-    this.commNodeCache = buildIdCache(commNodes)
-    this.commEdges = commEdges
-    this.commEdgeCache = buildIdCache(commEdges)
-    this.graphHeadConnectedNodes = getConnectedNodes(this.nodeGraph, this.graphHead.id)
+    this.graphManager = new CommPluginGraphManager(nodes, edges, klassMap)
+    this.taskManager = new CommPluginTaskManager(this)
+  }
+
+  get nodeGraph() {
+    return this.graphManager.nodeGraph
+  }
+
+  get commNodes() {
+    return this.graphManager.commNodes
+  }
+
+  get commNodeCache() {
+    return this.graphManager.commNodeCache
+  }
+
+  get commEdges() {
+    return this.graphManager.commEdges
+  }
+
+  get commEdgeCache() {
+    return this.graphManager.commEdgeCache
+  }
+
+  get graphHead() {
+    return this.graphManager.graphHead
+  }
+
+  get graphHeadConnectedNodes() {
+    return this.graphManager.graphHeadConnectedNodes
+  }
+
+  get threads() {
+    return this.taskManager.threads
+  }
+
+  get tasks() {
+    return this.taskManager.tasks
   }
 
   get threadList() {
-    return Object.values(this.threads)
+    return this.taskManager.threadList
   }
 
-  // 这里凡是被message触发就提交任务 该不该往下走交给Thread自己判断
   onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
-    const thread = new WorkflowThread(endPoint, this)
-    this.threads[thread.id] = thread
-    merge(thread.kv, kv)
-    merge(thread.nodeKv, {
-      global: this.bindingConfig.envKV || {},
-    })
-    const taskTick = async () => {
-      delete this.tasks[thread.id]
-      const nextTask = Task.will(taskTick)
-      await thread.tick(nextTask)
-      nextTask.orSubmit(task => (this.tasks[thread.id] = task))
-    }
-    this.tasks[thread.id] = Task.submit(taskTick)
+    this.taskManager.onTrigger(endPoint, kv)
   }
 
   mount(sdk: SDK) {
@@ -210,14 +289,7 @@ export class CommPlugin<SDK = unknown> {
   }
 
   getSubGraph(parentNodeId: string) {
-    const subNodes = this.commNodes.filter(
-      node => node.parentId === parentNodeId,
-    )
-    const subNodeIdSet = new Set(subNodes.map(node => node.id))
-    const subEdges = this.commEdges.filter(
-      edge => subNodeIdSet.has(edge.source) || subNodeIdSet.has(edge.target),
-    )
-    return buildNeighGraph(subNodes, subEdges)
+    return this.graphManager.getSubGraph(parentNodeId)
   }
 }
 
