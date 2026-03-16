@@ -44,7 +44,7 @@ describe('循环开始节点', () => {
     })
     const nextTask = createMockNextTask()
 
-    node.onThread(createTestThread().thread, nextTask as any, {})
+    node.onThread(createTestThread().thread, nextTask, {})
 
     expect(nextTask.abort).toHaveBeenCalledOnce()
   })
