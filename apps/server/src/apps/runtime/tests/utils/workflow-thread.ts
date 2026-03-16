@@ -2,7 +2,7 @@ import { vi } from 'vitest'
 import type { WorkflowThread } from '../../core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { merge } from 'lodash-es'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 
 type TestThreadOptions = {
   id?: string;
@@ -32,32 +32,38 @@ export const createTestThread = (options: TestThreadOptions = {}) => {
   }
 
   const graphManager = {
-    getSubGraphHead: vi.fn((parentId: string, subHeadType: ComponentNodesEnum) => {
-      const heads = (options.commNodes ?? []).filter(
-        node => node.parentId === parentId && node.data?.type === subHeadType,
-      )
-      if (heads.length !== 1) return null
-      return heads[0]
-    }),
+    getSubGraphHead: vi.fn(
+      (parentId: string, subHeadType: ComponentNodesEnum) => {
+        const heads = (options.commNodes ?? []).filter(
+          node =>
+            node.parentId === parentId && node.data?.type === subHeadType,
+        )
+        if (heads.length !== 1) return null
+        return heads[0]
+      },
+    ),
   }
 
-  const thread = merge({
-    id: options.id ?? 'thread-1',
-    nodeKv: options.nodeKv ?? {},
-    plugin: {
-      edges: options.edges ?? [],
-      commNodes: options.commNodes ?? [],
-      graphManager,
+  const thread = merge(
+    {
+      id: options.id ?? 'thread-1',
+      nodeKv: options.nodeKv ?? {},
+      plugin: {
+        edges: options.edges ?? [],
+        commNodes: options.commNodes ?? [],
+        graphManager,
+      },
+      graphRunner,
+      getSubGraphRunner: vi.fn(() => subGraphRunner),
+      logger: {
+        warn: vi.fn(),
+        error: vi.fn(),
+        debug: vi.fn(),
+        log: vi.fn(),
+      },
     },
-    graphRunner,
-    getSubGraphRunner: vi.fn(() => subGraphRunner),
-    logger: {
-      warn: vi.fn(),
-      error: vi.fn(),
-      debug: vi.fn(),
-      log: vi.fn(),
-    },
-  }, {})
+    {},
+  )
 
   return {
     thread: thread as unknown as WorkflowThread,

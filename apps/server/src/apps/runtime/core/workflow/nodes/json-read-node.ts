@@ -71,12 +71,14 @@ export class JsonReadNode extends CommNode<JsonReadDataCtx> {
     }
 
     const serializeStringArray = (value: unknown): string[] => {
-      if (Array.isArray(value)) return value.map(item => serializeString(item))
+      if (Array.isArray(value))
+        return value.map(item => serializeString(item))
       return value == null ? [] : [serializeString(value)]
     }
 
     const serializeNumberArray = (value: unknown): number[] => {
-      if (Array.isArray(value)) return value.map(item => serializeNumber(item))
+      if (Array.isArray(value))
+        return value.map(item => serializeNumber(item))
       return value == null ? [] : [serializeNumber(value)]
     }
 

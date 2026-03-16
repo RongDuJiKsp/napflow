@@ -5,9 +5,7 @@ import {
   createThreadFixture,
   createWillTaskSpy,
 } from './utils/pool-fixtures'
-import {
-  WorkflowThread,
-} from '../core/workflow/pool'
+import { WorkflowThread } from '../core/workflow/pool'
 import { TriggerOnEvents } from '../core/workflow/node'
 
 describe('GraphRunner', () => {
@@ -70,11 +68,20 @@ describe('CommPlugin', () => {
   it('构造时仅保留组件节点/边并识别触发器', () => {
     const plugin = createTestPlugin()
 
-    expect(plugin.graphManager.commNodes.map(node => node.id)).toEqual(['trigger-1', 'reply-1'])
-    expect(plugin.graphManager.commEdges.map(edge => edge.id)).toEqual(['e1'])
+    expect(plugin.graphManager.commNodes.map(node => node.id)).toEqual([
+      'trigger-1',
+      'reply-1',
+    ])
+    expect(plugin.graphManager.commEdges.map(edge => edge.id)).toEqual([
+      'e1',
+    ])
     expect(plugin.graphManager.graphHead.id).toBe('trigger-1')
     expect(Object.values(plugin.taskManager.threads)).toHaveLength(0)
-    expect(plugin.graphManager.graphHeadConnectedNodes.has(plugin.graphManager.graphHead)).toBe(true)
+    expect(
+      plugin.graphManager.graphHeadConnectedNodes.has(
+        plugin.graphManager.graphHead,
+      ),
+    ).toBe(true)
   })
 
   it('onTrigger 会创建线程并注入上下文', async () => {
@@ -92,7 +99,9 @@ describe('CommPlugin', () => {
     expect(threadId).toBeTruthy()
     expect(plugin.taskManager.tasks[threadId]).toBeTruthy()
     expect(plugin.taskManager.threads[threadId].kv.from).toBe('tester')
-    expect(plugin.taskManager.threads[threadId].nodeKv.global).toEqual({ token: 'abc' })
+    expect(plugin.taskManager.threads[threadId].nodeKv.global).toEqual({
+      token: 'abc',
+    })
 
     await vi.runOnlyPendingTimersAsync()
 

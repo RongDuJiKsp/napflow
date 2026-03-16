@@ -36,10 +36,16 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
             </Select.Trigger>
             <Select.Popover className="min-w-48">
               <ListBox>
-                <ListBox.Item id={DifyMode.Chatflow} className="px-2 py-1.5 cursor-pointer hover:bg-sky-50 transition-colors">
+                <ListBox.Item
+                  id={DifyMode.Chatflow}
+                  className="px-2 py-1.5 cursor-pointer hover:bg-sky-50 transition-colors"
+                >
                   <span className="text-sm">💬 Chatflow</span>
                 </ListBox.Item>
-                <ListBox.Item id={DifyMode.Workflow} className="px-2 py-1.5 cursor-pointer hover:bg-sky-50 transition-colors">
+                <ListBox.Item
+                  id={DifyMode.Workflow}
+                  className="px-2 py-1.5 cursor-pointer hover:bg-sky-50 transition-colors"
+                >
                   <span className="text-sm">⚙️ Workflow</span>
                 </ListBox.Item>
               </ListBox>
@@ -114,7 +120,9 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
       {data.mode === DifyMode.Workflow && (
         <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <Label className="text-sky-600 text-xs font-semibold tracking-wide">输入变量</Label>
+            <Label className="text-sky-600 text-xs font-semibold tracking-wide">
+              输入变量
+            </Label>
             <button
               onClick={handleInputAdd}
               className="text-xs text-sky-500 hover:text-sky-700 font-medium"
@@ -140,7 +148,8 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
                   onChange={v => handleInputValueChange(index, v)}
                   placeholder="值，输入 $ 引用变量"
                   className={{
-                    contentEditable: 'text-xs border border-sky-200 rounded p-1.5 w-full outline-none focus:border-sky-400',
+                    contentEditable:
+                      'text-xs border border-sky-200 rounded p-1.5 w-full outline-none focus:border-sky-400',
                     placeHolder: 'text-gray-300',
                   }}
                 />
@@ -155,7 +164,6 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
           ))}
         </div>
       )}
-
     </div>
   )
 }

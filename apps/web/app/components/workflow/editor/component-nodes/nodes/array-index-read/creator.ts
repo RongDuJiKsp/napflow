@@ -1,6 +1,4 @@
-import {
-  ComponentNodesEnum,
-} from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
 import type { ComponentCreator } from '../../types'
 import ArrayIndexReadNode from './node'
 import ArrayIndexReadPanel from './panel'

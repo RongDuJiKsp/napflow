@@ -50,49 +50,51 @@ export const BranchSchema = z.object({
 })
 export type Branch = z.infer<typeof BranchSchema>
 
-export const IfDataSchema = z.object({
-  branches: z.array(BranchSchema).min(1, '至少需要一个if条件'),
-}).superRefine((data, ctx) => {
-  // 第一个必须是if
-  if (data.branches[0]?.type !== BranchType.If) {
-    ctx.addIssue({
-      code: 'custom',
-      message: '第一个分支必须是if条件',
-      path: ['branches', 0],
-    })
-  }
-  // else只能有一个且在最后
-  const elseCount = data.branches.filter(
-    b => b.type === BranchType.Else,
-  ).length
-  if (elseCount > 1) {
-    ctx.addIssue({
-      code: 'custom',
-      message: '只能有一个else分支',
-      path: ['branches'],
-    })
-  }
-  if (elseCount === 1) {
-    const lastBranch = data.branches[data.branches.length - 1]
-    if (lastBranch?.type !== BranchType.Else) {
+export const IfDataSchema = z
+  .object({
+    branches: z.array(BranchSchema).min(1, '至少需要一个if条件'),
+  })
+  .superRefine((data, ctx) => {
+    // 第一个必须是if
+    if (data.branches[0]?.type !== BranchType.If) {
       ctx.addIssue({
         code: 'custom',
-        message: 'else分支必须在最后',
+        message: '第一个分支必须是if条件',
+        path: ['branches', 0],
+      })
+    }
+    // else只能有一个且在最后
+    const elseCount = data.branches.filter(
+      b => b.type === BranchType.Else,
+    ).length
+    if (elseCount > 1) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '只能有一个else分支',
         path: ['branches'],
       })
     }
-  }
-  // 非else分支必须有条件
-  for (let i = 0; i < data.branches.length; i++) {
-    const branch = data.branches[i]
-    if (branch.type !== BranchType.Else && !branch.condition) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '条件不能为空',
-        path: ['branches', i, 'condition'],
-      })
+    if (elseCount === 1) {
+      const lastBranch = data.branches[data.branches.length - 1]
+      if (lastBranch?.type !== BranchType.Else) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'else分支必须在最后',
+          path: ['branches'],
+        })
+      }
     }
-  }
-})
+    // 非else分支必须有条件
+    for (let i = 0; i < data.branches.length; i++) {
+      const branch = data.branches[i]
+      if (branch.type !== BranchType.Else && !branch.condition) {
+        ctx.addIssue({
+          code: 'custom',
+          message: '条件不能为空',
+          path: ['branches', i, 'condition'],
+        })
+      }
+    }
+  })
 
 export type IfData = z.infer<typeof IfDataSchema>

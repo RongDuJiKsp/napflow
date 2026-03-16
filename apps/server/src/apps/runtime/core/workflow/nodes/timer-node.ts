@@ -6,7 +6,9 @@ import { CommNode, CommNodeRole } from '../node'
 import type { WillTask } from '@/src/utils/task-pool'
 import type { WorkflowThread } from '../pool'
 import { Logger } from '@nestjs/common'
-export const TimerDataCtxSchema = ZodCheckComponentNodeMeta.extend(TimerDataSchema.shape)
+export const TimerDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+  TimerDataSchema.shape,
+)
 export type TimerDataCtx = z.infer<typeof TimerDataCtxSchema>
 export class TimerNode extends CommNode<TimerDataCtx> {
   readonly role: CommNodeRole = CommNodeRole.Trigger
@@ -16,7 +18,11 @@ export class TimerNode extends CommNode<TimerDataCtx> {
     super(data)
   }
 
-  onThread(thread: WorkflowThread, nextTask: WillTask, nkv: Record<string, any>): void | Promise<void> {
+  onThread(
+    thread: WorkflowThread,
+    nextTask: WillTask,
+    nkv: Record<string, any>,
+  ): void | Promise<void> {
     throw new Error('Method not implemented.')
   }
 }

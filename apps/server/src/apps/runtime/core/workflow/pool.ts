@@ -10,11 +10,18 @@ import {
 } from '@shared/common/workflow/core'
 import type { NodeKlassMap } from './constant'
 import { NodeSchemaMap } from './constant'
-import { buildIdCache, buildNeighGraph, getConnectedNodes } from '@/src/utils/algorithm'
+import {
+  buildIdCache,
+  buildNeighGraph,
+  getConnectedNodes,
+} from '@/src/utils/algorithm'
 import { merge } from 'lodash-es'
 import JoinableQueue from '@shared/data-struct/JoinableQueue'
 import { Logger } from '@nestjs/common'
-import type { ComponentNodesEnum, Var } from '@shared/common/workflow/component-node'
+import type {
+  ComponentNodesEnum,
+  Var,
+} from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import type { Class } from 'type-fest'
 
@@ -73,17 +80,17 @@ class CommPluginGraphManager {
     this.commNodeCache = buildIdCache(commNodes)
     this.commEdges = commEdges
     this.commEdgeCache = buildIdCache(commEdges)
-    this.graphHeadConnectedNodes = getConnectedNodes(this.nodeGraph, this.graphHead.id)
+    this.graphHeadConnectedNodes = getConnectedNodes(
+      this.nodeGraph,
+      this.graphHead.id,
+    )
   }
 
   getSubGraphHead(parentId: string, subHeadType: ComponentNodesEnum) {
     const headNodes = this.commNodes.filter(
-      node =>
-        node.parentId === parentId
-            && node.data.type === subHeadType,
+      node => node.parentId === parentId && node.data.type === subHeadType,
     )
-    if (headNodes.length === 0 || headNodes.length > 1)
-      return null
+    if (headNodes.length === 0 || headNodes.length > 1) return null
 
     return headNodes[0]
   }
@@ -180,7 +187,9 @@ export class GraphRunner {
     const toRemoveSet = new Set(toRemoveNodeId)
     for (const target of toRemoveNodeId)
       this.mayBeNextNodeDegree.delete(this.commNodeCache[target])
-    const toRepushArr = this.availableNodes.toArray().filter(item => !toRemoveSet.has(item.id))
+    const toRepushArr = this.availableNodes
+      .toArray()
+      .filter(item => !toRemoveSet.has(item.id))
     this.availableNodes.clear()
     this.availableNodes.enqueueNextMany(toRepushArr)
   }

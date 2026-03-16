@@ -42,7 +42,10 @@ export class IterateNode extends CommNode<IterateDataCtx> {
     if (_nkv['iter.index'] >= sourceArr.length) return
     _nkv['iter.item'] = sourceArr[_nkv['iter.index']]
 
-    const headNode = thread.plugin.graphManager.getSubGraphHead(this.id, ComponentNodesEnum.IterateStart)
+    const headNode = thread.plugin.graphManager.getSubGraphHead(
+      this.id,
+      ComponentNodesEnum.IterateStart,
+    )
     if (!headNode) {
       this.logger.error('iterate node has no head node or more than one')
       _nextTask.abort()

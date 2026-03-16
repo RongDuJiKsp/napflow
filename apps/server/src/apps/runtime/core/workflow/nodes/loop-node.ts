@@ -37,7 +37,10 @@ export class LoopNode extends CommNode<LoopDataCtx> {
     if (_nkv['loop.index'] >= this.data.maxCount) return
 
     // 获取子图的头节点
-    const headNode = thread.plugin.graphManager.getSubGraphHead(this.id, ComponentNodesEnum.LoopStart)
+    const headNode = thread.plugin.graphManager.getSubGraphHead(
+      this.id,
+      ComponentNodesEnum.LoopStart,
+    )
     if (!headNode) {
       this.logger.error('loop node has no head node or more than one')
       _nextTask.abort()
@@ -47,7 +50,7 @@ export class LoopNode extends CommNode<LoopDataCtx> {
     const subGraphRunner = this.getRunner(thread)
     subGraphRunner.enqueue(headNode)
 
-        // loop 节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
+    // loop 节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
     thread.graphRunner.enqueueNextMany([...subGraphRunner.consumeAll(), this])
   }
 

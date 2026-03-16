@@ -9,22 +9,24 @@ export const JsonReadOutputBindingSchema = z.object({
 
 export type JsonReadOutputBinding = z.infer<typeof JsonReadOutputBindingSchema>
 
-export const JsonReadDataSchema = z.object({
-  sourceVarName: z.string().min(1, '请选择一个字符串变量'),
-  outputs: z.array(JsonReadOutputBindingSchema),
-}).superRefine((data, ctx) => {
-  const names = new Set<string>()
-  data.outputs.forEach((item, index) => {
-    if (names.has(item.name)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '输出变量名不能重复',
-        path: ['outputs', index, 'name'],
-      })
-      return
-    }
-    names.add(item.name)
+export const JsonReadDataSchema = z
+  .object({
+    sourceVarName: z.string().min(1, '请选择一个字符串变量'),
+    outputs: z.array(JsonReadOutputBindingSchema),
   })
-})
+  .superRefine((data, ctx) => {
+    const names = new Set<string>()
+    data.outputs.forEach((item, index) => {
+      if (names.has(item.name)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: '输出变量名不能重复',
+          path: ['outputs', index, 'name'],
+        })
+        return
+      }
+      names.add(item.name)
+    })
+  })
 
 export type JsonReadData = z.infer<typeof JsonReadDataSchema>

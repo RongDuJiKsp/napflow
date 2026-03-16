@@ -5,12 +5,13 @@ export enum TriggerOn {
   Group = 'group',
 }
 
-export const TriggerDataSchema = z.object({
-  on: z.enum(TriggerOn),
-  userId: z.string().optional(),
-  groupId: z.string().optional(),
-}).superRefine(
-  (data, ctx) => {
+export const TriggerDataSchema = z
+  .object({
+    on: z.enum(TriggerOn),
+    userId: z.string().optional(),
+    groupId: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
     if (data.on === TriggerOn.Friend && !data.userId) {
       ctx.addIssue({
         code: 'custom',
@@ -25,7 +26,6 @@ export const TriggerDataSchema = z.object({
         path: ['groupId'],
       })
     }
-  },
-)
+  })
 
 export type TriggerData = z.infer<typeof TriggerDataSchema>
