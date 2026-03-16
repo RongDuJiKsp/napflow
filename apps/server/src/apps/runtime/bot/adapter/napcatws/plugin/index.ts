@@ -6,6 +6,7 @@ import type { NapcatWsSdk } from '../sdk'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import { RegisterManager } from '@/src/utils/registerbale'
+import { MinusTimePoller } from '@/src/utils/task-pool'
 
 export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
   constructor(
@@ -18,9 +19,11 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
   }
 
   private readonly registerManager = new RegisterManager()
+  private readonly minusPoller = new MinusTimePoller()
 
   mount(sdk: NapcatWsSdk) {
     super.mount(sdk)
+    // 监听群消息和私聊消息
     this.registerManager.register(
       sdk.subscribe('message.group', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
@@ -41,10 +44,17 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
         })
       }),
     )
+    // 监听定时器触发
+    this.minusPoller.register((seq) => {
+      this.onTrigger(TriggerOnEvents.Timer, {
+        time: String(this.minusPoller.realTime(seq) * 60),
+      })
+    })
   }
 
   unmount() {
     this.registerManager.clear()
+    this.minusPoller.unmount()
     super.unmount()
   }
 }

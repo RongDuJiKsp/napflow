@@ -85,6 +85,13 @@ export class MinusTimePoller implements PluginService<[]> {
     }
   }
 
+  realTime(seq: number) {
+    if (this.mountedAt === null)
+      throw new Error('MinusTimePoller is not mounted')
+
+    return Math.floor((this.mountedAt + seq * 60_000) / 60_000)
+  }
+
   mount(): void {
     if (this.intervalTask)
       return

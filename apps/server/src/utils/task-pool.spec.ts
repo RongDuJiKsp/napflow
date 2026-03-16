@@ -61,4 +61,21 @@ describe('MinusTimePoller', () => {
 
     expect(received).toEqual([1, 2])
   })
+
+  it('realTime 可从 seq 推导对应的 Unix 分钟数', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-03-16T00:00:30.000Z'))
+
+    const poller = new MinusTimePoller()
+    poller.mount()
+
+    expect(poller.realTime(1)).toBe(Math.floor(new Date('2026-03-16T00:01:30.000Z').getTime() / 60_000))
+    expect(poller.realTime(3)).toBe(Math.floor(new Date('2026-03-16T00:03:30.000Z').getTime() / 60_000))
+  })
+
+  it('未 mount 时调用 realTime 会抛错', () => {
+    const poller = new MinusTimePoller()
+
+    expect(() => poller.realTime(1)).toThrow('MinusTimePoller is not mounted')
+  })
 })
