@@ -5,6 +5,7 @@ import { TriggerOnEvents } from '@/src/apps/runtime/core/workflow/node'
 import type { NapcatWsSdk } from '../sdk'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+import { RegisterManager } from '@/src/utils/registerbale'
 
 export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
   constructor(
@@ -16,11 +17,11 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
     super(nodes, edges, env, bindingCfg, NcKlassMap)
   }
 
-  private unsubscribes: Array<() => void> | null = null
+  private readonly registerManager = new RegisterManager()
 
   mount(sdk: NapcatWsSdk) {
     super.mount(sdk)
-    this.unsubscribes = [
+    this.registerManager.register(
       sdk.subscribe('message.group', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
           gid: String(msg.group_id),
@@ -29,6 +30,8 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
           senderuid: String(msg.sender.user_id),
         })
       }),
+    )
+    this.registerManager.register(
       sdk.subscribe('message.private', async (msg) => {
         this.onTrigger(TriggerOnEvents.ChatMessage, {
           uid: String(msg.user_id),
@@ -37,11 +40,11 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
           senderuid: String(msg.sender.user_id),
         })
       }),
-    ]
+    )
   }
 
   unmount() {
-    this.unsubscribes?.forEach(unsubscribe => unsubscribe())
+    this.registerManager.clear()
     super.unmount()
   }
 }

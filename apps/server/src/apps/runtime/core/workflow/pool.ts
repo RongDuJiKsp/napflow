@@ -24,6 +24,7 @@ import type {
 } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import type { Class } from 'type-fest'
+import type { PluginService } from '@/src/utils/traits'
 
 export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
@@ -234,7 +235,7 @@ export class GraphRunner {
 /**
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
-export class CommPlugin<SDK = unknown> {
+export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
   readonly graphManager: CommPluginGraphManager
   readonly taskManager: CommPluginTaskManager<SDK>
 
