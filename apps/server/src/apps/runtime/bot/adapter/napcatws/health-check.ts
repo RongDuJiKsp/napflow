@@ -1,10 +1,11 @@
-import type { Registerable } from '../_base'
 import { Logger } from '@nestjs/common'
 import { BotUpstreamState } from '@shared/common/bot/base'
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 import type { NapcatWsSdk } from './sdk'
 import type { NapcatWsTriggerPlugin } from './plugin'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
+import type { PluginService } from '@/src/utils/traits'
+import { RegisterManager } from '@/src/utils/registerbale'
 
 export type HeartBeatSnapshot = {
   heartbeatAt: Date;
@@ -13,7 +14,7 @@ export type HeartBeatSnapshot = {
 }
 
 // Napcat Client 健康检查
-export class NCCHealthChecker implements Registerable {
+export class NCCHealthChecker implements PluginService<[]> {
   private readonly logger: Logger
   readonly createAt = new Date()
 
@@ -30,12 +31,11 @@ export class NCCHealthChecker implements Registerable {
     return `${this.ctxName}-${NCCHealthChecker.name}`
   }
 
-  private unsubscribes: (() => void)[] = []
+  private readonly registerManager: RegisterManager = new RegisterManager()
   private heartbeatSnapshot: HeartBeatSnapshot | null = null
 
-  register() {
-    if (this.unsubscribes.length) this.unregister()
-    this.unsubscribes.push(
+  mount() {
+    this.registerManager.register(
       this.nc.subscribe('meta_event.heartbeat', (ctx) => {
         this.heartbeatSnapshot = {
           heartbeatAt: new Date(),
@@ -46,9 +46,8 @@ export class NCCHealthChecker implements Registerable {
     )
   }
 
-  unregister() {
-    for (const fn of this.unsubscribes) fn()
-    this.unsubscribes = []
+  unmount() {
+    this.registerManager.clear()
   }
 
   selfBeat() {

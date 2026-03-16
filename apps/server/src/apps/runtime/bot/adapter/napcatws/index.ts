@@ -1,5 +1,5 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
-import type { BotAdapterFactory, BotInstance, Registerable } from '../_base'
+import type { BotAdapterFactory, BotInstance } from '../_base'
 import { Logger } from '@nestjs/common'
 import { BotCoreRuntimeError } from '../../../middleware/bot-core-runtime.filter'
 import type { BotAdapter, BotState } from '@shared/common/bot/base'
@@ -16,6 +16,7 @@ import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import { NapcatWsSdk } from './sdk'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 import type { BotBridgeForBotService } from '../../bridge/bot-bridge-for-bot'
+import type { PluginService } from '@/src/utils/traits'
 
 export class NapcatWsAdapter implements BotInstance {
   // metas
@@ -94,7 +95,7 @@ export class NapcatWsAdapter implements BotInstance {
   }
 
   get registerable() {
-    return [this.healthChecker].filter(Boolean) as Registerable[]
+    return [this.healthChecker].filter(Boolean) as PluginService<[]>[]
   }
 
   async bootstrapPlugins(_cfg: NonNullable<typeof this.botConfigSnapshot>) {
@@ -148,7 +149,7 @@ export class NapcatWsAdapter implements BotInstance {
       this.plugins || [],
     )
 
-    this.registerable.forEach(s => s.register())
+    this.registerable.forEach(s => s.mount())
     this.logger.log('service is registered')
     // finish
     await this.sdkConn.connect()
@@ -176,7 +177,7 @@ export class NapcatWsAdapter implements BotInstance {
 
   async stop() {
     this.logger.log('Stopping bot...')
-    this.registerable.forEach(s => s.unregister())
+    this.registerable.forEach(s => s.unmount())
     this.healthChecker = null
     this.logger.log('service is unregistered')
     this.plugins?.forEach((p) => {
