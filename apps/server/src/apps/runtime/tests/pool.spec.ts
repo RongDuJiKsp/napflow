@@ -70,11 +70,11 @@ describe('CommPlugin', () => {
   it('构造时仅保留组件节点/边并识别触发器', () => {
     const plugin = createTestPlugin()
 
-    expect(plugin.commNodes.map(node => node.id)).toEqual(['trigger-1', 'reply-1'])
-    expect(plugin.commEdges.map(edge => edge.id)).toEqual(['e1'])
-    expect(plugin.graphHead.id).toBe('trigger-1')
-    expect(plugin.threadList).toHaveLength(0)
-    expect(plugin.graphHeadConnectedNodes.has(plugin.graphHead)).toBe(true)
+    expect(plugin.graphManager.commNodes.map(node => node.id)).toEqual(['trigger-1', 'reply-1'])
+    expect(plugin.graphManager.commEdges.map(edge => edge.id)).toEqual(['e1'])
+    expect(plugin.graphManager.graphHead.id).toBe('trigger-1')
+    expect(Object.values(plugin.taskManager.threads)).toHaveLength(0)
+    expect(plugin.graphManager.graphHeadConnectedNodes.has(plugin.graphManager.graphHead)).toBe(true)
   })
 
   it('onTrigger 会创建线程并注入上下文', async () => {
@@ -88,11 +88,11 @@ describe('CommPlugin', () => {
 
     plugin.onTrigger(TriggerOnEvents.ChatMessage, { from: 'tester' })
 
-    const [threadId] = Object.keys(plugin.threads)
+    const [threadId] = Object.keys(plugin.taskManager.threads)
     expect(threadId).toBeTruthy()
-    expect(plugin.tasks[threadId]).toBeTruthy()
-    expect(plugin.threads[threadId].kv.from).toBe('tester')
-    expect(plugin.threads[threadId].nodeKv.global).toEqual({ token: 'abc' })
+    expect(plugin.taskManager.tasks[threadId]).toBeTruthy()
+    expect(plugin.taskManager.threads[threadId].kv.from).toBe('tester')
+    expect(plugin.taskManager.threads[threadId].nodeKv.global).toEqual({ token: 'abc' })
 
     await vi.runOnlyPendingTimersAsync()
 
@@ -132,7 +132,7 @@ describe('WorkflowThread', () => {
     await thread.tick(nextTask2)
 
     expect(abortSpy2).toHaveBeenCalledTimes(1)
-    expect(plugin.threads[thread.id]).toBeUndefined()
+    expect(plugin.taskManager.threads[thread.id]).toBeUndefined()
   })
 
   it('超时后会直接中止并卸载线程', async () => {
@@ -151,6 +151,6 @@ describe('WorkflowThread', () => {
 
     expect(abortSpy).toHaveBeenCalledTimes(1)
     expect(onThread).not.toHaveBeenCalled()
-    expect(plugin.threads[thread.id]).toBeUndefined()
+    expect(plugin.taskManager.threads[thread.id]).toBeUndefined()
   })
 })

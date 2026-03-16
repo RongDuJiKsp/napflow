@@ -161,21 +161,25 @@ export const createThreadFixture = (options: {
   }
 
   const plugin = {
-    threads: {} as Record<string, WorkflowThread>,
+    taskManager: {
+      threads: {} as Record<string, WorkflowThread>,
+    },
     configs: {
       threadMaxLiveSecond: options.threadMaxLiveSecond,
     },
-    nodeGraph: new Map([[triggerNode, { prev: [], next: [] }]]),
-    graphHeadConnectedNodes: new Set([triggerNode]),
-    commNodeCache: { [triggerNode.id]: triggerNode },
-    graphHead: triggerNode,
-    commNodes: [triggerNode],
-    getSubGraph: vi.fn(() => new Map()),
+    graphManager: {
+      nodeGraph: new Map([[triggerNode, { prev: [], next: [] }]]),
+      graphHeadConnectedNodes: new Set([triggerNode]),
+      commNodeCache: { [triggerNode.id]: triggerNode },
+      graphHead: triggerNode,
+      commNodes: [triggerNode],
+      getSubGraph: vi.fn(() => new Map()),
+    },
   }
 
   const endpoint = (options.endpoint ?? 'chatMessage') as TriggerOnEvents
   const thread = new WorkflowThread(endpoint, plugin as unknown as CommPlugin)
-  plugin.threads[thread.id] = thread
+  plugin.taskManager.threads[thread.id] = thread
 
   return {
     thread,

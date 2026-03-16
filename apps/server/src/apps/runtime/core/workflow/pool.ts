@@ -14,7 +14,7 @@ import { buildIdCache, buildNeighGraph, getConnectedNodes } from '@/src/utils/al
 import { merge } from 'lodash-es'
 import JoinableQueue from '@shared/data-struct/JoinableQueue'
 import { Logger } from '@nestjs/common'
-import type { Var } from '@shared/common/workflow/component-node'
+import type { ComponentNodesEnum, Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import type { Class } from 'type-fest'
 
@@ -76,6 +76,18 @@ class CommPluginGraphManager {
     this.graphHeadConnectedNodes = getConnectedNodes(this.nodeGraph, this.graphHead.id)
   }
 
+  getSubGraphHead(parentId: string, subHeadType: ComponentNodesEnum) {
+    const headNodes = this.commNodes.filter(
+      node =>
+        node.parentId === parentId
+            && node.data.type === subHeadType,
+    )
+    if (headNodes.length === 0 || headNodes.length > 1)
+      return null
+
+    return headNodes[0]
+  }
+
   getSubGraph(parentNodeId: string) {
     const subNodes = this.commNodes.filter(
       node => node.parentId === parentNodeId,
@@ -93,10 +105,6 @@ class CommPluginTaskManager<SDK = unknown> {
   readonly tasks: Record<string, Task<() => void>> = {}
 
   constructor(private readonly plugin: CommPlugin<SDK>) {}
-
-  get threadList() {
-    return Object.values(this.threads)
-  }
 
   // 这里凡是被message触发就提交任务 该不该往下走交给Thread自己判断
   onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
@@ -218,8 +226,9 @@ export class GraphRunner {
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
 export class CommPlugin<SDK = unknown> {
-  private readonly graphManager: CommPluginGraphManager
-  private readonly taskManager: CommPluginTaskManager<SDK>
+  readonly graphManager: CommPluginGraphManager
+  readonly taskManager: CommPluginTaskManager<SDK>
+
   readonly configs: PluginConfigs
   sdk: SDK | null = null
 
@@ -236,44 +245,8 @@ export class CommPlugin<SDK = unknown> {
     this.taskManager = new CommPluginTaskManager(this)
   }
 
-  get nodeGraph() {
-    return this.graphManager.nodeGraph
-  }
-
-  get commNodes() {
-    return this.graphManager.commNodes
-  }
-
-  get commNodeCache() {
-    return this.graphManager.commNodeCache
-  }
-
-  get commEdges() {
-    return this.graphManager.commEdges
-  }
-
-  get commEdgeCache() {
-    return this.graphManager.commEdgeCache
-  }
-
-  get graphHead() {
-    return this.graphManager.graphHead
-  }
-
-  get graphHeadConnectedNodes() {
-    return this.graphManager.graphHeadConnectedNodes
-  }
-
-  get threads() {
-    return this.taskManager.threads
-  }
-
-  get tasks() {
-    return this.taskManager.tasks
-  }
-
   get threadList() {
-    return this.taskManager.threadList
+    return Object.values(this.taskManager.threads)
   }
 
   onTrigger(endPoint: TriggerOnEvents, kv?: Record<string, string>) {
@@ -286,10 +259,6 @@ export class CommPlugin<SDK = unknown> {
 
   unmount() {
     this.sdk = null
-  }
-
-  getSubGraph(parentNodeId: string) {
-    return this.graphManager.getSubGraph(parentNodeId)
   }
 }
 
@@ -314,7 +283,11 @@ export class WorkflowThread<SDK = unknown> {
   constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin<SDK>) {
     this.triggerEndpoint = triggerEndpoint
     this.plugin = plugin
-    this.graphRunner = new GraphRunner(plugin.nodeGraph, plugin.graphHeadConnectedNodes, plugin.commNodeCache)
+    this.graphRunner = new GraphRunner(
+      plugin.graphManager.nodeGraph,
+      plugin.graphManager.graphHeadConnectedNodes,
+      plugin.graphManager.commNodeCache,
+    )
 
     this.logger.debug(`thread created by${triggerEndpoint}`)
     // 将endpoints初始化到节点
@@ -322,7 +295,7 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private applyEndPoints() {
-    const startNode = this.plugin.graphHead
+    const startNode = this.plugin.graphManager.graphHead
     if (startNode.triggerEv === this.triggerEndpoint)
       this.graphRunner.enqueue(startNode)
   }
@@ -367,7 +340,7 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private unmount() {
-    delete this.plugin.threads[this.id]
+    delete this.plugin.taskManager.threads[this.id]
   }
 
   getLogger(klass: Class<CommNode>): Logger {
@@ -375,10 +348,10 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   getSubGraphRunner(parentNodeId: string) {
-    const subNodes = this.plugin.commNodes.filter(
+    const subNodes = this.plugin.graphManager.commNodes.filter(
       node => node.parentId === parentNodeId,
     )
-    const subGraph = this.plugin.getSubGraph(parentNodeId)
+    const subGraph = this.plugin.graphManager.getSubGraph(parentNodeId)
     const subNodeCache = buildIdCache(subNodes)
     const subGraphRunner = new GraphRunner(subGraph, null, subNodeCache)
     return subGraphRunner

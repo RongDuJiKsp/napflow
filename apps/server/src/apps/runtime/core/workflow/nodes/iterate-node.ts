@@ -42,19 +42,15 @@ export class IterateNode extends CommNode<IterateDataCtx> {
     if (_nkv['iter.index'] >= sourceArr.length) return
     _nkv['iter.item'] = sourceArr[_nkv['iter.index']]
 
-    const headNodes = thread.plugin.commNodes.filter(
-      node =>
-        node.parentId === this.id
-        && node.data.type === ComponentNodesEnum.IterateStart,
-    )
-    if (headNodes.length === 0 || headNodes.length > 1) {
+    const headNode = thread.plugin.graphManager.getSubGraphHead(this.id, ComponentNodesEnum.IterateStart)
+    if (!headNode) {
       this.logger.error('iterate node has no head node or more than one')
       _nextTask.abort()
       return
     }
 
     const subGraphRunner = this.getRunner(thread)
-    subGraphRunner.enqueue(headNodes[0])
+    subGraphRunner.enqueue(headNode)
 
     // iterate节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
     thread.graphRunner.enqueueNextMany([...subGraphRunner.consumeAll(), this])
