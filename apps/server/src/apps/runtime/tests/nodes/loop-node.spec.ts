@@ -50,12 +50,12 @@ describe('循环节点', () => {
 
   it('达到最大次数时不再推进队列', () => {
     const node = createNode()
-    const { graphRunner } = createTestThread()
+    const { thread, graphRunner } = createTestThread()
     const nkv: Record<string, unknown> = {
       'loop.index': 1,
     }
 
-    node.onThread({} as any, createMockNextTask(), nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv['loop.index']).toBe(2)
     expect(graphRunner.enqueueNextMany).not.toHaveBeenCalled()
