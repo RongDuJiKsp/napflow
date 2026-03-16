@@ -1,3 +1,5 @@
+import type { PluginService } from './traits'
+
 /**
  * @description 向js任务池提交任务，但是可以在被运行前取消（被调度了就不行了）
  */
@@ -50,5 +52,57 @@ export class WillTask<Fn extends () => void = () => void> {
     if (this.cancelSignal) return
     const task = Task.submit(this.task, delay)
     saveFn(task)
+  }
+}
+
+export type SeqPoller = (seq: number) => void
+export class MinusTimePoller implements PluginService<[]> {
+  private callables: (SeqPoller)[] = []
+  private intervalTask: ReturnType<typeof setInterval> | null = null
+  private mountedAt: number | null = null
+  private dispatchedMinutes = 0
+
+  register(fn: SeqPoller) {
+    this.callables.push(fn)
+  }
+
+  private trigger(seq: number) {
+    this.callables.forEach(fn => fn(seq))
+  }
+
+  removeAll() {
+    this.callables = []
+  }
+
+  private flushByNow() {
+    if (this.mountedAt === null)
+      return
+
+    const elapsedMinutes = Math.floor((Date.now() - this.mountedAt) / 60_000)
+    while (this.dispatchedMinutes < elapsedMinutes) {
+      this.dispatchedMinutes += 1
+      this.trigger(this.dispatchedMinutes)
+    }
+  }
+
+  mount(): void {
+    if (this.intervalTask)
+      return
+
+    this.mountedAt = Date.now()
+    this.dispatchedMinutes = 0
+    this.intervalTask = setInterval(() => {
+      this.flushByNow()
+    }, 1000)
+  }
+
+  unmount(): void {
+    if (!this.intervalTask)
+      return
+
+    clearInterval(this.intervalTask)
+    this.intervalTask = null
+    this.mountedAt = null
+    this.dispatchedMinutes = 0
   }
 }
