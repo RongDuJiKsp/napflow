@@ -29,7 +29,7 @@ describe('数组索引读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv.value).toBe('b')
   })
 
@@ -45,7 +45,7 @@ describe('数组索引读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv.value).toBe(30)
   })
 
@@ -69,7 +69,7 @@ describe('数组索引读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv.value).toBe(30)
   })
 
@@ -84,7 +84,7 @@ describe('数组索引读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv.value).toBeUndefined()
   })
 
@@ -99,7 +99,7 @@ describe('数组索引读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv.value).toBeUndefined()
   })
 })

@@ -26,7 +26,7 @@ describe('迭代开始节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv).toMatchObject({
       'iter.index': 1,

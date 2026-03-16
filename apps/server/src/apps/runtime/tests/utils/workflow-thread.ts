@@ -1,5 +1,6 @@
 import { vi } from 'vitest'
 import type { WorkflowThread } from '../../core/workflow/pool'
+import type { WillTask } from '@/src/utils/task-pool'
 
 type TestThreadOptions = {
   id?: string;
@@ -12,7 +13,7 @@ type TestThreadOptions = {
 export const createMockNextTask = () => {
   return {
     abort: vi.fn(),
-  }
+  } as unknown as WillTask
 }
 
 export const createTestThread = (options: TestThreadOptions = {}) => {

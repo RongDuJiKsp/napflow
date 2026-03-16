@@ -35,7 +35,7 @@ describe('循环节点', () => {
     })
     const nkv: Record<string, unknown> = {}
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv['loop.index']).toBe(0)
     expect(nkv['loop.maxIndex']).toBe(2)
@@ -55,7 +55,7 @@ describe('循环节点', () => {
       'loop.index': 1,
     }
 
-    node.onThread({} as any, createMockNextTask() as any, nkv)
+    node.onThread({} as any, createMockNextTask(), nkv)
 
     expect(nkv['loop.index']).toBe(2)
     expect(graphRunner.enqueueNextMany).not.toHaveBeenCalled()

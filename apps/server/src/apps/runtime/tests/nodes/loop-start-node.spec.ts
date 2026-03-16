@@ -25,7 +25,7 @@ describe('循环开始节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv).toMatchObject({
       'loop.index': 3,

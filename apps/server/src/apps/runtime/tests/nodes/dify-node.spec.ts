@@ -45,7 +45,7 @@ describe('Dify节点', () => {
       },
     })
 
-    await node.onThread(thread, createMockNextTask() as any, nkv)
+    await node.onThread(thread, createMockNextTask(), nkv)
 
     expect(fetchMock).toHaveBeenCalledOnce()
     expect(nkv.output).toBe('hello dify')
@@ -78,7 +78,7 @@ describe('Dify节点', () => {
       },
     })
 
-    await node.onThread(thread, createMockNextTask() as any, nkv)
+    await node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv.output).toBe('{"ok":1}')
   })
@@ -105,7 +105,7 @@ describe('Dify节点', () => {
     })
     const nkv: Record<string, unknown> = {}
 
-    await node.onThread(createTestThread().thread, createMockNextTask() as any, nkv)
+    await node.onThread(createTestThread().thread, createMockNextTask(), nkv)
 
     expect(nkv.output).toBe('')
   })

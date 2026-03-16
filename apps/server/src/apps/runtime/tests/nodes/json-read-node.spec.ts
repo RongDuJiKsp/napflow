@@ -39,7 +39,7 @@ describe('JSON读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv.name).toBe('alice')
     expect(nkv.age).toBe(18)
@@ -58,7 +58,7 @@ describe('JSON读取节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
     expect(nkv).toEqual({})
   })
 })

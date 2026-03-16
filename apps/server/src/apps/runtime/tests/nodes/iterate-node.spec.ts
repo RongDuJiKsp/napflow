@@ -36,7 +36,7 @@ describe('数组迭代节点', () => {
     })
     const nkv: Record<string, unknown> = {}
 
-    node.onThread(thread, createMockNextTask() as any, nkv)
+    node.onThread(thread, createMockNextTask(), nkv)
 
     expect(nkv['iter.index']).toBe(0)
     expect(nkv['iter.maxIndex']).toBe(1)
@@ -58,7 +58,7 @@ describe('数组迭代节点', () => {
       },
     })
 
-    node.onThread(thread, createMockNextTask() as any, {})
+    node.onThread(thread, createMockNextTask(), {})
 
     expect(graphRunner.enqueueNextMany).not.toHaveBeenCalled()
   })

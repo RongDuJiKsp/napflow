@@ -47,7 +47,7 @@ describe('条件判断节点', () => {
       ],
     })
 
-    node.onThread(thread, createMockNextTask() as any, {})
+    node.onThread(thread, createMockNextTask(), {})
 
     expect(graphRunner.removeQueue).toHaveBeenCalledWith(['node-else'])
   })
@@ -67,7 +67,7 @@ describe('条件判断节点', () => {
       ],
     })
 
-    node.onThread(thread, createMockNextTask() as any, {})
+    node.onThread(thread, createMockNextTask(), {})
 
     expect(graphRunner.removeQueue).toHaveBeenCalledWith(['node-if'])
   })
