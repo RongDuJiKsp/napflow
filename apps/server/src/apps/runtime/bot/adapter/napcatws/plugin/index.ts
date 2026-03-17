@@ -50,6 +50,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
         time: String(this.minusPoller.realTime(seq) * 60),
       })
     })
+    this.minusPoller.mount()
   }
 
   unmount() {
