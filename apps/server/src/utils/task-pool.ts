@@ -136,5 +136,6 @@ export class MinusTimePoller implements PluginService<[]> {
     this.intervalTask = null
     this.mountedAt = null
     this.dispatchedMinutes = 0
+    this.removeAll()
   }
 }

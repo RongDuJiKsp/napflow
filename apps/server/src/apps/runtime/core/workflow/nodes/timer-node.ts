@@ -25,7 +25,10 @@ export class TimerNode extends CommNode<TimerDataCtx> implements CommTrigger {
     nextTask: WillTask,
     _nkv: Record<string, any>,
   ): void | Promise<void> {
-        // 定时器触发时，kv里会有time、mountAt、uptime三个字段，都是unix时间戳字符串
+     // 定时器触发时，kv 里会有 time、mountAt、uptime 三个字段：
+     // - time: Unix epoch 秒字符串（当前触发时间）
+     // - mountAt: 适配器注入的挂载时间标记（当前实现不保证是 Unix epoch，只是随 seq 变化的值）
+     // - uptime: 自挂载以来经过的秒数（elapsed seconds，而非 Unix epoch）
     const uptimeTs = Number(thread.kv.uptime)
     const mountAtTs = Number(thread.kv.mountAt)
     const timeTs = Number(thread.kv.time)
