@@ -50,7 +50,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
       this.onTrigger(TriggerOnEvents.Timer, {
         time: String(this.minusPoller.realTime(seq) * 60),
         mountAt: String(this.minusPoller.mountAtTs),
-        upTime: String(this.minusPoller.uptimeTs),
+        uptime: String(this.minusPoller.uptimeTs),
       })
     })
   }

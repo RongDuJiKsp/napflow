@@ -25,6 +25,7 @@ import type {
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
 import type { Class } from 'type-fest'
 import type { PluginService } from '@/src/utils/traits'
+import { compileTemplate } from '../../utils/templates'
 
 export type PluginConfigs = {
   threadMaxLiveSecond?: number; // 任务线程最大存活时间 默认10分钟
@@ -294,6 +295,16 @@ export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
   }
 }
 
+export class WorkflowThreadKvManager {
+  readonly kv: Record<string, string> = {}
+  readonly nodeKv: Record<string, Record<string, any>> = {}
+
+  initNodeKv(node: CommNode) {
+    this.nodeKv[node.id] = this.nodeKv[node.id] || {}
+    return this.nodeKv[node.id]
+  }
+}
+
 /**
  * @description 任务线程 每个实例对应每次触发创建的运行实体
  */
@@ -301,20 +312,14 @@ export class WorkflowThread<SDK = unknown> {
   // 上下文数据
   readonly id = randomUUID()
   readonly createdAt = new Date()
-  readonly kv: Record<string, string> = {}
-  readonly nodeKv: Record<string, Record<string, any>> = {}
-
-  readonly triggerEndpoint: TriggerOnEvents
-  readonly plugin: CommPlugin<SDK>
+  readonly kvManager = new WorkflowThreadKvManager()
 
   // 运行时图数据
   readonly graphRunner: GraphRunner
 
   readonly logger = new Logger(`${WorkflowThread.name}#${this.id}`)
 
-  constructor(triggerEndpoint: TriggerOnEvents, plugin: CommPlugin<SDK>) {
-    this.triggerEndpoint = triggerEndpoint
-    this.plugin = plugin
+  constructor(readonly triggerEndpoint: TriggerOnEvents, readonly plugin: CommPlugin<SDK>) {
     this.graphRunner = new GraphRunner(
       plugin.graphManager.nodeGraph,
       plugin.graphManager.graphHeadConnectedNodes,
@@ -332,9 +337,20 @@ export class WorkflowThread<SDK = unknown> {
       this.graphRunner.enqueue(startNode)
   }
 
+  get kv() {
+    return this.kvManager.kv
+  }
+
+  get nodeKv() {
+    return this.kvManager.nodeKv
+  }
+
+  compileTemplate(template: string) {
+    return compileTemplate(template, this)
+  }
+
   private async execNode(currNode: CommNode, nextTask: WillTask) {
-    this.nodeKv[currNode.id] = this.nodeKv[currNode.id] || {}
-    await currNode.onThread(this, nextTask, this.nodeKv[currNode.id])
+    await currNode.onThread(this, nextTask, this.kvManager.initNodeKv(currNode))
   }
 
   async tick(nextTask: WillTask) {
