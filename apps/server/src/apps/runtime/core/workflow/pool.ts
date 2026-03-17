@@ -345,7 +345,7 @@ export class WorkflowThread<SDK = unknown> {
     return this.kvManager.nodeKv
   }
 
-  compileTemplate(template: string) {
+  compileEnvTemplate(template: string) {
     return compileTemplate(template, this)
   }
 
