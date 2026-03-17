@@ -23,6 +23,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
 
   mount(sdk: NapcatWsSdk) {
     super.mount(sdk)
+    this.minusPoller.mount()
     // 监听群消息和私聊消息
     this.registerManager.register(
       sdk.subscribe('message.group', async (msg) => {
@@ -48,9 +49,10 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
     this.minusPoller.register((seq) => {
       this.onTrigger(TriggerOnEvents.Timer, {
         time: String(this.minusPoller.realTime(seq) * 60),
+        mountAt: String(this.minusPoller.mountAtTs),
+        upTime: String(this.minusPoller.uptimeTs),
       })
     })
-    this.minusPoller.mount()
   }
 
   unmount() {

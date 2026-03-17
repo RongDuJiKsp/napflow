@@ -59,8 +59,14 @@ export type SeqPoller = (seq: number) => void
 export class MinusTimePoller implements PluginService<[]> {
   private callables: (SeqPoller)[] = []
   private intervalTask: ReturnType<typeof setInterval> | null = null
-  private mountedAt: number | null = null
+  private mountedAt: Date | null = null
   private dispatchedMinutes = 0
+
+  get safeMountAt() {
+    if (this.mountedAt === null)
+      throw new Error('MinusTimePoller is not mounted')
+    return this.mountedAt
+  }
 
   register(fn: SeqPoller) {
     this.callables.push(fn)
@@ -78,25 +84,35 @@ export class MinusTimePoller implements PluginService<[]> {
     if (this.mountedAt === null)
       return
 
-    const elapsedMinutes = Math.floor((Date.now() - this.mountedAt) / 60_000)
+    const elapsedMinutes = Math.floor((Date.now() - this.mountedAt.valueOf()) / 60_000)
     while (this.dispatchedMinutes < elapsedMinutes) {
       this.dispatchedMinutes += 1
       this.trigger(this.dispatchedMinutes)
     }
   }
 
-  realTime(seq: number) {
-    if (this.mountedAt === null)
-      throw new Error('MinusTimePoller is not mounted')
+  get mountAtTs() {
+    return Math.floor(this.safeMountAt.valueOf() / 1000)
+  }
 
-    return Math.floor((this.mountedAt + seq * 60_000) / 60_000)
+  get uptimeTs() {
+    return Math.floor((Date.now() - this.safeMountAt.valueOf()) / 1000)
+  }
+
+  /**
+   * @description 获取当前的时间序列，单位为分钟，表示自从挂载以来经过了多少个整分钟
+   * @param seq 序列号 (可以理解为距离挂载的分钟数)，通常由MinusTimePoller自动递增传入
+   * @returns  当前的时间序列，单位为分钟，表示自从挂载以来经过了多少个整分钟
+   */
+  realTime(seq: number) {
+    return Math.floor((this.safeMountAt.valueOf() + seq * 60_000) / 60_000)
   }
 
   mount(): void {
     if (this.intervalTask)
       return
 
-    this.mountedAt = Date.now()
+    this.mountedAt = new Date()
     this.dispatchedMinutes = 0
     this.intervalTask = setInterval(() => {
       this.flushByNow()

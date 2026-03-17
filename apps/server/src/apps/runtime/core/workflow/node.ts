@@ -17,7 +17,7 @@ export enum CommNodeRole {
 }
 export enum TriggerOnEvents {
   ChatMessage = 'chatMessage', // 聊天触发的消息 这时候kv里面有hmsg(人类可读文本), gid(群id)或 uid(用户id)
-  Timer = 'timer', // 定时器触发 这时候kv里面有time(unix秒钟时间戳)
+  Timer = 'timer', // 定时器触发 这时候kv里面有 当前时间 time(unix秒钟时间戳) 系统启动时间 mountAt(unix秒钟时间戳) 系统启动了多少秒 uptime(unix秒钟时间戳)
 }
 
 export const defineCommNodeSchema = <

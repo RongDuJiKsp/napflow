@@ -263,7 +263,6 @@ export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
 
   // mount infos
   sdk: SDK | null = null
-  mountAt: Date | null = null
 
   constructor(
     readonly nodes: Node[],
@@ -288,12 +287,10 @@ export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
 
   mount(sdk: SDK) {
     this.sdk = sdk
-    this.mountAt = new Date()
   }
 
   unmount() {
     this.sdk = null
-    this.mountAt = null
   }
 }
 
