@@ -254,11 +254,16 @@ export class GraphRunner {
  * @description 任务池 每个任务池对应一个plugin 任务池为抽象类 任务池的启动由适配器管理
  */
 export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
+  // deps
   readonly graphManager: CommPluginGraphManager
   readonly taskManager: CommPluginTaskManager<SDK>
 
+  // dep cfg
   readonly configs: PluginConfigs
+
+  // mount infos
   sdk: SDK | null = null
+  mountAt: Date | null = null
 
   constructor(
     readonly nodes: Node[],
@@ -283,10 +288,12 @@ export class CommPlugin<SDK = unknown> implements PluginService<[SDK]> {
 
   mount(sdk: SDK) {
     this.sdk = sdk
+    this.mountAt = new Date()
   }
 
   unmount() {
     this.sdk = null
+    this.mountAt = null
   }
 }
 
