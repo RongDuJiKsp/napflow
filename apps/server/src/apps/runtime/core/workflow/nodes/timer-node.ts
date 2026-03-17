@@ -47,9 +47,10 @@ export class TimerNode extends CommNode<TimerDataCtx> implements CommTrigger {
         nextTask.abort()
     }
     else if(this.data.mode === TimerTriggerMode.Interval) {
-      // 如果是间隔触发，用uptime取模算间隔
-      const intervalSec = Number(timeExpr)
-      if(intervalSec <= 0 || uptimeTs % intervalSec !== 0)
+      // 如果是间隔触发，timeExpr 按分钟解释，先把 uptime 换算成分钟再取模
+      const intervalMinutes = Number(timeExpr)
+      const uptimeMinutes = Math.floor(uptimeTs / 60)
+      if(intervalMinutes <= 0 || uptimeMinutes % intervalMinutes !== 0)
         nextTask.abort()
     }
   }

@@ -40,7 +40,7 @@ export const TimerDataSchema = z
     if (Number.isNaN(asNumber) || !Number.isFinite(asNumber)) {
       ctx.addIssue({
         code: 'custom',
-        message: '间隔模式下 timeExpr 必须是可用数字，或使用变量引用',
+        message: '间隔模式下 timeExpr 必须是分钟数，或使用变量引用',
         path: ['timeExpr'],
       })
     }

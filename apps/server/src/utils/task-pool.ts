@@ -100,12 +100,21 @@ export class MinusTimePoller implements PluginService<[]> {
   }
 
   /**
-   * @description 获取当前的时间序列，单位为分钟，表示自从挂载以来经过了多少个整分钟
+   * @description 将序列号换算为一个虚拟的时间戳
    * @param seq 序列号 (可以理解为距离挂载的分钟数)，通常由MinusTimePoller自动递增传入
-   * @returns  当前的时间序列，单位为分钟，表示自从挂载以来经过了多少个整分钟
+   * @returns  一个时间戳，表示这个虚拟的序列号所对应的虚拟的现实时间戳
    */
   realTime(seq: number) {
     return Math.floor((this.safeMountAt.valueOf() + seq * 60_000) / 60_000)
+  }
+
+  /**
+   * @description 获取自从挂载以来经过了多少个整分钟
+   * @param seq 序列号 (可以理解为距离挂载的分钟数)，通常由MinusTimePoller自动递增传入
+   * @returns  自从挂载以来经过了多少个整分钟
+   */
+  realMountTime(seq: number) {
+    return seq
   }
 
   mount(): void {

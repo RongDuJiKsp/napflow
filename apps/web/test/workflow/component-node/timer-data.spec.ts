@@ -22,23 +22,23 @@ describe('TimerDataSchema', () => {
     }).toThrow()
   })
 
-  test('间隔模式：数字字符串保持为 string，运行时再解析', () => {
+  test('间隔模式：分钟数字字符串保持为 string，运行时再解析', () => {
     const parsed = TimerDataSchema.parse({
       mode: TimerTriggerMode.Interval,
-      timeExpr: '120',
+      timeExpr: '2',
     })
 
-    expect(parsed.timeExpr).toBe('120')
+    expect(parsed.timeExpr).toBe('2')
     expect(typeof parsed.timeExpr).toBe('string')
   })
 
   test('间隔模式：变量引用字符串保持原样', () => {
     const parsed = TimerDataSchema.parse({
       mode: TimerTriggerMode.Interval,
-      timeExpr: '$vars.intervalSec',
+      timeExpr: '$vars.intervalMinutes',
     })
 
-    expect(parsed.timeExpr).toBe('$vars.intervalSec')
+    expect(parsed.timeExpr).toBe('$vars.intervalMinutes')
   })
 
   test('间隔模式：不可转数字且非变量引用时报错', () => {

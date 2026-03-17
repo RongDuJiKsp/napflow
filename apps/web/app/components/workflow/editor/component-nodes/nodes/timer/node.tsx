@@ -14,7 +14,8 @@ const TimerNode: ComponentNodeFc<TimerData> = ({ id, data }) => {
   const hasTimeExpr = data.timeExpr !== '' && data.timeExpr !== undefined
   const triggerLabel
     = mode === TimerTriggerMode.Schedule ? '定时触发' : '间隔触发'
-  const exprLabel = mode === TimerTriggerMode.Schedule ? '时间表达式' : '间隔表达式'
+  const exprLabel
+    = mode === TimerTriggerMode.Schedule ? '时间表达式' : '间隔表达式(分钟)'
 
   return (
     <div className="flex flex-col gap-1 relative min-w-40">

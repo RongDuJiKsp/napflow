@@ -49,7 +49,7 @@ const TimerPanel: ComponentPanelFc<TimerData> = ({ id, data }) => {
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
-            {mode === TimerTriggerMode.Schedule ? '触发时间' : '触发间隔'}
+            {mode === TimerTriggerMode.Schedule ? '触发时间' : '触发间隔(分钟)'}
           </Label>
           <InputWithEnv
             envs={vars}
@@ -58,7 +58,7 @@ const TimerPanel: ComponentPanelFc<TimerData> = ({ id, data }) => {
             placeholder={
               mode === TimerTriggerMode.Schedule
                 ? '输入 HH:mm，输入 $ 引用变量'
-                : '输入间隔秒数，输入 $ 引用变量'
+                : '输入间隔分钟数，输入 $ 引用变量'
             }
             className={{
               contentEditable:

@@ -49,7 +49,7 @@ export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {
     this.minusPoller.register((seq) => {
       this.onTrigger(TriggerOnEvents.Timer, {
         time: String(this.minusPoller.realTime(seq) * 60),
-        mountAt: String(this.minusPoller.mountAtTs),
+        mountAt: String(this.minusPoller.realMountTime(seq) * 60),
         uptime: String(this.minusPoller.uptimeTs),
       })
     })
