@@ -4,7 +4,7 @@
  * @property {function} mount - 挂载函数，接受依赖项作为参数。当调用该函数时，插件服务将被挂载到系统中，并且可以使用提供的依赖项进行初始化或配置。
  * @property {function} unmount - 卸载函数，当调用该函数时，插件服务将从系统中卸载，并且可以执行任何必要的清理操作。卸载的插件保证能被重新挂载
  */
-export abstract class PluginService<Dependencies extends any[] = any> {
+export abstract class PluginService<Dependencies extends any[] = any[]> {
   abstract mount(...args: Dependencies): void
   abstract unmount(): void
 }
