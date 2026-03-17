@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { NodeClassic } from '@shared/common/workflow/core'
-import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-node'
+import {
+  ComponentNodesEnum,
+  VarTypes,
+} from '@shared/common/workflow/component-node'
 import { ArrayIndexReadNode } from '../../core/workflow/nodes/array-index-read-node'
 import { createMockNextTask, createTestThread } from '../utils/workflow-thread'
 

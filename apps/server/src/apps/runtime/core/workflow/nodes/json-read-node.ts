@@ -4,11 +4,11 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { JsonReadDataRawSchema } from '@shared/common/workflow/node-data/json-read'
+import { JsonReadDataSchema } from '@shared/common/workflow/node-data/json-read'
 import { VarTypes } from '@shared/common/workflow/component-node'
 
 export const JsonReadDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  JsonReadDataRawSchema.shape,
+  JsonReadDataSchema.shape,
 )
 
 export type JsonReadDataCtx = z.infer<typeof JsonReadDataCtxSchema>
@@ -71,12 +71,14 @@ export class JsonReadNode extends CommNode<JsonReadDataCtx> {
     }
 
     const serializeStringArray = (value: unknown): string[] => {
-      if (Array.isArray(value)) return value.map(item => serializeString(item))
+      if (Array.isArray(value))
+        return value.map(item => serializeString(item))
       return value == null ? [] : [serializeString(value)]
     }
 
     const serializeNumberArray = (value: unknown): number[] => {
-      if (Array.isArray(value)) return value.map(item => serializeNumber(item))
+      if (Array.isArray(value))
+        return value.map(item => serializeNumber(item))
       return value == null ? [] : [serializeNumber(value)]
     }
 

@@ -21,6 +21,7 @@ export const ReplyNodeCreator: ComponentCreator<ReplyData> = {
   editPanelComponent: ReplyPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,

@@ -68,7 +68,7 @@ describe('循环节点', () => {
       commNodes: [],
     })
 
-    node.onThread(thread, nextTask as any, {})
+    node.onThread(thread, nextTask, {})
 
     expect(nextTask.abort).toHaveBeenCalledOnce()
   })

@@ -8,7 +8,9 @@ const ArrayIndexReadNode: ComponentNodeFc<ArrayIndexReadData> = ({ data }) => {
       <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-emerald-100">
         <span className="text-emerald-600 font-medium">来源变量</span>
         <span className="truncate text-gray-500 max-w-28">
-          {data.sourceVarName || <span className="text-gray-400 italic">未选择</span>}
+          {data.sourceVarName || (
+            <span className="text-gray-400 italic">未选择</span>
+          )}
         </span>
       </div>
       <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-emerald-100">

@@ -17,6 +17,7 @@ export const LoopNodeCreator: ComponentCreator<LoopData> = {
   editPanelComponent: LoopPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.Iterate,

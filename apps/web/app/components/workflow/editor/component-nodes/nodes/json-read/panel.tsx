@@ -72,15 +72,20 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
               className={twMerge(
                 'flex flex-col gap-1.5 p-2 rounded border bg-white',
                 type === VarTypes.String && 'border-cyan-100 bg-cyan-50/30',
-                type === VarTypes.Number && 'border-emerald-100 bg-emerald-50/30',
-                type === VarTypes.StringArray && 'border-violet-100 bg-violet-50/30',
-                type === VarTypes.NumberArray && 'border-amber-100 bg-amber-50/30',
+                type === VarTypes.Number
+                  && 'border-emerald-100 bg-emerald-50/30',
+                type === VarTypes.StringArray
+                  && 'border-violet-100 bg-violet-50/30',
+                type === VarTypes.NumberArray
+                  && 'border-amber-100 bg-amber-50/30',
               )}
             >
               <div className="flex items-center gap-1">
                 <input
                   value={item.name}
-                  onChange={e => handleOutputNameChange(index, e.target.value)}
+                  onChange={e =>
+                    handleOutputNameChange(index, e.target.value)
+                  }
                   placeholder="输出变量名"
                   className="text-xs border border-emerald-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-emerald-400"
                 />
@@ -95,7 +100,9 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                 <span className="shrink-0">字段</span>
                 <input
                   value={item.field}
-                  onChange={e => handleOutputFieldChange(index, e.target.value)}
+                  onChange={e =>
+                    handleOutputFieldChange(index, e.target.value)
+                  }
                   placeholder="如 a"
                   className="text-xs border border-emerald-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-emerald-400"
                 />
@@ -104,22 +111,39 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                   onChange={v => handleOutputTypeChange(index, v as VarTypes)}
                 >
                   <Select.Trigger className="border-emerald-200 hover:border-emerald-400 transition-colors rounded w-32 min-h-8 h-8 px-2">
-                    <span className={twMerge('text-sm font-medium', outputTypeTextStyles[type])}>
+                    <span
+                      className={twMerge(
+                        'text-sm font-medium',
+                        outputTypeTextStyles[type],
+                      )}
+                    >
                       <Select.Value />
                     </span>
                   </Select.Trigger>
                   <Select.Popover className="min-w-36">
                     <ListBox>
-                      <ListBox.Item id={VarTypes.String} className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors">
+                      <ListBox.Item
+                        id={VarTypes.String}
+                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                      >
                         <span className="text-sm">string</span>
                       </ListBox.Item>
-                      <ListBox.Item id={VarTypes.Number} className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors">
+                      <ListBox.Item
+                        id={VarTypes.Number}
+                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                      >
                         <span className="text-sm">number</span>
                       </ListBox.Item>
-                      <ListBox.Item id={VarTypes.StringArray} className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors">
+                      <ListBox.Item
+                        id={VarTypes.StringArray}
+                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                      >
                         <span className="text-sm">Array&lt;string&gt;</span>
                       </ListBox.Item>
-                      <ListBox.Item id={VarTypes.NumberArray} className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors">
+                      <ListBox.Item
+                        id={VarTypes.NumberArray}
+                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                      >
                         <span className="text-sm">Array&lt;number&gt;</span>
                       </ListBox.Item>
                     </ListBox>

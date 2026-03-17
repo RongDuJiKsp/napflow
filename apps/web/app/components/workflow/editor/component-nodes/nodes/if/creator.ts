@@ -33,6 +33,7 @@ export const IfNodeCreator: ComponentCreator<IfData> = {
   editPanelComponent: IfPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.LoopStart,
     ComponentNodesEnum.IterateStart,

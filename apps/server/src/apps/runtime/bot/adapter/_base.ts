@@ -25,8 +25,3 @@ export type BotAdapterFactory = (
   configService: AppConfigService,
   bindingBridgeService: BotBridgeForBotService,
 ) => BotInstance | Promise<BotInstance>
-
-export type Registerable = {
-  register: () => void;
-  unregister: () => void;
-}

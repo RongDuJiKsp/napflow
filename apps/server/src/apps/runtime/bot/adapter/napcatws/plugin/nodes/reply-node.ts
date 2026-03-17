@@ -4,7 +4,6 @@ import type { WorkflowThread } from '@/src/apps/runtime/core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { Logger } from '@nestjs/common'
 import type { NapcatWsSdk } from '../../sdk'
-import { compileTemplate } from '@/src/apps/runtime/utils/templates'
 import { Structs } from '@rdjksp/node-napcat-ts'
 export class NcReplyNode extends ReplyNode {
   readonly logger = new Logger(NcReplyNode.name)
@@ -22,7 +21,7 @@ export class NcReplyNode extends ReplyNode {
     template: string,
     thread: WorkflowThread<NapcatWsSdk>,
   ): Promise<void> {
-    const content = compileTemplate(template, thread)
+    const content = thread.compileEnvTemplate(template)
     this.logger.debug(`Compiled Reply content: ${content}`)
     if (this.data.replyTarget === ReplyTarget.Group && this.data.groupId) {
       this.logger.debug('Replying to group')
@@ -37,10 +36,7 @@ export class NcReplyNode extends ReplyNode {
       && this.data.triggerSourceId
     ) {
       this.logger.debug('Replying to trigger source')
-      const triggerSourceId = compileTemplate(
-        this.data.triggerSourceId,
-        thread,
-      )
+      const triggerSourceId = thread.compileEnvTemplate(this.data.triggerSourceId)
       const sourceKv = thread.nodeKv[triggerSourceId]
 
       if (sourceKv['trigger.uid'])

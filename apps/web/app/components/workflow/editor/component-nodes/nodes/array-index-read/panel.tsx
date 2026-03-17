@@ -7,13 +7,12 @@ import InputWithEnv from '../../common/input-with-env'
 import { useArrayIndexReadCurd } from './hooks/use-array-index-read-curd'
 import ProviderEnv from '../../common/provider-env'
 
-const ArrayIndexReadPanel: ComponentPanelFc<ArrayIndexReadData> = ({ id, data }) => {
-  const {
-    vars,
-    arrayVars,
-    handleSourceVarNameChange,
-    handleIndexChange,
-  } = useArrayIndexReadCurd(id)
+const ArrayIndexReadPanel: ComponentPanelFc<ArrayIndexReadData> = ({
+  id,
+  data,
+}) => {
+  const { vars, arrayVars, handleSourceVarNameChange, handleIndexChange }
+    = useArrayIndexReadCurd(id)
 
   const handleSourceVarChange = useCallback(
     (value: string) => {

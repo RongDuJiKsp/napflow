@@ -2,7 +2,10 @@ import { useCallback } from 'react'
 import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
 import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
 import type { ComponentNode } from '../../../types'
-import type { DifyData, DifyMode } from '@shared/common/workflow/node-data/dify'
+import type {
+  DifyData,
+  DifyMode,
+} from '@shared/common/workflow/node-data/dify'
 import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 
 export const useDifyCurd = (id: string) => {
@@ -52,7 +55,10 @@ export const useDifyCurd = (id: string) => {
 
   const handleInputAdd = useCallback(() => {
     editNode<ComponentNode<DifyData>>(id, (draft) => {
-      draft.data.inputs = [...(draft.data.inputs ?? []), { key: '', value: '' }]
+      draft.data.inputs = [
+        ...(draft.data.inputs ?? []),
+        { key: '', value: '' },
+      ]
     })
     submitSyncDraft()
   }, [id, editNode, submitSyncDraft])
@@ -60,7 +66,9 @@ export const useDifyCurd = (id: string) => {
   const handleInputRemove = useCallback(
     (index: number) => {
       editNode<ComponentNode<DifyData>>(id, (draft) => {
-        draft.data.inputs = (draft.data.inputs ?? []).filter((_, i) => i !== index)
+        draft.data.inputs = (draft.data.inputs ?? []).filter(
+          (_, i) => i !== index,
+        )
       })
       submitSyncDraft()
     },

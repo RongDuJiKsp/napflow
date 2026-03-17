@@ -4,8 +4,10 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { DifyDataSchema, DifyMode } from '@shared/common/workflow/node-data/dify'
-import { compileTemplate } from '../../../utils/templates'
+import {
+  DifyDataSchema,
+  DifyMode,
+} from '@shared/common/workflow/node-data/dify'
 import { Logger } from '@nestjs/common'
 
 export const DifyDataCtxSchema = ZodCheckComponentNodeMeta.extend(
@@ -27,25 +29,37 @@ export class DifyNode extends CommNode<DifyDataCtx> {
     _nextTask: WillTask,
     nkv: Record<string, any>,
   ): Promise<void> {
-    const baseUrl = compileTemplate(this.data.baseUrl, thread)
-    const apiKey = compileTemplate(this.data.apiKey, thread)
-    const query = this.data.query ? compileTemplate(this.data.query, thread) : ''
+    const baseUrl = thread.compileEnvTemplate(this.data.baseUrl)
+    const apiKey = thread.compileEnvTemplate(this.data.apiKey)
+    const query = this.data.query
+      ? thread.compileEnvTemplate(this.data.query)
+      : ''
 
-    this.logger.debug(`Calling Dify API [${this.data.mode}], baseUrl: ${baseUrl}, query: ${query}`)
+    this.logger.debug(
+      `Calling Dify API [${this.data.mode}], baseUrl: ${baseUrl}, query: ${query}`,
+    )
 
     const base = baseUrl.replace(/\/$/, '')
     const isChatflow = this.data.mode === DifyMode.Chatflow
-    const url = isChatflow
-      ? `${base}/chat-messages`
-      : `${base}/workflows/run`
+    const url = isChatflow ? `${base}/chat-messages` : `${base}/workflows/run`
 
     const compiledInputs: Record<string, string> = {}
     for (const entry of this.data.inputs ?? [])
-      compiledInputs[entry.key] = compileTemplate(entry.value, thread)
+      compiledInputs[entry.key] = thread.compileEnvTemplate(entry.value)
 
     const bodyObj = isChatflow
-      ? { inputs: {}, query, response_mode: 'blocking', conversation_id: '', user: `napflow${this.id}${thread.id}` }
-      : { inputs: compiledInputs, response_mode: 'blocking', user: `napflow${this.id}${thread.id}` }
+      ? {
+        inputs: {},
+        query,
+        response_mode: 'blocking',
+        conversation_id: '',
+        user: `napflow${this.id}${thread.id}`,
+      }
+      : {
+        inputs: compiledInputs,
+        response_mode: 'blocking',
+        user: `napflow${this.id}${thread.id}`,
+      }
 
     let answer: string
     try {
@@ -63,11 +77,11 @@ export class DifyNode extends CommNode<DifyDataCtx> {
         answer = ''
       }
       else if (isChatflow) {
-        const json = await resp.json() as { answer?: string }
+        const json = (await resp.json()) as { answer?: string }
         answer = json.answer ?? ''
       }
       else {
-        const json = await resp.json() as { data?: { outputs?: unknown } }
+        const json = (await resp.json()) as { data?: { outputs?: unknown } }
         answer = JSON.stringify(json.data?.outputs ?? null)
       }
     }

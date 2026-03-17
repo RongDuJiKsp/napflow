@@ -1,9 +1,15 @@
-import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/component-node'
+import {
+  ComponentNodesEnum,
+  VarTypes,
+} from '@shared/common/workflow/component-node'
 import type { ComponentCreator } from '../../types'
 import DifyNode from './node'
 import DifyPanel from './panel'
 import { RiRobot2Line } from '@remixicon/react'
-import { DifyDataSchema, DifyMode } from '@shared/common/workflow/node-data/dify'
+import {
+  DifyDataSchema,
+  DifyMode,
+} from '@shared/common/workflow/node-data/dify'
 import type { DifyData } from '@shared/common/workflow/node-data/dify'
 
 export const DifyNodeCreator: ComponentCreator<DifyData> = {
@@ -21,6 +27,7 @@ export const DifyNodeCreator: ComponentCreator<DifyData> = {
   editPanelComponent: DifyPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
+    ComponentNodesEnum.Timer,
     ComponentNodesEnum.Reply,
     ComponentNodesEnum.If,
     ComponentNodesEnum.LoopStart,
@@ -40,7 +47,5 @@ export const DifyNodeCreator: ComponentCreator<DifyData> = {
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
   ],
-  env: [
-    { type: VarTypes.String, name: 'output' },
-  ],
+  env: [{ type: VarTypes.String, name: 'output' }],
 }

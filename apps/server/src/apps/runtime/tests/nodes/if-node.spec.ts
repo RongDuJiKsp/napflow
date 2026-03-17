@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { NodeClassic } from '@shared/common/workflow/core'
 import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
-import { BranchType, CompareOperator } from '@shared/common/workflow/node-data/if'
+import {
+  BranchType,
+  CompareOperator,
+} from '@shared/common/workflow/node-data/if'
 import { IfNode } from '../../core/workflow/nodes/if-node'
 import { createMockNextTask, createTestThread } from '../utils/workflow-thread'
 

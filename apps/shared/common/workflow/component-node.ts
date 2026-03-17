@@ -3,6 +3,7 @@ import z from 'zod'
 // component nodes
 export enum ComponentNodesEnum {
   Trigger = 'trigger',
+  Timer = 'timer',
   Reply = 'reply',
   If = 'if',
   Loop = 'loop',

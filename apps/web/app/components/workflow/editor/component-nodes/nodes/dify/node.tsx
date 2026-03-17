@@ -13,7 +13,9 @@ const DifyNode: ComponentNodeFc<DifyData> = ({ id, data }) => {
     <div className="flex flex-col gap-1 relative min-w-40">
       <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-sky-100">
         <span className="text-sky-500 font-medium">模式</span>
-        <span className="truncate text-gray-500 max-w-28">{isChatflow ? '💬 Chatflow' : '⚙️ Workflow'}</span>
+        <span className="truncate text-gray-500 max-w-28">
+          {isChatflow ? '💬 Chatflow' : '⚙️ Workflow'}
+        </span>
       </div>
       <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-sky-100">
         <span className="text-sky-500 font-medium">API 地址</span>
@@ -31,7 +33,10 @@ const DifyNode: ComponentNodeFc<DifyData> = ({ id, data }) => {
                 value={data.query}
                 onChange={noop}
                 isEditable={false}
-                className={{ contentEditable: 'text-xs text-gray-500 leading-tight outline-none' }}
+                className={{
+                  contentEditable:
+                    'text-xs text-gray-500 leading-tight outline-none',
+                }}
               />
             </div>
           ) : (
@@ -41,7 +46,9 @@ const DifyNode: ComponentNodeFc<DifyData> = ({ id, data }) => {
       ) : (
         <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-sky-100">
           <span className="text-sky-500 font-medium">输入变量</span>
-          <span className="text-gray-500">{(data.inputs ?? []).length} 个字段</span>
+          <span className="text-gray-500">
+            {(data.inputs ?? []).length} 个字段
+          </span>
         </div>
       )}
       <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-sky-100">

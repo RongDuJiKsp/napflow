@@ -30,7 +30,8 @@ class JoinableQueue<T> extends Deque<T> {
   }
 
   enqueueNextMany(elements: T[]): JoinableQueue<T> {
-    for (let i = elements.length - 1; i >= 0; i--) this.enqueueNext(elements[i])
+    for (let i = elements.length - 1; i >= 0; i--)
+      this.enqueueNext(elements[i])
     return this
   }
 

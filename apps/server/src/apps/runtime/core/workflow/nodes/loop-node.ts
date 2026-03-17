@@ -8,12 +8,12 @@ import { CommNode, CommNodeRole } from '../node'
 import type { GraphRunner } from '../pool'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { LoopDataRawSchema } from '@shared/common/workflow/node-data/loop'
+import { LoopDataSchema } from '@shared/common/workflow/node-data/loop'
 import { Logger } from '@nestjs/common'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
 export const LoopDataCtxSchema = ZodCheckComponentNodeMeta.extend(
-  LoopDataRawSchema.shape,
+  LoopDataSchema.shape,
 )
 
 export type LoopDataCtx = z.infer<typeof LoopDataCtxSchema>
@@ -37,21 +37,20 @@ export class LoopNode extends CommNode<LoopDataCtx> {
     if (_nkv['loop.index'] >= this.data.maxCount) return
 
     // 获取子图的头节点
-    const headNodes = thread.plugin.commNodes.filter(
-      node =>
-        node.parentId === this.id
-        && node.data.type === ComponentNodesEnum.LoopStart,
+    const headNode = thread.plugin.graphManager.getSubGraphHead(
+      this.id,
+      ComponentNodesEnum.LoopStart,
     )
-    if (headNodes.length === 0 || headNodes.length > 1) {
+    if (!headNode) {
       this.logger.error('loop node has no head node or more than one')
       _nextTask.abort()
       return
     }
     // 获取子图的 GraphRunner
     const subGraphRunner = this.getRunner(thread)
-    subGraphRunner.enqueue(headNodes[0])
+    subGraphRunner.enqueue(headNode)
 
-        // loop 节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
+    // loop 节点自己也加入队列 通过读取nkv的迭代索引来判断是否继续迭代 顺序为先所有子节点再自己
     thread.graphRunner.enqueueNextMany([...subGraphRunner.consumeAll(), this])
   }
 
