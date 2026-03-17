@@ -8,12 +8,12 @@
     "start:prod": "node dist/server/src/main.js",
     "lint": "eslint --fix",
     "lint:prettier": "npx prettier --write .",
-    "lint:all": "pnpm lint:prettier&& pnpm lint",
+    "lint:all": "pnpm lint:prettier && pnpm lint",
     "test": "npx vitest run",
+    "test:unit": "npx vitest run --exclude test/**/*.e2e-spec.ts",
     "test:watch": "npx vitest",
     "test:cov": "npx vitest run --coverage",
-    "test:debug": "node --inspect-brk node_modules/.bin/vitest --run --no-file-parallelism",
-    "test:e2e": "npx vitest run --config ./vitest.config.ts test/"
+    "test:debug": "node --inspect-brk node_modules/.bin/vitest --run --no-file-parallelism"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.9",

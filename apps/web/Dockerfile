@@ -27,6 +27,7 @@ COPY apps/web/test apps/web/test
 COPY apps/web/e2e apps/web/e2e
 # build
 WORKDIR /app/apps/web
+RUN pnpm test:unit
 RUN pnpm build
 # entrypoint
 EXPOSE 3000

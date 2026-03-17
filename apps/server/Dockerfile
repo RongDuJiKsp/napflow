@@ -22,6 +22,7 @@ COPY apps/server/src apps/server/src
 COPY apps/server/test apps/server/test
 # build
 WORKDIR /app/apps/server
+RUN pnpm run test:unit
 RUN pnpm build
 # entrypoint
 ENV HOST_NAME=0.0.0.0
