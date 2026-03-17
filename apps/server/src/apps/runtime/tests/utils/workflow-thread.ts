@@ -3,6 +3,7 @@ import type { WorkflowThread } from '../../core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { merge } from 'lodash-es'
 import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { compileTemplate } from '../../utils/templates'
 
 type TestThreadOptions = {
   id?: string;
@@ -48,6 +49,9 @@ export const createTestThread = (options: TestThreadOptions = {}) => {
     {
       id: options.id ?? 'thread-1',
       nodeKv: options.nodeKv ?? {},
+      compileEnvTemplate(template: string) {
+        return compileTemplate(template, this as WorkflowThread)
+      },
       plugin: {
         edges: options.edges ?? [],
         commNodes: options.commNodes ?? [],
