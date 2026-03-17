@@ -35,10 +35,10 @@ describe('TimerDataSchema', () => {
   test('间隔模式：变量引用字符串保持原样', () => {
     const parsed = TimerDataSchema.parse({
       mode: TimerTriggerMode.Interval,
-      timeExpr: '$vars.intervalMinutes',
+      timeExpr: '{{#vars.intervalMinutes#}}',
     })
 
-    expect(parsed.timeExpr).toBe('$vars.intervalMinutes')
+    expect(parsed.timeExpr).toBe('{{#vars.intervalMinutes#}}')
   })
 
   test('间隔模式：不可转数字且非变量引用时报错', () => {

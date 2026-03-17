@@ -5,7 +5,8 @@ export enum TimerTriggerMode {
   Interval = 'interval',
 }
 
-const TimeExprSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+const TimeExprRegex = /^([01]\d|2[0-3]):[0-5]\d$/
+const TemplateVarSchema = /\{\{#[^#]+#\}\}/
 
 export const TimerDataSchema = z
   .object({
@@ -22,11 +23,11 @@ export const TimerDataSchema = z
       return
     }
 
-    // 允许变量引用，格式由运行时模板解析。
-    if (data.timeExpr.includes('$')) return
+    // 允许模板变量引用，格式与运行时 compileTemplate 一致。
+    if (TemplateVarSchema.test(data.timeExpr)) return
 
     if (data.mode === TimerTriggerMode.Schedule) {
-      if (!TimeExprSchema.safeParse(data.timeExpr).success) {
+      if (!TimeExprRegex.test(data.timeExpr)) {
         ctx.addIssue({
           code: 'custom',
           message: 'timeExpr格式必须为HH:mm，或使用变量引用',
