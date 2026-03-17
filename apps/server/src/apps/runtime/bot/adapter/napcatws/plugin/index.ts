@@ -5,7 +5,7 @@ import { TriggerOnEvents } from '@/src/apps/runtime/core/workflow/node'
 import type { NapcatWsSdk } from '../sdk'
 import type { Var } from '@shared/common/workflow/component-node'
 import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
-import { RegisterManager } from '@/src/utils/registerbale'
+import { RegisterManager } from '@/src/utils/service-manager'
 import { MinusTimePoller } from '@/src/utils/task-pool'
 
 export class NapcatWsTriggerPlugin extends CommPlugin<NapcatWsSdk> {

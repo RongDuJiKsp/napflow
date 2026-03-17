@@ -5,7 +5,7 @@ import type { NapcatWsSdk } from './sdk'
 import type { NapcatWsTriggerPlugin } from './plugin'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 import type { PluginService } from '@/src/utils/traits'
-import { RegisterManager } from '@/src/utils/registerbale'
+import { RegisterManager } from '@/src/utils/service-manager'
 
 export type HeartBeatSnapshot = {
   heartbeatAt: Date;
