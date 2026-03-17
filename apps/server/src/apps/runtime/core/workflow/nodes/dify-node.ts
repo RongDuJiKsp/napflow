@@ -8,7 +8,6 @@ import {
   DifyDataSchema,
   DifyMode,
 } from '@shared/common/workflow/node-data/dify'
-import { compileTemplate } from '../../../utils/templates'
 import { Logger } from '@nestjs/common'
 
 export const DifyDataCtxSchema = ZodCheckComponentNodeMeta.extend(
@@ -30,10 +29,10 @@ export class DifyNode extends CommNode<DifyDataCtx> {
     _nextTask: WillTask,
     nkv: Record<string, any>,
   ): Promise<void> {
-    const baseUrl = compileTemplate(this.data.baseUrl, thread)
-    const apiKey = compileTemplate(this.data.apiKey, thread)
+    const baseUrl = thread.compileEnvTemplate(this.data.baseUrl)
+    const apiKey = thread.compileEnvTemplate(this.data.apiKey)
     const query = this.data.query
-      ? compileTemplate(this.data.query, thread)
+      ? thread.compileEnvTemplate(this.data.query)
       : ''
 
     this.logger.debug(
@@ -46,7 +45,7 @@ export class DifyNode extends CommNode<DifyDataCtx> {
 
     const compiledInputs: Record<string, string> = {}
     for (const entry of this.data.inputs ?? [])
-      compiledInputs[entry.key] = compileTemplate(entry.value, thread)
+      compiledInputs[entry.key] = thread.compileEnvTemplate(entry.value)
 
     const bodyObj = isChatflow
       ? {

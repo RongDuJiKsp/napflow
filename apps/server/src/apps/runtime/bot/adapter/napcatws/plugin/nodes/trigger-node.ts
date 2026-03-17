@@ -3,7 +3,6 @@ import { TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import type { WorkflowThread } from '@/src/apps/runtime/core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { Logger } from '@nestjs/common'
-import { compileTemplate } from '@/src/apps/runtime/utils/templates'
 
 export class NcTriggerNode extends TriggerNode {
   readonly logger = new Logger(NcTriggerNode.name)
@@ -12,8 +11,8 @@ export class NcTriggerNode extends TriggerNode {
     _nextTask: WillTask,
     nkv: Record<string, any>,
   ): void | Promise<void> {
-    const uid = compileTemplate(this.data.userId ?? '', thread)
-    const gid = compileTemplate(this.data.groupId ?? '', thread)
+    const uid = thread.compileEnvTemplate(this.data.userId ?? '')
+    const gid = thread.compileEnvTemplate(this.data.groupId ?? '')
     this.logger.debug(`Processing thread in ${thread.id}`)
     if (this.data.on === TriggerOn.Group && !thread.kv.gid) {
       this.logger.debug('Task not a group message, exiting')
