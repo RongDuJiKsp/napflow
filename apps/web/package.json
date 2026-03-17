@@ -7,7 +7,6 @@
     "lint": "eslint --fix",
     "lint:prettier": "npx prettier --write .",
     "lint:all": "pnpm lint:prettier&& pnpm lint",
-    "test": "pnpm run test:unit",
     "test:unit": "npx vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
