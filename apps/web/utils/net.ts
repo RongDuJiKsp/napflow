@@ -9,11 +9,10 @@ export const jsonQ = createAlova({
     method.config.headers.Authorization = `Bearer ${localStorage.getItem('auth-token')}`
   },
   responded: (resp) => {
-    // 当响应状态为401时，清除token并刷新（跳转到登录页）
+    // 当响应状态为401时，清除token 等待中间件发起跳转到登录页
     if (resp.status === 401) {
       localStorage.removeItem('auth-token')
-      globalThis.location.reload()
-      return
+      throw new Error('Unauthorized')
     }
     return resp.json()
   },
