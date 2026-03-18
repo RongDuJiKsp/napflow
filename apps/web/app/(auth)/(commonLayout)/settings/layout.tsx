@@ -1,6 +1,6 @@
 'use client'
 
-import { RiGlobalLine, RiTeamLine, RiUserSettingsLine } from '@remixicon/react'
+import { RiBrainAi3Line, RiGlobalLine, RiTeamLine, RiUserSettingsLine } from '@remixicon/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
@@ -15,6 +15,7 @@ export default function SettingsLayout({
   const navigationItems = [
     { href: '/settings/account', icon: RiUserSettingsLine, label: '账户设置' },
     { href: '/settings/workspace', icon: RiTeamLine, label: '工作区设置' },
+    { href: '/settings/models', icon: RiBrainAi3Line, label: '模型设置' },
     { href: '/settings/preferences', icon: RiGlobalLine, label: '偏好设置' },
   ]
 
