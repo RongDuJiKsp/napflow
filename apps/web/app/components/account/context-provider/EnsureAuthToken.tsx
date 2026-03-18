@@ -3,7 +3,6 @@ import { useLocalStorageStringValue } from '@/app/hooks/utils/use-storage'
 import { useRouter } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
 import { memo, useEffect } from 'react'
-const doNothing = (ele: unknown) => ele
 
 /**
  * @description EnsureAuthToken 用于监听localStorage的auth-token变化，当auth-token不存在时，自动跳转到登录页。
