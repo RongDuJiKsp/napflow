@@ -79,8 +79,8 @@ const ApiKeyConfigFormDialog = ({
           <div className="space-y-4 px-6 py-6">
             <TextField
               value={formValue.endpoint}
-              onChange={e =>
-                setFormValue(value => ({ ...value, endpoint: e.target.value }))
+              onChange={v =>
+                setFormValue(value => ({ ...value, endpoint: v }))
               }
             >
               <Label className="mb-2 block text-sm font-medium text-purple-700">
@@ -96,8 +96,8 @@ const ApiKeyConfigFormDialog = ({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <TextField
                 value={formValue.apiKey}
-                onChange={e =>
-                  setFormValue(value => ({ ...value, apiKey: e.target.value }))
+                onChange={v =>
+                  setFormValue(value => ({ ...value, apiKey: v }))
                 }
               >
                 <Label className="mb-2 block text-sm font-medium text-purple-700">
@@ -112,8 +112,8 @@ const ApiKeyConfigFormDialog = ({
 
               <TextField
                 value={formValue.model}
-                onChange={e =>
-                  setFormValue(value => ({ ...value, model: e.target.value }))
+                onChange={v =>
+                  setFormValue(value => ({ ...value, model: v }))
                 }
               >
                 <Label className="mb-2 block text-sm font-medium text-purple-700">

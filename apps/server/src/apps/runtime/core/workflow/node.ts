@@ -4,7 +4,7 @@ import {
   NodeClassic,
   ZodCheckNode,
 } from '@shared/common/workflow/core'
-import type { ComponentNodeMeta } from './zod/meta'
+import type { ComponentNodeMeta } from '@shared/common/workflow/core/component-node'
 import z from 'zod'
 import type { Class } from 'type-fest'
 import type { WorkflowThread } from './pool'
