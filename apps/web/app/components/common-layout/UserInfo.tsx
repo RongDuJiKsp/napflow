@@ -4,6 +4,8 @@ import type { ComponentWithClass } from '@/utils/type'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import {
   RiArrowDownSLine,
+  RiBrainAi3Line,
+  RiGlobalLine,
   RiLogoutBoxRLine,
   RiSettings3Line,
   RiUserSettingsLine,
@@ -19,6 +21,8 @@ type LinkItem = {
 const clickableLinks: LinkItem[] = [
   { label: '个人设置', icon: RiUserSettingsLine, href: '/settings/account' },
   { label: '工作区设置', icon: RiSettings3Line, href: '/settings/workspace' },
+  { label: '模型设置', icon: RiBrainAi3Line, href: '/settings/models' },
+  { label: '偏好设置', icon: RiGlobalLine, href: '/settings/preferences' },
 ]
 
 const UserInfo = () => {
