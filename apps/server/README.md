@@ -115,7 +115,7 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 | 列名                  | 类型        | 约束                  | 描述                                       |
 | --------------------- | ----------- | --------------------- | ------------------------------------------ |
-| `recordId`            | `varchar`   | **PK**，自动生成 UUID | 记录唯一标识                               |
+| `botId`            | `varchar`   | **PK**，自动生成 UUID | 记录唯一标识                               |
 | `name`                | `varchar`   | NOT NULL              | 机器人名称                                 |
 | `description`         | `varchar`   | NOT NULL              | 机器人描述                                 |
 | `commonAdapterConfig` | `json`      | NOT NULL              | 通用适配器配置（含自动启动、绑定工作流等） |
@@ -171,7 +171,7 @@ erDiagram
     }
 
     bot_record_entity {
-        varchar recordId PK
+        varchar botId PK
         varchar name
         varchar description
         json commonAdapterConfig

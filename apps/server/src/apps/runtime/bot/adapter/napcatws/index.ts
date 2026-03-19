@@ -43,7 +43,7 @@ export class NapcatWsAdapter implements BotInstance {
   private healthChecker: NCCHealthChecker | null = null
 
   get botName() {
-    return `${NapcatWsAdapter.name}-${this.botConfigDB.name}`
+    return `${NapcatWsAdapter.name}-${this.botConfigDB.botName}`
   }
 
   constructor(
@@ -102,7 +102,7 @@ export class NapcatWsAdapter implements BotInstance {
     this.logger.log('Bootstrap plugins...')
     this.plugins = []
     for (const appBinding of (await this.bridge.getBindingsInfo(
-      this.botConfigDB.recordId,
+      this.botConfigDB.botId,
     )) ?? []) {
       const app = appBinding.appPublish
       if (!app.nodes || !app.edges) {
@@ -112,7 +112,7 @@ export class NapcatWsAdapter implements BotInstance {
         continue
       }
       const bindingConfig = await this.bridge.getBindingConfig(
-        this.botConfigDB.recordId,
+        this.botConfigDB.botId,
         appBinding.bindingId,
       )
       this.plugins.push(

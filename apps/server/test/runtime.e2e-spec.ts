@@ -56,7 +56,7 @@ describe('Runtime BotManager (e2e)', () => {
   const TEST_BOT_ID_2 = 'test-bot-id-002'
 
   const mockBotRecord = {
-    recordId: TEST_BOT_ID,
+    botId: TEST_BOT_ID,
     name: '测试机器人',
     description: '用于测试的机器人',
     commonAdapterConfig: {},
@@ -67,7 +67,7 @@ describe('Runtime BotManager (e2e)', () => {
   }
 
   const mockBotRecord2 = {
-    recordId: TEST_BOT_ID_2,
+    botId: TEST_BOT_ID_2,
     name: '测试机器人2',
     description: '用于测试的机器人2',
     commonAdapterConfig: {},
@@ -129,16 +129,16 @@ describe('Runtime BotManager (e2e)', () => {
     botRecord: {
       find: vi.fn().mockResolvedValue([mockBotRecord]),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(mockBotRecord)
-        if (where.recordId === TEST_BOT_ID_2)
+        if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       }),
       findOneBy: vi.fn().mockImplementation((where: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(mockBotRecord)
-        if (where.recordId === TEST_BOT_ID_2)
+        if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       }),
@@ -146,7 +146,7 @@ describe('Runtime BotManager (e2e)', () => {
         return Promise.resolve({
           ...mockBotRecord,
           ...data,
-          recordId: TEST_BOT_ID,
+          botId: TEST_BOT_ID,
         })
       }),
     },
@@ -178,16 +178,16 @@ describe('Runtime BotManager (e2e)', () => {
     mockTypeOrmService.botRecord.find.mockResolvedValue([mockBotRecord])
     mockTypeOrmService.botRecord.findOne.mockImplementation(
       ({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(mockBotRecord)
-        if (where.recordId === TEST_BOT_ID_2)
+        if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       },
     )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
-      if (where.recordId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-      if (where.recordId === TEST_BOT_ID_2)
+      if (where.botId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
+      if (where.botId === TEST_BOT_ID_2)
         return Promise.resolve(mockBotRecord2)
       return Promise.resolve(null)
     })
@@ -195,7 +195,7 @@ describe('Runtime BotManager (e2e)', () => {
       return Promise.resolve({
         ...mockBotRecord,
         ...data,
-        recordId: TEST_BOT_ID,
+        botId: TEST_BOT_ID,
       })
     })
   })
@@ -487,7 +487,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       expect(res.body.statusCode).toBe(Code.Ok)
       expect(mockTypeOrmService.botRecord.findOne).toHaveBeenCalledWith({
-        where: { recordId: TEST_BOT_ID },
+        where: { botId: TEST_BOT_ID },
       })
       expect(mockTypeOrmService.botRecord.save).toHaveBeenCalledWith(
         expect.objectContaining({

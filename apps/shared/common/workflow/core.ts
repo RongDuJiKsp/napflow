@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ZodCheckXYPosition } from './re-export'
+import { ZodCheckXYPosition } from './core/re-export'
 
 export enum NodeClassic {
   Component = 'component', // 组件节点,该节点作为工作流运行路径的组成部分

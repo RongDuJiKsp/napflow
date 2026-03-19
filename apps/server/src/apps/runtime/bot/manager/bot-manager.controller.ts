@@ -63,7 +63,7 @@ export class BotManagerController {
     @JwtAccount() account: Account,
   ) {
     const botRec = await this.botManagerService.createBot(req, account)
-    return Resp.ok({ botId: botRec.recordId })
+    return Resp.ok({ botId: botRec.botId })
   }
 
   @Post(':botId/run')

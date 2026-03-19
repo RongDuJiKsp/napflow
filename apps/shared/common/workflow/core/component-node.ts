@@ -1,5 +1,5 @@
 import z from 'zod'
-
+import { tryParseJson } from '@shared/utils/zod-transfer'
 // component nodes
 export enum ComponentNodesEnum {
   Trigger = 'trigger',
@@ -20,6 +20,7 @@ export const hiddenNodeTypes = new Set<ComponentNodesEnum>([
   ComponentNodesEnum.LoopStart,
   ComponentNodesEnum.IterateStart,
 ])
+
 // node env
 export enum VarTypes {
   String = 'string',
@@ -34,20 +35,6 @@ export const ZodCheckVar = z.object({
 })
 export type Var = z.infer<typeof ZodCheckVar>
 
-/**
- * 尝试将字符串 JSON.parse 为目标类型，解析失败则保留原值交给 zod 校验
- */
-const tryParseJson = (val: unknown): unknown => {
-  if (typeof val === 'string') {
-    try {
-      return JSON.parse(val)
-    }
-    catch (_e) {
-      return val
-    }
-  }
-  return val
-}
 export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
   [VarTypes.String]: z.string(),
   [VarTypes.Number]: z.preprocess((val) => {
@@ -60,9 +47,3 @@ export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
   [VarTypes.StringArray]: z.preprocess(tryParseJson, z.array(z.string())),
   [VarTypes.NumberArray]: z.preprocess(tryParseJson, z.array(z.number())),
 }
-
-export const ZodCheckComponentNodeMeta = z.object({
-  type: z.enum(ComponentNodesEnum),
-  vars: z.array(ZodCheckVar),
-})
-export type ComponentNodeMeta = z.infer<typeof ZodCheckComponentNodeMeta>

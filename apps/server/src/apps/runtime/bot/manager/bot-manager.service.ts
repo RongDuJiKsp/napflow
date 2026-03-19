@@ -36,13 +36,13 @@ export class BotManagerService {
     return botRecords
       .map((botRecord) => {
         return {
-          botId: botRecord.recordId,
+          botId: botRecord.botId,
           adapterTag: botRecord.adapterTag,
           adapterDesc: BotFactoryService.getAdapterClass(botRecord.adapterTag)
             ?.meta.desc,
-          botName: botRecord.name,
+          botName: botRecord.botName,
           botDesc: botRecord.description,
-          state: this.botCoreRuntimeService.botState(botRecord.recordId),
+          state: this.botCoreRuntimeService.botState(botRecord.botId),
         }
       })
       .sort((a, b) => {
@@ -72,10 +72,10 @@ export class BotManagerService {
 
   async updateBot(botId: string, updateReq: UpdateBotReq) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { recordId: botId },
+      where: { botId: botId },
     })
     if (!botRecord) throw new CommError('Bot记录不存在', Code.NotFound, 'warn')
-    botRecord.name = updateReq.name
+    botRecord.botName = updateReq.name
     botRecord.description = updateReq.description
     return await this.db.botRecord.save(botRecord)
   }

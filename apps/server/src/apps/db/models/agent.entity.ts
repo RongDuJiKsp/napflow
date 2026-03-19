@@ -1,4 +1,4 @@
-import type { OpenAiEndpointConfigRecord } from '@shared/common/agent/config'
+import type { OpenAiEndpointConfigRecord } from '@shared/common/agent/entity'
 import { BaseEntity, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
 

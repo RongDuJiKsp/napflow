@@ -11,7 +11,7 @@ export class BotBridgeForBotService {
 
   async getRecordOrThrow(botId: string) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { recordId: botId },
+      where: { botId },
     })
     if (!botRecord) throw new CommError('Bot记录不存在', Code.NotFound, 'warn')
     return botRecord
@@ -19,7 +19,7 @@ export class BotBridgeForBotService {
 
   async getBotBindingWorkflow(botId: string) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { recordId: botId },
+      where: { botId },
     })
     if (!botRecord || !botRecord.commonAdapterConfig.bindingWorkflowApp)
       return null
@@ -34,7 +34,7 @@ export class BotBridgeForBotService {
 
   async getBindingConfig(botId: string, bindingId: string) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { recordId: botId },
+      where: { botId },
     })
     if (!botRecord) return null
     if (!botRecord.commonAdapterConfig.bindingWorkflowApp) return null
@@ -47,7 +47,7 @@ export class BotBridgeForBotService {
 
   async getBindingsInfo(botId: string) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { recordId: botId },
+      where: { botId },
     })
     if (!botRecord) return null
     const bindingApp = await this.getBotBindingWorkflow(botId)

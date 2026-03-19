@@ -3,7 +3,7 @@ import { defineZodResp } from '../_base'
 import {
   ZodCheckAccountInfo,
   ZodCheckUserRoleType,
-} from '../../common/account/base'
+} from '../../common/account/core'
 
 // req resp
 
