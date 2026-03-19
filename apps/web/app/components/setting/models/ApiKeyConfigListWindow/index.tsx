@@ -1,22 +1,16 @@
+'use client'
 import { RiAddLine, RiBrainAi3Line, RiDeleteBin2Line, RiEditLine } from '@remixicon/react'
 import { memo } from 'react'
 import { Button } from '@heroui/react'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
-import type { OpenAIApiModelConfig } from './types'
+import { useApiKeyOperators } from '../hooks/use-api-key-operators'
+import ApiKeyConfigFormDialog from './ApiKeyConfigFormDialog'
+import { useApiKeyListQuery } from '@/app/hooks/query/use-api-key-list-query'
 
-type ApiKeyConfigListWindowProps = {
-  configs: OpenAIApiModelConfig[]
-  onAdd: () => void
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
-}
+const ApiKeyConfigListWindow = () => {
+  const { data: configs = [] } = useApiKeyListQuery()
+  const { editTarget, handleAddConfig, handleEditConfig, handleCloseModal, deleteConfig } = useApiKeyOperators()
 
-const ApiKeyConfigListWindow = ({
-  configs,
-  onAdd,
-  onEdit,
-  onDelete,
-}: ApiKeyConfigListWindowProps) => {
   return (
     <SettingItemContainer
       title="已配置模型列表"
@@ -25,7 +19,7 @@ const ApiKeyConfigListWindow = ({
     >
       <div className="mb-4 flex justify-end">
         <Button
-          onClick={onAdd}
+          onClick={handleAddConfig}
           className="bg-linear-to-r from-purple-500 to-pink-500 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:from-purple-600 hover:to-pink-600"
         >
           <RiAddLine className="mr-1 h-4 w-4" />
@@ -47,14 +41,14 @@ const ApiKeyConfigListWindow = ({
           >
             <div className="mb-3 flex justify-end gap-2">
               <Button
-                onClick={() => onEdit(config.id)}
+                onClick={() => handleEditConfig(config.id)}
                 className="h-8 min-w-0 rounded-lg bg-purple-100 px-3 text-sm text-purple-700 transition-colors duration-200 hover:bg-purple-200"
               >
                 <RiEditLine className="mr-1 h-4 w-4" />
                 编辑
               </Button>
               <Button
-                onClick={() => onDelete(config.id)}
+                onClick={() => deleteConfig(config.id)}
                 className="h-8 min-w-0 rounded-lg bg-red-100 px-3 text-sm text-red-600 transition-colors duration-200 hover:bg-red-200"
               >
                 <RiDeleteBin2Line className="mr-1 h-4 w-4" />
@@ -79,6 +73,7 @@ const ApiKeyConfigListWindow = ({
           </div>
         ))}
       </div>
+      <ApiKeyConfigFormDialog open={!!editTarget} editId={editTarget !== true ? editTarget : undefined} onClose={handleCloseModal} />
     </SettingItemContainer>
   )
 }

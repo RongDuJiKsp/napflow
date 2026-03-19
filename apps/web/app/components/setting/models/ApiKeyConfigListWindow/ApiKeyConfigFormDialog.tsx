@@ -3,54 +3,21 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { RiAddLine, RiCloseLine, RiEditLine } from '@remixicon/react'
 import { Button, Input, Label, TextField } from '@heroui/react'
-import { memo, useEffect, useState } from 'react'
-import type { OpenAIApiModelInput } from './types'
+import { memo } from 'react'
+import { useApiKeyConfigForm } from '../hooks/use-api-key-config-form'
 
 type ApiKeyConfigFormDialogProps = {
   open: boolean
-  mode: 'create' | 'edit'
-  initialValue?: OpenAIApiModelInput
+  editId?: string
   onClose: () => void
-  onSubmit: (value: OpenAIApiModelInput) => void
-}
-
-const emptyFormValue: OpenAIApiModelInput = {
-  endpoint: '',
-  apiKey: '',
-  model: '',
 }
 
 const ApiKeyConfigFormDialog = ({
+  editId,
   open,
-  mode,
-  initialValue,
   onClose,
-  onSubmit,
 }: ApiKeyConfigFormDialogProps) => {
-  const [formValue, setFormValue] = useState<OpenAIApiModelInput>(emptyFormValue)
-  const [errorMsg, setErrorMsg] = useState('')
-
-  useEffect(() => {
-    if (!open) return
-    setFormValue(initialValue ?? emptyFormValue)
-    setErrorMsg('')
-  }, [open, initialValue])
-
-  const handleSubmit = () => {
-    const endpoint = formValue.endpoint.trim()
-    const apiKey = formValue.apiKey.trim()
-    const model = formValue.model.trim()
-
-    if (!endpoint || !apiKey || !model) {
-      setErrorMsg('请完整填写端点、API Key 和模型名称')
-      return
-    }
-
-    onSubmit({ endpoint, apiKey, model })
-  }
-
-  const isEditMode = mode === 'edit'
-
+  const { formData, isEditMode, handleApiKeyChange, handleEndpointChange, handleModelChange, handleSubmit } = useApiKeyConfigForm(editId)
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -78,10 +45,8 @@ const ApiKeyConfigFormDialog = ({
 
           <div className="space-y-4 px-6 py-6">
             <TextField
-              value={formValue.endpoint}
-              onChange={v =>
-                setFormValue(value => ({ ...value, endpoint: v }))
-              }
+              value={formData.endpoint}
+              onChange={handleEndpointChange}
             >
               <Label className="mb-2 block text-sm font-medium text-purple-700">
                 端点
@@ -95,10 +60,8 @@ const ApiKeyConfigFormDialog = ({
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <TextField
-                value={formValue.apiKey}
-                onChange={v =>
-                  setFormValue(value => ({ ...value, apiKey: v }))
-                }
+                value={formData.apiKey}
+                onChange={handleApiKeyChange}
               >
                 <Label className="mb-2 block text-sm font-medium text-purple-700">
                   API Key
@@ -111,10 +74,8 @@ const ApiKeyConfigFormDialog = ({
               </TextField>
 
               <TextField
-                value={formValue.model}
-                onChange={v =>
-                  setFormValue(value => ({ ...value, model: v }))
-                }
+                value={formData.model}
+                onChange={handleModelChange}
               >
                 <Label className="mb-2 block text-sm font-medium text-purple-700">
                   模型
@@ -126,8 +87,6 @@ const ApiKeyConfigFormDialog = ({
                 />
               </TextField>
             </div>
-
-            {errorMsg && <p className="text-sm text-red-500">{errorMsg}</p>}
           </div>
 
           <div className="flex justify-end space-x-3 border-t border-gray-100 bg-gray-50 px-6 py-4">
