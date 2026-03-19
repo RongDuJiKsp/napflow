@@ -9,7 +9,7 @@ import { adapterComponent } from './constances'
 import { Input, Label, TextArea, TextField } from '@heroui/react'
 import { twMerge } from 'tailwind-merge'
 import { Radio, RadioGroup } from '@headlessui/react'
-import { AdapterTag } from '@shared/common/bot/base'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
 
 const adapterOptions = [
   {

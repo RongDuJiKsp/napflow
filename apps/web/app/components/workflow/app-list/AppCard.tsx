@@ -1,6 +1,6 @@
 'use client'
 import { dateFmt } from '@/utils/date'
-import type { WorkflowApp } from '@shared/common/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
 import { useBoolean } from 'ahooks'
 import Link from 'next/link'
 import { type MouseEvent, memo, useCallback } from 'react'

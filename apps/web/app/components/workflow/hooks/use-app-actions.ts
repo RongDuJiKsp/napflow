@@ -3,7 +3,7 @@ import { jsonQ } from '@/utils/net'
 import { App } from 'antd'
 import { useCallback } from 'react'
 import { Code, type NullResp } from '@shared/data-transfer/_base'
-import type { WorkflowApp } from '@shared/common/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
 
 export const useAppActions = (app: WorkflowApp) => {
   const { message } = App.useApp()

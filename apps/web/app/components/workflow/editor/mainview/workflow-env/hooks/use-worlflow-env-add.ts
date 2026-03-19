@@ -1,4 +1,4 @@
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { useCallback, useState } from 'react'
 import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'

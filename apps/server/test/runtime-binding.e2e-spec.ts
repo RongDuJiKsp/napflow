@@ -11,7 +11,8 @@ import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
-import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
+import { BotRunningState } from '@shared/common/bot/core/status'
 import {
   createBaseMockTypeOrmService,
   createE2EApp,

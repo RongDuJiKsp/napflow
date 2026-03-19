@@ -6,7 +6,7 @@ import type {
   UpdateBotReq,
 } from '@shared/data-transfer/bot/manager'
 import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
-import { BotRunningState } from '@shared/common/bot/base'
+import { BotRunningState } from '@shared/common/bot/core/status'
 import { BotFactoryService } from '../core/bot-factory.service'
 import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'

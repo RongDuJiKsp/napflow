@@ -1,6 +1,6 @@
 import type { NodeKlassMap } from '@/src/apps/runtime/core/workflow/constant'
 import { NcTriggerNode } from './nodes/trigger-node'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { NcReplyNode } from './nodes/reply-node'
 import { IfNode } from '@/src/apps/runtime/core/workflow/nodes/if-node'
 import { LoopNode } from '@/src/apps/runtime/core/workflow/nodes/loop-node'

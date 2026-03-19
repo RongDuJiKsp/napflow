@@ -11,7 +11,7 @@ import {
   RiDeleteBin2Line,
   RiExpandLeftRightLine,
 } from '@remixicon/react'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { useNorReturnFn } from '@/app/hooks/utils/use-callbacker'
 import { useLoopNodeOperator } from '../../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../../nodes/iterate/hooks/use-iterate-operator'

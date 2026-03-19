@@ -1,11 +1,11 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-node'
+import { ZodCheckComponentNodeMeta } from '../zod/meta'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { JsonReadDataSchema } from '@shared/common/workflow/node-data/json-read'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 
 export const JsonReadDataCtxSchema = ZodCheckComponentNodeMeta.extend(
   JsonReadDataSchema.shape,

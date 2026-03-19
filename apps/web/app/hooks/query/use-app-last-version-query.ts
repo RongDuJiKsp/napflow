@@ -1,6 +1,6 @@
 import type { GetLastVersionResp } from '@shared/data-transfer/workflow/info'
 import { defineQueryFn } from './_base'
-import type { WorkflowAppData } from '@shared/common/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/entity'
 import { jsonQ } from '@/utils/net'
 import { useQuery } from '@tanstack/react-query'
 

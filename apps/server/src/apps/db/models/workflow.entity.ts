@@ -10,8 +10,8 @@ import {
 } from 'typeorm'
 import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
-import type { Var } from '@shared/common/workflow/component-node'
-import type { WorkflowApp, WorkflowAppData } from '@shared/common/workflow/base'
+import type { Var } from '@shared/common/workflow/core/component-node'
+import type { WorkflowApp, WorkflowAppData } from '@shared/common/workflow/entity'
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity implements WorkflowApp {
   @PrimaryColumn({ generated: 'uuid' })

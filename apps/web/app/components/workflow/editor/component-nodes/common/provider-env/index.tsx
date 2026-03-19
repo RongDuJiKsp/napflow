@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import type { Var } from '@shared/common/workflow/component-node'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 
 const typeColors: Record<VarTypes, string> = {

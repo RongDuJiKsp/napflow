@@ -1,6 +1,7 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import { AdapterTag, ZodCheckCommonBotInfo } from '../../common/bot/base'
+import { ZodCheckCommonBotInfo } from '../../common/bot/base'
+import { AdapterTag } from '../../common/bot/core/adapter'
 import { ZodCheckCommonAdapterConfig } from '../../common/bot/core/config'
 
 // @/bots/list

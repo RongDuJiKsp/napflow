@@ -9,7 +9,7 @@ import {
   RiCloseLine,
   RiPuzzleLine,
 } from '@remixicon/react'
-import type { WorkflowApp } from '@shared/common/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
 import { useBoolean } from 'ahooks'
 import { memo, useCallback, useState } from 'react'
 import { twMerge } from 'tailwind-merge'

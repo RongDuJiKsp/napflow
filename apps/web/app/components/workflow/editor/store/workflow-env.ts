@@ -1,4 +1,4 @@
-import type { Var } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
 import type { StateCreator } from 'zustand'
 
 type WorkflowEnvState = {

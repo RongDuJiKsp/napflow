@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/component-node'
+import { ZodCheckComponentNodeMeta } from '../zod/meta'
 import { TimerDataSchema, TimerTriggerMode } from '@shared/common/workflow/node-data/timer'
 import type z from 'zod'
 import type { CommNodeType, CommTrigger } from '../node'

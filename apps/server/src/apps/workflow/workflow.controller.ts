@@ -9,7 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { type Account, UserRole } from '@shared/common/account/base'
+import type { Account } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import type {
   CreateWorkflowReq,
   UpdateWorkflowReq,

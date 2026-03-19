@@ -1,10 +1,12 @@
 import z from 'zod'
 import {
-  ZodCheckWorkflowApp,
-  ZodCheckWorkflowAppData,
   ZodCheckWorkflowAppDraft,
   ZodCheckWorkflowAppVersionMeta,
 } from '../../common/workflow/base'
+import {
+  ZodCheckWorkflowApp,
+  ZodCheckWorkflowAppData,
+} from '../../common/workflow/entity'
 import { defineZodResp } from '../_base'
 
 // @/workflow/create

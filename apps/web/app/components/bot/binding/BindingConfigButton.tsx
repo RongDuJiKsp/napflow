@@ -13,8 +13,8 @@ import { twMerge } from 'tailwind-merge'
 import { useBotParam } from '../hooks/use-bot-param'
 import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
 import { useAppVersionDataQuery } from '@/app/hooks/query/use-app-version-data-query'
-import type { Var } from '@shared/common/workflow/component-node'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { useBindingAddEnv } from './hooks/use-binding-add-env'
 
 const typeColors: Record<VarTypes, string> = {

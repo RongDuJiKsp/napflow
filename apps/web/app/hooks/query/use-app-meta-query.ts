@@ -1,5 +1,5 @@
 import { jsonQ } from '@/utils/net'
-import type { WorkflowApp } from '@shared/common/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
 import type { GetAppResp } from '@shared/data-transfer/workflow/info'
 import { useQuery } from '@tanstack/react-query'
 import { defineQueryFn } from './_base'

@@ -1,11 +1,11 @@
 import z from 'zod'
 import { zodDeepPartial } from 'zod-deep-partial'
 import {
-  ZodCheckWorkflowApp,
   ZodCheckWorkflowAppVersionInfos,
 } from '../../common/workflow/base'
+import { ZodCheckWorkflowApp } from '../../common/workflow/entity'
 import { defineZodResp } from '../_base'
-import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/core/config'
 
 // @/bot-bridge/:botId/bindmany
 export const ZodCheckBotBridgeBindReq = z.array(

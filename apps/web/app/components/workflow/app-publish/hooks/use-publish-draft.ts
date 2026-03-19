@@ -1,10 +1,8 @@
 import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
 import { useCallback, useMemo, useState } from 'react'
 import { useAppParam } from '../../hooks/use-app-param'
-import type {
-  WorkflowAppData,
-  WorkflowAppDraft,
-} from '@shared/common/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/entity'
+import type { WorkflowAppDraft } from '@shared/common/workflow/base'
 import { pick } from 'lodash-es'
 import { useResetState } from 'ahooks'
 import type { WorkflowPublishResp } from '@shared/data-transfer/workflow/info'

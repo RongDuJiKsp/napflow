@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand'
 import type { WorkflowNode } from '../types'
-import type { XYPosition } from '@shared/common/workflow/re-export'
+import type { XYPosition } from '@shared/common/workflow/core/re-export'
 import type React from 'react'
 
 type StickyNodeState = {

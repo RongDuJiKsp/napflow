@@ -1,6 +1,6 @@
 import type { ComponentCreator } from '../../types'
 import { RiTimerLine } from '@remixicon/react'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import {
   type TimerData,
   TimerDataSchema,

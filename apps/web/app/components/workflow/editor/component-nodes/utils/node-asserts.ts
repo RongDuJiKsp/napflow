@@ -1,4 +1,4 @@
-import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import type { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import type { IfData } from '@shared/common/workflow/node-data/if'
 import type { IterateData } from '@shared/common/workflow/node-data/iterate'
 import type { IterateStartData } from '@shared/common/workflow/node-data/iterate-start'

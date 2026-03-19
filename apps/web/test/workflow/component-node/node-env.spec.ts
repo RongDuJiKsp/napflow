@@ -1,10 +1,10 @@
 import { getNodeEnvMap } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
 import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
-import type { Var } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
 import {
   ComponentNodesEnum,
   VarTypes,
-} from '@shared/common/workflow/component-node'
+} from '@shared/common/workflow/core/component-node'
 import { NodeClassic } from '@shared/common/workflow/core'
 import type { GraphEdge, TestNodeWithData, WorkflowEdge } from '../../utils'
 import { describe, expect, test } from 'vitest'

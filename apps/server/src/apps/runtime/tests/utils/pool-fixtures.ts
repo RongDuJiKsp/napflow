@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 import type { Edge, Node } from '@shared/common/workflow/core'
 import { NodeClassic } from '@shared/common/workflow/core'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { ReplyTarget } from '@shared/common/workflow/node-data/reply'
 import { TriggerOn } from '@shared/common/workflow/node-data/trigger'
 import { Task } from '@/src/utils/task-pool'

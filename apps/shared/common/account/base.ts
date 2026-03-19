@@ -25,7 +25,7 @@ export const ZodCheckAccountInfo = ZodCheckAccount.extend(
     createdAt: true,
     updatedAt: true,
     disabledAt: true,
-  }),
+  }).shape,
 ).extend({
   userGroup: z.array(ZodCheckUserGroupRecord),
 })

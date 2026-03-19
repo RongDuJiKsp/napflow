@@ -1,4 +1,4 @@
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { ReplyNodeCreator } from './nodes/reply/creator'
 import { TriggerNodeCreator } from './nodes/trigger/creator'
 import { TimerNodeCreator } from './nodes/timer/creator'

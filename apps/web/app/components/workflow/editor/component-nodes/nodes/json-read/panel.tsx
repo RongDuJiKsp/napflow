@@ -4,7 +4,7 @@ import type { JsonReadData } from '@shared/common/workflow/node-data/json-read'
 import { Label, ListBox, Select } from '@heroui/react'
 import VarSelect from '../../common/var-select'
 import { useJsonReadCurd } from './hooks/use-json-read-curd'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 
 const outputTypeTextStyles: Record<VarTypes, string> = {

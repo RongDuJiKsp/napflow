@@ -29,7 +29,7 @@ import {
   useUpgradeOptions,
 } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { Button, Label } from '@heroui/react'
 
 type ModalOperation = {

@@ -21,8 +21,8 @@ import { Logger } from '@nestjs/common'
 import type {
   ComponentNodesEnum,
   Var,
-} from '@shared/common/workflow/component-node'
-import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+} from '@shared/common/workflow/core/component-node'
+import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/core/config'
 import type { Class } from 'type-fest'
 import type { PluginService } from '@/src/utils/traits'
 import { compileTemplate } from '../../utils/templates'

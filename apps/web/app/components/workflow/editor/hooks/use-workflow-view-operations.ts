@@ -8,7 +8,7 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 import { useCommNodeOperation } from './use-comm-node-operation'
-import { hiddenNodeTypes } from '@shared/common/workflow/component-node'
+import { hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
 import { safeAssertIsComponentNode } from '../utils/node-asserts'
 
 export const checkAfterConnMakeCycle = <
