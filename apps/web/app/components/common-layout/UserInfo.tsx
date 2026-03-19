@@ -1,5 +1,5 @@
 'use client'
-import { useCurAccountQuery } from '@/app/hooks/query/use-cur-account-query'
+import { useCurAccountQuery } from '@/app/hooks/query/account/use-cur-account-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import {

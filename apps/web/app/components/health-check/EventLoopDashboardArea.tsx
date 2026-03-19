@@ -1,5 +1,5 @@
 'use client'
-import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
+import { useHealthSamplesQuery } from '@/app/hooks/query/health/use-health-samples-query'
 import { memo, useMemo } from 'react'
 import { Line } from '@ant-design/charts'
 import { fmtMsAxis, fmtMsTooltip, formatTimestamp } from './utils'

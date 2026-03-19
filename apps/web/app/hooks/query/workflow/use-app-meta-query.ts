@@ -2,7 +2,7 @@ import { jsonQ } from '@/utils/net'
 import type { WorkflowApp } from '@shared/common/workflow/entity'
 import type { GetAppResp } from '@shared/data-transfer/workflow/info'
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 
 /**
  * 获取AppMeta meta即不含data的数据 一个app可以有多个version data

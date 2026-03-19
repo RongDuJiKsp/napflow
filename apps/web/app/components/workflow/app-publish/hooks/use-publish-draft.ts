@@ -1,4 +1,4 @@
-import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
+import { useAppVersionsQuery } from '@/app/hooks/query/workflow/use-app-versions-query'
 import { useCallback, useMemo, useState } from 'react'
 import { useAppParam } from '../../hooks/use-app-param'
 import type { WorkflowAppData } from '@shared/common/workflow/entity'

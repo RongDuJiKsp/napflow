@@ -5,7 +5,7 @@ import { Button } from '@heroui/react'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
 import { useApiKeyOperators } from '../hooks/use-api-key-operators'
 import ApiKeyConfigFormDialog from './ApiKeyConfigFormDialog'
-import { useApiKeyListQuery } from '@/app/hooks/query/use-api-key-list-query'
+import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-query'
 
 const ApiKeyConfigListWindow = () => {
   const { data: configs = [] } = useApiKeyListQuery()

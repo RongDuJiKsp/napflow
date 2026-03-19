@@ -1,6 +1,6 @@
 import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
-import { useAppMetaQuery } from '@/app/hooks/query/use-app-meta-query'
+import { useAppMetaQuery } from '@/app/hooks/query/workflow/use-app-meta-query'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import {

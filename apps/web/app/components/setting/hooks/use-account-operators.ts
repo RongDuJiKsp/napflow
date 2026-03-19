@@ -11,7 +11,7 @@ import {
 import { App } from 'antd'
 import { useCallback } from 'react'
 import z from 'zod'
-import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
+import { useAccountsQuery } from '@/app/hooks/query/account/use-accounts-query'
 import { useResetState } from 'ahooks'
 import type { AccountUpDownGradeReq } from '@shared/data-transfer/account/account'
 

@@ -1,4 +1,4 @@
-import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
+import { useBindingBotQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-query'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import type { BotBridgeUnbindReq } from '@shared/data-transfer/bot/bridge'

@@ -1,5 +1,5 @@
 import { useLineGraphConfig } from '@/app/hooks/antd-charts/use-line-graph'
-import { useBotHealthCheckQuery } from '@/app/hooks/query/use-bot-health-check-query'
+import { useBotHealthCheckQuery } from '@/app/hooks/query/bot/bot-health/use-bot-health-check-query'
 import { Line } from '@ant-design/charts'
 import { memo, useMemo } from 'react'
 import { formatTimestamp } from '../../health-check/utils'

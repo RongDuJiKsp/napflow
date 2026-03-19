@@ -10,7 +10,7 @@ export const useApiKeyOperators = () => {
     setEditTarget(id)
   }, [])
   const handleCloseModal = useCallback(() => {
-    setEditTarget(null)
+    setEditTarget(undefined)
   }, [])
   const deleteConfig = useCallback((id: string) => {
     // TODO: 删除逻辑

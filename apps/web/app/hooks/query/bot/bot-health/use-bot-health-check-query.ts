@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../../_base'
 import { jsonQ } from '@/utils/net'
 import type { BotHealthSamplesResp } from '@shared/data-transfer/bot/health-check'
 import type { BotPluginStatusStatics } from '@shared/common/bot/health-check'

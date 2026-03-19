@@ -1,4 +1,4 @@
-import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
+import { useHealthSamplesQuery } from '@/app/hooks/query/health/use-health-samples-query'
 import { Gauge } from '@ant-design/charts'
 import { memo, useMemo } from 'react'
 import { useScoreGaugeConfig } from '../../hooks/antd-charts/use-score-gauge'

@@ -1,4 +1,4 @@
-import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
+import { useBindingBotConfigQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-config-query'
 import { useBoolean } from 'ahooks'
 import { useCallback, useState } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'

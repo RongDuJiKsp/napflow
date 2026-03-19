@@ -1,5 +1,5 @@
 'use client'
-import { useHealthSamplesQuery } from '@/app/hooks/query/use-health-samples-query'
+import { useHealthSamplesQuery } from '@/app/hooks/query/health/use-health-samples-query'
 import { memo } from 'react'
 import { formatTimestamp } from './utils'
 import { EmptyState, LoadingState } from './common'

@@ -1,4 +1,4 @@
-import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
+import { useAppsQuery } from '@/app/hooks/query/workflow/use-apps-query'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
 import { useCallback, useMemo, useState } from 'react'
 import type { BotBridgeBindReq } from '@shared/data-transfer/bot/bridge'
@@ -6,7 +6,7 @@ import { ZodCheckBotBridgeBindReq } from '@shared/data-transfer/bot/bridge'
 import { jsonQ } from '@/utils/net'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { Code, type NullResp } from '@shared/data-transfer/_base'
-import { useBindingBotQuery } from '@/app/hooks/query/use-binding-bot-query'
+import { useBindingBotQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-query'
 
 export type SelectPair = {
   appId: string;

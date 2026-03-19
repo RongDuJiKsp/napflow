@@ -1,4 +1,4 @@
-import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
+import { useAppsQuery } from '@/app/hooks/query/workflow/use-apps-query'
 import { jsonQ } from '@/utils/net'
 import { App } from 'antd'
 import { useCallback } from 'react'

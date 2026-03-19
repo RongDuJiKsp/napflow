@@ -19,7 +19,7 @@ import {
 } from '@remixicon/react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
-import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
+import { useAccountsQuery } from '@/app/hooks/query/account/use-accounts-query'
 import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
 import { twMerge } from 'tailwind-merge'

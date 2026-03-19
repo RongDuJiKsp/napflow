@@ -1,4 +1,4 @@
-import { useBotsQuery } from '@/app/hooks/query/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
 import { jsonQ } from '@/utils/net'
 import type { CommonBotInfo } from '@shared/common/bot/base'
 import type { NullResp } from '@shared/data-transfer/_base'

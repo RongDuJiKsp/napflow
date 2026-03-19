@@ -1,5 +1,5 @@
 'use client'
-import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
+import { useAppsQuery } from '@/app/hooks/query/workflow/use-apps-query'
 import { memo } from 'react'
 import AppCard from './AppCard'
 import CreateAppCard from './CreateAppCard'

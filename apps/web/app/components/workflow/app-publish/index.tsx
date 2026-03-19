@@ -16,9 +16,9 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { DiffEditor } from '@monaco-editor/react'
 import { useCreation } from 'ahooks'
 import type { editor } from 'monaco-editor'
-import { useAppMetaQuery } from '@/app/hooks/query/use-app-meta-query'
+import { useAppMetaQuery } from '@/app/hooks/query/workflow/use-app-meta-query'
 import { useAppParam } from '../hooks/use-app-param'
-import { useAppLastVersionQuery } from '@/app/hooks/query/use-app-last-version-query'
+import { useAppLastVersionQuery } from '@/app/hooks/query/workflow/use-app-last-version-query'
 
 type PublishStepCommProps = {
   onNextStep: () => void;

@@ -1,4 +1,4 @@
-import { useAccountInfoQuery } from '@/app/hooks/query/use-account-info-query'
+import { useAccountInfoQuery } from '@/app/hooks/query/account/use-account-info-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { RiAdminLine, RiUserLine } from '@remixicon/react'
 import { UserRole, type UserRole as UserRoleType } from '@shared/common/account/core'

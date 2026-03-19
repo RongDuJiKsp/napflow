@@ -1,5 +1,5 @@
 import { jsonQ } from '@/utils/net'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 import type { GetVersionMetaResp } from '@shared/data-transfer/workflow/info'
 import type { WorkflowAppVersionMeta } from '@shared/common/workflow/base'
 import { useQuery } from '@tanstack/react-query'

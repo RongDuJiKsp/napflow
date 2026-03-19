@@ -1,6 +1,6 @@
 'use client'
-import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
-import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
+import { useAppVersionsQuery } from '@/app/hooks/query/workflow/use-app-versions-query'
+import { useAppsQuery } from '@/app/hooks/query/workflow/use-apps-query'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Button } from '@heroui/react'
 import {

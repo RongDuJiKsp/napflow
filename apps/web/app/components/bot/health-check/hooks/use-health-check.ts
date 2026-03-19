@@ -1,4 +1,4 @@
-import { useBotHealthCheckQuery } from '@/app/hooks/query/use-bot-health-check-query'
+import { useBotHealthCheckQuery } from '@/app/hooks/query/bot/bot-health/use-bot-health-check-query'
 import { useInterval } from 'ahooks'
 import { useBotParam } from '../../hooks/use-bot-param'
 
