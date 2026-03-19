@@ -1,7 +1,6 @@
 import { UserRole } from '@shared/common/account/base'
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -11,16 +10,17 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { NotNullColumn } from '../decorator/entity'
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
   @PrimaryColumn()
   email: string
 
-  @Column()
+  @NotNullColumn()
   nickname: string
 
-  @Column()
+  @NotNullColumn()
   password: string
 
   @OneToMany(() => UserGroupEntity, userGroup => userGroup.user, {
