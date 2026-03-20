@@ -2,7 +2,11 @@ import z from 'zod'
 import { ZodCheckBot } from './entity'
 import { ZodCheckBotState } from './core/status'
 
-export const ZodCheckCommonBotInfo = ZodCheckBot.extend({
+export const ZodCheckCommonBotInfo = ZodCheckBot.pick({
+  botId: true,
+  botName: true,
+  adapterTag: true,
+}).extend({
   state: ZodCheckBotState,
   adapterDesc: z.string(),
   botDesc: z.string(),
