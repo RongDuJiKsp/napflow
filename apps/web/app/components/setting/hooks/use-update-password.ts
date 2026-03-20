@@ -15,7 +15,10 @@ const ChangePasswordForm = z.object({
 type ChangePasswordFormType = z.infer<typeof ChangePasswordForm>
 
 const submitForm = async (data: ChangePasswordFormType) =>
-  await jsonQ.Post<NullResp>('/account/change-password', data)
+  await jsonQ.Post<NullResp>('/account/change/password', {
+    originPassword: data.oldPassword,
+    password: data.newPassword,
+  })
 export const useUpdatePassword = () => {
   const { notification } = App.useApp()
 

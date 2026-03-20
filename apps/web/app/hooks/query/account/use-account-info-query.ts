@@ -13,7 +13,7 @@ export const useAccountInfoQuery = (accEmail: string) => {
     queryKey: ['account-info', accEmail],
     queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(
       async () =>
-        await jsonQ.Get<AccountInfoResp>('/account/account-info', {
+        await jsonQ.Get<AccountInfoResp>('/account/query/info', {
           params: { email: accEmail },
         }),
     ),

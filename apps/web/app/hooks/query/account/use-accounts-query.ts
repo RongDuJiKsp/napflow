@@ -23,7 +23,7 @@ export const useAccountsQuery = (isDisabled?: boolean, roles?: UserRole[]) => {
     queryKey: ['accounts', queryParams],
     queryFn: defineQueryFn<AccountInfoListResp, AccountInfo[]>(
       async () =>
-        await jsonQ.Get<AccountInfoListResp>('/account/account', {
+        await jsonQ.Get<AccountInfoListResp>('/account/query/list', {
           params: queryParams,
         }),
       { errMsgFallback: '获取账户列表失败' },
