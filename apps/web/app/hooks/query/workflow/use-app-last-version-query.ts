@@ -8,8 +8,7 @@ export const useAppLastVersionQuery = (appId: string) => {
   return useQuery({
     queryKey: ['app-last-version', appId],
     queryFn: defineQueryFn<GetLastVersionResp, WorkflowAppData>(
-      async () =>
-        await jsonQ.Get<GetLastVersionResp>(`/workflow/${appId}/last-version`),
+      async () => await jsonQ.Get<GetLastVersionResp>(`/workflow/versions/${appId}/last`),
     ),
   })
 }

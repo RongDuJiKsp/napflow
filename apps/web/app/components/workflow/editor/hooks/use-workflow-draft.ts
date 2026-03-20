@@ -21,7 +21,7 @@ export const useWorkflowDraft = () => {
   }, [workflowStore, workflowExtStore, appId])
   const syncRequest = useCallback(
     async (draft: WorkflowAppDraft) =>
-      await jsonQ.Post<NullResp>(`/workflow/${appId}/sync`, draft),
+      await jsonQ.Post<NullResp>(`/workflow/flow/${appId}/sync`, draft),
     [appId],
   )
   const submitFn = useSubmitZodFn(ZodCheckWorkflowAppDraft, syncRequest, {

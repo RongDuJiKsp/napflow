@@ -12,7 +12,7 @@ export const useAppMetaQuery = (appId: string) => {
   return useQuery({
     queryKey: ['app-meta', appId],
     queryFn: defineQueryFn<GetAppResp, WorkflowApp>(
-      async () => await jsonQ.Get<GetAppResp>(`/workflow/${appId}`),
+      async () => await jsonQ.Get<GetAppResp>(`/workflow/record/${appId}`),
       { errMsgFallback: '获取AppMeta失败' },
     ),
   })

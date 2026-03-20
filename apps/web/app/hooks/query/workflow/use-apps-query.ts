@@ -13,7 +13,7 @@ export const useAppsQuery = (onlySelf?: boolean) => {
     queryKey: ['apps', onlySelf],
     queryFn: defineQueryFn<GetAppsResp, WorkflowApp[]>(
       async () =>
-        await jsonQ.Get<GetAppsResp>('/workflow/apps', {
+        await jsonQ.Get<GetAppsResp>('/workflow/record/list', {
           params: { onlySelf },
         }),
       { errMsgFallback: '获取插件列表失败' },

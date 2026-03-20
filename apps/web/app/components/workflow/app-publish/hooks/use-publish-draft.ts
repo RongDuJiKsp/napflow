@@ -103,7 +103,7 @@ export const usePublishDesctionForm = (afterSuccess?: () => void) => {
 
   const fetchSubmitPublish = useCallback(
     async (data: WorkflowPublishReq) =>
-      await jsonQ.Post<WorkflowPublishResp>(`/workflow/${appId}/publish`, data),
+      await jsonQ.Post<WorkflowPublishResp>(`/workflow/flow/${appId}/publish`, data),
     [appId],
   )
   const submitForm = useSubmitZod<WorkflowPublishReq, WorkflowPublishResp>(

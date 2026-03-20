@@ -8,8 +8,7 @@ export const useAppVersionsQuery = (appId: string) => {
   return useQuery({
     queryKey: ['app-versions', appId],
     queryFn: defineQueryFn<GetVersionsResp, WorkflowAppData[]>(
-      async () =>
-        await jsonQ.Get<GetVersionsResp>(`/workflow/${appId}/versions`),
+      async () => await jsonQ.Get<GetVersionsResp>(`/workflow/versions/${appId}/list`),
       { errMsgFallback: '获取版本列表失败' },
     ),
   })
