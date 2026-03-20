@@ -509,7 +509,7 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.NotFound)
     })
 
-    it('缺少 botName 字段时应返回参数校验错误', async () => {
+    it('缺少 name 字段时应返回参数校验错误', async () => {
       const res = await request(app.getHttpServer())
         .post(`/bot/record/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
@@ -535,7 +535,7 @@ describe('Runtime BotManager (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/bot/record/${TEST_BOT_ID}/update`)
         .send({
-          botName: '新名称',
+          name: '新名称',
           description: '新描述',
         })
       expect(res.status).toBe(401)
