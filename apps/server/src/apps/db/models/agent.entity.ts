@@ -3,7 +3,9 @@ import { BaseEntity, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
 
 @Entity('openai_endpoint')
-export class OpenAiEndpointEntity extends BaseEntity implements OpenAiEndpointConfigRecord {
+export class OpenAiEndpointEntity
+  extends BaseEntity
+  implements OpenAiEndpointConfigRecord {
   @PrimaryColumn({ generated: 'uuid' })
   id: string
 

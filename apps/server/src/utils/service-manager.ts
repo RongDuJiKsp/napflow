@@ -2,8 +2,7 @@ export class RegisterManager {
   private unsubscribes: Array<() => void> | null = null
 
   register(unsubscribe: () => void) {
-    if (!this.unsubscribes)
-      this.unsubscribes = []
+    if (!this.unsubscribes) this.unsubscribes = []
 
     this.unsubscribes.push(unsubscribe)
   }

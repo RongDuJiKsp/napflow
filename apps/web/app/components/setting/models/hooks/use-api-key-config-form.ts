@@ -14,13 +14,18 @@ import { useCallback, useEffect } from 'react'
  * @description 管理 API Key 配置的表单 Hook
  * @param editId - 可选的编辑配置 ID，如果存在则为编辑模式，否则为新增模式
  */
-export const useApiKeyConfigForm = (editId?: string, onSuccess?: () => void) => {
-  const [formData, setFormData, resetFormData] = useResetState<OpenAiEndpointConfig>({
-    endpoint: '',
-    apiKey: '',
-    model: '',
-  })
-  const { data: configs = [], refetch: refreshConfigList } = useApiKeyListQuery()
+export const useApiKeyConfigForm = (
+  editId?: string,
+  onSuccess?: () => void,
+) => {
+  const [formData, setFormData, resetFormData]
+    = useResetState<OpenAiEndpointConfig>({
+      endpoint: '',
+      apiKey: '',
+      model: '',
+    })
+  const { data: configs = [], refetch: refreshConfigList }
+    = useApiKeyListQuery()
 
   const isEditMode = Boolean(editId)
 

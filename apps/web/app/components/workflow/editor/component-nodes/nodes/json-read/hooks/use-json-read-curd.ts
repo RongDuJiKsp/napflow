@@ -10,7 +10,10 @@ import {
   type VarCtx,
   useComponentNodeEnv,
 } from '../../../hooks/use-component-node-env'
-import { type Var, VarTypes } from '@shared/common/workflow/core/component-node'
+import {
+  type Var,
+  VarTypes,
+} from '@shared/common/workflow/core/component-node'
 
 const buildNodeVars = (outputs: JsonReadOutputBinding[]): Var[] => {
   return outputs

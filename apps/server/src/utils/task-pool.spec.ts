@@ -69,8 +69,12 @@ describe('MinusTimePoller', () => {
     const poller = new MinusTimePoller()
     poller.mount()
 
-    expect(poller.realTime(1)).toBe(Math.floor(new Date('2026-03-16T00:01:30.000Z').getTime() / 60_000))
-    expect(poller.realTime(3)).toBe(Math.floor(new Date('2026-03-16T00:03:30.000Z').getTime() / 60_000))
+    expect(poller.realTime(1)).toBe(
+      Math.floor(new Date('2026-03-16T00:01:30.000Z').getTime() / 60_000),
+    )
+    expect(poller.realTime(3)).toBe(
+      Math.floor(new Date('2026-03-16T00:03:30.000Z').getTime() / 60_000),
+    )
   })
 
   it('未 mount 时调用 realTime 会抛错', () => {

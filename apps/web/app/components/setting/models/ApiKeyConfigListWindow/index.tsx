@@ -1,5 +1,10 @@
 'use client'
-import { RiAddLine, RiBrainAi3Line, RiDeleteBin2Line, RiEditLine } from '@remixicon/react'
+import {
+  RiAddLine,
+  RiBrainAi3Line,
+  RiDeleteBin2Line,
+  RiEditLine,
+} from '@remixicon/react'
 import { memo } from 'react'
 import { Button } from '@heroui/react'
 import SettingItemContainer from '@/app/components/_base/container/SettingItemContainer'
@@ -9,13 +14,16 @@ import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-que
 
 const ApiKeyConfigListWindow = () => {
   const { data: configs = [] } = useApiKeyListQuery()
-  const { editTarget, handleAddConfig, handleEditConfig, handleCloseModal, deleteConfig } = useApiKeyOperators()
+  const {
+    editTarget,
+    handleAddConfig,
+    handleEditConfig,
+    handleCloseModal,
+    deleteConfig,
+  } = useApiKeyOperators()
 
   return (
-    <SettingItemContainer
-      title="已配置模型api列表"
-      Icon={RiBrainAi3Line}
-    >
+    <SettingItemContainer title="已配置模型api列表" Icon={RiBrainAi3Line}>
       <div className="mb-4 flex justify-end">
         <Button
           onClick={handleAddConfig}
@@ -58,11 +66,17 @@ const ApiKeyConfigListWindow = () => {
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <div>
                 <p className="mb-1 text-xs font-medium text-purple-500">端点</p>
-                <p className="break-all text-sm text-gray-700">{config.endpoint}</p>
+                <p className="break-all text-sm text-gray-700">
+                  {config.endpoint}
+                </p>
               </div>
               <div>
-                <p className="mb-1 text-xs font-medium text-purple-500">API Key</p>
-                <p className="break-all text-sm text-gray-700">{config.apiKey}</p>
+                <p className="mb-1 text-xs font-medium text-purple-500">
+                  API Key
+                </p>
+                <p className="break-all text-sm text-gray-700">
+                  {config.apiKey}
+                </p>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-purple-500">模型</p>
@@ -72,7 +86,11 @@ const ApiKeyConfigListWindow = () => {
           </div>
         ))}
       </div>
-      <ApiKeyConfigFormDialog open={!!editTarget} editId={editTarget !== true ? editTarget : undefined} onClose={handleCloseModal} />
+      <ApiKeyConfigFormDialog
+        open={!!editTarget}
+        editId={editTarget !== true ? editTarget : undefined}
+        onClose={handleCloseModal}
+      />
     </SettingItemContainer>
   )
 }

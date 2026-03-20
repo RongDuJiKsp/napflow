@@ -126,15 +126,13 @@ describe('Runtime BotManager (e2e)', () => {
     botRecord: {
       find: vi.fn().mockResolvedValue([mockBotRecord]),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.botId === TEST_BOT_ID)
-          return Promise.resolve(mockBotRecord)
+        if (where.botId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
         if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
       }),
       findOneBy: vi.fn().mockImplementation((where: any) => {
-        if (where.botId === TEST_BOT_ID)
-          return Promise.resolve(mockBotRecord)
+        if (where.botId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
         if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
@@ -175,8 +173,7 @@ describe('Runtime BotManager (e2e)', () => {
     mockTypeOrmService.botRecord.find.mockResolvedValue([mockBotRecord])
     mockTypeOrmService.botRecord.findOne.mockImplementation(
       ({ where }: any) => {
-        if (where.botId === TEST_BOT_ID)
-          return Promise.resolve(mockBotRecord)
+        if (where.botId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
         if (where.botId === TEST_BOT_ID_2)
           return Promise.resolve(mockBotRecord2)
         return Promise.resolve(null)
@@ -184,8 +181,7 @@ describe('Runtime BotManager (e2e)', () => {
     )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
       if (where.botId === TEST_BOT_ID) return Promise.resolve(mockBotRecord)
-      if (where.botId === TEST_BOT_ID_2)
-        return Promise.resolve(mockBotRecord2)
+      if (where.botId === TEST_BOT_ID_2) return Promise.resolve(mockBotRecord2)
       return Promise.resolve(null)
     })
     mockTypeOrmService.botRecord.save.mockImplementation((data: any) => {

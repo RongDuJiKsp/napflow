@@ -2,9 +2,7 @@ import { useCallback } from 'react'
 import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
 import type { ComponentNode } from '../../../types'
 import type { TimerTriggerMode } from '@shared/common/workflow/node-data/timer'
-import type {
-  TimerData,
-} from '@shared/common/workflow/node-data/timer'
+import type { TimerData } from '@shared/common/workflow/node-data/timer'
 import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
 import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
 

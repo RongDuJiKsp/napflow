@@ -263,8 +263,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       },
     )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
-      if (where.botId === TEST_BOT_ID)
-        return Promise.resolve(currentBotRecord)
+      if (where.botId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
       return Promise.resolve(null)
     })
   })

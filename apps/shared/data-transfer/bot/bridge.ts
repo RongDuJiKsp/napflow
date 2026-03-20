@@ -1,8 +1,6 @@
 import z from 'zod'
 import { zodDeepPartial } from 'zod-deep-partial'
-import {
-  ZodCheckWorkflowAppVersionInfos,
-} from '../../common/workflow/base'
+import { ZodCheckWorkflowAppVersionInfos } from '../../common/workflow/base'
 import { ZodCheckWorkflowApp } from '../../common/workflow/entity'
 import { defineZodResp } from '../_base'
 import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/core/config'

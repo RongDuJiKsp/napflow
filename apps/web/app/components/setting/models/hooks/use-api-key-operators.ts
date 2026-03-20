@@ -23,16 +23,21 @@ export const useApiKeyOperators = () => {
     setEditTarget(undefined)
   }, [])
 
-  const deleteConfig = useCallback(async (id: string) => {
-    const res = await jsonQ.Post<NullResp>(`/agent/openai-endpoint/${id}/delete`)
-    if (res.statusCode !== Code.Ok) {
-      message.error(res.message)
-      return
-    }
+  const deleteConfig = useCallback(
+    async (id: string) => {
+      const res = await jsonQ.Post<NullResp>(
+        `/agent/openai-endpoint/${id}/delete`,
+      )
+      if (res.statusCode !== Code.Ok) {
+        message.error(res.message)
+        return
+      }
 
-    message.success('模型配置删除成功')
-    await refreshConfigList()
-  }, [message, refreshConfigList])
+      message.success('模型配置删除成功')
+      await refreshConfigList()
+    },
+    [message, refreshConfigList],
+  )
 
   return {
     editTarget,

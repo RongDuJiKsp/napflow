@@ -1,7 +1,10 @@
 import { useAccountInfoQuery } from '@/app/hooks/query/account/use-account-info-query'
 import type { ComponentWithClass } from '@/utils/type'
 import { RiAdminLine, RiUserLine } from '@remixicon/react'
-import { UserRole, type UserRole as UserRoleType } from '@shared/common/account/core'
+import {
+  UserRole,
+  type UserRole as UserRoleType,
+} from '@shared/common/account/core'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useMemo } from 'react'
 import type { AccountInfo } from '@shared/common/account/base'

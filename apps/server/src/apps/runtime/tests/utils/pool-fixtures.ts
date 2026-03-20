@@ -183,7 +183,9 @@ export const createThreadFixture = (
       getSubGraph: vi.fn(() => new Map()),
     },
   }
-  plugin.taskManager.removeThread.mockImplementation(CommPluginTaskManager.prototype.removeThread.bind(plugin.taskManager))
+  plugin.taskManager.removeThread.mockImplementation(
+    CommPluginTaskManager.prototype.removeThread.bind(plugin.taskManager),
+  )
 
   const endpoint = (options.endpoint ?? 'chatMessage') as TriggerOnEvents
   const thread = new WorkflowThread(endpoint, plugin as unknown as CommPlugin)

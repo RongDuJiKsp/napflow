@@ -18,7 +18,9 @@ import { AgentService } from './agent.service'
 
 @Controller('agent')
 export class AgentController {
-  constructor(@Inject(AgentService) private readonly agentService: AgentService) {}
+  constructor(
+    @Inject(AgentService) private readonly agentService: AgentService,
+  ) {}
 
   @Get('openai-endpoint')
   @AllowUserGroup(UserRole.User)
@@ -48,8 +50,7 @@ export class AgentController {
     req: UpdateOpenAiEndpointReq,
   ) {
     const updated = await this.agentService.updateOpenAiEndpoint(id, req)
-    if (!updated)
-      return Resp.error('配置不存在或已被删除', Code.NotFound)
+    if (!updated) return Resp.error('配置不存在或已被删除', Code.NotFound)
 
     return Resp.ok()
   }

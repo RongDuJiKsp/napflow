@@ -1,6 +1,11 @@
 'use client'
 
-import { RiBrainAi3Line, RiGlobalLine, RiTeamLine, RiUserSettingsLine } from '@remixicon/react'
+import {
+  RiBrainAi3Line,
+  RiGlobalLine,
+  RiTeamLine,
+  RiUserSettingsLine,
+} from '@remixicon/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'

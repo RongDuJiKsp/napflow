@@ -7,9 +7,9 @@ import { memo } from 'react'
 import { useApiKeyConfigForm } from '../hooks/use-api-key-config-form'
 
 type ApiKeyConfigFormDialogProps = {
-  open: boolean
-  editId?: string
-  onClose: () => void
+  open: boolean;
+  editId?: string;
+  onClose: () => void;
 }
 
 const ApiKeyConfigFormDialog = ({
@@ -17,7 +17,14 @@ const ApiKeyConfigFormDialog = ({
   open,
   onClose,
 }: ApiKeyConfigFormDialogProps) => {
-  const { formData, isEditMode, handleApiKeyChange, handleEndpointChange, handleModelChange, handleSubmit } = useApiKeyConfigForm(editId, onClose)
+  const {
+    formData,
+    isEditMode,
+    handleApiKeyChange,
+    handleEndpointChange,
+    handleModelChange,
+    handleSubmit,
+  } = useApiKeyConfigForm(editId, onClose)
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -26,9 +33,11 @@ const ApiKeyConfigFormDialog = ({
           <div className="bg-linear-to-r from-purple-500 to-pink-500 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                {isEditMode
-                  ? <RiEditLine className="h-6 w-6 text-white" />
-                  : <RiAddLine className="h-6 w-6 text-white" />}
+                {isEditMode ? (
+                  <RiEditLine className="h-6 w-6 text-white" />
+                ) : (
+                  <RiAddLine className="h-6 w-6 text-white" />
+                )}
                 <DialogTitle className="text-lg font-semibold text-white">
                   {isEditMode ? '编辑模型配置' : '添加模型配置'}
                 </DialogTitle>
@@ -59,10 +68,7 @@ const ApiKeyConfigFormDialog = ({
             </TextField>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <TextField
-                value={formData.apiKey}
-                onChange={handleApiKeyChange}
-              >
+              <TextField value={formData.apiKey} onChange={handleApiKeyChange}>
                 <Label className="mb-2 block text-sm font-medium text-purple-700">
                   API Key
                 </Label>
@@ -73,10 +79,7 @@ const ApiKeyConfigFormDialog = ({
                 />
               </TextField>
 
-              <TextField
-                value={formData.model}
-                onChange={handleModelChange}
-              >
+              <TextField value={formData.model} onChange={handleModelChange}>
                 <Label className="mb-2 block text-sm font-medium text-purple-700">
                   模型
                 </Label>

@@ -11,7 +11,10 @@ import {
 import { DefaultNullColumn, NotNullColumn } from '../decorator/entity'
 import type { Edge, Node } from '@shared/common/workflow/core'
 import type { Var } from '@shared/common/workflow/core/component-node'
-import type { WorkflowApp, WorkflowAppData } from '@shared/common/workflow/entity'
+import type {
+  WorkflowApp,
+  WorkflowAppData,
+} from '@shared/common/workflow/entity'
 @Entity('apps')
 export class WorkflowAppEntity extends BaseEntity implements WorkflowApp {
   @PrimaryColumn({ generated: 'uuid' })
@@ -34,7 +37,9 @@ export class WorkflowAppEntity extends BaseEntity implements WorkflowApp {
 }
 
 @Entity('app_datas')
-export class WorkflowAppDataEntity extends BaseEntity implements WorkflowAppData {
+export class WorkflowAppDataEntity
+  extends BaseEntity
+  implements WorkflowAppData {
   // meta area
   @PrimaryColumn()
   version: string

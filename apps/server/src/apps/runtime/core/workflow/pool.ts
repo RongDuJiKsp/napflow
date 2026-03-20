@@ -319,7 +319,10 @@ export class WorkflowThread<SDK = unknown> {
 
   readonly logger = new Logger(`${WorkflowThread.name}#${this.id}`)
 
-  constructor(readonly triggerEndpoint: TriggerOnEvents, readonly plugin: CommPlugin<SDK>) {
+  constructor(
+    readonly triggerEndpoint: TriggerOnEvents,
+    readonly plugin: CommPlugin<SDK>,
+  ) {
     this.graphRunner = new GraphRunner(
       plugin.graphManager.nodeGraph,
       plugin.graphManager.graphHeadConnectedNodes,
@@ -350,7 +353,11 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private async execNode(currNode: CommNode, nextTask: WillTask) {
-    await currNode.onThread(this, nextTask, this.kvManager.initNodeKv(currNode))
+    await currNode.onThread(
+      this,
+      nextTask,
+      this.kvManager.initNodeKv(currNode),
+    )
   }
 
   async tick(nextTask: WillTask) {

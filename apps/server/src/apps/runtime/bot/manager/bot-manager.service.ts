@@ -72,7 +72,7 @@ export class BotManagerService {
 
   async updateBot(botId: string, updateReq: UpdateBotReq) {
     const botRecord = await this.db.botRecord.findOne({
-      where: { botId: botId },
+      where: { botId },
     })
     if (!botRecord) throw new CommError('Bot记录不存在', Code.NotFound, 'warn')
     botRecord.botName = updateReq.name

@@ -25,7 +25,7 @@ export class BotFactoryService {
   ) {}
 
   async createBot(botId: string) {
-    const botRecord = await this.db.botRecord.findOneBy({ botId: botId })
+    const botRecord = await this.db.botRecord.findOneBy({ botId })
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
     // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
     return await adapterFactory[botRecord.adapterTag](
