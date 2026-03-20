@@ -15,7 +15,7 @@ export const useBotHealthCheckQuery = (botId: string) => {
     queryFn: defineQueryFn<BotHealthSamplesResp, BotPluginStatusStatics[]>(
       async () =>
         await jsonQ.Get<BotHealthSamplesResp>(
-          `/bot-health-check/${botId}/sample`,
+          `/bot/health-check/${botId}/sample`,
         ),
     ),
   })

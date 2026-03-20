@@ -9,7 +9,7 @@ import {
 import { useResetState } from 'ahooks'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
-import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/record/use-bots-query'
 
 export const useEditBot = () => {
   const { botId } = useBotParam()
@@ -43,7 +43,7 @@ export const useEditBot = () => {
 
   const submitFn = useCallback(
     async (data: UpdateBotReq) =>
-      await jsonQ.Post<NullResp>(`/bots/${botId}/update`, data),
+      await jsonQ.Post<NullResp>(`/bot/record/${botId}/update`, data),
     [botId],
   )
 

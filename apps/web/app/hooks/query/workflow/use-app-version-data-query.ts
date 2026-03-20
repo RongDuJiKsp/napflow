@@ -10,7 +10,7 @@ export const useAppVersionDataQuery = (appId: string, version: string) => {
     queryFn: defineQueryFn<GetVersionResp, WorkflowAppData>(
       async () =>
         await jsonQ.Get<GetVersionResp>(
-          `/workflow/${appId}/version/${version}`,
+          `/workflow/versions/${appId}/${version}/query`,
         ),
     ),
   })

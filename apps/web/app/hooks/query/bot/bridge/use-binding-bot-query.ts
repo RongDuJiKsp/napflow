@@ -12,7 +12,7 @@ export const useBindingBotQuery = (botId: string) => {
     >(
       async () =>
         await jsonQ.Get<BotBridgeBindStatusResp>(
-          `/bot-bridge/${botId}/binding`,
+          `/bot/bridge/${botId}/binding`,
         ),
     ),
   })

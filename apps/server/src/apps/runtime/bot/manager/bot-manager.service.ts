@@ -6,7 +6,7 @@ import type {
   UpdateBotReq,
 } from '@shared/data-transfer/bot/manager'
 import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
-import { BotRunningState } from '@shared/common/bot/core/status'
+import { BotRunningState, BotRunningStateUtils } from '@shared/common/bot/core/status'
 import { BotFactoryService } from '../core/bot-factory.service'
 import { CommError } from '@/src/apps/middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
@@ -78,5 +78,17 @@ export class BotManagerService {
     botRecord.botName = updateReq.name
     botRecord.description = updateReq.description
     return await this.db.botRecord.save(botRecord)
+  }
+
+  async deleteBot(botId: string) {
+    const botState = this.botCoreRuntimeService.botState(botId)
+    if (BotRunningStateUtils.isRunning(botState.runningState)) {
+      throw new CommError(
+        'Bot正在运行，只能在停止后删除记录',
+        Code.BadRequest,
+        'warn',
+      )
+    }
+    return await this.db.botRecord.delete({ botId })
   }
 }

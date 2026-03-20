@@ -39,7 +39,7 @@ export const useAppSettings = () => {
 
   const submitFn = useCallback(
     async (data: UpdateWorkflowReq) =>
-      await jsonQ.Post<NullResp>(`/workflow/${appId}/update`, data),
+      await jsonQ.Post<NullResp>(`/workflow/record/${appId}/update`, data),
     [appId],
   )
 

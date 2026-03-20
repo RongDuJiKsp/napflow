@@ -34,7 +34,7 @@ export const useAccountActions = () => {
         return
       }
       const res = await jsonQ.Post<NullResp>(
-        '/account/upgrade',
+        '/account/action/upgrade',
         validated.data,
       )
       if (res.statusCode !== Code.Ok) {
@@ -60,7 +60,7 @@ export const useAccountActions = () => {
         return
       }
       const res = await jsonQ.Post<NullResp>(
-        '/account/downgrade',
+        '/account/action/downgrade',
         validated.data,
       )
       if (res.statusCode !== Code.Ok) {
@@ -84,7 +84,7 @@ export const useAccountActions = () => {
         return
       }
       const res = await jsonQ.Post<NullResp>(
-        '/account/disable',
+        '/account/action/disable',
         validated.data,
       )
       if (res.statusCode !== Code.Ok) {
@@ -140,7 +140,10 @@ export const useAccountAddOperators = () => {
       })
       return
     }
-    const res = await jsonQ.Post<NullResp>('/account/create', validated.data)
+    const res = await jsonQ.Post<NullResp>(
+      '/account/action/create',
+      validated.data,
+    )
     if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return

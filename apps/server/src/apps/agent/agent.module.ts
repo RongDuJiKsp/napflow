@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
-import { AgentService } from './agent.service'
-import { AgentController } from './agent.controller'
+import { AgentEndpointService } from './config/openai-endpoints/agent-endpoint.service'
+import { AgentEndpointController } from './config/openai-endpoints/agent-endpoint.controller'
 
 @Module({
-  providers: [AgentService],
-  exports: [AgentService],
-  controllers: [AgentController],
+  providers: [AgentEndpointService],
+  exports: [AgentEndpointService],
+  controllers: [AgentEndpointController],
 })
 export class AgentModule {}

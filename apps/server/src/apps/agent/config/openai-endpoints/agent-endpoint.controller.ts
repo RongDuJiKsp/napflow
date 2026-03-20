@@ -14,15 +14,15 @@ import {
 } from '@shared/data-transfer/agent/endpoint'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AllowUserGroup } from '@/src/decorator/account'
-import { AgentService } from './agent.service'
+import { AgentEndpointService } from './agent-endpoint.service'
 
-@Controller('agent')
-export class AgentController {
+@Controller('agent/openai-endpoint')
+export class AgentEndpointController {
   constructor(
-    @Inject(AgentService) private readonly agentService: AgentService,
+    @Inject(AgentEndpointService) private readonly agentService: AgentEndpointService,
   ) {}
 
-  @Get('openai-endpoint')
+  @Get()
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckGetOpenAiEndpointListResp)
   async getOpenAiEndpointList() {
@@ -30,7 +30,7 @@ export class AgentController {
     return Resp.ok(configs)
   }
 
-  @Post('openai-endpoint/create')
+  @Post('create')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckCreateOpenAiEndpointResp)
   async createOpenAiEndpoint(
@@ -41,7 +41,7 @@ export class AgentController {
     return Resp.ok({ id: created.id })
   }
 
-  @Post('openai-endpoint/:id/update')
+  @Post(':id/update')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
   async updateOpenAiEndpoint(
@@ -55,7 +55,7 @@ export class AgentController {
     return Resp.ok()
   }
 
-  @Post('openai-endpoint/:id/delete')
+  @Post(':id/delete')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
   async deleteOpenAiEndpoint(@Param('id') id: string) {

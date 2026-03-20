@@ -34,11 +34,11 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
  *   BotCoreRuntime.botInstanceMap（直接访问私有属性，模拟运行中状态）
  *
  * 覆盖端点：
- *   POST /bot-bridge/:botId/bindmany                  - 批量绑定插件（workflow app）
- *   POST /bot-bridge/:botId/unbindmany                - 批量解绑插件
- *   GET  /bot-bridge/:botId/binding                   - 获取绑定列表
- *   GET  /bot-bridge/:botId/bindingconfig/:bindingId  - 获取绑定配置
- *   POST /bot-bridge/:botId/bindingconfig/:bindingId  - 设置绑定配置
+ *   POST /bot/bridge/:botId/bindmany                  - 批量绑定插件（workflow app）
+ *   POST /bot/bridge/:botId/unbindmany                - 批量解绑插件
+ *   GET  /bot/bridge/:botId/binding                   - 获取绑定列表
+ *   GET  /bot/bridge/:botId/bindingconfig/:bindingId  - 获取绑定配置
+ *   POST /bot/bridge/:botId/bindingconfig/:bindingId  - 设置绑定配置
  *
  * 业务规则：
  *   - 不能绑定 draft 版本
@@ -171,7 +171,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
     vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
     await request(app.getHttpServer())
-      .post(`/bots/${TEST_BOT_ID}/run`)
+      .post(`/bot/runtime/${TEST_BOT_ID}/run`)
       .set('Authorization', `Bearer ${getUserToken()}`)
       .expect(201)
   }
@@ -268,11 +268,11 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
   })
 
-  // ========== POST /bot-bridge/:botId/bindmany - 批量绑定插件 ==========
-  describe('POST /bot-bridge/:botId/bindmany', () => {
+  // ========== POST /bot/bridge/:botId/bindmany - 批量绑定插件 ==========
+  describe('POST /bot/bridge/:botId/bindmany', () => {
     it('Bot 停止时应当成功绑定单个插件', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
@@ -298,7 +298,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('Bot 停止时应当成功批量绑定多个插件', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([
           { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
@@ -320,14 +320,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('应当允许将相同 appId 的相同版本多次绑定', async () => {
       // 第一次绑定
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
 
       // 第二次绑定相同 appId + version
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
@@ -343,7 +343,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('绑定 draft 版本时应当返回 400 错误', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'draft' }])
 
@@ -358,7 +358,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('批量绑定中包含 draft 版本时应当全部拒绝', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([
           { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
@@ -376,7 +376,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       await startBot()
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
 
@@ -386,7 +386,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('Bot 记录不存在时应当返回错误', async () => {
       const res = await request(app.getHttpServer())
-        .post('/bot-bridge/non-existent-bot/bindmany')
+        .post('/bot/bridge/non-existent-bot/bindmany')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
 
@@ -397,14 +397,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
       expect(res.status).toBe(401)
     })
   })
 
-  // ========== POST /bot-bridge/:botId/unbindmany - 批量解绑插件 ==========
-  describe('POST /bot-bridge/:botId/unbindmany', () => {
+  // ========== POST /bot/bridge/:botId/unbindmany - 批量解绑插件 ==========
+  describe('POST /bot/bridge/:botId/unbindmany', () => {
     it('Bot 停止时应当成功解绑指定插件', async () => {
       // 先在 botRecord 中预置绑定数据
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
@@ -417,7 +417,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [TEST_BINDING_ID] })
         .expect(201)
@@ -444,7 +444,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [TEST_BINDING_ID, TEST_BINDING_ID_2] })
         .expect(201)
@@ -461,7 +461,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: ['non-existent-binding-id'] })
         .expect(201)
@@ -481,7 +481,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       await startBot()
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [TEST_BINDING_ID] })
 
@@ -491,18 +491,18 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .send({ bindingIds: [TEST_BINDING_ID] })
       expect(res.status).toBe(401)
     })
   })
 
-  // ========== GET /bot-bridge/:botId/binding - 获取绑定列表 ==========
-  describe('GET /bot-bridge/:botId/binding', () => {
+  // ========== GET /bot/bridge/:botId/binding - 获取绑定列表 ==========
+  describe('GET /bot/bridge/:botId/binding', () => {
     it('没有绑定时应当返回空数组', async () => {
       // botRecord 没有 bindingWorkflowApp 或为空 → getBindingsInfo 返回 null
       const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/binding`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -516,7 +516,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/binding`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -538,7 +538,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/binding`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -548,14 +548,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer()).get(
-        `/bot-bridge/${TEST_BOT_ID}/binding`,
+        `/bot/bridge/${TEST_BOT_ID}/binding`,
       )
       expect(res.status).toBe(401)
     })
   })
 
-  // ========== GET /bot-bridge/:botId/bindingconfig/:bindingId - 获取绑定配置 ==========
-  describe('GET /bot-bridge/:botId/bindingconfig/:bindingId', () => {
+  // ========== GET /bot/bridge/:botId/bindingconfig/:bindingId - 获取绑定配置 ==========
+  describe('GET /bot/bridge/:botId/bindingconfig/:bindingId', () => {
     it('绑定存在且有配置时应当返回配置', async () => {
       const testConfig = { envKV: { key1: 'value1', key2: 'value2' } }
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
@@ -568,7 +568,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -581,7 +581,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = []
 
       const res = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/non-existent-id`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/non-existent-id`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -590,21 +590,21 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer()).get(
-        `/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
+        `/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
       )
       expect(res.status).toBe(401)
     })
   })
 
-  // ========== POST /bot-bridge/:botId/bindingconfig/:bindingId - 设置绑定配置 ==========
-  describe('POST /bot-bridge/:botId/bindingconfig/:bindingId', () => {
+  // ========== POST /bot/bridge/:botId/bindingconfig/:bindingId - 设置绑定配置 ==========
+  describe('POST /bot/bridge/:botId/bindingconfig/:bindingId', () => {
     it('Bot 停止时应当成功设置绑定配置', async () => {
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = [
         { appId: TEST_APP_ID, version: 'v1.0.0', bindingId: TEST_BINDING_ID },
       ]
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { myKey: 'myValue' } })
         .expect(201)
@@ -624,7 +624,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       ]
 
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { newKey: 'newValue' } })
         .expect(201)
@@ -647,7 +647,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       await startBot()
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { key: 'value' } })
 
@@ -659,7 +659,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       currentBotRecord.commonAdapterConfig.bindingWorkflowApp = []
 
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/non-existent-id`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/non-existent-id`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { key: 'value' } })
 
@@ -669,7 +669,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .send({ envKV: { key: 'value' } })
       expect(res.status).toBe(401)
     })
@@ -680,7 +680,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('绑定 → 查询 → 解绑 → 查询 完整流程', async () => {
       // 1. 绑定一个插件
       const bindRes = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
@@ -688,7 +688,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 2. 查询绑定列表 → 应该有 1 个
       const listRes1 = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/binding`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
       expect(listRes1.body.statusCode).toBe(Code.Ok)
@@ -699,7 +699,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 3. 解绑
       const unbindRes = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [bindingId] })
         .expect(201)
@@ -707,7 +707,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 4. 查询绑定列表 → 应该为空
       const listRes2 = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/binding`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/binding`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
       expect(listRes2.body.statusCode).toBe(Code.Ok)
@@ -717,7 +717,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('绑定 → 配置 → 查询配置 完整流程', async () => {
       // 1. 绑定
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
         .expect(201)
@@ -727,14 +727,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 2. 设置配置
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${bindingId}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${bindingId}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { dbHost: 'localhost', dbPort: '3306' } })
         .expect(201)
 
       // 3. 查询配置
       const cfgRes = await request(app.getHttpServer())
-        .get(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${bindingId}`)
+        .get(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${bindingId}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -752,21 +752,21 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 绑定被拒绝
       const bindRes = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([{ appId: TEST_APP_ID_2, appVersion: 'v2.0.0' }])
       expect(bindRes.status).toBe(400)
 
       // 解绑被拒绝
       const unbindRes = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [TEST_BINDING_ID] })
       expect(unbindRes.status).toBe(400)
 
       // 配置被拒绝
       const cfgRes = await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { key: 'value' } })
       expect(cfgRes.status).toBe(400)
@@ -775,7 +775,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     it('批量绑定多个插件后逐一解绑应正确', async () => {
       // 绑定 2 个插件
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send([
           { appId: TEST_APP_ID, appVersion: 'v1.0.0' },
@@ -794,7 +794,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 解绑第一个
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [bindingIdFirst] })
         .expect(201)
@@ -808,7 +808,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 解绑第二个
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/unbindmany`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ bindingIds: [bindingIdSecond] })
         .expect(201)
@@ -830,14 +830,14 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
       // 第一次配置
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { key1: 'val1' } })
         .expect(201)
 
       // 第二次配置（追加新 key）
       await request(app.getHttpServer())
-        .post(`/bot-bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ envKV: { key2: 'val2' } })
         .expect(201)

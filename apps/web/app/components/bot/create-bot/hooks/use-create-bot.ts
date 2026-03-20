@@ -31,7 +31,7 @@ export const useCreateBotSetConfig = <T>() => {
 }
 
 const onSubmit = async (form: CreateBotReq) =>
-  await jsonQ.Post<CreateBotResp>('/bots/create', form)
+  await jsonQ.Post<CreateBotResp>('/bot/record/create', form)
 
 export const useCreateBot = () => {
   const router = useRouter()

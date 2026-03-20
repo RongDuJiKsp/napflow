@@ -7,7 +7,7 @@ import { WorkflowModule } from './apps/workflow/workflow.module'
 import { DbModule } from './apps/db/db.module'
 import { ZodModule } from './apps/zod/zod.module'
 import { RuntimeModule } from './apps/runtime/runtime.module'
-import { HealthCheckModule } from './apps/health-check/health-check.module'
+import { HealthCheckModule } from './apps/health/health-check.module'
 import { CommModule } from './apps/middleware/comm.module'
 import { AgentModule } from './apps/agent/agent.module'
 

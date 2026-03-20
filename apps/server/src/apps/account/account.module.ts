@@ -1,7 +1,9 @@
 import type { DynamicModule } from '@nestjs/common'
 import { Global, Module } from '@nestjs/common'
 import { AccountService } from './account.service'
-import { AccountController } from './account.controller'
+import { AccountQueryController } from './account-query.controller'
+import { AccountActionController } from './account-action.controller'
+import { AccountAuthController } from './account-auth.controller'
 import { JwtService } from './jwt.service'
 import { AccountInitService } from './account-init.service'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core/constants'
@@ -14,7 +16,11 @@ import {
 
 @Global()
 @Module({
-  controllers: [AccountController],
+  controllers: [
+    AccountQueryController,
+    AccountActionController,
+    AccountAuthController,
+  ],
   providers: [AccountService, JwtService, AccountInitService],
   exports: [AccountService, JwtService, AccountInitService],
 })

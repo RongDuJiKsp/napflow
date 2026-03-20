@@ -9,7 +9,7 @@ import { useResetState } from 'ahooks'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
 
 const submitChange = async (data: AccountChangeNicknameReq) =>
-  await jsonQ.Post<NullResp>('/account/change-nickname', data)
+  await jsonQ.Post<NullResp>('/account/change/nickname', data)
 
 export const useUpdateNickname = () => {
   const [formValue, setFormValue, resetForm]

@@ -4,13 +4,13 @@ import { ZodCheckCommonBotInfo } from '../../common/bot/base'
 import { AdapterTag } from '../../common/bot/core/adapter'
 import { ZodCheckCommonAdapterConfig } from '../../common/bot/core/config'
 
-// @/bots/list
+// @/bot/record/list
 export const ZodCheckGetAllBotsResp = defineZodResp(
   z.array(ZodCheckCommonBotInfo),
 )
 export type GetAllBotsResp = z.infer<typeof ZodCheckGetAllBotsResp>
 
-// @/bots/create
+// @/bot/record/create
 export const ZodCheckCreateBotReq = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
@@ -20,7 +20,7 @@ export const ZodCheckCreateBotReq = z.object({
 })
 export type CreateBotReq = z.infer<typeof ZodCheckCreateBotReq>
 
-// @/bots/create
+// @/bot/record/create
 export const ZodCheckCreateBotResp = defineZodResp(
   z.object({
     botId: z.string(),
@@ -28,7 +28,7 @@ export const ZodCheckCreateBotResp = defineZodResp(
 )
 export type CreateBotResp = z.infer<typeof ZodCheckCreateBotResp>
 
-// @/bots/:botId/update
+// @/bot/record/:botId/update
 export const ZodCheckUpdateBotReq = z.object({
   name: z.string().min(1),
   description: z.string().min(1),

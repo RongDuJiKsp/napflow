@@ -1,4 +1,4 @@
-import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/record/use-bots-query'
 import { useCallback, useMemo } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { useBotState } from '../../bot-list/hooks/use-bot-state'

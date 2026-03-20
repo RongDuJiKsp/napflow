@@ -10,7 +10,7 @@ export const useBindingBotConfigQuery = (botId: string, bindingId: string) => {
     queryFn: defineQueryFn<BotBindingConfigResp, BotWorkflowAppBindingConfig>(
       async () =>
         await jsonQ.Get<BotBindingConfigResp>(
-          `/bot-bridge/${botId}/bindingconfig/${bindingId}`,
+          `/bot/bridge/${botId}/bindingconfig/${bindingId}`,
         ),
     ),
   })

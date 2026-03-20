@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 
 const submitForm = async (form: CreateWorkflowReq) =>
-  await jsonQ.Post<CreateWorkflowResp>('/workflow/create', form)
+  await jsonQ.Post<CreateWorkflowResp>('/workflow/record/create', form)
 export const useCreateApp = () => {
   const router = useRouter()
   const [form, setForm] = useResetState<CreateWorkflowReq>({

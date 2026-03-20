@@ -1,4 +1,4 @@
-import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/record/use-bots-query'
 import { jsonQ } from '@/utils/net'
 import type { CommonBotInfo } from '@shared/common/bot/base'
 import type { NullResp } from '@shared/data-transfer/_base'
@@ -17,7 +17,7 @@ export const useBotRestfulApi = (
 ) => {
   const { message } = App.useApp()
   return useCallback(async () => {
-    const res = await jsonQ.Post<NullResp>(`bots/${botId}/${action}`)
+    const res = await jsonQ.Post<NullResp>(`/bot/runtime/${botId}/${action}`)
     if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
@@ -60,7 +60,7 @@ export const useBotInfoOperator = (bot: CommonBotInfo) => {
     router.push(`/bots/${bot.botId}/edit`)
   }, [bot, router])
   const deleteBot = useCallback(async () => {
-    const res = await jsonQ.Post<NullResp>(`bots/${bot.botId}/delete`)
+    const res = await jsonQ.Post<NullResp>(`/bot/record/${bot.botId}/delete`)
     if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return

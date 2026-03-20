@@ -1,4 +1,4 @@
-import { useBindingBotQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-query'
+import { useBindingBotQuery } from '@/app/hooks/query/bot/bridge/use-binding-bot-query'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 import type { BotBridgeUnbindReq } from '@shared/data-transfer/bot/bridge'
@@ -11,7 +11,7 @@ export const useBindingItem = (botId: string, bindingId: string) => {
   const handleUnbind = useCallback(async () => {
     const req: BotBridgeUnbindReq = { bindingIds: [bindingId] }
     const res = await jsonQ.Post<NullResp>(
-      `/bot-bridge/${botId}/unbindmany`,
+      `/bot/bridge/${botId}/unbindmany`,
       req,
     )
     if (res.statusCode !== 200) {

@@ -9,9 +9,9 @@ export const useAppVersionMetaQuery = (appId: string, version: string) => {
     queryKey: ['app-version-meta', appId, version],
     queryFn: defineQueryFn<GetVersionMetaResp, WorkflowAppVersionMeta>(
       async () =>
-        await jsonQ.Get<GetVersionMetaResp>(`/workflow/${appId}/version-meta`, {
-          params: { version },
-        }),
+        await jsonQ.Get<GetVersionMetaResp>(
+          `/workflow/versions/${appId}/${version}/meta`,
+        ),
       { errMsgFallback: '获取版本元数据失败' },
     ),
   })

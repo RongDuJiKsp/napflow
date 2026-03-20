@@ -20,15 +20,15 @@ import { createE2EApp, createTokenFactory } from './utils/nest-init'
  *
  * 覆盖端点:
  *   POST /account/login        - 登录
- *   POST /account/create       - 创建账户（注册）
- *   GET  /account/cur-account  - 获取当前用户信息
- *   GET  /account/account-info - 获取指定用户信息
- *   GET  /account/account      - 获取账户列表
- *   POST /account/change-password  - 修改密码
- *   POST /account/change-nickname  - 修改昵称
- *   POST /account/upgrade      - 升级用户组
- *   POST /account/downgrade    - 降级用户组
- *   POST /account/disable      - 禁用账户
+ *   POST /account/action/create       - 创建账户（注册）
+ *   GET  /account/query/cur           - 获取当前用户信息
+ *   GET  /account/query/info          - 获取指定用户信息
+ *   GET  /account/query/list          - 获取账户列表
+ *   POST /account/change/password     - 修改密码
+ *   POST /account/change/nickname     - 修改昵称
+ *   POST /account/action/upgrade      - 升级用户组
+ *   POST /account/action/downgrade    - 降级用户组
+ *   POST /account/action/disable      - 禁用账户
  */
 describe('AccountController (e2e)', () => {
   let app: INestApplication<App>
@@ -259,15 +259,15 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // POST /account/create（注册/创建账户）
+  // POST /account/action/create（注册/创建账户）
   // =====================================================================
-  describe('POST /account/create', () => {
+  describe('POST /account/action/create', () => {
     it('Admin 应该能成功创建新账户', async () => {
       // 模拟用户不存在（createBlankAccount 内部先 getAccount）
       mockTypeOrmService.user.findOne.mockResolvedValueOnce(null)
 
       const res = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'newuser@test.com',
@@ -281,7 +281,7 @@ describe('AccountController (e2e)', () => {
     it('Admin 创建已存在的账户时应返回错误', async () => {
       // findOne 返回已存在用户 -> createBlankAccount 抛出 AccountError
       const res = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'admin@test.com',
@@ -295,7 +295,7 @@ describe('AccountController (e2e)', () => {
 
     it('普通用户不应该能创建账户', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'another@test.com',
@@ -309,7 +309,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户不应该能创建账户', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .send({
           email: 'another@test.com',
           nickname: 'AnotherUser',
@@ -321,7 +321,7 @@ describe('AccountController (e2e)', () => {
 
     it('应该在缺少必填字段时返回错误', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'newuser@test.com',
@@ -333,12 +333,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // GET /account/cur-account
+  // GET /account/query/cur
   // =====================================================================
-  describe('GET /account/cur-account', () => {
+  describe('GET /account/query/cur', () => {
     it('已认证用户应该能获取自己的信息', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/cur-account')
+        .get('/account/query/cur')
         .set('Authorization', `Bearer ${getAdminToken()}`)
 
       expect(res.body.statusCode).toBe(Code.Ok)
@@ -348,7 +348,7 @@ describe('AccountController (e2e)', () => {
 
     it('普通用户也应该能获取自己的信息', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/cur-account')
+        .get('/account/query/cur')
         .set('Authorization', `Bearer ${getUserToken()}`)
 
       expect(res.body.statusCode).toBe(Code.Ok)
@@ -357,7 +357,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer()).get(
-        '/account/cur-account',
+        '/account/query/cur',
       )
 
       expect(res.status).toBe(401)
@@ -365,7 +365,7 @@ describe('AccountController (e2e)', () => {
 
     it('使用无效 token 应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/cur-account')
+        .get('/account/query/cur')
         .set('Authorization', 'Bearer invalid.jwt.token')
 
       expect(res.status).toBe(401)
@@ -373,12 +373,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // GET /account/account-info
+  // GET /account/query/info
   // =====================================================================
-  describe('GET /account/account-info', () => {
+  describe('GET /account/query/info', () => {
     it('已认证用户应该能获取指定用户信息', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/account-info')
+        .get('/account/query/info')
         .query({ email: 'user@test.com' })
         .set('Authorization', `Bearer ${getUserToken()}`)
 
@@ -390,7 +390,7 @@ describe('AccountController (e2e)', () => {
       mockTypeOrmService.user.findOne.mockResolvedValueOnce(null)
 
       const res = await request(app.getHttpServer())
-        .get('/account/account-info')
+        .get('/account/query/info')
         .query({ email: 'nonexist@test.com' })
         .set('Authorization', `Bearer ${getUserToken()}`)
 
@@ -400,7 +400,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/account-info')
+        .get('/account/query/info')
         .query({ email: 'user@test.com' })
 
       expect(res.status).toBe(401)
@@ -408,12 +408,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // GET /account/account（账户列表）
+  // GET /account/query/list（账户列表）
   // =====================================================================
-  describe('GET /account/account', () => {
+  describe('GET /account/query/list', () => {
     it('已认证用户应该能获取账户列表', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/account')
+        .get('/account/query/list')
         .set('Authorization', `Bearer ${getUserToken()}`)
 
       expect(res.body.statusCode).toBe(Code.Ok)
@@ -422,7 +422,7 @@ describe('AccountController (e2e)', () => {
 
     it('应支持 isDisabled 查询参数', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/account')
+        .get('/account/query/list')
         .query({ isDisabled: 'true' })
         .set('Authorization', `Bearer ${getUserToken()}`)
 
@@ -431,7 +431,7 @@ describe('AccountController (e2e)', () => {
 
     it('应支持 roles 查询参数', async () => {
       const res = await request(app.getHttpServer())
-        .get('/account/account')
+        .get('/account/query/list')
         .query({ roles: [UserRole.Admin] })
         .set('Authorization', `Bearer ${getAdminToken()}`)
 
@@ -439,19 +439,19 @@ describe('AccountController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/account/account')
+      const res = await request(app.getHttpServer()).get('/account/query/list')
 
       expect(res.status).toBe(401)
     })
   })
 
   // =====================================================================
-  // POST /account/change-password
+  // POST /account/change/password
   // =====================================================================
-  describe('POST /account/change-password', () => {
+  describe('POST /account/change/password', () => {
     it('已认证用户应该能用正确的原密码修改密码', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-password')
+        .post('/account/change/password')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           originPassword: 'password123',
@@ -463,7 +463,7 @@ describe('AccountController (e2e)', () => {
 
     it('原密码错误时应返回错误', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-password')
+        .post('/account/change/password')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           originPassword: 'wrongOldPassword',
@@ -476,7 +476,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-password')
+        .post('/account/change/password')
         .send({
           originPassword: 'password123',
           password: 'newPassword456',
@@ -487,7 +487,7 @@ describe('AccountController (e2e)', () => {
 
     it('缺少必填字段时应返回错误', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-password')
+        .post('/account/change/password')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           originPassword: 'password123',
@@ -499,12 +499,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // POST /account/change-nickname
+  // POST /account/change/nickname
   // =====================================================================
-  describe('POST /account/change-nickname', () => {
+  describe('POST /account/change/nickname', () => {
     it('已认证用户应该能修改昵称', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-nickname')
+        .post('/account/change/nickname')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ nickname: 'NewNickname' })
 
@@ -513,7 +513,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-nickname')
+        .post('/account/change/nickname')
         .send({ nickname: 'NewNickname' })
 
       expect(res.status).toBe(401)
@@ -521,7 +521,7 @@ describe('AccountController (e2e)', () => {
 
     it('缺少 nickname 字段时应返回错误', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/change-nickname')
+        .post('/account/change/nickname')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({})
 
@@ -530,12 +530,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // POST /account/upgrade
+  // POST /account/action/upgrade
   // =====================================================================
-  describe('POST /account/upgrade', () => {
+  describe('POST /account/action/upgrade', () => {
     it('Admin 应该能升级用户组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/upgrade')
+        .post('/account/action/upgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -548,7 +548,7 @@ describe('AccountController (e2e)', () => {
 
     it('不能升级为 User 组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/upgrade')
+        .post('/account/action/upgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -561,7 +561,7 @@ describe('AccountController (e2e)', () => {
 
     it('普通用户不应该能升级用户组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/upgrade')
+        .post('/account/action/upgrade')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'user@test.com',
@@ -573,7 +573,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/upgrade')
+        .post('/account/action/upgrade')
         .send({
           email: 'user@test.com',
           groupType: [UserRole.Admin],
@@ -586,7 +586,7 @@ describe('AccountController (e2e)', () => {
       mockTypeOrmService.userGroup.save.mockResolvedValueOnce([])
 
       const res = await request(app.getHttpServer())
-        .post('/account/upgrade')
+        .post('/account/action/upgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -598,12 +598,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // POST /account/downgrade
+  // POST /account/action/downgrade
   // =====================================================================
-  describe('POST /account/downgrade', () => {
+  describe('POST /account/action/downgrade', () => {
     it('Admin 应该能降级用户组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -616,7 +616,7 @@ describe('AccountController (e2e)', () => {
 
     it('不能降级 User 组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -633,7 +633,7 @@ describe('AccountController (e2e)', () => {
       })
 
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'user@test.com',
@@ -645,7 +645,7 @@ describe('AccountController (e2e)', () => {
 
     it('普通用户不应该能降级用户组', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'admin@test.com',
@@ -657,7 +657,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .send({
           email: 'admin@test.com',
           groupType: [UserRole.Admin],
@@ -672,7 +672,7 @@ describe('AccountController (e2e)', () => {
       ])
 
       const res = await request(app.getHttpServer())
-        .post('/account/downgrade')
+        .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email: 'admin@test.com',
@@ -685,12 +685,12 @@ describe('AccountController (e2e)', () => {
   })
 
   // =====================================================================
-  // POST /account/disable
+  // POST /account/action/disable
   // =====================================================================
-  describe('POST /account/disable', () => {
+  describe('POST /account/action/disable', () => {
     it('Admin 应该能禁用指定账户', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({ email: 'user@test.com' })
 
@@ -701,7 +701,7 @@ describe('AccountController (e2e)', () => {
       mockTypeOrmService.user.softDelete.mockResolvedValueOnce({ affected: 0 })
 
       const res = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({ email: 'nonexist@test.com' })
 
@@ -710,7 +710,7 @@ describe('AccountController (e2e)', () => {
 
     it('普通用户不应该能禁用账户', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ email: 'user@test.com' })
 
@@ -719,7 +719,7 @@ describe('AccountController (e2e)', () => {
 
     it('未认证用户应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .send({ email: 'user@test.com' })
 
       expect(res.status).toBe(401)
@@ -730,14 +730,14 @@ describe('AccountController (e2e)', () => {
   // 联动场景 - 创建 / 查询 / 禁用 / 登录校验
   // =====================================================================
   describe('Account 联动请求场景', () => {
-    it('create -> account-info -> disable -> login 应体现禁用后的登录限制', async () => {
+    it('create -> query/info -> disable -> login 应体现禁用后的登录限制', async () => {
       const email = 'linked-user@test.com'
       const password = 'linkedPassword123'
 
       // 1. 创建账户
       mockTypeOrmService.user.findOne.mockResolvedValueOnce(null)
       const createRes = await request(app.getHttpServer())
-        .post('/account/create')
+        .post('/account/action/create')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({
           email,
@@ -748,7 +748,7 @@ describe('AccountController (e2e)', () => {
 
       // 2. 创建后可查询到账户信息
       const infoRes = await request(app.getHttpServer())
-        .get('/account/account-info')
+        .get('/account/query/info')
         .query({ email })
         .set('Authorization', `Bearer ${getAdminToken()}`)
       expect(infoRes.body.statusCode).toBe(Code.Ok)
@@ -756,7 +756,7 @@ describe('AccountController (e2e)', () => {
 
       // 3. 禁用账户
       const disableRes = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({ email })
       expect(disableRes.body.statusCode).toBe(Code.Ok)
@@ -770,7 +770,7 @@ describe('AccountController (e2e)', () => {
       expect(loginRes.body.message).toContain('用户已被禁用')
     })
 
-    it('login -> disable -> cur-account(旧token) 应体现当前 token 可用性行为', async () => {
+    it('login -> disable -> query/cur(旧token) 应体现当前 token 可用性行为', async () => {
       // 1. 先登录获得用户 token
       const loginRes = await request(app.getHttpServer())
         .post('/account/login')
@@ -781,14 +781,14 @@ describe('AccountController (e2e)', () => {
 
       // 2. 管理员禁用该用户
       const disableRes = await request(app.getHttpServer())
-        .post('/account/disable')
+        .post('/account/action/disable')
         .set('Authorization', `Bearer ${getAdminToken()}`)
         .send({ email: 'user@test.com' })
       expect(disableRes.body.statusCode).toBe(Code.Ok)
 
       // 3. 使用禁用前签发的 token 访问受保护接口
       const curAccountRes = await request(app.getHttpServer())
-        .get('/account/cur-account')
+        .get('/account/query/cur')
         .set('Authorization', `Bearer ${oldToken}`)
 
       // 当前实现下，guard 仅校验 token 角色，不校验 disabledAt
@@ -809,7 +809,7 @@ describe('AccountController (e2e)', () => {
 
       // 2. 使用旧密码鉴权，修改为新密码
       const changeRes = await request(app.getHttpServer())
-        .post('/account/change-password')
+        .post('/account/change/password')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({ originPassword: oldPassword, password: newPassword })
       expect(changeRes.body.statusCode).toBe(Code.Ok)

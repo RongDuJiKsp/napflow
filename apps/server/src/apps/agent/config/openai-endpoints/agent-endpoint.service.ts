@@ -6,7 +6,7 @@ import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 const API_KEY_MASK_END_LENGTH = 6
 
 @Injectable()
-export class AgentService {
+export class AgentEndpointService {
   constructor(@Inject(TypeOrmService) private readonly db: TypeOrmService) {}
 
   async getOpenAiEndpointList() {
