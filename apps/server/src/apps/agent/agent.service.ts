@@ -1,4 +1,5 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
+import { maskApiKey } from '@/src/utils/strings'
 import { Inject, Injectable } from '@nestjs/common'
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 
@@ -17,7 +18,7 @@ export class AgentService {
       id: config.id,
       endpoint: config.endpoint,
       model: config.model,
-      apiKey: `${config.apiKey.slice(0, API_KEY_MASK_END_LENGTH)}****${config.apiKey.slice(-API_KEY_MASK_END_LENGTH)}`,
+      apiKey: maskApiKey(config.apiKey, API_KEY_MASK_END_LENGTH),
     }))
   }
 
