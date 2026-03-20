@@ -11,7 +11,7 @@ export const useBindingItem = (botId: string, bindingId: string) => {
   const handleUnbind = useCallback(async () => {
     const req: BotBridgeUnbindReq = { bindingIds: [bindingId] }
     const res = await jsonQ.Post<NullResp>(
-      `/bot-bridge/${botId}/unbindmany`,
+      `/bot/bridge/${botId}/unbindmany`,
       req,
     )
     if (res.statusCode !== 200) {

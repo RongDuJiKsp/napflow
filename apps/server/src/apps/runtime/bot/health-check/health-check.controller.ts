@@ -5,7 +5,7 @@ import { ZodSerializerDto } from 'nestjs-zod'
 import { ZodCheckBotHealthSamplesResp } from '@shared/data-transfer/bot/health-check'
 import { Resp } from '@shared/data-transfer/_base'
 import { BotHealthCheckService } from './health-check.service'
-@Controller('bot-health-check')
+@Controller('bot/health-check')
 export class BotHealthCheckController {
   constructor(
     @Inject(BotHealthCheckService)

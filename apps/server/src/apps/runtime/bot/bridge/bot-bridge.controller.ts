@@ -18,7 +18,7 @@ import { BotBridgeService } from './bot-bridge.service'
 import { BotBridgeForBotService } from './bot-bridge-for-bot'
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 
-@Controller('bot-bridge')
+@Controller('bot/bridge/:botId')
 export class BotBridgeController {
   constructor(
     @Inject(BotBridgeService)
@@ -29,7 +29,7 @@ export class BotBridgeController {
     private readonly db: TypeOrmService,
   ) {}
 
-  @Post(':botId/bindmany')
+  @Post('bindmany')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
   async bind(
@@ -43,7 +43,7 @@ export class BotBridgeController {
     return Resp.ok()
   }
 
-  @Post(':botId/unbindmany')
+  @Post('unbindmany')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
   async unbind(
@@ -54,7 +54,7 @@ export class BotBridgeController {
     return Resp.ok()
   }
 
-  @Get(':botId/binding')
+  @Get('binding')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckBotBridgeBindStatusResp)
   async getBinding(@Param('botId') botId: string) {
@@ -71,7 +71,7 @@ export class BotBridgeController {
     return Resp.ok(bindingInfos)
   }
 
-  @Get(':botId/bindingconfig/:bindingId')
+  @Get('bindingconfig/:bindingId')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckBotBindingConfigResp)
   async getBindingConfig(
@@ -86,7 +86,7 @@ export class BotBridgeController {
     return Resp.ok(config)
   }
 
-  @Post(':botId/bindingconfig/:bindingId')
+  @Post('bindingconfig/:bindingId')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
   async configBinding(

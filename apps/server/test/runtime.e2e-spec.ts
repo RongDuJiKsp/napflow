@@ -49,12 +49,12 @@ describe('Runtime BotManager (e2e)', () => {
   let botCoreRuntimeService: BotCoreRuntimeService
 
   // ---------- Mock 数据 ----------
-  const TEST_BOT_ID = 'test-bot-id-001'
-  const TEST_BOT_ID_2 = 'test-bot-id-002'
+  const TEST_BOT_ID = 'a7d4d36b-b32b-4276-859d-b9ba52befafe'
+  const TEST_BOT_ID_2 = '17daf1c5-07ec-4835-a41d-0e1ced642a70'
 
   const mockBotRecord = {
     botId: TEST_BOT_ID,
-    name: '测试机器人',
+    botName: '测试机器人',
     description: '用于测试的机器人',
     commonAdapterConfig: {},
     adapterTag: AdapterTag.napcatWs,
@@ -65,7 +65,7 @@ describe('Runtime BotManager (e2e)', () => {
 
   const mockBotRecord2 = {
     botId: TEST_BOT_ID_2,
-    name: '测试机器人2',
+    botName: '测试机器人2',
     description: '用于测试的机器人2',
     commonAdapterConfig: {},
     adapterTag: AdapterTag.napcatWs,
@@ -212,7 +212,7 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.data.botId).toBeDefined()
       expect(mockTypeOrmService.botRecord.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          name: '新机器人',
+          botName: '新机器人',
           description: '新机器人描述',
           adapterTag: AdapterTag.napcatWs,
         }),
@@ -484,7 +484,7 @@ describe('Runtime BotManager (e2e)', () => {
       })
       expect(mockTypeOrmService.botRecord.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          name: '更新后的机器人名称',
+          botName: '更新后的机器人名称',
           description: '更新后的机器人描述',
         }),
       )
@@ -505,7 +505,7 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.NotFound)
     })
 
-    it('缺少 name 字段时应返回参数校验错误', async () => {
+    it('缺少 botName 字段时应返回参数校验错误', async () => {
       const res = await request(app.getHttpServer())
         .post(`/bots/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
@@ -521,7 +521,7 @@ describe('Runtime BotManager (e2e)', () => {
         .post(`/bots/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
-          name: '只有名称没有描述',
+          botName: '只有名称没有描述',
         })
 
       expect(res.body.statusCode).toBe(Code.BadRequest)
@@ -531,7 +531,7 @@ describe('Runtime BotManager (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(`/bots/${TEST_BOT_ID}/update`)
         .send({
-          name: '新名称',
+          botName: '新名称',
           description: '新描述',
         })
       expect(res.status).toBe(401)

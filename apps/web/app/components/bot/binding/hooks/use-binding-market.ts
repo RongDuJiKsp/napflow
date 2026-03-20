@@ -61,7 +61,7 @@ export const useBindingMarket = (onClose?: () => void) => {
   )
   const doFetch = useCallback(
     async (data: BotBridgeBindReq) =>
-      await jsonQ.Post<NullResp>(`/bot-bridge/${botId}/bindmany`, data),
+      await jsonQ.Post<NullResp>(`/bot/bridge/${botId}/bindmany`, data),
     [botId],
   )
   const doSubmit = useSubmitZod<BotBridgeBindReq, NullResp>(

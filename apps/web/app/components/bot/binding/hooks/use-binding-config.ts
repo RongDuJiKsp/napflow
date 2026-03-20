@@ -11,7 +11,7 @@ export const useBindingConfig = (bindingId: string) => {
   const submitReqFn = useCallback(
     async (data: BotWorkflowAppBindingConfig) =>
       await jsonQ.Post<NullResp>(
-        `/bot-bridge/${botId}/bindingconfig/${bindingId}`,
+        `/bot/bridge/${botId}/bindingconfig/${bindingId}`,
         data,
       ),
     [botId, bindingId],
