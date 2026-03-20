@@ -14,12 +14,12 @@ import {
 } from '@shared/data-transfer/agent/endpoint'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { AllowUserGroup } from '@/src/decorator/account'
-import { AgentEndPointService } from './agent-endpoint.service'
+import { AgentEndpointService } from './agent-endpoint.service'
 
 @Controller('agent/openai-endpoint')
 export class AgentEndpointController {
   constructor(
-    @Inject(AgentEndPointService) private readonly agentService: AgentEndPointService,
+    @Inject(AgentEndpointService) private readonly agentService: AgentEndpointService,
   ) {}
 
   @Get()
