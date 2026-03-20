@@ -172,7 +172,7 @@ erDiagram
 
     bot_record_entity {
         varchar botId PK
-        varchar name
+        varchar botName
         varchar description
         json commonAdapterConfig
         enum adapterTag
