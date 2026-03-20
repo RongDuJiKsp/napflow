@@ -61,7 +61,7 @@ export class BotManagerService {
 
   async createBot(createReq: CreateBotReq, author: Account) {
     return await this.db.botRecord.save({
-      name: createReq.name,
+      botName: createReq.name,
       description: createReq.description,
       commonAdapterConfig: createReq.commonConfig,
       adapterTag: createReq.adapterTag,
