@@ -26,7 +26,8 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
  * Runtime 端点 E2E 测试
  *
  * 测试控制器：
- *   BotManagerController    - 路由 /bots
+ *   BotManagerController    - 路由 /bot/record
+ *   BotRuntimeController    - 路由 /bot/runtime/:botId
  *
  * Mock：
  *   数据库层（botRecord / workflowApp / workflowAppData 仓库）
@@ -34,13 +35,14 @@ import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
  *   BotCoreRuntime.botInstanceMap（直接访问私有属性，控制运行时状态）
  *
  * 覆盖端点：
- *   POST /bots/create          - 创建 Bot 记录
- *   GET  /bots/list             - 获取 Bot 列表（含运行状态）
- *   POST /bots/:botId/run       - 启动 Bot（manager → factory → botInstance）
- *   POST /bots/:botId/stop      - 停止 Bot（manager → botInstance.signal(SIGSTOP)）
- *   POST /bots/:botId/kill      - 强制终止 Bot（manager → botInstance.signal(SIGKILL)）
- *   POST /bots/:botId/reload    - 重载 Bot（删除旧实例 → 重新创建）
- *   POST /bots/:botId/update    - 更新 Bot 记录（名称与描述）
+ *   POST /bot/record/create          - 创建 Bot 记录
+ *   GET  /bot/record/list             - 获取 Bot 列表（含运行状态）
+ *   POST /bot/runtime/:botId/run       - 启动 Bot（manager → factory → botInstance）
+ *   POST /bot/runtime/:botId/stop      - 停止 Bot（manager → botInstance.signal(SIGSTOP)）
+ *   POST /bot/runtime/:botId/kill      - 强制终止 Bot（manager → botInstance.signal(SIGKILL)）
+ *   POST /bot/runtime/:botId/reload    - 重载 Bot（删除旧实例 → 重新创建）
+ *   POST /bot/record/:botId/update    - 更新 Bot 记录（名称与描述）
+ *   POST /bot/record/:botId/delete    - 删除 Bot 记录
  */
 describe('Runtime BotManager (e2e)', () => {
   let app: INestApplication<App>
@@ -193,11 +195,11 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/create ==========
-  describe('POST /bots/create', () => {
+  // ========== POST /bot/record/create ==========
+  describe('POST /bot/record/create', () => {
     it('应当成功创建 Bot 记录', async () => {
       const res = await request(app.getHttpServer())
-        .post('/bots/create')
+        .post('/bot/record/create')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           name: '新机器人',
@@ -220,7 +222,7 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).post('/bots/create').send({
+      const res = await request(app.getHttpServer()).post('/bot/record/create').send({
         name: '新机器人',
         description: '新机器人描述',
         commonConfig: {},
@@ -231,11 +233,11 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== GET /bots/list ==========
-  describe('GET /bots/list', () => {
+  // ========== GET /bot/record/list ==========
+  describe('GET /bot/record/list', () => {
     it('应当返回 Bot 列表', async () => {
       const res = await request(app.getHttpServer())
-        .get('/bots/list')
+        .get('/bot/record/list')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
 
@@ -244,7 +246,7 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/bots/list')
+      const res = await request(app.getHttpServer()).get('/bot/record/list')
       expect(res.status).toBe(401)
     })
 
@@ -263,12 +265,12 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 仅启动第一个 bot，第二个保持 stopped
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       const res = await request(app.getHttpServer())
-        .get('/bots/list')
+        .get('/bot/record/list')
         .query({ isRunning: true, adapterTag: 'napcatWs' })
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(200)
@@ -280,14 +282,14 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/:botId/run - 核心：Manager 创建 Bot 实例 ==========
-  describe('POST /bots/:botId/run', () => {
+  // ========== POST /bot/runtime/:botId/run - 核心：Manager 创建 Bot 实例 ==========
+  describe('POST /bot/runtime/:botId/run', () => {
     it('应当通过 factory 创建 bot 实例并存入 runtime', async () => {
       const mockInstance = createMockBotInstance()
       vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
 
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -305,13 +307,13 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 第一次启动
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 第二次启动 - 因为已经 running，不应再次调用 factory
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -321,27 +323,27 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer()).post(
-        `/bots/${TEST_BOT_ID}/run`,
+        `/bot/runtime/${TEST_BOT_ID}/run`,
       )
       expect(res.status).toBe(401)
     })
   })
 
-  // ========== POST /bots/:botId/stop - 核心：Manager → BotInstance.signal(SIGSTOP) ==========
-  describe('POST /bots/:botId/stop', () => {
+  // ========== POST /bot/runtime/:botId/stop - 核心：Manager → BotInstance.signal(SIGSTOP) ==========
+  describe('POST /bot/runtime/:botId/stop', () => {
     it('应当向 bot 实例发送 SIGSTOP 信号', async () => {
       // 先启动 bot
       const mockInstance = createMockBotInstance()
       vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
 
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 发送 stop 指令
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/stop`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/stop`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -352,7 +354,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('bot 不存在于 runtime 时 stop 应当静默成功', async () => {
       const res = await request(app.getHttpServer())
-        .post('/bots/non-existent-bot/stop')
+        .post('/bot/runtime/non-existent-bot/stop')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -360,21 +362,21 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/:botId/kill - 核心：Manager → BotInstance.signal(SIGKILL) ==========
-  describe('POST /bots/:botId/kill', () => {
+  // ========== POST /bot/runtime/:botId/kill - 核心：Manager → BotInstance.signal(SIGKILL) ==========
+  describe('POST /bot/runtime/:botId/kill', () => {
     it('应当向 bot 实例发送 SIGKILL 信号', async () => {
       // 先启动 bot
       const mockInstance = createMockBotInstance()
       vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
 
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 发送 kill 指令
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/kill`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/kill`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -385,7 +387,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('bot 不存在于 runtime 时 kill 应当静默成功', async () => {
       const res = await request(app.getHttpServer())
-        .post('/bots/non-existent-bot/kill')
+        .post('/bot/runtime/non-existent-bot/kill')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -393,8 +395,8 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/:botId/reload - 核心：正在运行的 bot reload 无作用，已停止的 bot 才会重新创建 ==========
-  describe('POST /bots/:botId/reload', () => {
+  // ========== POST /bot/runtime/:botId/reload - 核心：正在运行的 bot reload 无作用，已停止的 bot 才会重新创建 ==========
+  describe('POST /bot/runtime/:botId/reload', () => {
     it('bot 正在运行时 reload 不应有任何作用', async () => {
       const runningInstance = createMockBotInstance({
         runningState: BotRunningState.running,
@@ -405,7 +407,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 先启动 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -413,7 +415,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 执行 reload - 因为 bot 正在运行，reload 不应有任何作用
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -434,7 +436,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 先启动 bot（模拟一个已停止的实例）
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -442,7 +444,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 执行 reload - 因为 bot 已停止，应当删除旧实例并重新创建
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -457,7 +459,7 @@ describe('Runtime BotManager (e2e)', () => {
       vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
 
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -466,11 +468,11 @@ describe('Runtime BotManager (e2e)', () => {
     })
   })
 
-  // ========== POST /bots/:botId/update ==========
-  describe('POST /bots/:botId/update', () => {
+  // ========== POST /bot/record/:botId/update ==========
+  describe('POST /bot/record/:botId/update', () => {
     it('应当成功更新 Bot 的名称和描述', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/update`)
+        .post(`/bot/record/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           name: '更新后的机器人名称',
@@ -494,7 +496,7 @@ describe('Runtime BotManager (e2e)', () => {
       mockTypeOrmService.botRecord.findOne.mockResolvedValueOnce(null)
 
       const res = await request(app.getHttpServer())
-        .post('/bots/non-existent-bot/update')
+        .post('/bot/record/non-existent-bot/update')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           name: '任意名称',
@@ -507,7 +509,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('缺少 botName 字段时应返回参数校验错误', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/update`)
+        .post(`/bot/record/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           description: '只有描述没有名称',
@@ -518,7 +520,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('缺少 description 字段时应返回参数校验错误', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/update`)
+        .post(`/bot/record/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           botName: '只有名称没有描述',
@@ -529,7 +531,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     it('未认证时应返回 401', async () => {
       const res = await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/update`)
+        .post(`/bot/record/${TEST_BOT_ID}/update`)
         .send({
           botName: '新名称',
           description: '新描述',
@@ -556,13 +558,13 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 1. 启动 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 2. 停止 bot - signal(SIGSTOP) 被发送
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/stop`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/stop`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
       expect(instance1.signal).toHaveBeenCalledWith(BotSignal.SIGSTOP);
@@ -574,7 +576,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 3. 再次启动 bot - 因为已 stopped，应重新创建
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -587,13 +589,13 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 启动
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // kill
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/kill`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/kill`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -612,13 +614,13 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 启动
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // reload - bot 正在运行，reload 无任何作用
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -640,13 +642,13 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 启动
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 停止 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/stop`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/stop`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -659,7 +661,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // reload - bot 已停止，应当删除旧实例并创建新实例
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/reload`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/reload`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -682,18 +684,18 @@ describe('Runtime BotManager (e2e)', () => {
 
       // 启动两个 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID_2}/run`)
+        .post(`/bot/runtime/${TEST_BOT_ID_2}/run`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
       // 只停止第一个 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID}/stop`)
+        .post(`/bot/runtime/${TEST_BOT_ID}/stop`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 
@@ -703,7 +705,7 @@ describe('Runtime BotManager (e2e)', () => {
 
       // kill 第二个 bot
       await request(app.getHttpServer())
-        .post(`/bots/${TEST_BOT_ID_2}/kill`)
+        .post(`/bot/runtime/${TEST_BOT_ID_2}/kill`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .expect(201)
 

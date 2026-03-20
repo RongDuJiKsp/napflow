@@ -43,7 +43,7 @@ export const useEditBot = () => {
 
   const submitFn = useCallback(
     async (data: UpdateBotReq) =>
-      await jsonQ.Post<NullResp>(`/bots/${botId}/update`, data),
+      await jsonQ.Post<NullResp>(`/bot/record/${botId}/update`, data),
     [botId],
   )
 

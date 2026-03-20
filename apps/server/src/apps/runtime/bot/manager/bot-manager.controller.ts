@@ -1,3 +1,5 @@
+import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
+import { ZodBody } from '@/src/decorator/zod'
 import {
   Controller,
   Get,
@@ -8,15 +10,11 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { BotManagerService } from './bot-manager.service'
-import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
-import { AdapterTag } from '@shared/common/bot/core/adapter'
-import { BotRunningState } from '@shared/common/bot/core/status'
-import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
 import type { Account } from '@shared/common/account/base'
 import { UserRole } from '@shared/common/account/core'
-import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
-import { ZodSerializerDto } from 'nestjs-zod'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
+import { BotRunningState } from '@shared/common/bot/core/status'
+import { Code, Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import {
   type CreateBotReq,
   type UpdateBotReq,
@@ -25,15 +23,14 @@ import {
   ZodCheckGetAllBotsResp,
   ZodCheckUpdateBotReq,
 } from '@shared/data-transfer/bot/manager'
-import { ZodBody } from '@/src/decorator/zod'
+import { ZodSerializerDto } from 'nestjs-zod'
+import { BotManagerService } from './bot-manager.service'
 
-@Controller('bots')
+@Controller('bot/record')
 export class BotManagerController {
   constructor(
     @Inject(BotManagerService)
     private readonly botManagerService: BotManagerService,
-    @Inject(BotCoreRuntimeService)
-    private readonly botCoreRuntimeService: BotCoreRuntimeService,
   ) {}
 
   @Get('list')
@@ -67,38 +64,6 @@ export class BotManagerController {
     return Resp.ok({ botId: botRec.botId })
   }
 
-  @Post(':botId/run')
-  @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckNullResp)
-  async runBot(@Param('botId') botId: string) {
-    await this.botCoreRuntimeService.runBot(botId)
-    return Resp.ok()
-  }
-
-  @Post(':botId/stop')
-  @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckNullResp)
-  async stopBot(@Param('botId') botId: string) {
-    await this.botCoreRuntimeService.stopBot(botId)
-    return Resp.ok()
-  }
-
-  @Post(':botId/kill')
-  @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckNullResp)
-  async killBot(@Param('botId') botId: string) {
-    await this.botCoreRuntimeService.killBot(botId)
-    return Resp.ok()
-  }
-
-  @Post(':botId/reload')
-  @AllowUserGroup(UserRole.User)
-  @ZodSerializerDto(ZodCheckNullResp)
-  async reloadBot(@Param('botId') botId: string) {
-    await this.botCoreRuntimeService.reloadBot(botId)
-    return Resp.ok()
-  }
-
   @Post(':botId/update')
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckNullResp)
@@ -107,6 +72,15 @@ export class BotManagerController {
     @ZodBody({ zod: ZodCheckUpdateBotReq }) req: UpdateBotReq,
   ) {
     await this.botManagerService.updateBot(botId, req)
+    return Resp.ok()
+  }
+
+  @Post(':botId/delete')
+  @AllowUserGroup(UserRole.User)
+  @ZodSerializerDto(ZodCheckNullResp)
+  async deleteBot(@Param('botId') botId: string) {
+    const result = await this.botManagerService.deleteBot(botId)
+    if (!result.affected) return Resp.error('Bot记录不存在', Code.NotFound)
     return Resp.ok()
   }
 }

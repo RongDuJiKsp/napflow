@@ -5,6 +5,7 @@ import { ManagerController } from './manager/manager.controller'
 import { BotCoreRuntimeService } from './bot/core/bot-core-runtime.service'
 import { BotManagerService } from './bot/manager/bot-manager.service'
 import { BotManagerController } from './bot/manager/bot-manager.controller'
+import { BotRuntimeController } from './bot/manager/bot-runtime.controller'
 import { BotBridgeService } from './bot/bridge/bot-bridge.service'
 import { BotBridgeController } from './bot/bridge/bot-bridge.controller'
 import { BotBridgeForBotService } from './bot/bridge/bot-bridge-for-bot'
@@ -36,6 +37,7 @@ import { BotFactoryService } from './bot/core/bot-factory.service'
   controllers: [
     ManagerController,
     BotManagerController,
+    BotRuntimeController,
     BotBridgeController,
     BotHealthCheckController,
   ],

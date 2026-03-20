@@ -11,7 +11,7 @@ export const useBotsQuery = () => {
   return useQuery({
     queryKey: ['bots'],
     queryFn: defineQueryFn<GetAllBotsResp, CommonBotInfo[]>(
-      async () => await jsonQ.Get<GetAllBotsResp>('/bots/list'),
+      async () => await jsonQ.Get<GetAllBotsResp>('/bot/record/list'),
     ),
   })
 }

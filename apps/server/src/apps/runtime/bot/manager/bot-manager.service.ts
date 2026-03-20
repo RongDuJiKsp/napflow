@@ -79,4 +79,8 @@ export class BotManagerService {
     botRecord.description = updateReq.description
     return await this.db.botRecord.save(botRecord)
   }
+
+  async deleteBot(botId: string) {
+    return await this.db.botRecord.delete({ botId })
+  }
 }

@@ -171,7 +171,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     })
     vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(mockInstance)
     await request(app.getHttpServer())
-      .post(`/bots/${TEST_BOT_ID}/run`)
+      .post(`/bot/runtime/${TEST_BOT_ID}/run`)
       .set('Authorization', `Bearer ${getUserToken()}`)
       .expect(201)
   }
