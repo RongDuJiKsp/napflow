@@ -523,7 +523,7 @@ describe('Runtime BotManager (e2e)', () => {
         .post(`/bot/record/${TEST_BOT_ID}/update`)
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
-          botName: '只有名称没有描述',
+          name: '只有名称没有描述',
         })
 
       expect(res.body.statusCode).toBe(Code.BadRequest)
