@@ -7,6 +7,7 @@ import {
   WorkflowAppEntity,
 } from './models/workflow.entity'
 import { BotRecordEntity } from './models/bot.entity'
+import { OpenAiEndpointEntity } from './models/agent.entity'
 
 @Injectable()
 export class TypeOrmService {
@@ -21,6 +22,8 @@ export class TypeOrmService {
     private readonly workflowAppDataRepository: Repository<WorkflowAppDataEntity>,
     @InjectRepository(BotRecordEntity)
     private readonly botRecordRepository: Repository<BotRecordEntity>,
+    @InjectRepository(OpenAiEndpointEntity)
+    private readonly openAiEndpointRepository: Repository<OpenAiEndpointEntity>,
   ) {}
 
   // User 相关操作
@@ -44,5 +47,10 @@ export class TypeOrmService {
   // Bot 相关操作
   get botRecord() {
     return this.botRecordRepository
+  }
+
+  // Agent 相关操作
+  get openAiEndpoint() {
+    return this.openAiEndpointRepository
   }
 }

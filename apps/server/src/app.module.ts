@@ -9,6 +9,7 @@ import { ZodModule } from './apps/zod/zod.module'
 import { RuntimeModule } from './apps/runtime/runtime.module'
 import { HealthCheckModule } from './apps/health-check/health-check.module'
 import { CommModule } from './apps/middleware/comm.module'
+import { AgentModule } from './apps/agent/agent.module'
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CommModule } from './apps/middleware/comm.module'
     CommModule.forRoot(),
     AccountModule.forRoot(),
     WorkflowModule,
+    AgentModule,
     RuntimeModule,
     HealthCheckModule,
   ],

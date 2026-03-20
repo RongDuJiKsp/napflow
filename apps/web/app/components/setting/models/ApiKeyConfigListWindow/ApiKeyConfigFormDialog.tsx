@@ -17,7 +17,7 @@ const ApiKeyConfigFormDialog = ({
   open,
   onClose,
 }: ApiKeyConfigFormDialogProps) => {
-  const { formData, isEditMode, handleApiKeyChange, handleEndpointChange, handleModelChange, handleSubmit } = useApiKeyConfigForm(editId)
+  const { formData, isEditMode, handleApiKeyChange, handleEndpointChange, handleModelChange, handleSubmit } = useApiKeyConfigForm(editId, onClose)
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
