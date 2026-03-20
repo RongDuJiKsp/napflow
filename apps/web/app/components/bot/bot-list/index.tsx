@@ -1,5 +1,5 @@
 'use client'
-import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/record/use-bots-query'
 import { memo } from 'react'
 import BotListItemCard from './BotListItemCard'
 import CreateBotCard from './CreateBotCard'

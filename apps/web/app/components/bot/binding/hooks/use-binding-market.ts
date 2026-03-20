@@ -6,7 +6,7 @@ import { ZodCheckBotBridgeBindReq } from '@shared/data-transfer/bot/bridge'
 import { jsonQ } from '@/utils/net'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { Code, type NullResp } from '@shared/data-transfer/_base'
-import { useBindingBotQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-query'
+import { useBindingBotQuery } from '@/app/hooks/query/bot/bridge/use-binding-bot-query'
 
 export type SelectPair = {
   appId: string;
