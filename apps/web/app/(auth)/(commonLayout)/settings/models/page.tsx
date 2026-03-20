@@ -5,7 +5,7 @@ import ApiKeyConfigListWindow from '@/app/components/setting/models/ApiKeyConfig
 
 export default function Page() {
   return (
-    <SettingLayout title={'apikey配置'}>
+    <SettingLayout title={'模型设置'}>
       <ApiKeyConfigListWindow
       />
 

@@ -13,9 +13,8 @@ const ApiKeyConfigListWindow = () => {
 
   return (
     <SettingItemContainer
-      title="已配置模型列表"
+      title="已配置模型api列表"
       Icon={RiBrainAi3Line}
-      extra="OpenAI 协议"
     >
       <div className="mb-4 flex justify-end">
         <Button
