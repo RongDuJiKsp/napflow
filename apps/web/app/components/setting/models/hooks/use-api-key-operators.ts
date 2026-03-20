@@ -8,7 +8,7 @@ import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-que
 export const useApiKeyOperators = () => {
   const { message } = App.useApp()
   const { refetch: refreshConfigList } = useApiKeyListQuery()
-  // editTarget: null 没有编辑，string 是编辑对应id，true 是新建
+  // editTarget: undefined 表示关闭，string 表示编辑对应 id，true 表示新建
   const [editTarget, setEditTarget] = useState<string | true | undefined>()
 
   const handleAddConfig = useCallback(() => {

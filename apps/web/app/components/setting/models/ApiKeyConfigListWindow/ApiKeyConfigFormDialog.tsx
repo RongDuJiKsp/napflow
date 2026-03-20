@@ -3,7 +3,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { RiAddLine, RiCloseLine, RiEditLine } from '@remixicon/react'
 import { Button, Input, Label, TextField } from '@heroui/react'
-import { memo } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { useApiKeyConfigForm } from '../hooks/use-api-key-config-form'
 
 type ApiKeyConfigFormDialogProps = {
@@ -17,6 +17,7 @@ const ApiKeyConfigFormDialog = ({
   open,
   onClose,
 }: ApiKeyConfigFormDialogProps) => {
+  const [showApiKey, setShowApiKey] = useState(false)
   const {
     formData,
     isEditMode,
@@ -25,8 +26,14 @@ const ApiKeyConfigFormDialog = ({
     handleModelChange,
     handleSubmit,
   } = useApiKeyConfigForm(editId, onClose)
+
+  const handleDialogClose = useCallback(() => {
+    setShowApiKey(false)
+    onClose()
+  }, [onClose])
+
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-50">
+    <Dialog open={open} onClose={handleDialogClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel className="mx-auto w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
@@ -43,7 +50,7 @@ const ApiKeyConfigFormDialog = ({
                 </DialogTitle>
               </div>
               <button
-                onClick={onClose}
+                onClick={handleDialogClose}
                 className="text-white/80 transition-colors duration-200 hover:text-white"
                 aria-label="关闭"
               >
@@ -73,10 +80,20 @@ const ApiKeyConfigFormDialog = ({
                   API Key
                 </Label>
                 <Input
-                  type="text"
+                  type={showApiKey ? 'text' : 'password'}
                   className="w-full rounded-lg border border-pink-200 bg-white text-gray-700 transition-all duration-200 placeholder-pink-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  placeholder="例如：sk-proj-****xxxx"
+                  placeholder={isEditMode ? '留空则保持原有 API Key' : '例如：sk-proj-****xxxx'}
+                  autoComplete="new-password"
                 />
+                <div className="mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowApiKey(value => !value)}
+                    className="text-xs text-purple-600 transition-colors duration-200 hover:text-purple-700"
+                  >
+                    {showApiKey ? '隐藏 API Key' : '显示 API Key'}
+                  </button>
+                </div>
               </TextField>
 
               <TextField value={formData.model} onChange={handleModelChange}>
@@ -94,7 +111,7 @@ const ApiKeyConfigFormDialog = ({
 
           <div className="flex justify-end space-x-3 border-t border-gray-100 bg-gray-50 px-6 py-4">
             <Button
-              onClick={onClose}
+              onClick={handleDialogClose}
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
             >
               取消

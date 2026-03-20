@@ -26,7 +26,7 @@ export class AgentController {
   @AllowUserGroup(UserRole.User)
   @ZodSerializerDto(ZodCheckGetOpenAiEndpointListResp)
   async getOpenAiEndpointList() {
-    const configs = await this.agentService.getOpenAiEndpointList()
+    const configs = await this.agentService.getOpenAiEndpointListToShow()
     return Resp.ok(configs)
   }
 
