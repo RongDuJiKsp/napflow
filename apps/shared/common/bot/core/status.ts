@@ -12,7 +12,7 @@ export const BotRunningStateUtils = {
   runningStates: [BotRunningState.running, BotRunningState.offline],
   isRunning: (state: BotRunningState) =>
     BotRunningStateUtils.runningStates.includes(state),
-  isStoped: (state: BotRunningState) =>
+  isStopped: (state: BotRunningState) =>
     !BotRunningStateUtils.runningStates.includes(state),
 }
 
