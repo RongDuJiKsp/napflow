@@ -146,6 +146,7 @@ describe('Runtime BotManager (e2e)', () => {
           botId: TEST_BOT_ID,
         })
       }),
+      delete: vi.fn().mockResolvedValue({ affected: 1 }),
     },
   }
 
@@ -193,6 +194,7 @@ describe('Runtime BotManager (e2e)', () => {
         botId: TEST_BOT_ID,
       })
     })
+    mockTypeOrmService.botRecord.delete.mockResolvedValue({ affected: 1 })
   })
 
   // ========== POST /bot/record/create ==========
@@ -537,6 +539,54 @@ describe('Runtime BotManager (e2e)', () => {
           description: '新描述',
         })
       expect(res.status).toBe(401)
+    })
+  })
+
+  // ========== POST /bot/record/:botId/delete ==========
+  describe('POST /bot/record/:botId/delete', () => {
+    it('应当成功删除 Bot 记录', async () => {
+      const res = await request(app.getHttpServer())
+        .post(`/bot/record/${TEST_BOT_ID}/delete`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(mockTypeOrmService.botRecord.delete).toHaveBeenCalledWith({
+        botId: TEST_BOT_ID,
+      })
+    })
+
+    it('删除不存在的 Bot 记录时应返回 NotFound', async () => {
+      mockTypeOrmService.botRecord.delete.mockResolvedValueOnce({ affected: 0 })
+
+      const res = await request(app.getHttpServer())
+        .post('/bot/record/non-existent-bot/delete')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      expect(res.body.statusCode).toBe(Code.NotFound)
+      expect(res.body.message).toBe('Bot记录不存在')
+    })
+
+    it('Bot 正在运行时应拒绝删除并返回错误', async () => {
+      const runningInstance = createMockBotInstance({
+        runningState: BotRunningState.running,
+      })
+      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(runningInstance)
+
+      await request(app.getHttpServer())
+        .post(`/bot/runtime/${TEST_BOT_ID}/run`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(201)
+
+      const res = await request(app.getHttpServer())
+        .post(`/bot/record/${TEST_BOT_ID}/delete`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+        .expect(400)
+
+      expect(res.body.statusCode).toBe(Code.BadRequest)
+      expect(res.body.message).toContain('运行')
+      expect(mockTypeOrmService.botRecord.delete).not.toHaveBeenCalled()
     })
   })
 
