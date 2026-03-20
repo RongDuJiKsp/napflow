@@ -8,7 +8,7 @@ import {
   type VarCtxName,
   getCommVarCtxName,
 } from '../../../hooks/use-component-node-env'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 import type { JSX } from 'react'
 import type { LexicalNode, NodeKey, TextNode } from 'lexical'

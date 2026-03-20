@@ -7,7 +7,7 @@ import type {
   ComponentNodeMeta,
   ComponentNodesEnum,
   Var,
-} from '@shared/common/workflow/component-node'
+} from '@shared/common/workflow/core/component-node'
 
 // data实例
 export type ComponentNodeDataExtra = {

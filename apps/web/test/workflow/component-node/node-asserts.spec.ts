@@ -4,7 +4,7 @@ import {
 } from '@/app/components/workflow/editor/component-nodes/utils/node-asserts'
 import type { ComponentNode } from '@/app/components/workflow/editor/component-nodes/types'
 import type { WorkflowNode } from '@/app/components/workflow/editor/types'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { NodeClassic } from '@shared/common/workflow/core'
 import { describe, expect, test } from 'vitest'
 

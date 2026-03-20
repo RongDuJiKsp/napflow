@@ -2,8 +2,8 @@ import type { ComponentCreator } from '../../types'
 import { RiWebhookLine } from '@remixicon/react'
 import TriggerNode from './node'
 import TriggerPanel from './panel'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import {
   TriggerDataSchema,
   TriggerOn,

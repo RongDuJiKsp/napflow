@@ -3,9 +3,10 @@ import type {
   AccountInfoListQuery,
   AccountInfoListResp,
 } from '@shared/data-transfer/account/account'
-import type { AccountInfo, UserRole } from '@shared/common/account/base'
+import type { AccountInfo } from '@shared/common/account/base'
+import type { UserRole } from '@shared/common/account/core'
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 
 /**
  * 获取账户列表

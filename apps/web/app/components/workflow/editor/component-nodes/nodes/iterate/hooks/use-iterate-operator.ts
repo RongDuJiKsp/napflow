@@ -6,7 +6,7 @@ import {
   createComponentSubNode,
 } from '../../../utils/node'
 import type { IterateStartData } from '@shared/common/workflow/node-data/iterate-start'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { createWorkflowEdge } from '../../../../utils/nodes'
 import { ComponentNodeCreatorMap } from '../../../constants'
 import type { ComponentNode } from '../../../types'

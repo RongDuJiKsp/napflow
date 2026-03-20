@@ -3,8 +3,9 @@ packages:
 
 onlyBuiltDependencies:
   - '@nestjs/core'
+  - '@swc/core'
   - bcrypt
   - core-js
+  - esbuild
   - sharp
   - unrs-resolver
-  - '@swc/core'

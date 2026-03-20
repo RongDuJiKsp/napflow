@@ -36,7 +36,9 @@ export class NcReplyNode extends ReplyNode {
       && this.data.triggerSourceId
     ) {
       this.logger.debug('Replying to trigger source')
-      const triggerSourceId = thread.compileEnvTemplate(this.data.triggerSourceId)
+      const triggerSourceId = thread.compileEnvTemplate(
+        this.data.triggerSourceId,
+      )
       const sourceKv = thread.nodeKv[triggerSourceId]
 
       if (sourceKv['trigger.uid'])

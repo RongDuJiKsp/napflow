@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import type { GetAppsResp } from '@shared/data-transfer/workflow/info'
 import { jsonQ } from '@/utils/net'
-import type { WorkflowApp } from '@shared/common/workflow/base'
-import { defineQueryFn } from './_base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
+import { defineQueryFn } from '../_base'
 
 /**
  * 获取插件列表

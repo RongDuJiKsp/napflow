@@ -10,10 +10,11 @@ import {
 } from '@nestjs/common'
 import { BotManagerService } from './bot-manager.service'
 import { BotCoreRuntimeService } from '../core/bot-core-runtime.service'
-import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
+import { BotRunningState } from '@shared/common/bot/core/status'
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
 import type { Account } from '@shared/common/account/base'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { Resp, ZodCheckNullResp } from '@shared/data-transfer/_base'
 import { ZodSerializerDto } from 'nestjs-zod'
 import {
@@ -63,7 +64,7 @@ export class BotManagerController {
     @JwtAccount() account: Account,
   ) {
     const botRec = await this.botManagerService.createBot(req, account)
-    return Resp.ok({ botId: botRec.recordId })
+    return Resp.ok({ botId: botRec.botId })
   }
 
   @Post(':botId/run')

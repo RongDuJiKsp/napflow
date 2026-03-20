@@ -1,6 +1,6 @@
 import { AllowUserGroup } from '@/src/decorator/account'
 import { Controller, Get, Inject, Param } from '@nestjs/common'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { ZodCheckBotHealthSamplesResp } from '@shared/data-transfer/bot/health-check'
 import { Resp } from '@shared/data-transfer/_base'

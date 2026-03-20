@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { NodeClassic } from '@shared/common/workflow/core'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { DifyMode } from '@shared/common/workflow/node-data/dify'
 import { DifyNode } from '../../core/workflow/nodes/dify-node'
 import { createMockNextTask, createTestThread } from '../utils/workflow-thread'

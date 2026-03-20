@@ -2,7 +2,7 @@
 import Password from '@/app/components/_base/input/Password'
 import InputWithEnv from '@/app/components/workflow/editor/component-nodes/common/input-with-env'
 import type { VarCtx } from '@/app/components/workflow/editor/component-nodes/hooks/use-component-node-env'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { useBoolean } from 'ahooks'
 import { useState } from 'react'
 

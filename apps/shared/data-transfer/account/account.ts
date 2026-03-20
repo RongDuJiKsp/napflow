@@ -1,9 +1,7 @@
 import z from 'zod'
 import { defineZodResp } from '../_base'
-import {
-  ZodCheckAccountInfo,
-  ZodCheckUserRoleType,
-} from '../../common/account/base'
+import { ZodCheckAccountInfo } from '../../common/account/base'
+import { UserRole } from '@shared/common/account/core'
 
 // req resp
 
@@ -25,7 +23,7 @@ export type LoginResp = z.infer<typeof ZodCheckLoginResp>
 // @/account/account
 export const ZodCheckAccountInfoListQuery = z.object({
   isDisabled: z.boolean().optional(), // 用户是否被禁用
-  groups: z.array(ZodCheckUserRoleType).optional(), // 用户组
+  groups: z.array(z.enum(UserRole)).optional(), // 用户组
 })
 export type AccountInfoListQuery = z.infer<typeof ZodCheckAccountInfoListQuery>
 
@@ -44,7 +42,7 @@ export type AccountInfoResp = z.infer<typeof ZodCheckAccountInfoResp>
 export const ZodCheckAccountUpDownGradeReq = ZodCheckAccountInfo.pick({
   email: true,
 }).extend({
-  groupType: z.array(ZodCheckUserRoleType),
+  groupType: z.array(z.enum(UserRole)),
 })
 export type AccountUpDownGradeReq = z.infer<
   typeof ZodCheckAccountUpDownGradeReq

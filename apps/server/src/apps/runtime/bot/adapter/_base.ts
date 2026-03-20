@@ -1,7 +1,8 @@
 import type { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { WorkflowAppDataEntity } from '@/src/apps/db/models/workflow.entity'
-import type { BotAdapter, BotSignal, BotState } from '@shared/common/bot/base'
+import type { BotAdapter } from '@shared/common/bot/core/adapter'
+import type { BotSignal, BotState } from '@shared/common/bot/core/status'
 import type { BotPluginStatusSnapshot } from '@shared/common/bot/health-check'
 import type { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 

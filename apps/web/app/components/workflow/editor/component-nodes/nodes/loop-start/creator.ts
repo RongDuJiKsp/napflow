@@ -1,7 +1,7 @@
 import {
   ComponentNodesEnum,
   VarTypes,
-} from '@shared/common/workflow/component-node'
+} from '@shared/common/workflow/core/component-node'
 import type { ComponentCreator } from '../../types'
 import LoopStartNode from './node'
 import LoopStartPanel from './panel'

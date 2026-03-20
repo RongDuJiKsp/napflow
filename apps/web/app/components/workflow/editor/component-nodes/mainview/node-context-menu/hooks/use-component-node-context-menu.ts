@@ -7,7 +7,7 @@ import { useComponentNodeCurd } from '../../../hooks/use-component-node-curd'
 import {
   ComponentNodesEnum,
   hiddenNodeTypes,
-} from '@shared/common/workflow/component-node'
+} from '@shared/common/workflow/core/component-node'
 
 type HandlerProps = ItemParams<ComponentNodeProps>
 

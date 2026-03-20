@@ -9,6 +9,7 @@ import {
   WorkflowAppEntity,
 } from './models/workflow.entity'
 import { BotRecordEntity } from './models/bot.entity'
+import { OpenAiEndpointEntity } from './models/agent.entity'
 
 @Global()
 @Module({
@@ -47,6 +48,7 @@ import { BotRecordEntity } from './models/bot.entity'
       WorkflowAppEntity,
       WorkflowAppDataEntity,
       BotRecordEntity,
+      OpenAiEndpointEntity,
     ]),
   ],
   providers: [TypeOrmService],

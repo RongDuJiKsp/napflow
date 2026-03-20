@@ -9,7 +9,8 @@ import InputWithEnv from '../../common/input-with-env'
 import { useTimerCurd } from './hooks/use-timer-curd'
 
 const TimerPanel: ComponentPanelFc<TimerData> = ({ id, data }) => {
-  const { vars, handleTimerModeChange, handleTimeExprChange } = useTimerCurd(id)
+  const { vars, handleTimerModeChange, handleTimeExprChange }
+    = useTimerCurd(id)
   const mode = data.mode ?? TimerTriggerMode.Schedule
 
   return (

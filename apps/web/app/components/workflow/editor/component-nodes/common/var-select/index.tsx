@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { ListBox, Select, type SelectProps } from '@heroui/react'
 import type { VarCtx } from '../../hooks/use-component-node-env'
 import { getCommVarCtxName } from '../../hooks/use-component-node-env'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 
 export const varTypeColors: Record<VarTypes, string> = {

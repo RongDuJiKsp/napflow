@@ -1,6 +1,6 @@
 import { AllowUserGroup } from '@/src/decorator/account'
 import { Controller, Get, Inject, Param, Post } from '@nestjs/common'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { ZodSerializerDto } from 'nestjs-zod'
 import {
   type BotBridgeBindReq,

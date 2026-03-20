@@ -7,7 +7,7 @@ import type { App } from 'supertest/types'
 import { AppModule } from '../../src/app.module'
 import { TypeOrmService } from '../../src/apps/db/typeorm.service'
 import { JwtService } from '../../src/apps/account/jwt.service'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 
 export type E2EContext = {
   app: INestApplication<App>;

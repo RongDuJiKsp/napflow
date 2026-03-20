@@ -2,7 +2,7 @@ import { vi } from 'vitest'
 import type { WorkflowThread } from '../../core/workflow/pool'
 import type { WillTask } from '@/src/utils/task-pool'
 import { merge } from 'lodash-es'
-import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import type { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { compileTemplate } from '../../utils/templates'
 
 type TestThreadOptions = {

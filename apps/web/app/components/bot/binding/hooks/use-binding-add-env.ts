@@ -1,9 +1,12 @@
-import { useBindingBotConfigQuery } from '@/app/hooks/query/use-binding-bot-config-query'
+import { useBindingBotConfigQuery } from '@/app/hooks/query/bot/bot-bridge/use-binding-bot-config-query'
 import { useBoolean } from 'ahooks'
 import { useCallback, useState } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { useBindingConfig } from './use-binding-config'
-import { type Var, VarZodChecks } from '@shared/common/workflow/component-node'
+import {
+  type Var,
+  VarZodChecks,
+} from '@shared/common/workflow/core/component-node'
 import { App } from 'antd'
 import z from 'zod'
 

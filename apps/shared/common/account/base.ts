@@ -1,33 +1,32 @@
 import z from 'zod'
+import { UserRole } from './core'
+import { ZodCheckUser } from './entity'
 
-export enum UserRole {
-  Admin = 'Admin',
-  User = 'User',
-}
-// base
-export const ZodCheckUserRoleType = z.enum(UserRole)
-export type UserRoleType = z.infer<typeof ZodCheckUserRoleType>
+export const ZodCheckUserGroup = z.object({
+  groupType: z.enum(UserRole),
+})
+export type UserGroup = z.infer<typeof ZodCheckUserGroup>
 
-export const ZodCheckAccount = z.object({
-  email: z.email(),
-  nickname: z.string(),
-  userGroup: z.array(
-    z.object({
-      groupType: ZodCheckUserRoleType,
-    }),
-  ),
+export const ZodCheckUserGroupRecord = ZodCheckUserGroup.extend({
+  createdAt: z.date(),
+})
+export type UserGroupRecord = z.infer<typeof ZodCheckUserGroupRecord>
+
+export const ZodCheckAccount = ZodCheckUser.pick({
+  email: true,
+  nickname: true,
+}).extend({
+  userGroup: z.array(ZodCheckUserGroup),
 })
 export type Account = z.infer<typeof ZodCheckAccount>
 
-export const ZodCheckAccountInfo = ZodCheckAccount.extend({
-  userGroup: z.array(
-    z.object({
-      groupType: ZodCheckUserRoleType,
-      createdAt: z.date(),
-    }),
-  ),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  disabledAt: z.date().nullable(), // 注意 定义POJO时 使用nullable而不是optional
+export const ZodCheckAccountInfo = ZodCheckAccount.extend(
+  ZodCheckUser.pick({
+    createdAt: true,
+    updatedAt: true,
+    disabledAt: true,
+  }).shape,
+).extend({
+  userGroup: z.array(ZodCheckUserGroupRecord),
 })
 export type AccountInfo = z.infer<typeof ZodCheckAccountInfo>

@@ -1,7 +1,7 @@
 import { jsonQ } from '@/utils/net'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 import type { GetVersionResp } from '@shared/data-transfer/workflow/info'
-import type { WorkflowAppData } from '@shared/common/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/entity'
 import { useQuery } from '@tanstack/react-query'
 
 export const useAppVersionDataQuery = (appId: string, version: string) => {

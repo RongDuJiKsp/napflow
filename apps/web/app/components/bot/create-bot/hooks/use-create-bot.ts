@@ -1,4 +1,4 @@
-import { AdapterTag } from '@shared/common/bot/base'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
 import type {
   CreateBotReq,
   CreateBotResp,

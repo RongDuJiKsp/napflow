@@ -1,6 +1,6 @@
 'use client'
-import { useAppVersionsQuery } from '@/app/hooks/query/use-app-versions-query'
-import { useAppsQuery } from '@/app/hooks/query/use-apps-query'
+import { useAppVersionsQuery } from '@/app/hooks/query/workflow/use-app-versions-query'
+import { useAppsQuery } from '@/app/hooks/query/workflow/use-apps-query'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Button } from '@heroui/react'
 import {
@@ -9,7 +9,7 @@ import {
   RiCloseLine,
   RiPuzzleLine,
 } from '@remixicon/react'
-import type { WorkflowApp } from '@shared/common/workflow/base'
+import type { WorkflowApp } from '@shared/common/workflow/entity'
 import { useBoolean } from 'ahooks'
 import { memo, useCallback, useState } from 'react'
 import { twMerge } from 'tailwind-merge'

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
 import { useSubmitZodFn } from '@/app/hooks/utils/use-form'
-import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
-import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/adapter'
+import type { BotWorkflowAppBindingConfig } from '@shared/common/bot/core/config'
+import { ZodCheckBotWorkflowAppBindingConfig } from '@shared/common/bot/core/config'
 import { jsonQ } from '@/utils/net'
 import type { NullResp } from '@shared/data-transfer/_base'
 

@@ -1,4 +1,4 @@
-import type { UserRoleType } from '@shared/common/account/base'
+import type { UserRole as UserRoleType } from '@shared/common/account/core'
 import { useResetState } from 'ahooks'
 
 export const useUpDownGradeDialog = (

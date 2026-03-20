@@ -1,7 +1,7 @@
 'use client'
 
 import { memo } from 'react'
-import { useBotHealthCheckQuery } from '@/app/hooks/query/use-bot-health-check-query'
+import { useBotHealthCheckQuery } from '@/app/hooks/query/bot/bot-health/use-bot-health-check-query'
 import { useBotParam } from '../hooks/use-bot-param'
 import { formatTimestamp } from '../../health-check/utils'
 import { EmptyState, LoadingState } from '../../health-check/common'

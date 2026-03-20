@@ -1,9 +1,12 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
 import type { BotInstance } from '../adapter/_base'
-import type { BotState } from '@shared/common/bot/base'
-import { BotRunningState, BotRunningStateUtils } from '@shared/common/bot/base'
-import { BotSignal } from '@shared/common/bot/base'
+import type { BotState } from '@shared/common/bot/core/status'
+import {
+  BotRunningState,
+  BotRunningStateUtils,
+} from '@shared/common/bot/core/status'
+import { BotSignal } from '@shared/common/bot/core/status'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 import { AppConfigService } from '@/src/apps/app-config/app-config.service'
 import { BotFactoryService } from './bot-factory.service'

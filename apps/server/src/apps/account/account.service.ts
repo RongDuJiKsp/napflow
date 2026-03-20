@@ -6,7 +6,7 @@ import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import type { UserEntity } from '@/src/apps/db/models/account.entity'
 import type { FindOptionsWhere } from 'typeorm'
 import { In, IsNull, Not } from 'typeorm'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { AccountError } from './middleware/account.filter'
 
 @Injectable()

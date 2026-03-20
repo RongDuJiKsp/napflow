@@ -1,7 +1,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { memo, useCallback, useState } from 'react'
 import { RiAddLine, RiCloseLine, RiPlug2Line } from '@remixicon/react'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 import {
   Button,

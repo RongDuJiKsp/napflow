@@ -1,4 +1,4 @@
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import type { ComponentCreator } from '../../types'
 import JsonReadNode from './node'
 import JsonReadPanel from './panel'

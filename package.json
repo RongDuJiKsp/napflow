@@ -6,6 +6,7 @@
     "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
     "image:server": "docker build -f apps/server/Dockerfile .  -t napflow/server",
     "image:all": "pnpm run image:web && pnpm run image:server",
+    "lint:all": "pnpm -r run lint:all",
     "test": "npx vitest run",
     "test:unit": "npx vitest run --exclude \"**/*.e2e-spec.ts\"",
     "test:withbuild": "pnpm run test && pnpm run image:all ",

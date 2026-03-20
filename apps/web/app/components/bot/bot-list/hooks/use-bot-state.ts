@@ -1,5 +1,5 @@
 import type { CommonBotInfo } from '@shared/common/bot/base'
-import { BotRunningState } from '@shared/common/bot/base'
+import { BotRunningState } from '@shared/common/bot/core/status'
 
 const getStatusText = (state: BotRunningState) => {
   switch (state) {

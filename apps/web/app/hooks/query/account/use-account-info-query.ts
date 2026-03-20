@@ -1,7 +1,7 @@
 import { jsonQ } from '@/utils/net'
 import type { AccountInfoResp } from '@shared/data-transfer/account/account'
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 import type { AccountInfo } from '@shared/common/account/base'
 
 /**

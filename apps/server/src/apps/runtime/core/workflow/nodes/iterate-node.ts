@@ -1,7 +1,5 @@
-import {
-  ComponentNodesEnum,
-  ZodCheckComponentNodeMeta,
-} from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'

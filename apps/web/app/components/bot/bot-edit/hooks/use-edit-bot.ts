@@ -9,7 +9,7 @@ import {
 import { useResetState } from 'ahooks'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBotParam } from '../../hooks/use-bot-param'
-import { useBotsQuery } from '@/app/hooks/query/use-bots-query'
+import { useBotsQuery } from '@/app/hooks/query/bot/bots/use-bots-query'
 
 export const useEditBot = () => {
   const { botId } = useBotParam()

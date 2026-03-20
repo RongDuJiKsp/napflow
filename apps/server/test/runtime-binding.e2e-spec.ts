@@ -11,7 +11,8 @@ import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
-import { AdapterTag, BotRunningState } from '@shared/common/bot/base'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
+import { BotRunningState } from '@shared/common/bot/core/status'
 import {
   createBaseMockTypeOrmService,
   createE2EApp,
@@ -66,10 +67,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
    */
   function createMockBotRecord(overrides?: {
     bindingWorkflowApp?: any[];
-    recordId?: string;
+    botId?: string;
   }) {
     const record: any = {
-      recordId: overrides?.recordId ?? TEST_BOT_ID,
+      botId: overrides?.botId ?? TEST_BOT_ID,
       name: '测试机器人',
       description: '用于绑定测试的机器人',
       commonAdapterConfig: {
@@ -214,12 +215,12 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     botRecord: {
       find: vi.fn().mockResolvedValue([currentBotRecord]),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(currentBotRecord)
         return Promise.resolve(null)
       }),
       findOneBy: vi.fn().mockImplementation((where: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(currentBotRecord)
         return Promise.resolve(null)
       }),
@@ -256,14 +257,13 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     mockTypeOrmService.botRecord.find.mockResolvedValue([currentBotRecord])
     mockTypeOrmService.botRecord.findOne.mockImplementation(
       ({ where }: any) => {
-        if (where.recordId === TEST_BOT_ID)
+        if (where.botId === TEST_BOT_ID)
           return Promise.resolve(currentBotRecord)
         return Promise.resolve(null)
       },
     )
     mockTypeOrmService.botRecord.findOneBy.mockImplementation((where: any) => {
-      if (where.recordId === TEST_BOT_ID)
-        return Promise.resolve(currentBotRecord)
+      if (where.botId === TEST_BOT_ID) return Promise.resolve(currentBotRecord)
       return Promise.resolve(null)
     })
   })

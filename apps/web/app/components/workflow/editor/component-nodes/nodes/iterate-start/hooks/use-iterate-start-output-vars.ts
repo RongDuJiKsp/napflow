@@ -1,6 +1,6 @@
 import type { WorkflowNode } from '@/test/utils'
-import type { Var } from '@shared/common/workflow/component-node'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { useNodes } from '@xyflow/react'
 import {
   getIterateStartOutputVar,

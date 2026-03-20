@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { BotBridgeForBotService } from '../bridge/bot-bridge-for-bot'
 import { AppConfigService } from '@/src/apps/app-config/app-config.service'
-import type { BotAdapterClass } from '@shared/common/bot/base'
-import { AdapterTag } from '@shared/common/bot/base'
+import type { BotAdapterClass } from '@shared/common/bot/core/adapter'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
 import type { BotAdapterFactory } from '../adapter/_base'
 import { NapcatWsAdapter, NapcatWsFactory } from '../adapter/napcatws'
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
@@ -25,7 +25,7 @@ export class BotFactoryService {
   ) {}
 
   async createBot(botId: string) {
-    const botRecord = await this.db.botRecord.findOneBy({ recordId: botId })
+    const botRecord = await this.db.botRecord.findOneBy({ botId })
     if (!botRecord) throw new BotCoreRuntimeError(`bot ${botId} not found`)
     // 测试时可能没绑定就启动了 先给个[] 后面可能强制绑定
     return await adapterFactory[botRecord.adapterTag](

@@ -1,4 +1,4 @@
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import type { CommNode, CommNodeType } from './node'
 import { TriggerDataCtxSchema, TriggerNode } from './nodes/trigger-node'
 import { ReplyDataCtxSchema, ReplyNode } from './nodes/reply-node'

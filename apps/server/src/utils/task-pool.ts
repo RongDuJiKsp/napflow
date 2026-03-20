@@ -57,7 +57,7 @@ export class WillTask<Fn extends () => void = () => void> {
 
 export type SeqPoller = (seq: number) => void
 export class MinusTimePoller implements PluginService<[]> {
-  private callables: (SeqPoller)[] = []
+  private callables: SeqPoller[] = []
   private intervalTask: ReturnType<typeof setInterval> | null = null
   private mountedAt: Date | null = null
   private dispatchedMinutes = 0
@@ -81,10 +81,11 @@ export class MinusTimePoller implements PluginService<[]> {
   }
 
   private flushByNow() {
-    if (this.mountedAt === null)
-      return
+    if (this.mountedAt === null) return
 
-    const elapsedMinutes = Math.floor((Date.now() - this.mountedAt.valueOf()) / 60_000)
+    const elapsedMinutes = Math.floor(
+      (Date.now() - this.mountedAt.valueOf()) / 60_000,
+    )
     while (this.dispatchedMinutes < elapsedMinutes) {
       this.dispatchedMinutes += 1
       this.trigger(this.dispatchedMinutes)
@@ -118,8 +119,7 @@ export class MinusTimePoller implements PluginService<[]> {
   }
 
   mount(): void {
-    if (this.intervalTask)
-      return
+    if (this.intervalTask) return
 
     this.mountedAt = new Date()
     this.dispatchedMinutes = 0
@@ -129,8 +129,7 @@ export class MinusTimePoller implements PluginService<[]> {
   }
 
   unmount(): void {
-    if (!this.intervalTask)
-      return
+    if (!this.intervalTask) return
 
     clearInterval(this.intervalTask)
     this.intervalTask = null

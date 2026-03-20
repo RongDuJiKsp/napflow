@@ -19,7 +19,7 @@ import {
 } from '@remixicon/react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import SettingItemContainer from '../../_base/container/SettingItemContainer'
-import { useAccountsQuery } from '@/app/hooks/query/use-accounts-query'
+import { useAccountsQuery } from '@/app/hooks/query/account/use-accounts-query'
 import { dateFmt } from '@/utils/date'
 import { useAccountActions } from '../hooks/use-account-operators'
 import { twMerge } from 'tailwind-merge'
@@ -29,7 +29,7 @@ import {
   useUpgradeOptions,
 } from './hooks/use-up-down-grade-options'
 import { useUpDownGradeDialog } from './hooks/use-up-down-dialog'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { Button, Label } from '@heroui/react'
 
 type ModalOperation = {

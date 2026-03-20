@@ -1,9 +1,7 @@
 import { TypeOrmService } from '@/src/apps/db/typeorm.service'
 import { Inject, Injectable } from '@nestjs/common'
-import type {
-  WorkflowAppData,
-  WorkflowAppDraft,
-} from '@shared/common/workflow/base'
+import type { WorkflowAppData } from '@shared/common/workflow/entity'
+import type { WorkflowAppDraft } from '@shared/common/workflow/base'
 import { CommError } from '../middleware/commerror.filter'
 import { Code } from '@shared/data-transfer/_base'
 import type { Account } from '@shared/common/account/base'

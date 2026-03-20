@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { NodeClassic } from '@shared/common/workflow/core'
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { LoopNode } from '../../core/workflow/nodes/loop-node'
 import { createMockNextTask, createTestThread } from '../utils/workflow-thread'
 

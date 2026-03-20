@@ -9,8 +9,8 @@ import {
   useComponentNodeEnv,
 } from '../../../hooks/use-component-node-env'
 import type { VarCtx } from '../../../hooks/use-component-node-env'
-import type { Var } from '@shared/common/workflow/component-node'
-import { VarTypes } from '@shared/common/workflow/component-node'
+import type { Var } from '@shared/common/workflow/core/component-node'
+import { VarTypes } from '@shared/common/workflow/core/component-node'
 
 const buildNodeVars = (sourceVarName: string, vars: VarCtx[]): Var[] => {
   const sourceVar = vars.find(v => getCommVarCtxName(v) === sourceVarName)

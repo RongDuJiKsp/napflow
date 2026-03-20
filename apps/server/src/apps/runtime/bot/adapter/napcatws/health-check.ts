@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common'
-import { BotUpstreamState } from '@shared/common/bot/base'
+import { BotUpstreamState } from '@shared/common/bot/core/status'
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 import type { NapcatWsSdk } from './sdk'
 import type { NapcatWsTriggerPlugin } from './plugin'

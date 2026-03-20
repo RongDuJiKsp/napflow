@@ -1,7 +1,6 @@
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -11,16 +10,18 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { NotNullColumn } from '../decorator/entity'
+import type { User, UserGroup } from '@shared/common/account/entity'
 
 @Entity('users')
-export class UserEntity extends BaseEntity {
+export class UserEntity extends BaseEntity implements User {
   @PrimaryColumn()
   email: string
 
-  @Column()
+  @NotNullColumn()
   nickname: string
 
-  @Column()
+  @NotNullColumn()
   password: string
 
   @OneToMany(() => UserGroupEntity, userGroup => userGroup.user, {
@@ -39,7 +40,7 @@ export class UserEntity extends BaseEntity {
 }
 
 @Entity('user_groups')
-export class UserGroupEntity extends BaseEntity {
+export class UserGroupEntity extends BaseEntity implements UserGroup {
   @PrimaryColumn()
   ofUser: string
 

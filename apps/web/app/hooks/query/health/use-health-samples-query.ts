@@ -1,5 +1,5 @@
 import type { AggregatedMetrics } from '@shared/common/health-check/health-check'
-import { defineQueryFn } from './_base'
+import { defineQueryFn } from '../_base'
 import type { HealthCheckSamplesResp } from '@shared/data-transfer/health-check/samples'
 import { jsonQ } from '@/utils/net'
 import { useQuery } from '@tanstack/react-query'

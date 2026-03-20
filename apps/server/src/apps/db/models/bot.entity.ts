@@ -1,19 +1,20 @@
 import { BaseEntity, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm'
 import { NotNullColumn } from '../decorator/entity'
-import type { CommonAdapterConfig } from '@shared/common/bot/adapter'
 import type { JsonObject } from 'type-fest'
-import { AdapterTag } from '@shared/common/bot/base'
+import type { Bot } from '@shared/common/bot/entity'
+import { AdapterTag } from '@shared/common/bot/core/adapter'
+import type { CommonAdapterConfig } from '@shared/common/bot/core/config'
 
 // 每一个BotRecord对应配置好的机器人endpoint
 @Entity()
-export class BotRecordEntity extends BaseEntity {
+export class BotRecordEntity extends BaseEntity implements Bot {
   // id
   @PrimaryColumn({ generated: 'uuid' })
-  recordId: string
+  botId: string
 
   // 机器人名称
   @NotNullColumn()
-  name: string
+  botName: string
 
   // 机器人描述
   @NotNullColumn()

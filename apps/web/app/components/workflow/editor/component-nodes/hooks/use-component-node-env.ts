@@ -6,7 +6,7 @@ import {
   ComponentNodesEnum,
   type Var,
   VarTypes,
-} from '@shared/common/workflow/component-node'
+} from '@shared/common/workflow/core/component-node'
 import type { ComponentNode } from '../types'
 import { useWorkflowExtStore } from '../../hooks/use-workflow-ext-state'
 import { useStore } from 'zustand'

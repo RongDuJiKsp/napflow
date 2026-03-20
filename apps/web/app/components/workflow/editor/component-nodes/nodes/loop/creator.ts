@@ -1,4 +1,4 @@
-import { ComponentNodesEnum } from '@shared/common/workflow/component-node'
+import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import type { ComponentCreator } from '../../types'
 import LoopNode from './node'
 import LoopPanel from './panel'

@@ -10,7 +10,7 @@ import {
 import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
-import { UserRole } from '@shared/common/account/base'
+import { UserRole } from '@shared/common/account/core'
 import { Code } from '@shared/data-transfer/_base'
 import bcryptjs from 'bcryptjs'
 import { createE2EApp, createTokenFactory } from './utils/nest-init'

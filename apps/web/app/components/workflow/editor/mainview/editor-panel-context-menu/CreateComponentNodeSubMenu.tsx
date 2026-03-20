@@ -2,8 +2,8 @@ import { memo } from 'react'
 import { Item, Submenu } from 'react-contexify'
 import { ComponentNodeCreatorMap } from '../../component-nodes/constants'
 import { useStickyNewComponentNode } from '../../hooks/use-create-component-node'
-import type { ComponentNodesEnum } from '@shared/common/workflow/component-node'
-import { hiddenNodeTypes } from '@shared/common/workflow/component-node'
+import type { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+import { hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
 
 const traggerCreators = Object.entries(ComponentNodeCreatorMap)
   .filter(([key]) => !hiddenNodeTypes.has(key as ComponentNodesEnum))
