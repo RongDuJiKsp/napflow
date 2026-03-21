@@ -8,7 +8,7 @@ export enum WorkflowHistoryActionTag {
   Programme = 'programme',
 }
 
-type WorkflowEditorHistoryState = {
+export type WorkflowEditorHistoryState = {
   nodes: WorkflowNode[]
   edges: WorkflowEdge[]
   envs: Var[];
