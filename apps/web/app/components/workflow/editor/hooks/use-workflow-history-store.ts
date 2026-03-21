@@ -1,8 +1,8 @@
 import type { StoreApi } from 'zustand'
 import { createStore } from 'zustand'
 import { createParamContext } from '@/utils/react'
-import type { WorkflowHistoryStoreShape } from '../store/workflow-historys'
-import { createWorkflowHistoryStoreShape } from '../store/workflow-historys'
+import type { WorkflowHistoryStoreShape } from '../store/workflow-history'
+import { createWorkflowHistoryStoreShape } from '../store/workflow-history'
 
 type Shape = WorkflowHistoryStoreShape
 
