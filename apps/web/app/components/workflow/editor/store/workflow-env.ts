@@ -13,7 +13,7 @@ type WorkflowEnvAction = {
 
 export type WorkflowEnvStoreShape = WorkflowEnvState & WorkflowEnvAction
 
-export const createWorkflowEnvStore: StateCreator<WorkflowEnvStoreShape> = set => ({
+export const createWorkflowEnvStoreShape: StateCreator<WorkflowEnvStoreShape> = set => ({
   envs: [],
   addEnv: (env: Var) => set(state => ({ envs: [...state.envs, env] })),
   removeEnv: (envname: string) =>

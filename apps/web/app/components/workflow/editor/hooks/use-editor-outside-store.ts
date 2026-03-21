@@ -1,24 +1,11 @@
 import { createParamContext } from '@/utils/react'
 import type { StoreApi } from 'zustand'
 import { createStore } from 'zustand'
-
-type EditorOutsideStoreState = {
-  isEnvWindowOpen: boolean;
-}
-
-type NodeEditorOutsideAction = {
-  openEnvWindow: () => void;
-  closeEnvWindow: () => void;
-}
-
-export type EditorOutsideStoreShape = EditorOutsideStoreState
-  & NodeEditorOutsideAction
+import { type EditorOutsideStoreShape, createEditorOutsideStoreShape } from '../store/editor-outside'
 
 export const createEditorOutsideStore = () =>
-  createStore<EditorOutsideStoreShape>(set => ({
-    isEnvWindowOpen: false,
-    openEnvWindow: () => set({ isEnvWindowOpen: true }),
-    closeEnvWindow: () => set({ isEnvWindowOpen: false }),
+  createStore<EditorOutsideStoreShape>((...args) => ({
+    ...createEditorOutsideStoreShape(...args),
   }))
 
 const {
