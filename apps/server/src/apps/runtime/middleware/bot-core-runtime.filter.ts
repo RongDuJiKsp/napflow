@@ -35,7 +35,7 @@ export class BotCoreRuntimeExceptionFilter implements ExceptionFilter<BotCoreRun
 
   catchOther(exception: BotCoreRuntimeError, host: ArgumentsHost) {
     this.logger.warn(
-      `BotCoreRuntimeExceptionFilter caught a non-http(${host.getType()}) exception: ${exception.message}`,
+      `BotCoreRuntimeExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }

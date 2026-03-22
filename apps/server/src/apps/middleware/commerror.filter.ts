@@ -44,7 +44,7 @@ export class CommErrorExceptionFilter implements ExceptionFilter<CommError> {
 
   catchOther(exception: CommError, host: ArgumentsHost) {
     this.logger.warn(
-      `CommErrorExceptionFilter caught a non-http(${host.getType()}) exception: ${exception.message}`,
+      `CommErrorExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }

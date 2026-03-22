@@ -31,7 +31,7 @@ export class ZodErrExceptionFilter implements ExceptionFilter<ZodError> {
 
   catchOther(exception: ZodError, host: ArgumentsHost) {
     this.logger.warn(
-      `ZodErrExceptionFilter caught a non-http(${host.getType()}) exception: ${exception.message}`,
+      `ZodErrExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }
@@ -62,7 +62,7 @@ export class ZodSerializationExceptionFilter implements ExceptionFilter<ZodSeria
 
   catchOther(exception: ZodSerializationException, host: ArgumentsHost) {
     this.logger.warn(
-      `ZodSerializationExceptionFilter caught a non-http(${host.getType()}) exception: ${exception.message}`,
+      `ZodSerializationExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }
