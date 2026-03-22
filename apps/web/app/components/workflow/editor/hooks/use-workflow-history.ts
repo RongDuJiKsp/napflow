@@ -29,12 +29,24 @@ export const useWorkflowHistory = () => {
   const redo = useCallback((steps?: number) => {
     const { redo } = historyStore.temporal.getState()
     redo(steps)
-  }, [historyStore])
+    const { setNodes, setEdges } = workflowStore.getState()
+    const { setEnvs } = workflowExtStore.getState()
+    const { nodes, edges, envs } = historyStore.getState()
+    setNodes(nodes)
+    setEdges(edges)
+    setEnvs(envs)
+  }, [historyStore, workflowExtStore, workflowStore])
 
   const undo = useCallback((steps?: number) => {
     const { undo } = historyStore.temporal.getState()
     undo(steps)
-  }, [historyStore])
+    const { setNodes, setEdges } = workflowStore.getState()
+    const { setEnvs } = workflowExtStore.getState()
+    const { nodes, edges, envs } = historyStore.getState()
+    setNodes(nodes)
+    setEdges(edges)
+    setEnvs(envs)
+  }, [historyStore, workflowExtStore, workflowStore])
 
   return {
     override,
