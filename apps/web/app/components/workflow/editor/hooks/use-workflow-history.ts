@@ -26,7 +26,19 @@ export const useWorkflowHistory = () => {
     setEnvs(envs)
   }, [historyStore, workflowStore, workflowExtStore])
 
+  const redo = useCallback((steps?: number) => {
+    const { redo } = historyStore.temporal.getState()
+    redo(steps)
+  }, [historyStore])
+
+  const undo = useCallback((steps?: number) => {
+    const { undo } = historyStore.temporal.getState()
+    undo(steps)
+  }, [historyStore])
+
   return {
     override,
+    redo,
+    undo,
   }
 }
