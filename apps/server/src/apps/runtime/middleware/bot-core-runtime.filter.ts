@@ -14,12 +14,28 @@ export class BotCoreRuntimeExceptionFilter implements ExceptionFilter<BotCoreRun
   private readonly logger = new Logger(BotCoreRuntimeExceptionFilter.name)
 
   catch(exception: BotCoreRuntimeError, host: ArgumentsHost) {
-    const httpHost = new ExpressHttpHost(host)
+    const httpHost = ExpressHttpHost.tryParse(host)
+
+    if (httpHost) {
+      this.catchHttp(exception, httpHost)
+      return
+    }
+
+    this.catchOther(exception, host)
+  }
+
+  catchHttp(exception: BotCoreRuntimeError, httpHost: ExpressHttpHost) {
     httpHost.response
       .status(400)
       .json(Resp.error(exception.message, Code.BadRequest))
     this.logger.log(
       `endpoint visit ${httpHost.request.path} with BotCoreRuntime Error(${exception.message})`,
+    )
+  }
+
+  catchOther(exception: BotCoreRuntimeError, host: ArgumentsHost) {
+    this.logger.warn(
+      `BotCoreRuntimeExceptionFilter caught a non-http(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }

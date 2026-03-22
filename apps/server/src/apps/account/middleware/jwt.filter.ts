@@ -15,26 +15,49 @@ export class VaildJwtErrorFilter implements ExceptionFilter<VaildJwtError> {
   private readonly logger = new Logger(VaildJwtErrorFilter.name)
 
   catch(exception: VaildJwtError, host: ArgumentsHost) {
-    const ctx = new ExpressHttpHost(host)
+    const httpHost = ExpressHttpHost.tryParse(host)
+
+    if (httpHost) {
+      this.catchHttp(exception, httpHost)
+      return
+    }
+
+    this.logger.warn(`VaildJwtErrorFilter caught an exception: ${exception.message}`)
+  }
+
+  catchHttp(exception: VaildJwtError, httpHost: ExpressHttpHost) {
     // 在请求阶段发生的记录为UnAuth
-    ctx.response
+    httpHost.response
       .status(HttpStatus.UNAUTHORIZED)
       .json(Resp.error(exception.message, Code.Unauthorized))
     this.logger.log(
-      `endpoint ${ctx.request.path} visited with unauth(${exception.message})`,
+      `endpoint ${httpHost.request.path} visited with unauth(${exception.message})`,
     )
   }
 }
 
 @Catch(JsonWebTokenError)
 export class JsonWebTokenErrorFilter implements ExceptionFilter<JsonWebTokenError> {
-  private readonly logger = new Logger(VaildJwtErrorFilter.name)
+  private readonly logger = new Logger(JsonWebTokenErrorFilter.name)
 
   catch(exception: JsonWebTokenError, host: ArgumentsHost) {
-    const ctx = new ExpressHttpHost(host)
+    const httpHost = ExpressHttpHost.tryParse(host)
+
+    if (httpHost) {
+      this.catchHttp(exception, httpHost)
+      return
+    }
+
+    this.logger.warn(`JsonWebTokenErrorFilter caught an exception: ${exception.message}`)
+  }
+
+  catchHttp(exception: JsonWebTokenError, httpHost: ExpressHttpHost) {
     // 在请求阶段发生的记录为UnAuth
-    ctx.response
+    httpHost.response
       .status(HttpStatus.UNAUTHORIZED)
       .json(Resp.error('Token已过期', Code.Unauthorized))
+    this.logger.log(
+      `endpoint ${httpHost.request.path} visited with token error(${exception.message})`,
+    )
   }
 }

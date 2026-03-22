@@ -17,7 +17,17 @@ export class AccountExceptionFilter implements ExceptionFilter<AccountError> {
   constructor(@Inject(JwtService) private readonly jwtService: JwtService) {}
 
   catch(exception: AccountError, host: ArgumentsHost) {
-    const httpHost = new ExpressHttpHost(host)
+    const httpHost = ExpressHttpHost.tryParse(host)
+
+    if(httpHost) {
+      this.catchHttp(exception, httpHost)
+      return
+    }
+
+    this.catchOther(exception, host)
+  }
+
+  catchHttp(exception: AccountError, httpHost: ExpressHttpHost) {
     const account = this.jwtService.account.jwtHttpRequest(httpHost.request)
     // 在请求阶段发生的记录为BadRequest
     httpHost.response
@@ -25,6 +35,12 @@ export class AccountExceptionFilter implements ExceptionFilter<AccountError> {
       .json(Resp.error(exception.message, Code.BadRequest))
     this.logger.log(
       `'${account.nickname}' visit ${httpHost.request.path} with Account Error(${exception.message})`,
+    )
+  }
+
+  catchOther(exception: AccountError, host: ArgumentsHost) {
+    this.logger.warn(
+      `AccountExceptionFilter caught a unhandled(${host.getType()}) exception: ${exception.message}`,
     )
   }
 }
