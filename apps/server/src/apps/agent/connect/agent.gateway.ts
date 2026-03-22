@@ -9,20 +9,20 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets'
 import type { Server, Socket } from 'socket.io'
-import { ToolCallService } from './toolcall.service'
+import { AgentService } from './agent.service'
 @WebSocketGateway({})
-export class ToolCallGateway implements OnGatewayInit<Server>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
+export class AgentGateway implements OnGatewayInit<Server>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
   @WebSocketServer()
   server: Server
 
   constructor(
-    @Inject(ToolCallService) private readonly toolCallService: ToolCallService,
+    @Inject(AgentService) private readonly agentService: AgentService,
   ) {
 
   }
 
   afterInit(server: Server) {
-    console.log('ToolCallGateway initialized')
+    console.log('AgentGateway initialized')
   }
 
   handleConnection(client: Socket, ...args: any[]) {
