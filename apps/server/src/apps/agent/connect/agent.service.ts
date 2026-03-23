@@ -76,7 +76,7 @@ export class AgentSession {
         'addCustomNode',
         this.clientRpc.getHandler('addCustomNode'),
         {
-          description: '向流程图中添加一个自定义节点',
+          description: '向工作流中添加一个自定义节点',
         },
       ),
     )
@@ -85,7 +85,7 @@ export class AgentSession {
         'readCurrent',
         this.clientRpc.getHandler('readCurrent'),
         {
-          description: '读取当前流程图的草稿数据',
+          description: '读取当前工作流的草稿数据',
         },
       ),
     )
