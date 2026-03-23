@@ -1,7 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import type { Socket } from 'socket.io'
-import type { LangChainInstance } from '../langchain/instance'
-import { LangChainClientRPC } from './client-rpc/client-rpc'
 import type {
   WsAuthRequest,
   WsConnectionRequest,
@@ -9,7 +7,7 @@ import type {
 import { JwtService } from '../../account/jwt.service'
 import { LangChainService } from '../langchain/langchain.service'
 import { TypeOrmService } from '../../db/typeorm.service'
-import { genToolFromClientRPCMethodItem } from '../langchain/call-rpc'
+import { AgentSession } from './instance'
 
 @Injectable()
 export class AgentService {
@@ -56,38 +54,5 @@ export class AgentService {
     }
 
     return new AgentSession(socket, langChainInstance)
-  }
-}
-
-export class AgentSession {
-  private readonly logger: Logger
-  private readonly clientRpc: LangChainClientRPC
-
-  constructor(
-    private readonly socket: Socket,
-    private readonly langChainInstance: LangChainInstance,
-  ) {
-    this.logger = new Logger(`AgentSession-${socket.id}`)
-    this.clientRpc = new LangChainClientRPC(socket)
-
-    // add tools
-    langChainInstance.dynTool.addTool(
-      genToolFromClientRPCMethodItem(
-        'addCustomNode',
-        this.clientRpc.getHandler('addCustomNode'),
-        {
-          description: '向工作流中添加一个自定义节点',
-        },
-      ),
-    )
-    langChainInstance.dynTool.addTool(
-      genToolFromClientRPCMethodItem(
-        'readCurrent',
-        this.clientRpc.getHandler('readCurrent'),
-        {
-          description: '读取当前工作流的草稿数据',
-        },
-      ),
-    )
   }
 }
