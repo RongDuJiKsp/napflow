@@ -1,7 +1,8 @@
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 import type { ClientTool } from '@langchain/core/tools'
-import { createAgent, createMiddleware } from 'langchain'
+import { HumanMessage, createAgent, createMiddleware } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
+import { InMemoryChatMessageHistory } from '@langchain/core/chat_history'
 /**
  * @description LangChainDynamicTool 用于动态添加工具到 LangChain Agent 中
  */
@@ -48,6 +49,9 @@ export class LangChainInstance {
   // tool calls
   readonly dynTool = new LangChainDynamicTool()
 
+  // memory
+  private readonly memory = new InMemoryChatMessageHistory()
+
   constructor(private readonly endpoint: OpenAiEndpointConfig) {
     this.openAiSdk = new ChatOpenAI({
       model: endpoint.model,
@@ -60,5 +64,17 @@ export class LangChainInstance {
       model: this.openAiSdk,
       middleware: [this.dynTool.middleware],
     })
+  }
+
+  async invokeChat(input: string) {
+    const history = await this.memory.getMessages()
+    const result = await this.agent.invoke({
+      messages: [...history, new HumanMessage(input)],
+    })
+    this.memory.addMessages(result.messages)
+  }
+
+  async getMessagesAsJson() {
+    return (await this.memory.getMessages()).map(msg => msg.toJSON())
   }
 }
