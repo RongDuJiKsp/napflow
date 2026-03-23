@@ -6,9 +6,7 @@ import type { WsAuthRequest, WsConnectionRequest } from '@shared/common/agent/we
 import { JwtService } from '../../account/jwt.service'
 import { LangChainService } from '../langchain/langchain.service'
 import { TypeOrmService } from '../../db/typeorm.service'
-import { tool } from 'langchain'
-import type { ToolSchemaAddCustomNode } from '@shared/rpc/agent/client-rpc/schema'
-import { ZodToolSchemaAddCustomNode } from '@shared/rpc/agent/client-rpc/schema'
+import { genToolFromClientRPCMethodItem } from '../langchain/call-rpc'
 
 @Injectable()
 export class AgentService {
@@ -58,13 +56,11 @@ export class AgentSession {
     this.clientRpc = new LangChainClientRPC(socket)
 
     // add tools
-    langChainInstance.dynTool.addTool(tool(async (args: ToolSchemaAddCustomNode) => {
-      const caller = this.clientRpc.getHandler('addCustomNode')
-      await caller(args)
-    }, {
-      name: 'addCustomNode',
-      description: 'Add a custom node to the workflow, with specified type and position',
-      schema: ZodToolSchemaAddCustomNode,
+    langChainInstance.dynTool.addTool(genToolFromClientRPCMethodItem('addCustomNode', this.clientRpc.getHandler('addCustomNode'), {
+      description: '向流程图中添加一个自定义节点',
+    }))
+    langChainInstance.dynTool.addTool(genToolFromClientRPCMethodItem('readCurrent', this.clientRpc.getHandler('readCurrent'), {
+      description: '读取当前流程图的草稿数据',
     }))
   }
 }
