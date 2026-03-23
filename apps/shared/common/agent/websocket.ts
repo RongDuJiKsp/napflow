@@ -11,10 +11,20 @@ export const ZodCheckWsAgentModel = z.object({
 })
 export type WsAgentModel = z.infer<typeof ZodCheckWsAgentModel>
 
+// message recovery context
+export const ZodCheckWsAgentMessageRecoveryContext = z.object({
+  appId: z.string().min(1, 'App ID is required'),
+  socketSessionId: z.string().min(1, 'Socket Session ID is required'),
+}).optional()
+export type WsAgentMessageRecoveryContext = z.infer<
+  typeof ZodCheckWsAgentMessageRecoveryContext
+>
+
 // request
 export const ZodCheckWsAgentConnectionRequest = z.tuple([
   ZodCheckWsAuthRequest,
   ZodCheckWsAgentModel,
+  ZodCheckWsAgentMessageRecoveryContext,
 ])
 export type WsConnectionRequest = z.infer<
   typeof ZodCheckWsAgentConnectionRequest

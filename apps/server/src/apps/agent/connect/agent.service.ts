@@ -37,7 +37,7 @@ export class AgentService {
     socket: Socket,
     ...connArgs: WsConnectionRequest
   ) {
-    const [authReq, agentReq] = connArgs
+    const [authReq, agentReq, recoverReq] = connArgs
 
     if (!this.checkAuthConnectionSuccess(socket, authReq)) return null
 
