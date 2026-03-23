@@ -1,8 +1,7 @@
 import type { Socket } from 'socket.io'
 import z from 'zod'
 import { ClientRPCError } from '../middleware/client-rpc.filter'
-import { ZodRpcAddCustomNodeRequest, ZodRpcAddCustomNodeResponse, ZodRpcReadCurrentRequest, ZodRpcReadCurrentResponse } from './schemas'
-
+import { CLIENT_RPC_METHODS } from '@shared/rpc/agent/client-rpc/methods'
 export class BaseLangChainClientRPCRequester {
   constructor(
     private readonly socket: Socket,
@@ -32,23 +31,13 @@ export class BaseLangChainClientRPCRequester {
     return resp.data
   }
 }
-// 类型打字约束
-const defineRpcMethod = <M extends Record<string, { request: z.ZodTuple<any, any>; response: z.ZodTypeAny }>>(methods: M): M => methods
+
 /**
  * @description: client rpc 即从客户端拉数据到服务端 这里是具体方法的实现类，
  * BaseLangChainClientRPCRequester 是基础类，提供了 emit 和 emitWithSchema 两个方法，前者直接发请求，后者带参数和响应的 schema 验证
  */
 export class LangChainClientRPC extends BaseLangChainClientRPCRequester {
-  private readonly methods = defineRpcMethod({
-    addCustomNode: {
-      request: ZodRpcAddCustomNodeRequest,
-      response: ZodRpcAddCustomNodeResponse,
-    },
-    readCurrent: {
-      request: ZodRpcReadCurrentRequest,
-      response: ZodRpcReadCurrentResponse,
-    },
-  })
+  private readonly methods = CLIENT_RPC_METHODS
 
   getRequestSchema<K extends keyof typeof this.methods>(method: K): (typeof this.methods)[K]['request'] {
     return this.methods[method].request

@@ -1,12 +1,8 @@
 import { ZodCheckWorkflowAppDraft } from '@shared/common/workflow/base'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { ZodCheckXYPosition } from '@shared/common/workflow/core/re-export'
+import { ZodRpcBaseResponse, ZodRpcNullRequest } from '@shared/rpc/core/base-schema'
 import z from 'zod'
-// base
-const ZodRpcNullRequest = z.tuple([])
-const ZodRpcBaseResponse = z.object({
-  success: z.boolean(),
-})
 
 // addCustomNode
 export const ZodRpcAddCustomNodeRequest = z.tuple([
