@@ -60,7 +60,9 @@ describe('AgentController (e2e)', () => {
     openAiEndpoint: {
       find: vi.fn().mockImplementation(() => Promise.resolve([...configs])),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        return Promise.resolve(configs.find(item => item.id === where.id) ?? null)
+        return Promise.resolve(
+          configs.find(item => item.id === where.id) ?? null,
+        )
       }),
       save: vi.fn().mockImplementation((data: any) => {
         if (data.id) {
@@ -120,8 +122,9 @@ describe('AgentController (e2e)', () => {
     })
 
     it('未认证访问应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/agent/openai-endpoint')
+      const res = await request(app.getHttpServer()).get(
+        '/agent/openai-endpoint',
+      )
 
       expect(res.status).toBe(401)
     })
@@ -258,7 +261,9 @@ describe('AgentController (e2e)', () => {
 
       expect(listAfterDelete.body.statusCode).toBe(Code.Ok)
       expect(
-        listAfterDelete.body.data.find((item: MockOpenAiEndpoint) => item.id === createdId),
+        listAfterDelete.body.data.find(
+          (item: MockOpenAiEndpoint) => item.id === createdId,
+        ),
       ).toBeUndefined()
     })
   })

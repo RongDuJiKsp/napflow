@@ -82,7 +82,11 @@ const ApiKeyConfigFormDialog = ({
                 <Input
                   type={showApiKey ? 'text' : 'password'}
                   className="w-full rounded-lg border border-pink-200 bg-white text-gray-700 transition-all duration-200 placeholder-pink-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  placeholder={isEditMode ? '留空则保持原有 API Key' : '例如：sk-proj-****xxxx'}
+                  placeholder={
+                    isEditMode
+                      ? '留空则保持原有 API Key'
+                      : '例如：sk-proj-****xxxx'
+                  }
                   autoComplete="new-password"
                 />
                 <div className="mt-2 flex justify-end">

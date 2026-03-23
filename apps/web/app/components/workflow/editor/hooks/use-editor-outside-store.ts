@@ -1,7 +1,10 @@
 import { createParamContext } from '@/utils/react'
 import type { StoreApi } from 'zustand'
 import { createStore } from 'zustand'
-import { type EditorOutsideStoreShape, createEditorOutsideStoreShape } from '../store/editor-outside'
+import {
+  type EditorOutsideStoreShape,
+  createEditorOutsideStoreShape,
+} from '../store/editor-outside'
 
 export const createEditorOutsideStore = () =>
   createStore<EditorOutsideStoreShape>((...args) => ({

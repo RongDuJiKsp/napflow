@@ -12,7 +12,9 @@ type NodeEditorOutsideAction = {
 export type EditorOutsideStoreShape = EditorOutsideStoreState
   & NodeEditorOutsideAction
 
-export const createEditorOutsideStoreShape: StateCreator<EditorOutsideStoreShape> = set => ({
+export const createEditorOutsideStoreShape: StateCreator<
+  EditorOutsideStoreShape
+> = set => ({
   isEnvWindowOpen: false,
   openEnvWindow: () => set({ isEnvWindowOpen: true }),
   closeEnvWindow: () => set({ isEnvWindowOpen: false }),

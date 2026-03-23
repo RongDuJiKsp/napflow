@@ -18,7 +18,7 @@ export class LangChainDynamicTool {
     },
     wrapToolCall: (req, handler) => {
       const dynTool = this.dynToolDict.get(String(req.tool?.name ?? ''))
-      if(dynTool) {
+      if (dynTool) {
         return handler({
           ...req,
           tool: dynTool,
@@ -33,7 +33,7 @@ export class LangChainDynamicTool {
   }
 
   addTool(tool: ClientTool) {
-    if(this.dynToolDict.has(tool.name))
+    if (this.dynToolDict.has(tool.name))
       throw new Error(`Tool with name ${tool.name} already exists`)
     this.dynTools.push(tool)
     this.dynToolDict.set(tool.name, tool)
@@ -41,7 +41,7 @@ export class LangChainDynamicTool {
 }
 
 export class LangChainInstance {
-    // models and agent
+  // models and agent
   private readonly openAiSdk: ChatOpenAI
   private readonly agent: ReturnType<typeof createAgent>
 

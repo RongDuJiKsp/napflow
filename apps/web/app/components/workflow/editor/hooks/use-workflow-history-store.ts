@@ -11,7 +11,10 @@ export const createWorkflowHistoryStore = () =>
 const {
   context: WorkflowHistoryStoreContext,
   useContextHook: useWorkflowHistoryStore,
-} = createParamContext<ReturnType<typeof createWorkflowHistoryStore>>('workflow-history')
+}
+  = createParamContext<ReturnType<typeof createWorkflowHistoryStore>>(
+    'workflow-history',
+  )
 
 export { WorkflowHistoryStoreContext, useWorkflowHistoryStore }
 

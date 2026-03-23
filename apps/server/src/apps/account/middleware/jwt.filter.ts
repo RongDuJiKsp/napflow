@@ -22,7 +22,9 @@ export class VaildJwtErrorFilter implements ExceptionFilter<VaildJwtError> {
       return
     }
 
-    this.logger.warn(`VaildJwtErrorFilter caught an exception: ${exception.message}`)
+    this.logger.warn(
+      `VaildJwtErrorFilter caught an exception: ${exception.message}`,
+    )
   }
 
   catchHttp(exception: VaildJwtError, httpHost: ExpressHttpHost) {
@@ -48,7 +50,9 @@ export class JsonWebTokenErrorFilter implements ExceptionFilter<JsonWebTokenErro
       return
     }
 
-    this.logger.warn(`JsonWebTokenErrorFilter caught an exception: ${exception.message}`)
+    this.logger.warn(
+      `JsonWebTokenErrorFilter caught an exception: ${exception.message}`,
+    )
   }
 
   catchHttp(exception: JsonWebTokenError, httpHost: ExpressHttpHost) {

@@ -19,7 +19,7 @@ export class AccountExceptionFilter implements ExceptionFilter<AccountError> {
   catch(exception: AccountError, host: ArgumentsHost) {
     const httpHost = ExpressHttpHost.tryParse(host)
 
-    if(httpHost) {
+    if (httpHost) {
       this.catchHttp(exception, httpHost)
       return
     }

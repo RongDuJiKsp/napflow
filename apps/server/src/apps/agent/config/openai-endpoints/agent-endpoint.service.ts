@@ -26,7 +26,10 @@ export class AgentEndpointService {
     return await this.db.openAiEndpoint.save(config)
   }
 
-  async updateOpenAiEndpoint(id: string, config: Partial<OpenAiEndpointConfig>) {
+  async updateOpenAiEndpoint(
+    id: string,
+    config: Partial<OpenAiEndpointConfig>,
+  ) {
     const endpoint = await this.db.openAiEndpoint.findOne({
       where: { id },
     })

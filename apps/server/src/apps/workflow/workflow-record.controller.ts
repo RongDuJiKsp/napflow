@@ -1,9 +1,20 @@
 import { AllowUserGroup, JwtAccount } from '@/src/decorator/account'
 import { ZodBody } from '@/src/decorator/zod'
-import { Controller, Get, Inject, Param, ParseBoolPipe, Post, Query } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseBoolPipe,
+  Post,
+  Query,
+} from '@nestjs/common'
 import type { Account } from '@shared/common/account/base'
 import { UserRole } from '@shared/common/account/core'
-import type { CreateWorkflowReq, UpdateWorkflowReq } from '@shared/data-transfer/workflow/info'
+import type {
+  CreateWorkflowReq,
+  UpdateWorkflowReq,
+} from '@shared/data-transfer/workflow/info'
 import {
   ZodCheckCreateWorkflowReq,
   ZodCheckCreateWorkflowResp,

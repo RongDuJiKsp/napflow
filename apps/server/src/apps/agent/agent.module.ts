@@ -5,15 +5,8 @@ import { AgentGateway } from './connect/agent.gateway'
 import { AgentService } from './connect/agent.service'
 
 @Module({
-  providers: [
-    AgentEndpointService,
-    AgentGateway,
-    AgentService,
-  ],
-  exports: [
-    AgentEndpointService,
-    AgentService,
-  ],
+  providers: [AgentEndpointService, AgentGateway, AgentService],
+  exports: [AgentEndpointService, AgentService],
   controllers: [AgentEndpointController],
 })
 export class AgentModule {}

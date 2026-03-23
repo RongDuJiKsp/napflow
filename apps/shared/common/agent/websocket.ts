@@ -12,5 +12,10 @@ export const ZodCheckWsAgentModel = z.object({
 export type WsAgentModel = z.infer<typeof ZodCheckWsAgentModel>
 
 // request
-export const ZodCheckWsAgentConnectionRequest = z.tuple([ZodCheckWsAuthRequest, ZodCheckWsAgentModel])
-export type WsConnectionRequest = z.infer<typeof ZodCheckWsAgentConnectionRequest>
+export const ZodCheckWsAgentConnectionRequest = z.tuple([
+  ZodCheckWsAuthRequest,
+  ZodCheckWsAgentModel,
+])
+export type WsConnectionRequest = z.infer<
+  typeof ZodCheckWsAgentConnectionRequest
+>

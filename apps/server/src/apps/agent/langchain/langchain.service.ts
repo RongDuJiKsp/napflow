@@ -4,14 +4,15 @@ import { LangChainInstance } from './instance'
 
 @Injectable()
 export class LangChainService {
-  constructor(@Inject(TypeOrmService) private readonly typeOrmService: TypeOrmService) {
-
-  }
+  constructor(
+    @Inject(TypeOrmService) private readonly typeOrmService: TypeOrmService,
+  ) {}
 
   async createLangChainInstanceByEndpointRecordId(endpointId: string) {
-    const endpointRecord = await this.typeOrmService.openAiEndpoint.findOneBy({ id: endpointId })
-    if(!endpointRecord)
-      return null
+    const endpointRecord = await this.typeOrmService.openAiEndpoint.findOneBy({
+      id: endpointId,
+    })
+    if (!endpointRecord) return null
 
     return new LangChainInstance(endpointRecord)
   }

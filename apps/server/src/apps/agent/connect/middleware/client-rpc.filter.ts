@@ -11,10 +11,14 @@ export class ClientRPCError extends Error {
 export class ClientRPCFilter implements ExceptionFilter<ClientRPCError> {
   private readonly logger = new Logger(ClientRPCFilter.name)
   catch(exception: ClientRPCError, host: ArgumentsHost) {
-    if(host.getType() !== 'ws') {
-      this.logger.error(`ClientRPCFilter caught an exception in non-ws context: ${exception.message}`)
+    if (host.getType() !== 'ws') {
+      this.logger.error(
+        `ClientRPCFilter caught an exception in non-ws context: ${exception.message}`,
+      )
       return
     }
-    this.logger.warn(`ClientRPCFilter caught an exception: ${exception.message}`)
+    this.logger.warn(
+      `ClientRPCFilter caught an exception: ${exception.message}`,
+    )
   }
 }

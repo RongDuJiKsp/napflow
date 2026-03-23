@@ -415,7 +415,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/workflow/record/list')
+      const res = await request(app.getHttpServer()).get(
+        '/workflow/record/list',
+      )
 
       expect(res.status).toBe(401)
     })
@@ -1012,8 +1014,9 @@ describe('WorkflowController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`)
+      const res = await request(app.getHttpServer()).get(
+        `/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`,
+      )
 
       expect(res.status).toBe(401)
     })

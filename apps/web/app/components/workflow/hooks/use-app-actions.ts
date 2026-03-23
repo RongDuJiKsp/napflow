@@ -10,7 +10,9 @@ export const useAppActions = (app: WorkflowApp) => {
   const { refetch } = useAppsQuery()
 
   const deleteApp = useCallback(async () => {
-    const res = await jsonQ.Post<NullResp>(`/workflow/record/${app.appId}/delete`)
+    const res = await jsonQ.Post<NullResp>(
+      `/workflow/record/${app.appId}/delete`,
+    )
     if (res.statusCode !== Code.Ok) {
       message.error(res.message)
       return
