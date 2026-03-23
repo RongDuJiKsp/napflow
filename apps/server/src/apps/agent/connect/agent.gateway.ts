@@ -47,9 +47,14 @@ implements
         `Failed to establish agent session for client ${client.id}`,
       )
     }
+    else {
+      this.logger.log(
+        `Agent session established for client ${client.id}`,
+      )
+    }
   }
 
   handleDisconnect(client: Socket) {
-    throw new Error('Method not implemented.')
+    this.logger.log(`Client disconnected: ${client.id}`)
   }
 }
