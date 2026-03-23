@@ -6,6 +6,10 @@ import type { WsAuthRequest, WsConnectionRequest } from '@shared/common/agent/we
 import { JwtService } from '../../account/jwt.service'
 import { LangChainService } from '../langchain/langchain.service'
 import { TypeOrmService } from '../../db/typeorm.service'
+import { tool } from 'langchain'
+import type { ToolSchemaAddCustomNode } from '@shared/rpc/agent/client-rpc/schema'
+import { ZodToolSchemaAddCustomNode } from '@shared/rpc/agent/client-rpc/schema'
+
 @Injectable()
 export class AgentService {
   private readonly logger = new Logger(AgentService.name)
@@ -54,5 +58,13 @@ export class AgentSession {
     this.clientRpc = new LangChainClientRPC(socket)
 
     // add tools
+    langChainInstance.dynTool.addTool(tool(async (args: ToolSchemaAddCustomNode) => {
+      const caller = this.clientRpc.getHandler('addCustomNode')
+      await caller(args)
+    }, {
+      name: 'addCustomNode',
+      description: 'Add a custom node to the workflow, with specified type and position',
+      schema: ZodToolSchemaAddCustomNode,
+    }))
   }
 }

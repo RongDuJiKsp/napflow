@@ -5,9 +5,13 @@ import { ZodRpcBaseResponse, ZodRpcNullRequest } from '@shared/rpc/core/base-sch
 import z from 'zod'
 
 // addCustomNode
+export const ZodToolSchemaAddCustomNode = z.object({
+  type: z.enum(ComponentNodesEnum),
+  position: ZodCheckXYPosition,
+})
+export type ToolSchemaAddCustomNode = z.infer<typeof ZodToolSchemaAddCustomNode>
 export const ZodRpcAddCustomNodeRequest = z.tuple([
-  z.enum(ComponentNodesEnum),
-  ZodCheckXYPosition,
+  ZodToolSchemaAddCustomNode,
 ])
 export const ZodRpcAddCustomNodeResponse = ZodRpcBaseResponse
 
