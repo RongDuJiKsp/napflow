@@ -16,6 +16,7 @@ const WorkflowAgent = () => {
       size={'large'}
       open={isOpen}
       onClose={close}
+      mask={false}
     >
       <div className="text-sm text-black/45">Agent 功能占位</div>
     </Drawer>
