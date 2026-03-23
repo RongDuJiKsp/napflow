@@ -12,11 +12,10 @@ const WorkflowAgent = () => {
   return (
     <Drawer
       title="Agent"
-      placement="right"
-      width={420}
+      placement="left"
+      size={'large'}
       open={isOpen}
       onClose={close}
-      destroyOnClose
     >
       <div className="text-sm text-black/45">Agent 功能占位</div>
     </Drawer>
