@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import type { AgentSession } from './instance'
+import type { RecoverableAgentSessionItem } from '@shared/data-transfer/agent/session'
+import type { AgentSession } from '../instance'
 
 export type NamespaceAppId = string
 export type SessionId = string
@@ -21,5 +22,14 @@ export class AgentSessionRecoverService {
   recoverSession(namespaceAppId: NamespaceAppId, sessionId: SessionId) {
     const session = this.nameSpaceMap(namespaceAppId).get(sessionId)
     return session || null
+  }
+
+  getRecoverableSessionList(namespaceAppId: NamespaceAppId): RecoverableAgentSessionItem[] {
+    const sessions = this.nameSpaceMap(namespaceAppId)
+    return Array.from(sessions.values()).map(session => ({
+      sessionId: session.sessionId,
+      title: session.langChainInstance.chatSummary,
+      createdAt: session.createdAt,
+    }))
   }
 }

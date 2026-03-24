@@ -33,13 +33,14 @@ export class AgentRpcBridge {
 
 export class AgentSession {
   readonly sessionId = uuidV4()
+  readonly createdAt = new Date()
   private readonly logger: Logger = new Logger(`AgentSession-${this.sessionId}`)
   private socket: Socket
   private clientRpc: LangChainClientRPC | null
   private rpcBridge: AgentRpcBridge | null
 
   constructor(
-    private readonly langChainInstance: LangChainInstance,
+    readonly langChainInstance: LangChainInstance,
   ) {
   }
 

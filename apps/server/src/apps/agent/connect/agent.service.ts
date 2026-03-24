@@ -10,7 +10,7 @@ import { JwtService } from '../../account/jwt.service'
 import { LangChainService } from '../langchain/langchain.service'
 import { TypeOrmService } from '../../db/typeorm.service'
 import { AgentSession } from './instance'
-import { AgentSessionRecoverService } from './agent-session-recover.service'
+import { AgentSessionRecoverService } from './session-recover/agent-session-recover.service'
 
 @Injectable()
 export class AgentService {

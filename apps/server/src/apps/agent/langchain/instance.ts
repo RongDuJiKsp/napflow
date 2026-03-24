@@ -52,6 +52,12 @@ export class LangChainInstance {
   // memory
   private readonly memory = new InMemoryChatMessageHistory()
 
+  private summary = ' 未摘要对话'
+
+  get chatSummary() {
+    return this.summary
+  }
+
   constructor(private readonly endpoint: OpenAiEndpointConfig) {
     this.openAiSdk = new ChatOpenAI({
       model: endpoint.model,
