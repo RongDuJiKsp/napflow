@@ -40,14 +40,14 @@ export class AgentSession {
   private rpcBridge: AgentRpcBridge | null
 
   constructor(
-    readonly langChainInstance: LangChainInstance,
+    readonly langChain: LangChainInstance,
   ) {
   }
 
   mountToSocket(socket: Socket) {
     this.socket = socket
     this.clientRpc = new LangChainClientRPC(socket)
-    this.rpcBridge = new AgentRpcBridge(this.clientRpc, this.langChainInstance)
+    this.rpcBridge = new AgentRpcBridge(this.clientRpc, this.langChain)
     this.logger.log(`Agent session ${this.sessionId} mounted to socket ${socket.id}`)
   }
 }

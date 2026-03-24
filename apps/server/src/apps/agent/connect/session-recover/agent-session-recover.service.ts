@@ -28,7 +28,7 @@ export class AgentSessionRecoverService {
     const sessions = this.nameSpaceMap(namespaceAppId)
     return Array.from(sessions.values()).map(session => ({
       sessionId: session.sessionId,
-      title: session.langChainInstance.chatSummary,
+      title: session.langChain.chatSummary,
       createdAt: session.createdAt,
     }))
   }

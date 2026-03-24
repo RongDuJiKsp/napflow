@@ -146,13 +146,13 @@ describe('AgentController (e2e)', () => {
       const appId = 'app-recover-e2e'
       sessionRecoverService.registerSession(appId, {
         sessionId: 'session-a',
-        summary: '摘要 A',
-        createdAt: '2026-01-01T00:00:00.000Z',
+        langChain: { summary: '摘要 A', get chatSummary() { return this.summary } },
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
       } as any)
       sessionRecoverService.registerSession(appId, {
         sessionId: 'session-b',
-        summary: '未摘要对话',
-        createdAt: '2026-01-02T00:00:00.000Z',
+        langChain: { summary: '未摘要对话', get chatSummary() { return this.summary } },
+        createdAt: new Date('2026-01-02T00:00:00.000Z'),
       } as any)
 
       const res = await request(app.getHttpServer())
