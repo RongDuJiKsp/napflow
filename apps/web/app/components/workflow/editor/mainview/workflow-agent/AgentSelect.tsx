@@ -10,7 +10,7 @@ type ModelSelectionStepProps = {
   setSelectedConfigId: (value: string) => void;
 }
 
-const ModelSelectionStep = ({
+const AgentSelect = ({
   onEnterChat,
   selectedConfigId,
   setSelectedConfigId,
@@ -112,4 +112,4 @@ const ModelSelectionStep = ({
   )
 }
 
-export default memo(ModelSelectionStep)
+export default memo(AgentSelect)

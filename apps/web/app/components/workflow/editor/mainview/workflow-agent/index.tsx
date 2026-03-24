@@ -2,8 +2,8 @@
 import { Drawer } from 'antd'
 import { RiRobot2Line } from '@remixicon/react'
 import { memo } from 'react'
-import AgentChatStep from './AgentChatStep'
-import ModelSelectionStep from './ModelSelectionStep'
+import AgentChatStep from './AgentChat'
+import ModelSelectionStep from './AgentSelect'
 import { AgentPanelStage, useWorkflowAgent } from './hooks/use-workflow-agent'
 import { choose } from '@/utils/comm'
 

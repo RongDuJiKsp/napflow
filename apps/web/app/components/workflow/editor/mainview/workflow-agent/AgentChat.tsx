@@ -3,7 +3,7 @@ import { Typography } from 'antd'
 import { RiSparkling2Line } from '@remixicon/react'
 import { memo } from 'react'
 
-const AgentChatStep = () => {
+const AgentChat = () => {
   return (
     <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-4 py-10 text-center">
       <div className="mb-3 flex justify-center text-gray-400">
@@ -19,4 +19,4 @@ const AgentChatStep = () => {
   )
 }
 
-export default memo(AgentChatStep)
+export default memo(AgentChat)

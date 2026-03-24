@@ -34,6 +34,6 @@ export const useArrayDict = <T>(
   )
   const findItem = useCallback((id: string) => map[id], [map])
   return {
-    findItem
+    findItem,
   }
 }
