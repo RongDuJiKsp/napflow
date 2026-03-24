@@ -24,12 +24,11 @@ NapFlow 前端应用（Next.js），包含工作流编辑器、Bot 管理、插�
 
 | 变量名                     | 说明                                                                       | 读取位置                            | 默认值                  | 是否必填 |
 | -------------------------- | -------------------------------------------------------------------------- | ----------------------------------- | ----------------------- | -------- |
-| `SERVER_URL`               | 后端服务地址，用于 Next.js rewrites 代理转发                               | `next.config.ts`                    | `http://localhost:8848` | 否       |
-| `NEXT_PUBLIC_API_URL`      | 前端请求的 API 基础路径。以 `/` 开头时启用 Next.js 代理转发到 `SERVER_URL` | `config/env.ts`、`next.config.ts`   | `/api`                  | 否       |
+| `NEXT_PUBLIC_API_URL`      | 前端请求的 API 基础路径。推荐设置为 `/api`，由独立 proxy 服务转发到后端    | `config/env.ts`                     | `/api`                  | 否       |
 | `NEXT_PUBLIC_NODE_ENV`     | 前端运行环境标识，导出 `isDevelopment` / `isProduction`                    | `config/env.ts`                     | 自动取 `$NODE_ENV`      | 否       |
 | `STRENGTH_PASSWORD_LENGTH` | 前端密码强度校验的最小长度，正整数字符串                                   | `app/components/_base/constants.ts` | `8`                     | 否       |
 
-> **说明**：当 `NEXT_PUBLIC_API_URL` 以 `/` 开头时，Next.js 会通过 rewrites 将 `/api/*` 的请求代理转发到 `SERVER_URL`，适用于前后端分离部署时解决跨域问题。如果将 `NEXT_PUBLIC_API_URL` 设置为完整的后端地址（如 `http://localhost:8848`），则前端会直接请求后端，不经过代理。
+> **说明**：当前推荐由独立 Node.js proxy 承接入口流量并转发 `/api/*` 到后端，前端保留 `NEXT_PUBLIC_API_URL=/api` 即可。若将 `NEXT_PUBLIC_API_URL` 设置为完整后端地址（如 `http://localhost:8848`），前端会直连后端，不经过 proxy。
 
 ## Getting Started
 

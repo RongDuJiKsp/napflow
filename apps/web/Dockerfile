@@ -1,7 +1,6 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
-ARG SERVER_URL
 # precheck
 # pass
 # 准备pnpm 上下文

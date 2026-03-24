@@ -60,6 +60,7 @@ NapFlow 是一个基于**可视化工作流**的 QQ 机器人管理平台，提�
 ### 子项目文档
 - 前端：`apps/web` → [README](./apps/web/README.md)
 - 后端：`apps/server` → [README](./apps/server/README.md)
+- 代理：`apps/proxy` → [README](./apps/proxy/README.md)
 - 共享包：`apps/shared` → [README](./apps/shared/README.md)
 
 ### 基础设施
@@ -116,6 +117,10 @@ napflow/
 │   │       │   └── app-config/       # 应用配置模块
 │   │       ├── decorator/            # 自定义装饰器
 │   │       └── utils/                # 后端工具函数
+│   │
+│   ├── proxy/                        # 独立入口代理（Express + http-proxy-middleware）
+│   │   └── src/
+│   │       └── index.ts              # /api -> server，其他流量 -> web
 │   │
 │   └── shared/                       # 前后端共享包
 │       ├── common/                   # 共享类型与枚举

@@ -73,16 +73,42 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-      args:
-        SERVER_URL: http://server:8848
     restart: unless-stopped
     depends_on:
       - server
     environment:
       NODE_ENV: production
-      SERVER_URL: http://server:8848
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
       NEXT_PUBLIC_NODE_ENV: production
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - napflow_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  proxy:
+    image: napflow-proxy:latest
+    pull_policy: never
+    container_name: napflow-proxy
+    init: true
+    build:
+      context: .
+      dockerfile: apps/proxy/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - web
+      - server
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      WEB_TARGET: http://web:3000
+      API_TARGET: http://server:8848
     ports:
       - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-3000}:3000"
     security_opt:
