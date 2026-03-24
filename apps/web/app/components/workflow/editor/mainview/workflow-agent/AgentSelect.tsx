@@ -1,23 +1,24 @@
 'use client'
 import { Alert, Button, Select, Typography } from 'antd'
 import { RiSparkling2Line } from '@remixicon/react'
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { useModelSelection } from './hooks/use-model-selection'
+import { AgentWsConnType, serdeConnToken } from './hooks/use-agent-ws-conn'
 
 type ModelSelectionStepProps = {
   onEnterChat: () => void;
-  selectedConfigId?: string;
-  setSelectedConfigId: (value: string) => void;
+  onConnTokenChange: (value: string) => void;
 }
 
 const AgentSelect = ({
   onEnterChat,
-  selectedConfigId,
-  setSelectedConfigId,
+  onConnTokenChange,
 }: ModelSelectionStepProps) => {
-  const { isApiKeyListError, apiKeyListError, isApiKeyListPending, selectedModelConfig, modelOptions, findApiKeyItem } = useModelSelection({
-    selectedConfigId,
-  })
+  const { isApiKeyListError, apiKeyListError, isApiKeyListPending, selectedConfigId, selectedModelConfig, modelOptions, findApiKeyItem, setSelectedConfigId } = useModelSelection()
+  useEffect(() => {
+    if (selectedConfigId)
+      onConnTokenChange(serdeConnToken(AgentWsConnType.NewConnection, selectedConfigId))
+  }, [selectedConfigId, onConnTokenChange])
 
   return (
     <div className="flex h-full flex-col gap-4">

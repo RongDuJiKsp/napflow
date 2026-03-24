@@ -8,9 +8,11 @@ import { AgentPanelStage, useWorkflowAgent } from './hooks/use-workflow-agent'
 import { choose } from '@/utils/comm'
 
 const WorkflowAgent = () => {
-  const { isOpen, handleClose, handleEnterChat, panelStage, selectedConfigId, setSelectedConfigId } = useWorkflowAgent()
+  const { isOpen, handleClose, handleEnterChat, panelStage, connToken, setConnToken } = useWorkflowAgent()
   const isModelSelection = panelStage === AgentPanelStage.ModelSelection
   const isAgentChat = panelStage === AgentPanelStage.AgentChat
+  const isReadyForChat = Boolean(connToken)
+
   return (
     <Drawer
       title={
@@ -28,18 +30,20 @@ const WorkflowAgent = () => {
       open={isOpen}
       onClose={handleClose}
       mask={false}
-      closable={panelStage === AgentPanelStage.ModelSelection}
+      closable={isModelSelection}
     >
-      {panelStage === AgentPanelStage.ModelSelection && (
+      {isModelSelection && (
         <ModelSelectionStep
-          selectedConfigId={selectedConfigId}
-          setSelectedConfigId={setSelectedConfigId}
+          onConnTokenChange={setConnToken}
           onEnterChat={handleEnterChat}
         />
       )}
-
-      {panelStage === AgentPanelStage.AgentChat
-      && <AgentChatStep />}
+      {isAgentChat && isReadyForChat
+      && <AgentChatStep connToken={connToken} />}
+      {isAgentChat && !isReadyForChat
+      && <div className="flex h-full items-center justify-center">
+        <span className="text-sm text-gray-500">未找到模型配置，请返回上一步重新选择模型</span>
+      </div>}
     </Drawer>
   )
 }

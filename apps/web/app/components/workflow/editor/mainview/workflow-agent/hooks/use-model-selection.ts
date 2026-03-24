@@ -1,15 +1,12 @@
 import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-query'
 import { useArrayDict } from '@/app/hooks/utils/use-callbacker'
 import type { OpenAiEndpointConfigRecord } from '@shared/common/agent/entity'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 const getApiKeyListIndex = (config: OpenAiEndpointConfigRecord) => config.id
 
-export const useModelSelection = ({
-  selectedConfigId,
-}: {
-  selectedConfigId: string | undefined
-}) => {
+export const useModelSelection = () => {
   const { data: modelConfigs = [], error: apiKeyListError, isError: isApiKeyListError, isPending: isApiKeyListPending } = useApiKeyListQuery()
+  const [selectedConfigId, setSelectedConfigId] = useState<string>()
 
   const { findItem: findApiKeyItem } = useArrayDict(modelConfigs, getApiKeyListIndex)
 
@@ -29,7 +26,9 @@ export const useModelSelection = ({
 
   return {
     modelOptions,
+    selectedConfigId,
     selectedModelConfig,
+    setSelectedConfigId,
     apiKeyListError,
     isApiKeyListError,
     isApiKeyListPending,

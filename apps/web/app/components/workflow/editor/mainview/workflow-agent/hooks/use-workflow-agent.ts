@@ -11,26 +11,26 @@ export const useWorkflowAgent = () => {
   const isOpen = useStore(editorOutsideStore, state => state.isAgentWindowOpen)
   const close = useStore(editorOutsideStore, state => state.closeAgentWindow)
   const [panelStage, setPanelStage] = useState<AgentPanelStage>(AgentPanelStage.ModelSelection)
-  const [selectedConfigId, setSelectedConfigId] = useState<string>()
+  const [connToken, setConnToken] = useState<string>('')
 
   const handleClose = useCallback(() => {
     setPanelStage(AgentPanelStage.ModelSelection)
-    setSelectedConfigId(undefined)
+    setConnToken('')
     close()
   }, [close])
 
   const handleEnterChat = useCallback(() => {
-    if (!selectedConfigId)
+    if (!connToken)
       return
     setPanelStage(AgentPanelStage.AgentChat)
-  }, [selectedConfigId])
+  }, [connToken])
 
   return {
     isOpen,
     handleClose,
     handleEnterChat,
     panelStage,
-    selectedConfigId,
-    setSelectedConfigId,
+    connToken,
+    setConnToken,
   }
 }
