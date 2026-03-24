@@ -8,7 +8,7 @@ export type WsAuthRequest = z.infer<typeof ZodCheckWsAuthRequest>
 // request model type
 export const ZodCheckWsAgentModel = z.object({
   recordId: z.string().min(1, 'Record ID is required'),
-})
+}).optional()
 export type WsAgentModel = z.infer<typeof ZodCheckWsAgentModel>
 
 // message recovery context
@@ -25,7 +25,16 @@ export const ZodCheckWsAgentConnectionRequest = z.tuple([
   ZodCheckWsAuthRequest,
   ZodCheckWsAgentModel,
   ZodCheckWsAgentMessageRecoveryContext,
-])
+]).superRefine((args, ctx) => {
+  const [, modelReq, recoveryReq] = args
+  if (!modelReq && !recoveryReq) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Either model configuration or recovery context must be provided',
+      fatal: true,
+    })
+  }
+})
 export type WsConnectionRequest = z.infer<
   typeof ZodCheckWsAgentConnectionRequest
 >

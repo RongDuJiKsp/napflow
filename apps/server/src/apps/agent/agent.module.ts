@@ -4,10 +4,11 @@ import { AgentEndpointController } from './config/openai-endpoints/agent-endpoin
 import { AgentGateway } from './connect/agent.gateway'
 import { AgentService } from './connect/agent.service'
 import { LangChainService } from './langchain/langchain.service'
+import { AgentSessionRecoverService } from './connect/agent-session-recover.service'
 
 @Module({
-  providers: [AgentEndpointService, AgentGateway, AgentService, LangChainService],
-  exports: [AgentEndpointService, AgentService, LangChainService],
+  providers: [AgentEndpointService, AgentSessionRecoverService, AgentGateway, AgentService, LangChainService],
+  exports: [AgentEndpointService, AgentSessionRecoverService, AgentService, LangChainService],
   controllers: [AgentEndpointController],
 })
 export class AgentModule {}

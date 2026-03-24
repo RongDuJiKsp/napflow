@@ -3,7 +3,7 @@ import type { Socket } from 'socket.io'
 import { genToolFromClientRPCMethodItem } from '../langchain/call-rpc'
 import type { LangChainInstance } from '../langchain/instance'
 import { LangChainClientRPC } from './client-rpc/client-rpc'
-
+import { v4 as uuidV4 } from 'uuid'
 export class AgentRpcBridge {
   constructor(
     private readonly clientRpc: LangChainClientRPC,
@@ -32,16 +32,21 @@ export class AgentRpcBridge {
 }
 
 export class AgentSession {
-  private readonly logger: Logger
-  private readonly clientRpc: LangChainClientRPC
-  private readonly rpcBridge: AgentRpcBridge
+  readonly sessionId = uuidV4()
+  private readonly logger: Logger = new Logger(`AgentSession-${this.sessionId}`)
+  private socket: Socket
+  private clientRpc: LangChainClientRPC | null
+  private rpcBridge: AgentRpcBridge | null
 
   constructor(
-    private readonly socket: Socket,
     private readonly langChainInstance: LangChainInstance,
   ) {
-    this.logger = new Logger(`AgentSession-${socket.id}`)
+  }
+
+  mountToSocket(socket: Socket) {
+    this.socket = socket
     this.clientRpc = new LangChainClientRPC(socket)
-    this.rpcBridge = new AgentRpcBridge(this.clientRpc, langChainInstance)
+    this.rpcBridge = new AgentRpcBridge(this.clientRpc, this.langChainInstance)
+    this.logger.log(`Agent session ${this.sessionId} mounted to socket ${socket.id}`)
   }
 }

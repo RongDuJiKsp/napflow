@@ -1,18 +1,19 @@
 import { Inject, Logger } from '@nestjs/common'
 import type {
+  GatewayMetadata,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
 } from '@nestjs/websockets'
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import type { Server, Socket } from 'socket.io'
 import { AgentService } from './agent.service'
 import { ZodCheckWsAgentConnectionRequest } from '@shared/common/agent/websocket'
 import { z } from 'zod'
-@WebSocketGateway({})
+@WebSocketGateway<GatewayMetadata>({
+  namespace: '/agent',
+})
 export class AgentGateway
 implements
-    OnGatewayInit<Server>,
     OnGatewayConnection<Socket>,
     OnGatewayDisconnect<Socket> {
   private readonly logger = new Logger(AgentGateway.name)
@@ -22,12 +23,6 @@ implements
   constructor(
     @Inject(AgentService) private readonly agentService: AgentService,
   ) {}
-
-  afterInit(server: Server) {
-    this.logger.log(
-      `AgentGateway server initialized: ${server.httpServer.address()?.toString() ?? 'unknown address'}`,
-    )
-  }
 
   async handleConnection(client: Socket, ...args: any[]) {
     const connParams = ZodCheckWsAgentConnectionRequest.safeParse(args)
