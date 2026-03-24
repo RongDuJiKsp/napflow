@@ -70,9 +70,6 @@ const AgentSelect = ({
               选择执行模型
             </Typography.Title>
           </div>
-          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-sky-700">
-            步骤 1/2
-          </span>
         </div>
         <Typography.Text type="secondary">
           你可以创建一个新会话，也可以恢复一个历史会话继续对话。
