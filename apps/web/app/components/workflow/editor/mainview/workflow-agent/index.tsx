@@ -1,24 +1,45 @@
 'use client'
 import { Drawer } from 'antd'
+import { RiRobot2Line } from '@remixicon/react'
 import { memo } from 'react'
-import { useStore } from 'zustand'
-import { useEditorOutsideStore } from '../../hooks/use-editor-outside-store'
+import AgentChatStep from './AgentChatStep'
+import ModelSelectionStep from './ModelSelectionStep'
+import { AgentPanelStage, useWorkflowAgent } from './hooks/use-workflow-agent'
+import { choose } from '@/utils/comm'
 
 const WorkflowAgent = () => {
-  const editorOutsideStore = useEditorOutsideStore()
-  const isOpen = useStore(editorOutsideStore, state => state.isAgentWindowOpen)
-  const close = useStore(editorOutsideStore, state => state.closeAgentWindow)
-
+  const { isOpen, handleClose, handleEnterChat, panelStage, selectedConfigId, setSelectedConfigId } = useWorkflowAgent()
+  const isModelSelection = panelStage === AgentPanelStage.ModelSelection
+  const isAgentChat = panelStage === AgentPanelStage.AgentChat
   return (
     <Drawer
-      title="Agent"
+      title={
+        <div className="flex items-center gap-2 text-base">
+          <RiRobot2Line size={18} />
+          <span>{
+            choose(
+              isModelSelection && '创建 Agent',
+              isAgentChat && 'Agent 对话',
+            )}
+          </span>
+        </div>
+      }
       placement="left"
-      size={'large'}
       open={isOpen}
-      onClose={close}
+      onClose={handleClose}
       mask={false}
+      closable={panelStage === AgentPanelStage.ModelSelection}
     >
-      <div className="text-sm text-black/45">Agent 功能占位</div>
+      {panelStage === AgentPanelStage.ModelSelection && (
+        <ModelSelectionStep
+          selectedConfigId={selectedConfigId}
+          setSelectedConfigId={setSelectedConfigId}
+          onEnterChat={handleEnterChat}
+        />
+      )}
+
+      {panelStage === AgentPanelStage.AgentChat
+      && <AgentChatStep />}
     </Drawer>
   )
 }
