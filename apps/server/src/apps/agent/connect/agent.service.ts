@@ -1,6 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import type { Socket } from 'socket.io'
 import type {
+  WsAgentMessageRecoveryContext,
+  WsAgentModel,
   WsAuthRequest,
   WsConnectionRequest,
 } from '@shared/common/agent/websocket'
@@ -22,7 +24,7 @@ export class AgentService {
     @Inject(AgentSessionRecoverService) private readonly sessionRecoverService: AgentSessionRecoverService,
   ) {}
 
-  private checkAuthConnectionSuccess(socket: Socket, auth: WsAuthRequest) {
+  private checkAuthConnectionSuccess(auth: WsAuthRequest, socket: Socket) {
     const user = this.jwtService.account.jwtVerify(auth.token)
     if (!user) {
       this.logger.log(
@@ -35,29 +37,29 @@ export class AgentService {
     return true
   }
 
-  async allocSessionToConnection(recordId: string, namespaceAppId: string, socket: Socket) {
+  async allocSessionToConnection(model: WsAgentModel, socket: Socket) {
     const langChainInstance
       = await this.langChainService.createLangChainInstanceByEndpointRecordId(
-        recordId,
+        model.recordId,
       )
     if (!langChainInstance) {
       this.logger.error(
-        `Failed to create LangChainInstance for endpoint record id: ${recordId}`,
+        `Failed to create LangChainInstance for endpoint record id: ${model.recordId}`,
       )
       socket.disconnect(true)
       return null
     }
     const agentSession = new AgentSession(langChainInstance)
     agentSession.mountToSocket(socket)
-    this.sessionRecoverService.registerSession(namespaceAppId, agentSession)
+    this.sessionRecoverService.registerSession(model.appId, agentSession)
     return agentSession
   }
 
-  async recoverSessionToConnection(recoverId: string, recoverAppId: string, socket: Socket) {
-    const recoverdSession = this.sessionRecoverService.recoverSession(recoverAppId, recoverId)
+  async recoverSessionToConnection(recover: WsAgentMessageRecoveryContext, socket: Socket) {
+    const recoverdSession = this.sessionRecoverService.recoverSession(recover.appId, recover.socketSessionId)
     if(!recoverdSession) {
       this.logger.warn(
-        `Failed to recover session for appId ${recoverAppId} with sessionId ${recoverId}`,
+        `Failed to recover session for appId ${recover.appId} with sessionId ${recover.socketSessionId}`,
       )
       socket.disconnect(true)
       return null
@@ -65,25 +67,25 @@ export class AgentService {
     // update socket connection
     recoverdSession.mountToSocket(socket)
     this.logger.log(
-      `Successfully recovered session for appId ${recoverAppId} with sessionId ${recoverId} and associated it with new socket id ${socket.id}`,
+      `Successfully recovered session for appId ${recover.appId} with sessionId ${recover.socketSessionId} and associated it with new socket id ${socket.id}`,
     )
     return recoverdSession
   }
 
   async handleSessionConnection(
     socket: Socket,
-    ...connArgs: WsConnectionRequest
+    connReq: WsConnectionRequest,
   ) {
-    const [authReq, agentReq, recoverReq] = connArgs
+    const { auth: authReq, model, recovery } = connReq
 
-    if (!this.checkAuthConnectionSuccess(socket, authReq))
+    if (!this.checkAuthConnectionSuccess(authReq, socket))
       return null
 
-    if(recoverReq)
-      return await this.recoverSessionToConnection(recoverReq.socketSessionId, recoverReq.appId, socket)
+    if (recovery)
+      return await this.recoverSessionToConnection(recovery, socket)
 
-    if(agentReq)
-      return await this.allocSessionToConnection(agentReq.recordId, authReq.token, socket)
+    if (model)
+      return await this.allocSessionToConnection(model, socket)
 
     this.logger.error(
       `Connection from socket ${socket.id} does not contain valid agent request or recovery context`,

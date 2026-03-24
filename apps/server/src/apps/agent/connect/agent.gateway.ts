@@ -24,8 +24,10 @@ implements
     @Inject(AgentService) private readonly agentService: AgentService,
   ) {}
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    const connParams = ZodCheckWsAgentConnectionRequest.safeParse(args)
+  async handleConnection(client: Socket) {
+    const connParams = ZodCheckWsAgentConnectionRequest.safeParse(
+      client.handshake.auth,
+    )
     if (!connParams.success) {
       this.logger.warn(
         `Invalid connection parameters from client ${client.id}: ${z.prettifyError(connParams.error)}`,
@@ -35,7 +37,7 @@ implements
     }
     const agentSession = await this.agentService.handleSessionConnection(
       client,
-      ...connParams.data,
+      connParams.data,
     )
     if (!agentSession) {
       this.logger.warn(
