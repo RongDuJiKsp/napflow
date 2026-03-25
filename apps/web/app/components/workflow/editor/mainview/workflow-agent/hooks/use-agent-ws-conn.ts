@@ -29,6 +29,7 @@ const createConnection = (recordId: string, appId: string) => {
         recordId,
       },
     },
+    autoConnect: false, // 先创建连接实例，但不立即连接，等到组件挂载后再连接
   })
 }
 const createRecoveryConnection = (recoverId: string, appId: string) => {
@@ -40,10 +41,11 @@ const createRecoveryConnection = (recoverId: string, appId: string) => {
         appId,
       },
     },
+    autoConnect: false, // 先创建连接实例，但不立即连接，等到组件挂载后再连接
   })
 }
 
-export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => void) => {
+export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => (((conn: Socket) => void) | undefined)) => {
   const { appId } = useAppParam()
 
   const wsConn = useCreation(() => {
@@ -58,14 +60,20 @@ export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => 
   }, [connToken, appId])
 
   useEffect(() => {
-    if(wsConn)
-      onCreated?.(wsConn)
+    if (wsConn && onCreated) {
+      const cleanup = onCreated(wsConn)
+      return () => {
+        if (cleanup) cleanup(wsConn)
+      }
+    }
   }, [wsConn, onCreated])
 
   useEffect(() => {
+    wsConn?.connect()
     return () => {
       wsConn?.disconnect()
     }
   }, [wsConn])
+
   return wsConn
 }
