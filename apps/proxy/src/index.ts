@@ -2,11 +2,44 @@ import './env'
 import express from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { PROCESS_ENV } from './config'
-import { proxyLogger } from './logger'
+import { logger, loggerStream } from './logger'
+import pino from 'pino'
+
+const loggerIgnoreMiddleware = (keywords: string[]) => {
+  const logMethod: NonNullable<pino.LoggerOptions['hooks']>['logMethod'] = function (args, method) {
+    const [obj, msg] = args
+
+    let text: string | undefined
+    try{
+      if(typeof msg === 'string')
+        text = msg
+      else if(typeof obj === 'string')
+        text = obj
+      else
+        text = JSON.stringify(obj)
+    }
+    catch{}
+
+    if (keywords.some(keyword => text?.includes(keyword)))
+      return
+
+    method.apply(this, args)
+  }
+  return logMethod
+}
 
 const mountProxy = (app: express.Express) => {
   const webTarget = PROCESS_ENV.WEB_TARGET
   const apiTarget = PROCESS_ENV.API_TARGET
+
+  const webLogger = pino({
+    level: PROCESS_ENV.LOGGER_LEVEL,
+    hooks: {
+      logMethod: loggerIgnoreMiddleware(['__nextjs_', '_next/static']),
+    },
+  }, loggerStream)
+
+  const apiLogger = pino({ level: PROCESS_ENV.LOGGER_LEVEL }, loggerStream)
 
   app.use(
     '/api',
@@ -17,7 +50,7 @@ const mountProxy = (app: express.Express) => {
       pathRewrite: {
         '^/api': '',
       },
-      logger: proxyLogger,
+      logger: apiLogger,
     }),
   )
 
@@ -26,7 +59,7 @@ const mountProxy = (app: express.Express) => {
       target: webTarget,
       changeOrigin: true,
       ws: true,
-      logger: proxyLogger,
+      logger: webLogger,
     }),
   )
 }
@@ -43,9 +76,9 @@ const bootstrap = () => {
   const apiTarget = PROCESS_ENV.API_TARGET
 
   app.listen(port, host, () => {
-    proxyLogger.info(`[proxy] listening on ${host}:${port}`)
-    proxyLogger.info(`[proxy] web target: ${webTarget}`)
-    proxyLogger.info(`[proxy] api target: ${apiTarget}`)
+    logger.info(`listening on ${host}:${port}`)
+    logger.info(`web target: ${webTarget}`)
+    logger.info(`api target: ${apiTarget}`)
   })
 }
 

@@ -1,12 +1,12 @@
 import { pino } from 'pino'
 import { PROCESS_ENV } from './config'
 import pretty from 'pino-pretty'
-const stream = pretty({
+export const loggerStream = pretty({
   colorize: true,
   ignore: 'pid,hostname',
 })
 
-export const proxyLogger = pino({
+export const logger = pino({
   name: 'proxy',
   level: PROCESS_ENV.LOGGER_LEVEL,
-}, stream)
+}, loggerStream)
