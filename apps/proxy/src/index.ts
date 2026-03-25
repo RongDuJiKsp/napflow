@@ -1,14 +1,16 @@
 import express, { type Request, type Response } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import './config'
+import './env'
+import { PROCESS_ENV } from './config'
 
 const bootstrap = () => {
   const app = express()
   app.disable('x-powered-by')
 
-  const port = Number(process.env.PORT || 3000)
-  const webTarget = process.env.WEB_TARGET || 'http://localhost:3000'
-  const apiTarget = process.env.API_TARGET || 'http://localhost:8848'
+  const host = PROCESS_ENV.LISTEN_HOST
+  const port = Number(PROCESS_ENV.LISTEN_PORT)
+  const webTarget = PROCESS_ENV.WEB_TARGET
+  const apiTarget = PROCESS_ENV.API_TARGET
 
   app.get('/__proxy-health__', (_req: Request, res: Response) => {
     res.status(200).json({ ok: true })
@@ -38,8 +40,8 @@ const bootstrap = () => {
     }),
   )
 
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`[proxy] listening on 0.0.0.0:${port}`)
+  app.listen(port, host, () => {
+    console.log(`[proxy] listening on ${host}:${port}`)
     console.log(`[proxy] web target: ${webTarget}`)
     console.log(`[proxy] api target: ${apiTarget}`)
   })
