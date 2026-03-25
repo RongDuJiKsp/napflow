@@ -5,12 +5,12 @@ import type {
   WsAgentModel,
   WsAuthRequest,
   WsConnectionRequest,
-} from '@shared/common/agent/websocket'
-import { JwtService } from '../../account/jwt.service'
-import { LangChainService } from '../langchain/langchain.service'
-import { TypeOrmService } from '../../db/typeorm.service'
-import { AgentSession } from './instance'
-import { AgentSessionRecoverService } from './session-recover/agent-session-recover.service'
+} from '@shared/common/agent/socketio/auth'
+import { JwtService } from '../../../account/jwt.service'
+import { LangChainService } from '../../langchain/langchain.service'
+import { TypeOrmService } from '../../../db/typeorm.service'
+import { AgentSession } from '../instance'
+import { AgentSessionRecoverService } from '../session-recover/agent-session-recover.service'
 import { SocketBindService } from './socket-bind.service'
 
 @Injectable()
