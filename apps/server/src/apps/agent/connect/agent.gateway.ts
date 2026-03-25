@@ -53,5 +53,6 @@ implements
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`)
+    this.agentService.handleSessionDisconnection(client)
   }
 }

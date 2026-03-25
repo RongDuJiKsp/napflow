@@ -6,10 +6,11 @@ import { AgentSessionRecoverController } from './connect/session-recover/agent-s
 import { AgentService } from './connect/agent.service'
 import { LangChainService } from './langchain/langchain.service'
 import { AgentSessionRecoverService } from './connect/session-recover/agent-session-recover.service'
+import { SocketBindService } from './connect/socket-bind.service'
 
 @Module({
-  providers: [AgentEndpointService, AgentSessionRecoverService, AgentGateway, AgentService, LangChainService],
-  exports: [AgentEndpointService, AgentSessionRecoverService, AgentService, LangChainService],
+  providers: [AgentEndpointService, AgentSessionRecoverService, SocketBindService, AgentGateway, AgentService, LangChainService],
+  exports: [AgentEndpointService, AgentSessionRecoverService, SocketBindService, AgentService, LangChainService],
   controllers: [AgentEndpointController, AgentSessionRecoverController],
 })
 export class AgentModule {}

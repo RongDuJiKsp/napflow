@@ -29,13 +29,17 @@ export class AgentRpcBridge {
       ),
     )
   }
+
+  destroy() {
+    this.langChainInstance.dynTool.cleanAllTools()
+  }
 }
 
 export class AgentSession {
   readonly sessionId = uuidV4()
   readonly createdAt = new Date()
   private readonly logger: Logger = new Logger(`AgentSession-${this.sessionId}`)
-  private socket: Socket
+  private socket: Socket | null
   private clientRpc: LangChainClientRPC | null
   private rpcBridge: AgentRpcBridge | null
 
@@ -49,5 +53,13 @@ export class AgentSession {
     this.clientRpc = new LangChainClientRPC(socket)
     this.rpcBridge = new AgentRpcBridge(this.clientRpc, this.langChain)
     this.logger.log(`Agent session ${this.sessionId} mounted to socket ${socket.id}`)
+  }
+
+  unMountToSocket() {
+    this.logger.log(`Agent session ${this.sessionId} unmounted from socket ${this.socket?.id}`)
+    this.rpcBridge?.destroy()
+    this.socket = null
+    this.clientRpc = null
+    this.rpcBridge = null
   }
 }

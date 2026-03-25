@@ -39,6 +39,11 @@ export class LangChainDynamicTool {
     this.dynTools.push(tool)
     this.dynToolDict.set(tool.name, tool)
   }
+
+  cleanAllTools() {
+    this.dynTools.length = 0
+    this.dynToolDict.clear()
+  }
 }
 
 export class LangChainInstance {

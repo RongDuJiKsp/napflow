@@ -11,6 +11,7 @@ import { LangChainService } from '../langchain/langchain.service'
 import { TypeOrmService } from '../../db/typeorm.service'
 import { AgentSession } from './instance'
 import { AgentSessionRecoverService } from './session-recover/agent-session-recover.service'
+import { SocketBindService } from './socket-bind.service'
 
 @Injectable()
 export class AgentService {
@@ -22,6 +23,7 @@ export class AgentService {
     private readonly langChainService: LangChainService,
     @Inject(TypeOrmService) private readonly typeOrmService: TypeOrmService,
     @Inject(AgentSessionRecoverService) private readonly sessionRecoverService: AgentSessionRecoverService,
+    @Inject(SocketBindService) private readonly socketBindService: SocketBindService,
   ) {}
 
   private checkAuthConnectionSuccess(auth: WsAuthRequest, socket: Socket) {
@@ -50,7 +52,7 @@ export class AgentService {
       return null
     }
     const agentSession = new AgentSession(langChainInstance)
-    agentSession.mountToSocket(socket)
+    this.socketBindService.bindSessionToSocket(agentSession, socket)
     this.sessionRecoverService.registerSession(model.appId, agentSession)
     return agentSession
   }
@@ -65,7 +67,7 @@ export class AgentService {
       return null
     }
     // update socket connection
-    recoverdSession.mountToSocket(socket)
+    this.socketBindService.bindSessionToSocket(recoverdSession, socket)
     this.logger.log(
       `Successfully recovered session for appId ${recover.appId} with sessionId ${recover.socketSessionId} and associated it with new socket id ${socket.id}`,
     )
@@ -92,5 +94,9 @@ export class AgentService {
     )
     socket.disconnect(true)
     return null
+  }
+
+  async handleSessionDisconnection(socket: Socket) {
+    this.socketBindService.unbindSessionFromSocket(socket)
   }
 }
