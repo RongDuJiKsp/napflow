@@ -45,7 +45,7 @@ const createRecoveryConnection = (recoverId: string, appId: string) => {
   })
 }
 
-export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => (((conn: Socket) => void) | undefined)) => {
+export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => (((conn: Socket) => void) | void)) => {
   const { appId } = useAppParam()
 
   const wsConn = useCreation(() => {
