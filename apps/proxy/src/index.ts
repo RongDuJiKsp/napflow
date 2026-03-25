@@ -1,6 +1,6 @@
 import './env'
 import express from 'express'
-import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 import { PROCESS_ENV } from './config'
 import { logger, loggerIgnoreMiddleware, loggerStream } from './logger'
 import pino from 'pino'
@@ -21,9 +21,8 @@ const mountProxy = (app: express.Express) => {
   const apiLogger = pino({ name: 'api-proxy', level: PROCESS_ENV.LOGGER_LEVEL }, loggerStream)
 
   app.use(
-    '/api',
     createProxyMiddleware({
-      pathFilter: path => path === '/api' || path.startsWith('/api/'),
+      pathFilter: ['/api/**'],
       target: apiTarget,
       changeOrigin: true,
       ws: true,
@@ -33,9 +32,6 @@ const mountProxy = (app: express.Express) => {
         '^/api': '',
       },
       logger: apiLogger,
-      on: {
-        proxyReq: fixRequestBody,
-      },
     }),
   )
 
