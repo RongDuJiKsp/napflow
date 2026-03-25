@@ -23,6 +23,7 @@ const mountProxy = (app: express.Express) => {
   app.use(
     '/api',
     createProxyMiddleware({
+      pathFilter: path => path === '/api' || path.startsWith('/api/'),
       target: apiTarget,
       changeOrigin: true,
       ws: true,
