@@ -8,15 +8,17 @@ import pino from 'pino'
 const mountProxy = (app: express.Express) => {
   const webTarget = PROCESS_ENV.WEB_TARGET
   const apiTarget = PROCESS_ENV.API_TARGET
+  const proxyTimeoutMs = PROCESS_ENV.PROXY_TIMEOUT_MS
 
   const webLogger = pino({
+    name: 'web-proxy',
     level: PROCESS_ENV.LOGGER_LEVEL,
     hooks: {
       logMethod: loggerIgnoreMiddleware(['__nextjs_', '_next/static']),
     },
   }, loggerStream)
 
-  const apiLogger = pino({ level: PROCESS_ENV.LOGGER_LEVEL }, loggerStream)
+  const apiLogger = pino({ name: 'api-proxy', level: PROCESS_ENV.LOGGER_LEVEL }, loggerStream)
 
   app.use(
     '/api',
@@ -24,6 +26,8 @@ const mountProxy = (app: express.Express) => {
       target: apiTarget,
       changeOrigin: true,
       ws: true,
+      timeout: proxyTimeoutMs,
+      proxyTimeout: proxyTimeoutMs,
       pathRewrite: {
         '^/api': '',
       },
@@ -36,6 +40,8 @@ const mountProxy = (app: express.Express) => {
       target: webTarget,
       changeOrigin: true,
       ws: true,
+      timeout: proxyTimeoutMs,
+      proxyTimeout: proxyTimeoutMs,
       logger: webLogger,
     }),
   )
@@ -51,11 +57,13 @@ const bootstrap = () => {
   const port = Number(PROCESS_ENV.LISTEN_PORT)
   const webTarget = PROCESS_ENV.WEB_TARGET
   const apiTarget = PROCESS_ENV.API_TARGET
+  const proxyTimeoutMs = PROCESS_ENV.PROXY_TIMEOUT_MS
 
   app.listen(port, host, () => {
     logger.info(`listening on ${host}:${port}`)
     logger.info(`web target: ${webTarget}`)
     logger.info(`api target: ${apiTarget}`)
+    logger.info(`proxy timeout(ms): ${proxyTimeoutMs}`)
   })
 }
 

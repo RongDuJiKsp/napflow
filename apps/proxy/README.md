@@ -13,6 +13,7 @@
 - `PORT`：代理监听端口，默认 `3000`
 - `WEB_TARGET`：前端 Next.js 服务地址，默认 `http://localhost:3000`
 - `API_TARGET`：后端服务地址，默认 `http://localhost:8848`
+- `PROXY_TIMEOUT_MS`：代理请求超时（毫秒），默认 `15000`
 
 proxy 使用 `dotenv` 自动加载环境变量文件，加载优先级如下：
 
