@@ -2,31 +2,8 @@ import './env'
 import express from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { PROCESS_ENV } from './config'
-import { logger, loggerStream } from './logger'
+import { logger, loggerIgnoreMiddleware, loggerStream } from './logger'
 import pino from 'pino'
-
-const loggerIgnoreMiddleware = (keywords: string[]) => {
-  const logMethod: NonNullable<pino.LoggerOptions['hooks']>['logMethod'] = function (args, method) {
-    const [obj, msg] = args
-
-    let text: string | undefined
-    try{
-      if(typeof msg === 'string')
-        text = msg
-      else if(typeof obj === 'string')
-        text = obj
-      else
-        text = JSON.stringify(obj)
-    }
-    catch{}
-
-    if (keywords.some(keyword => text?.includes(keyword)))
-      return
-
-    method.apply(this, args)
-  }
-  return logMethod
-}
 
 const mountProxy = (app: express.Express) => {
   const webTarget = PROCESS_ENV.WEB_TARGET
