@@ -14,7 +14,9 @@ export enum AgentWsConnType {
 export const serdeConnToken = (type: AgentWsConnType, id: string): string => {
   return `${type}:${id}`
 }
-export const parseConnToken = (token: string): { type: AgentWsConnType, id: string } | null => {
+export const parseConnToken = (
+  token: string,
+): { type: AgentWsConnType; id: string } | null => {
   const [type, id] = token.split(':')
   if (!type || !id) return null
   return { type: type as AgentWsConnType, id }
@@ -22,7 +24,8 @@ export const parseConnToken = (token: string): { type: AgentWsConnType, id: stri
 
 const createConnection = (recordId: string, appId: string) => {
   return io('/agent', {
-    path: `${baseUrl}/socket.io`, auth: <Pick<WsConnectionRequest, 'auth' | 'model'>>{
+    path: `${baseUrl}/socket.io`,
+    auth: <Pick<WsConnectionRequest, 'auth' | 'model'>>{
       auth: { token: localStorage.getItem('auth-token') },
       model: {
         appId,
@@ -34,7 +37,8 @@ const createConnection = (recordId: string, appId: string) => {
 }
 const createRecoveryConnection = (recoverId: string, appId: string) => {
   return io('/agent', {
-    path: `${baseUrl}/socket.io`, auth: <Pick<WsConnectionRequest, 'auth' | 'recovery'>>{
+    path: `${baseUrl}/socket.io`,
+    auth: <Pick<WsConnectionRequest, 'auth' | 'recovery'>>{
       auth: { token: localStorage.getItem('auth-token') },
       recovery: {
         socketSessionId: recoverId,
@@ -45,7 +49,10 @@ const createRecoveryConnection = (recoverId: string, appId: string) => {
   })
 }
 
-export const useAgentWsConn = (connToken: string, onCreated?: (conn: Socket) => (((conn: Socket) => void) | void)) => {
+export const useAgentWsConn = (
+  connToken: string,
+  onCreated?: (conn: Socket) => ((conn: Socket) => void) | void,
+) => {
   const { appId } = useAppParam()
 
   const wsConn = useCreation(() => {

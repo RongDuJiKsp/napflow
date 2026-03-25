@@ -4,7 +4,12 @@ import type {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets'
-import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
+import {
+  ConnectedSocket,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets'
 import type { Server, Socket } from 'socket.io'
 import { AgentService } from './services/agent.service'
 import { ZodCheckWsAgentConnectionRequest } from '@shared/common/agent/socketio/auth'
@@ -17,9 +22,7 @@ import { MessageService } from './services/message.service'
   namespace: '/agent',
 })
 export class AgentGateway
-implements
-    OnGatewayConnection<Socket>,
-    OnGatewayDisconnect<Socket> {
+implements OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
   private readonly logger = new Logger(AgentGateway.name)
   @WebSocketServer()
   server: Server
@@ -50,9 +53,7 @@ implements
       )
     }
     else {
-      this.logger.log(
-        `Agent session established for client ${client.id}`,
-      )
+      this.logger.log(`Agent session established for client ${client.id}`)
     }
   }
 
@@ -63,7 +64,8 @@ implements
 
   @SubscribeMessage('query')
   async handleChatQueryMessage(
-    @ZodBody({ zod: ZodCheckWsMessageEventChatQuery }) body: WsMessageEventChatQuery,
+    @ZodBody({ zod: ZodCheckWsMessageEventChatQuery })
+    body: WsMessageEventChatQuery,
     @ConnectedSocket() socket: Socket,
   ) {
     await this.messageService.handleChatQueryMessage(body.query, socket)

@@ -15,10 +15,22 @@ const AgentSelect = ({
   onEnterChat,
   onConnTokenChange,
 }: ModelSelectionStepProps) => {
-  const [sessionMode, setSessionMode] = useState<AgentWsConnType>(AgentWsConnType.NewConnection)
-  const [selectedRecoverSessionId, setSelectedRecoverSessionId] = useState<string>()
+  const [sessionMode, setSessionMode] = useState<AgentWsConnType>(
+    AgentWsConnType.NewConnection,
+  )
+  const [selectedRecoverSessionId, setSelectedRecoverSessionId]
+    = useState<string>()
 
-  const { isApiKeyListError, apiKeyListError, isApiKeyListPending, selectedConfigId, selectedModelConfig, modelOptions, findApiKeyItem, setSelectedConfigId } = useModelSelection()
+  const {
+    isApiKeyListError,
+    apiKeyListError,
+    isApiKeyListPending,
+    selectedConfigId,
+    selectedModelConfig,
+    modelOptions,
+    findApiKeyItem,
+    setSelectedConfigId,
+  } = useModelSelection()
   const {
     data: recoverableSessions = [],
     error: recoverSessionListError,
@@ -36,29 +48,46 @@ const AgentSelect = ({
   )
 
   const selectedRecoverSession = useMemo(
-    () => recoverableSessions.find(item => item.sessionId === selectedRecoverSessionId),
+    () =>
+      recoverableSessions.find(
+        item => item.sessionId === selectedRecoverSessionId,
+      ),
     [recoverableSessions, selectedRecoverSessionId],
   )
 
   useEffect(() => {
     if (sessionMode === AgentWsConnType.NewConnection && selectedConfigId) {
-      onConnTokenChange(serdeConnToken(AgentWsConnType.NewConnection, selectedConfigId))
+      onConnTokenChange(
+        serdeConnToken(AgentWsConnType.NewConnection, selectedConfigId),
+      )
       return
     }
 
-    if (sessionMode === AgentWsConnType.RecoveryConnection && selectedRecoverSessionId) {
+    if (
+      sessionMode === AgentWsConnType.RecoveryConnection
+      && selectedRecoverSessionId
+    ) {
       onConnTokenChange(
-        serdeConnToken(AgentWsConnType.RecoveryConnection, selectedRecoverSessionId),
+        serdeConnToken(
+          AgentWsConnType.RecoveryConnection,
+          selectedRecoverSessionId,
+        ),
       )
       return
     }
 
     onConnTokenChange('')
-  }, [selectedConfigId, selectedRecoverSessionId, sessionMode, onConnTokenChange])
+  }, [
+    selectedConfigId,
+    selectedRecoverSessionId,
+    sessionMode,
+    onConnTokenChange,
+  ])
 
-  const canEnterChat = sessionMode === AgentWsConnType.NewConnection
-    ? Boolean(selectedConfigId)
-    : Boolean(selectedRecoverSessionId)
+  const canEnterChat
+    = sessionMode === AgentWsConnType.NewConnection
+      ? Boolean(selectedConfigId)
+      : Boolean(selectedRecoverSessionId)
 
   return (
     <div className="flex h-full flex-col gap-4">
@@ -97,7 +126,11 @@ const AgentSelect = ({
           type="error"
           showIcon
           title="加载模型列表失败"
-          description={apiKeyListError instanceof Error ? apiKeyListError.message : '请稍后重试'}
+          description={
+            apiKeyListError instanceof Error
+              ? apiKeyListError.message
+              : '请稍后重试'
+          }
         />
       )}
 
@@ -108,7 +141,9 @@ const AgentSelect = ({
           </Typography.Text>
           <Select
             className="w-full"
-            placeholder={isApiKeyListPending ? '模型列表加载中...' : '请选择模型'}
+            placeholder={
+              isApiKeyListPending ? '模型列表加载中...' : '请选择模型'
+            }
             loading={isApiKeyListPending}
             options={modelOptions}
             value={selectedConfigId}
@@ -118,8 +153,12 @@ const AgentSelect = ({
               const config = findApiKeyItem(option.data.value)
               return (
                 <div className="py-1">
-                  <div className="text-sm font-medium text-gray-800">{config?.model}</div>
-                  <div className="text-xs text-gray-400">{config?.endpoint}</div>
+                  <div className="text-sm font-medium text-gray-800">
+                    {config?.model}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {config?.endpoint}
+                  </div>
                   <div className="text-xs text-gray-400">{config?.apiKey}</div>
                 </div>
               )
@@ -135,19 +174,35 @@ const AgentSelect = ({
           </Typography.Text>
           <Select
             className="w-full"
-            placeholder={isRecoverSessionListPending ? '历史会话加载中...' : '请选择要恢复的会话'}
+            placeholder={
+              isRecoverSessionListPending
+                ? '历史会话加载中...'
+                : '请选择要恢复的会话'
+            }
             loading={isRecoverSessionListPending}
             options={recoverSessionOptions}
             value={selectedRecoverSessionId}
             onChange={setSelectedRecoverSessionId}
-            disabled={isRecoverSessionListPending || recoverSessionOptions.length === 0}
+            disabled={
+              isRecoverSessionListPending || recoverSessionOptions.length === 0
+            }
             optionRender={(option) => {
-              const session = recoverableSessions.find(item => item.sessionId === option.data.value)
+              const session = recoverableSessions.find(
+                item => item.sessionId === option.data.value,
+              )
               return (
                 <div className="py-1">
-                  <div className="text-sm font-medium text-gray-800">{session?.title}</div>
-                  <div className="text-xs text-gray-400">{session?.sessionId}</div>
-                  <div className="text-xs text-gray-400">{session ? new Date(session.createdAt).toLocaleString('zh-CN') : ''}</div>
+                  <div className="text-sm font-medium text-gray-800">
+                    {session?.title}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {session?.sessionId}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {session
+                      ? new Date(session.createdAt).toLocaleString('zh-CN')
+                      : ''}
+                  </div>
                 </div>
               )
             }}
@@ -172,7 +227,8 @@ const AgentSelect = ({
         </div>
       )}
 
-      {sessionMode === AgentWsConnType.RecoveryConnection && selectedRecoverSessionId && (
+      {sessionMode === AgentWsConnType.RecoveryConnection
+        && selectedRecoverSessionId && (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
           <Typography.Text className="mb-2 block text-xs font-medium uppercase tracking-wide text-emerald-600">
             已选择会话
@@ -185,13 +241,19 @@ const AgentSelect = ({
           </div>
           {selectedRecoverSession && (
             <div className="mt-1 text-xs text-emerald-700/80">
-              创建时间：{new Date(selectedRecoverSession.createdAt).toLocaleString('zh-CN')}
+              创建时间：
+              {new Date(selectedRecoverSession.createdAt).toLocaleString(
+                'zh-CN',
+              )}
             </div>
           )}
         </div>
       )}
 
-      {sessionMode === AgentWsConnType.NewConnection && !isApiKeyListPending && !isApiKeyListError && modelOptions.length === 0 && (
+      {sessionMode === AgentWsConnType.NewConnection
+        && !isApiKeyListPending
+        && !isApiKeyListError
+        && modelOptions.length === 0 && (
         <Alert
           type="info"
           showIcon
@@ -200,16 +262,24 @@ const AgentSelect = ({
         />
       )}
 
-      {sessionMode === AgentWsConnType.RecoveryConnection && isRecoverSessionListError && (
+      {sessionMode === AgentWsConnType.RecoveryConnection
+        && isRecoverSessionListError && (
         <Alert
           type="error"
           showIcon
           message="加载历史会话失败"
-          description={recoverSessionListError instanceof Error ? recoverSessionListError.message : '请稍后重试'}
+          description={
+            recoverSessionListError instanceof Error
+              ? recoverSessionListError.message
+              : '请稍后重试'
+          }
         />
       )}
 
-      {sessionMode === AgentWsConnType.RecoveryConnection && !isRecoverSessionListPending && !isRecoverSessionListError && recoverSessionOptions.length === 0 && (
+      {sessionMode === AgentWsConnType.RecoveryConnection
+        && !isRecoverSessionListPending
+        && !isRecoverSessionListError
+        && recoverSessionOptions.length === 0 && (
         <Alert
           type="info"
           showIcon

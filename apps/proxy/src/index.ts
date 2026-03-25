@@ -10,15 +10,21 @@ const mountProxy = (app: express.Express) => {
   const apiTarget = PROCESS_ENV.API_TARGET
   const proxyTimeoutMs = PROCESS_ENV.PROXY_TIMEOUT_MS
 
-  const webLogger = pino({
-    name: 'web-proxy',
-    level: PROCESS_ENV.LOGGER_LEVEL,
-    hooks: {
-      logMethod: loggerIgnoreMiddleware(['__nextjs_', '_next/static']),
+  const webLogger = pino(
+    {
+      name: 'web-proxy',
+      level: PROCESS_ENV.LOGGER_LEVEL,
+      hooks: {
+        logMethod: loggerIgnoreMiddleware(['__nextjs_', '_next/static']),
+      },
     },
-  }, loggerStream)
+    loggerStream,
+  )
 
-  const apiLogger = pino({ name: 'api-proxy', level: PROCESS_ENV.LOGGER_LEVEL }, loggerStream)
+  const apiLogger = pino(
+    { name: 'api-proxy', level: PROCESS_ENV.LOGGER_LEVEL },
+    loggerStream,
+  )
 
   app.use(
     createProxyMiddleware({

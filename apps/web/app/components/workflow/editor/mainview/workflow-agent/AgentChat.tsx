@@ -3,18 +3,24 @@ import { Typography } from 'antd'
 import { RiSparkling2Line } from '@remixicon/react'
 import type { PropsWithChildren } from 'react'
 import { memo } from 'react'
-import { AgentWsConnContext, useAgentWsConnInstance } from './hooks/use-agent-chat'
+import {
+  AgentWsConnContext,
+  useAgentWsConnInstance,
+} from './hooks/use-agent-chat'
 
-const AgentChatConnProvider = ({ connToken, children }: PropsWithChildren<{ connToken: string }>) => {
+const AgentChatConnProvider = ({
+  connToken,
+  children,
+}: PropsWithChildren<{ connToken: string }>) => {
   const conn = useAgentWsConnInstance(connToken)
-  return <AgentWsConnContext.Provider value={conn}>
-    {children}
-  </AgentWsConnContext.Provider>
+  return (
+    <AgentWsConnContext.Provider value={conn}>
+      {children}
+    </AgentWsConnContext.Provider>
+  )
 }
 
-const AgentChat = ({ connToken}: {
-  connToken: string
-}) => {
+const AgentChat = ({ connToken }: { connToken: string }) => {
   return (
     <AgentChatConnProvider connToken={connToken}>
       <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-4 py-10 text-center">

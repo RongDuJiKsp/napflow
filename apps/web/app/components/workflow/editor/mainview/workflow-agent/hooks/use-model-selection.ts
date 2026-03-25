@@ -5,10 +5,18 @@ import { useMemo, useState } from 'react'
 const getApiKeyListIndex = (config: OpenAiEndpointConfigRecord) => config.id
 
 export const useModelSelection = () => {
-  const { data: modelConfigs = [], error: apiKeyListError, isError: isApiKeyListError, isPending: isApiKeyListPending } = useApiKeyListQuery()
+  const {
+    data: modelConfigs = [],
+    error: apiKeyListError,
+    isError: isApiKeyListError,
+    isPending: isApiKeyListPending,
+  } = useApiKeyListQuery()
   const [selectedConfigId, setSelectedConfigId] = useState<string>()
 
-  const { findItem: findApiKeyItem } = useArrayDict(modelConfigs, getApiKeyListIndex)
+  const { findItem: findApiKeyItem } = useArrayDict(
+    modelConfigs,
+    getApiKeyListIndex,
+  )
 
   const modelOptions = useMemo(
     () =>

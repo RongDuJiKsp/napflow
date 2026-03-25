@@ -6,7 +6,10 @@ export type NamespaceAppId = string
 export type SessionId = string
 @Injectable()
 export class AgentSessionRecoverService {
-  private readonly sessions = new Map<NamespaceAppId, Map<SessionId, AgentSession>>()
+  private readonly sessions = new Map<
+    NamespaceAppId,
+    Map<SessionId, AgentSession>
+  >()
 
   nameSpaceMap(namespaceAppId: NamespaceAppId) {
     if (!this.sessions.has(namespaceAppId))
@@ -24,7 +27,9 @@ export class AgentSessionRecoverService {
     return session || null
   }
 
-  getRecoverableSessionList(namespaceAppId: NamespaceAppId): RecoverableAgentSessionItem[] {
+  getRecoverableSessionList(
+    namespaceAppId: NamespaceAppId,
+  ): RecoverableAgentSessionItem[] {
     const sessions = this.nameSpaceMap(namespaceAppId)
     return Array.from(sessions.values()).map(session => ({
       sessionId: session.sessionId,

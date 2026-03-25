@@ -22,20 +22,23 @@ export type WsAgentMessageRecoveryContext = z.infer<
 >
 
 // request
-export const ZodCheckWsAgentConnectionRequest = z.object({
-  auth: ZodCheckWsAuthRequest,
-  model: ZodCheckWsAgentModel.optional(),
-  recovery: ZodCheckWsAgentMessageRecoveryContext.optional(),
-}).superRefine((req, ctx) => {
-  const { model: modelReq, recovery: recoveryReq } = req
-  if (!modelReq && !recoveryReq) {
-    ctx.addIssue({
-      code: 'custom',
-      message: 'Either model configuration or recovery context must be provided',
-      fatal: true,
-    })
-  }
-})
+export const ZodCheckWsAgentConnectionRequest = z
+  .object({
+    auth: ZodCheckWsAuthRequest,
+    model: ZodCheckWsAgentModel.optional(),
+    recovery: ZodCheckWsAgentMessageRecoveryContext.optional(),
+  })
+  .superRefine((req, ctx) => {
+    const { model: modelReq, recovery: recoveryReq } = req
+    if (!modelReq && !recoveryReq) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'Either model configuration or recovery context must be provided',
+        fatal: true,
+      })
+    }
+  })
 export type WsConnectionRequest = z.infer<
   typeof ZodCheckWsAgentConnectionRequest
 >

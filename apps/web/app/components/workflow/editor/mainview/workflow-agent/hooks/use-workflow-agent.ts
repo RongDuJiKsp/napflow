@@ -8,9 +8,14 @@ export enum AgentPanelStage {
 
 export const useWorkflowAgent = () => {
   const editorOutsideStore = useEditorOutsideStore()
-  const isOpen = useStore(editorOutsideStore, state => state.isAgentWindowOpen)
+  const isOpen = useStore(
+    editorOutsideStore,
+    state => state.isAgentWindowOpen,
+  )
   const close = useStore(editorOutsideStore, state => state.closeAgentWindow)
-  const [panelStage, setPanelStage] = useState<AgentPanelStage>(AgentPanelStage.ModelSelection)
+  const [panelStage, setPanelStage] = useState<AgentPanelStage>(
+    AgentPanelStage.ModelSelection,
+  )
   const [connToken, setConnToken] = useState<string>('')
 
   const handleClose = useCallback(() => {
@@ -20,8 +25,7 @@ export const useWorkflowAgent = () => {
   }, [close])
 
   const handleEnterChat = useCallback(() => {
-    if (!connToken)
-      return
+    if (!connToken) return
     setPanelStage(AgentPanelStage.AgentChat)
   }, [connToken])
 

@@ -10,11 +10,11 @@ export type ZodBodyConfig = {
 // Create a decorator to parse the body of the request
 export const ZodBody = createParamDecorator(
   ({ zod }: ZodBodyConfig, ctx: ExecutionContext) => {
-    if(ctx.getType() === 'http') {
+    if (ctx.getType() === 'http') {
       const request = ctx.switchToHttp().getRequest<Request>()
       return zod.parse(request.body)
     }
-    if(ctx.getType() === 'ws') {
+    if (ctx.getType() === 'ws') {
       const data = ctx.switchToWs().getData()
       return zod.parse(data)
     }

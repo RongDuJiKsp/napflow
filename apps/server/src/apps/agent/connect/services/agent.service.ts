@@ -22,8 +22,10 @@ export class AgentService {
     @Inject(LangChainService)
     private readonly langChainService: LangChainService,
     @Inject(TypeOrmService) private readonly typeOrmService: TypeOrmService,
-    @Inject(AgentSessionRecoverService) private readonly sessionRecoverService: AgentSessionRecoverService,
-    @Inject(SocketBindService) private readonly socketBindService: SocketBindService,
+    @Inject(AgentSessionRecoverService)
+    private readonly sessionRecoverService: AgentSessionRecoverService,
+    @Inject(SocketBindService)
+    private readonly socketBindService: SocketBindService,
   ) {}
 
   private checkAuthConnectionSuccess(auth: WsAuthRequest, socket: Socket) {
@@ -57,9 +59,15 @@ export class AgentService {
     return agentSession
   }
 
-  async recoverSessionToConnection(recover: WsAgentMessageRecoveryContext, socket: Socket) {
-    const recoverdSession = this.sessionRecoverService.recoverSession(recover.appId, recover.socketSessionId)
-    if(!recoverdSession) {
+  async recoverSessionToConnection(
+    recover: WsAgentMessageRecoveryContext,
+    socket: Socket,
+  ) {
+    const recoverdSession = this.sessionRecoverService.recoverSession(
+      recover.appId,
+      recover.socketSessionId,
+    )
+    if (!recoverdSession) {
       this.logger.warn(
         `Failed to recover session for appId ${recover.appId} with sessionId ${recover.socketSessionId}`,
       )
@@ -74,20 +82,15 @@ export class AgentService {
     return recoverdSession
   }
 
-  async handleSessionConnection(
-    socket: Socket,
-    connReq: WsConnectionRequest,
-  ) {
+  async handleSessionConnection(socket: Socket, connReq: WsConnectionRequest) {
     const { auth: authReq, model, recovery } = connReq
 
-    if (!this.checkAuthConnectionSuccess(authReq, socket))
-      return null
+    if (!this.checkAuthConnectionSuccess(authReq, socket)) return null
 
     if (recovery)
       return await this.recoverSessionToConnection(recovery, socket)
 
-    if (model)
-      return await this.allocSessionToConnection(model, socket)
+    if (model) return await this.allocSessionToConnection(model, socket)
 
     this.logger.error(
       `Connection from socket ${socket.id} does not contain valid agent request or recovery context`,

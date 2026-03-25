@@ -8,7 +8,14 @@ import { AgentPanelStage, useWorkflowAgent } from './hooks/use-workflow-agent'
 import { choose } from '@/utils/comm'
 
 const WorkflowAgent = () => {
-  const { isOpen, handleClose, handleEnterChat, panelStage, connToken, setConnToken } = useWorkflowAgent()
+  const {
+    isOpen,
+    handleClose,
+    handleEnterChat,
+    panelStage,
+    connToken,
+    setConnToken,
+  } = useWorkflowAgent()
   const isModelSelection = panelStage === AgentPanelStage.ModelSelection
   const isAgentChat = panelStage === AgentPanelStage.AgentChat
   const isReadyForChat = Boolean(connToken)
@@ -18,8 +25,8 @@ const WorkflowAgent = () => {
       title={
         <div className="flex items-center gap-2 text-base">
           <RiRobot2Line size={18} />
-          <span>{
-            choose(
+          <span>
+            {choose(
               isModelSelection && '创建 Agent',
               isAgentChat && 'Agent 对话',
             )}
@@ -38,12 +45,14 @@ const WorkflowAgent = () => {
           onEnterChat={handleEnterChat}
         />
       )}
-      {isAgentChat && isReadyForChat
-      && <AgentChatStep connToken={connToken} />}
-      {isAgentChat && !isReadyForChat
-      && <div className="flex h-full items-center justify-center">
-        <span className="text-sm text-gray-500">未找到模型配置，请返回上一步重新选择模型</span>
-      </div>}
+      {isAgentChat && isReadyForChat && <AgentChatStep connToken={connToken} />}
+      {isAgentChat && !isReadyForChat && (
+        <div className="flex h-full items-center justify-center">
+          <span className="text-sm text-gray-500">
+            未找到模型配置，请返回上一步重新选择模型
+          </span>
+        </div>
+      )}
     </Drawer>
   )
 }

@@ -13,7 +13,9 @@ export class SocketBindService {
   bindSessionToSocket(session: AgentSession, socket: Socket) {
     this.socketToSessionMap.set(socket.id, session)
     session.mountToSocket(socket)
-    this.logger.log(`Bound agent session ${session.sessionId} to socket ${socket.id}`)
+    this.logger.log(
+      `Bound agent session ${session.sessionId} to socket ${socket.id}`,
+    )
   }
 
   unbindSessionFromSocket(socket: Socket) {
@@ -21,7 +23,9 @@ export class SocketBindService {
     if (session) {
       session.unMountToSocket()
       this.socketToSessionMap.delete(socket.id)
-      this.logger.log(`Unbound agent session ${session.sessionId} from socket ${socket.id}`)
+      this.logger.log(
+        `Unbound agent session ${session.sessionId} from socket ${socket.id}`,
+      )
     }
   }
 }

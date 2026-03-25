@@ -10,7 +10,12 @@ export default async function Page() {
   return (
     <StoreOutsideProvider>
       <WorkflowSideMenus
-        elements={[AppSettings, WorkflowEnvButton, WorkflowAgentButton, AppPublish]}
+        elements={[
+          AppSettings,
+          WorkflowEnvButton,
+          WorkflowAgentButton,
+          AppPublish,
+        ]}
       >
         <div className="w-full h-main overflow-hidden">
           <Editor />

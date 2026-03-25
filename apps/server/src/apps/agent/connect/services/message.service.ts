@@ -6,7 +6,8 @@ import type { Socket } from 'socket.io'
 export class MessageService {
   private readonly logger = new Logger(MessageService.name)
   constructor(
-    @Inject(SocketBindService) private readonly socketBindService: SocketBindService,
+    @Inject(SocketBindService)
+    private readonly socketBindService: SocketBindService,
   ) {}
 
   async handleChatQueryMessage(message: string, socket: Socket) {
