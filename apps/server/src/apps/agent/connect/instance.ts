@@ -4,6 +4,7 @@ import { LangChainClientRPC as WorkflowEditorClientRPC } from './client-rpc/clie
 import { v4 as uuidV4 } from 'uuid'
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 import { LangChainInstance } from '../langchain/instance'
+import { HumanMessage } from '@langchain/core/messages'
 
 export class AgentSession {
   readonly sessionId = uuidV4()
@@ -45,8 +46,13 @@ export class AgentSession {
 
   async invokeChat(message: string) {
     this.logger.log(`Invoking chat with message: ${message}`)
+    // 首先回显用户输入的消息，以提升响应速度和用户体验
+    this.safeSocket.emit('query.response', (new HumanMessage(message)).toDict())
+
     const { diff } = await this.langChain.invokeChat(message)
-    for(const msg of diff)
+
+    // 发送响应消息 splice(1) 是为了去掉第一个消息，因为第一个消息就是用户输入的消息
+    for(const msg of diff.splice(1))
       this.safeSocket.emit('query.response', msg.toDict())
   }
 }
