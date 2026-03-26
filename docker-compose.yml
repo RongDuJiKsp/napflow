@@ -5,10 +5,10 @@ services:
     init: true
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-napflow_db}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER:?MYSQL_USER is required}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
     ports:
       - "127.0.0.1:${MYSQL_BIND_PORT:-3306}:3306"
     volumes:
@@ -42,13 +42,13 @@ services:
     environment:
       SERVER_HOST_NAME: 0.0.0.0
       SERVER_PORT: ${SERVER_PORT:-8848}
-      MYSQL_USERNAME: ${MYSQL_USER}
-      MYSQL_PWD: ${MYSQL_PASSWORD}
+      MYSQL_USERNAME: ${MYSQL_USER:?MYSQL_USER is required}
+      MYSQL_PWD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
       MYSQL_HOSTPORT: mysql:3306
       MYSQL_DATABASE: ${MYSQL_DATABASE:-napflow_db}
-      ACC_ROOT_EMAIL: ${ACC_ROOT_EMAIL}
-      ACC_ROOT_NICKNAME: ${ACC_ROOT_NICKNAME}
-      ACC_ROOT_PASSWORD: ${ACC_ROOT_PASSWORD}
+      ACC_ROOT_EMAIL: ${ACC_ROOT_EMAIL:-root@napflow.com}
+      ACC_ROOT_NICKNAME: ${ACC_ROOT_NICKNAME:-rootUser}
+      ACC_ROOT_PASSWORD: ${ACC_ROOT_PASSWORD:-root}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
       - "${SERVER_BIND_IP:-0.0.0.0}:${SERVER_PORT:-8848}:8848"
