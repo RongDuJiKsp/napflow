@@ -203,54 +203,6 @@ erDiagram
       }
 ```
 
-## 环境变量
-
-后端环境变量由 `AppConfigService`（`src/apps/app-config/app-config.service.ts`）通过 Zod Schema 统一解析校验，启动时如果必填项缺失或格式错误会直接报错退出。
-
-| 变量名                   | 说明                                                               | 默认值           | 是否必填 |
-| ------------------------ | ------------------------------------------------------------------ | ---------------- | -------- |
-| `HOST_NAME`              | 服务监听的主机名                                                   | `localhost`      | 否       |
-| `PORT`                   | 服务监听的端口号                                                   | `3000`           | 否       |
-| `MYSQL_USERNAME`         | MySQL 数据库用户名                                                 | —                | **是**   |
-| `MYSQL_PWD`              | MySQL 数据库密码                                                   | —                | **是**   |
-| `MYSQL_HOSTPORT`         | MySQL 数据库地址（`host:port` 格式）                               | `localhost:3306` | 否       |
-| `MYSQL_DATABASE`         | MySQL 数据库名称（不存在时自动创建）                               | `napflow_db`     | 否       |
-| `ACC_ROOT_EMAIL`         | 初始 Root 管理员邮箱（需符合邮箱格式）                             | —                | **是**   |
-| `ACC_ROOT_NICKNAME`      | 初始 Root 管理员昵称                                               | —                | **是**   |
-| `ACC_ROOT_PASSWORD`      | 初始 Root 管理员密码                                               | —                | **是**   |
-| `SYNC_ROOT_ACCOUNT_FLAG` | 启用后每次启动同步 Root 账户为当前配置值；未设置时仅在不存在时创建 | 未设置（不启用） | 否       |
-| `JWT_SECRET_KEY`         | JWT 签名密钥。未设置时每次启动随机生成，重启后已签发 Token 失效    | 随机 32 字节 hex | 否       |
-
-此外，`src/config/env.ts` 还导出了 `NODE_ENV`（默认 `production`）和 `IS_NODE_ENV_PROD` 供内部使用。
-
-### 最小配置示例
-
-**`apps/server/.env`**：
-
-```bash
-HOST_NAME=127.0.0.1
-PORT=8848
-ACC_ROOT_EMAIL=root@napflow.com
-ACC_ROOT_NICKNAME=rootUser
-ACC_ROOT_PASSWORD=root
-```
-
-**`apps/server/.env.local`**（存放数据库敏感配置，不纳入版本控制）：
-
-```bash
-MYSQL_USERNAME=root
-MYSQL_PWD=yourpassword
-MYSQL_HOSTPORT=localhost:3306
-```
-
-**`apps/server/.env.development`**（开发模式下固定 JWT 密钥，防止热重载后 Token 失效）：
-
-```bash
-JWT_SECRET_KEY=abcdef123456
-```
-
-> **注意**：生产环境建议通过 Docker 环境变量或 `.env.production` 文件注入敏感配置，不要将真实密码提交到版本控制中。各 `.env` 文件中已包含详细的注释说明，可直接查看对应文件了解更多信息。
-
 ## Project setup
 
 ```bash

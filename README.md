@@ -152,8 +152,8 @@ pnpm install
 ```
 
 ### 启动开发环境
-- 前端启动方式与环境变量说明见 [apps/web/README.md](./apps/web/README.md)
-- 后端启动方式与环境变量说明见 [apps/server/README.md](./apps/server/README.md)
+- 前端启动方式见 [apps/web/README.md](./apps/web/README.md)
+- 后端启动方式见 [apps/server/README.md](./apps/server/README.md)
 - 共享包为纯类型与 DTO，不需要独立启动
 
 ## 🧪 运行测试
