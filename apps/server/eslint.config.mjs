@@ -4,5 +4,5 @@ import { combine } from '@antfu/eslint-config'
 import base from '../../eslint.config.mjs'
 export default combine(base, [
   // Override default ignores of eslint-config-next.
-  globalIgnores(['node-modules/', 'dist/', 'src/prisma/generated']),
+  globalIgnores(['node_modules/', 'dist/', 'src/prisma/generated']),
 ])

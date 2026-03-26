@@ -29,7 +29,7 @@ export class AgentService {
     const user = this.jwtService.account.jwtVerify(auth.token)
     if (!user) {
       this.logger.log(
-        `Unauthorized connection attempt with token: ${auth.token}`,
+        `Unauthorized connection attempt on socket ${socket.id}`,
       )
       socket.disconnect(true)
       return false

@@ -30,4 +30,4 @@ RUN pnpm test:unit
 RUN pnpm build
 # entrypoint
 EXPOSE 3000
-CMD ["pnpm", "start"]
+CMD ["pnpm", "start:prod"]

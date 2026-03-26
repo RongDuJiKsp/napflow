@@ -30,5 +30,5 @@ COPY --from=base /app/apps/proxy/.env.development apps/proxy/.env.development
 
 WORKDIR /app/apps/proxy
 
-EXPOSE 3000
+EXPOSE 80
 CMD ["pnpm", "start:prod"]
