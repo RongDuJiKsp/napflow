@@ -106,6 +106,7 @@ services:
       - server
     environment:
       NODE_ENV: production
+      LISTEN_HOST: 0.0.0.0
       LISTEN_PORT: 80
       WEB_TARGET: http://web:3000
       API_TARGET: http://server:8848
