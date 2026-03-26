@@ -19,7 +19,7 @@ const AgentStatus = () => {
         </Tag>
       </div>
       <Typography.Text className="text-xs text-black/45">
-        当前阶段已支持发送 query 消息，回复渲染将在后续接入。
+        使用Agent快速生成工作流
       </Typography.Text>
     </div>
   )
