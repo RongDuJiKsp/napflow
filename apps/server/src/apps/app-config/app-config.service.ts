@@ -16,7 +16,7 @@ export const AppConfigEnvShema = z.object({
   ACC_ROOT_PASSWORD: z.string().min(1).catch('root'),
   SYNC_ROOT_ACCOUNT_FLAG: z.string().optional(),
   // secret 配置
-  JWT_SECRET_KEY: z.string().min(1).catch(crypto.randomBytes(32).toString('hex')),
+  JWT_SECRET_KEY: z.string().min(1).catch(() => crypto.randomBytes(32).toString('hex')),
 })
 @Injectable()
 export class AppConfigService {
