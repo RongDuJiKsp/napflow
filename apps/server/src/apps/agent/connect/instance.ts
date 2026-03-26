@@ -15,7 +15,7 @@ export class AgentSession {
 
   private readonly clientRpc: WorkflowEditorClientRPC = new WorkflowEditorClientRPC()
   readonly langChain: LangChainInstance
-  socket: Socket | null
+  socket: Socket | null = null
 
   constructor(readonly apiConfig: OpenAiEndpointConfig) {
     this.langChain = new LangChainInstance(apiConfig)
