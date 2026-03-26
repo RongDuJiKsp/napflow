@@ -11,9 +11,9 @@ export const AppConfigEnvShema = z.object({
   MYSQL_HOSTPORT: z.string().default('localhost:3306'),
   MYSQL_DATABASE: z.string().default('napflow_db'),
   // 默认账户配置
-  ACC_ROOT_EMAIL: z.email(),
-  ACC_ROOT_NICKNAME: z.string(),
-  ACC_ROOT_PASSWORD: z.string(),
+  ACC_ROOT_EMAIL: z.email().default('root@napflow.com'),
+  ACC_ROOT_NICKNAME: z.string().default('rootUser'),
+  ACC_ROOT_PASSWORD: z.string().default('root'),
   SYNC_ROOT_ACCOUNT_FLAG: z.string().optional(),
   // secret 配置
   JWT_SECRET_KEY: z.string().default(crypto.randomBytes(32).toString('hex')),
