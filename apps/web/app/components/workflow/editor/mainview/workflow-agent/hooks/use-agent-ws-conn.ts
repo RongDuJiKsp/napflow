@@ -22,12 +22,24 @@ export const parseConnToken = (
   return { type: type as AgentWsConnType, id }
 }
 
-// http://example.com -> ws://example.com https://example.com -> wss://example.com /api -> /api
-const wsBaseUrl = baseUrl.startsWith('http') ? baseUrl.replace(/^http/, 'ws') : baseUrl
+const getConnTarget = (): { url: string; path: string } => {
+  if(baseUrl.startsWith('/')) {
+    return {
+      url: '/agent', path: `${baseUrl}/socket.io`,
+    }
+  }
+  // http://example.com -> ws://example.com https://example.com -> wss://example.com /api -> /api
+  const wsFullBaseUrl = baseUrl.startsWith('http') ? baseUrl.replace(/^http/, 'ws') : baseUrl
+  return {
+    url: `${wsFullBaseUrl}/agent`,
+    path: '/socket.io',
+  }
+}
 
 const createConnection = (recordId: string, appId: string) => {
-  return io('/agent', {
-    path: `${wsBaseUrl}/socket.io`,
+  const { url, path } = getConnTarget()
+  return io(url, {
+    path,
     auth: <Pick<WsConnectionRequest, 'auth' | 'model'>>{
       auth: { token: localStorage.getItem('auth-token') },
       model: {
@@ -39,8 +51,9 @@ const createConnection = (recordId: string, appId: string) => {
   })
 }
 const createRecoveryConnection = (recoverId: string, appId: string) => {
-  return io('/agent', {
-    path: `${wsBaseUrl}/socket.io`,
+  const { url, path } = getConnTarget()
+  return io(url, {
+    path,
     auth: <Pick<WsConnectionRequest, 'auth' | 'recovery'>>{
       auth: { token: localStorage.getItem('auth-token') },
       recovery: {

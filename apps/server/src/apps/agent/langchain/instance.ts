@@ -35,7 +35,7 @@ export class LangChainInstance extends LangChainBase {
   // memory
   private readonly memory = new InMemoryChatMessageHistory()
 
-  private summary = ' 未摘要对话'
+  private summary = '未摘要对话'
 
   get chatSummary() {
     return this.summary
