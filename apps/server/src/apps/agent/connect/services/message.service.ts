@@ -12,5 +12,12 @@ export class MessageService {
 
   async handleChatQueryMessage(message: string, socket: Socket) {
     this.logger.log(`用户${socket.id}向模型发送了查询${message}`)
+    const agentSession = this.socketBindService.getSessionBySocket(socket)
+    if (!agentSession) {
+      this.logger.warn(`未找到与socket ${socket.id}绑定的agent session`)
+      return
+    }
+    const resp = await agentSession.langChain.invokeChat(message)
+    console.log(resp)
   }
 }

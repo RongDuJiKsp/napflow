@@ -3,12 +3,25 @@ import z from 'zod'
 import { ClientRPCError } from '../middleware/client-rpc.filter'
 import { CLIENT_RPC_METHODS } from '@shared/rpc/agent/client-rpc/methods'
 import type { RPCMethodItem } from '@shared/rpc/core/ts-check'
-export class BaseLangChainClientRPCRequester {
-  constructor(private readonly socket: Socket) {}
+import { PluginService } from '@/src/utils/traits'
+export class BaseLangChainClientRPCRequester extends PluginService<[Socket]> {
+  private socket: Socket | null = null
+
+  mount(socket: Socket): void {
+    this.socket = socket
+  }
+
+  unmount(): void {
+    this.socket = null
+  }
 
   async emit<A extends any[], R>(...args: A): Promise<R> {
-    return new Promise((resolve) => {
-      this.socket.emit('client-rpc', args, (response: R) => {
+    return new Promise((resolve, reject) => {
+      if (!this.socket) {
+        reject(new ClientRPCError('Socket is not connected'))
+        return
+      }
+      this.socket.emit('client-rpc', ...args, (response: R) => {
         resolve(response)
       })
     })

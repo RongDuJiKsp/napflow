@@ -1,58 +1,15 @@
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
-import type { ClientTool } from '@langchain/core/tools'
-import { HumanMessage, createAgent, createMiddleware } from 'langchain'
+import type { ClientTool, ServerTool } from '@langchain/core/tools'
+import type { AgentMiddleware } from 'langchain'
+import { HumanMessage, createAgent } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history'
-/**
- * @description LangChainDynamicTool 用于动态添加工具到 LangChain Agent 中
- */
-export class LangChainDynamicTool {
-  private readonly dynTools: ClientTool[] = []
-  private readonly dynToolDict = new Map<string, ClientTool>()
-  private readonly dynToolCallMiddleware = createMiddleware({
-    name: 'dynToolCallMiddleware',
-    wrapModelCall: (req, handler) => {
-      return handler({
-        ...req,
-        tools: [...req.tools, ...this.dynTools],
-      })
-    },
-    wrapToolCall: (req, handler) => {
-      const dynTool = this.dynToolDict.get(String(req.tool?.name ?? ''))
-      if (dynTool) {
-        return handler({
-          ...req,
-          tool: dynTool,
-        })
-      }
-      return handler(req)
-    },
-  })
 
-  get middleware() {
-    return this.dynToolCallMiddleware
-  }
-
-  addTool(tool: ClientTool) {
-    if (this.dynToolDict.has(tool.name))
-      throw new Error(`Tool with name ${tool.name} already exists`)
-    this.dynTools.push(tool)
-    this.dynToolDict.set(tool.name, tool)
-  }
-
-  cleanAllTools() {
-    this.dynTools.length = 0
-    this.dynToolDict.clear()
-  }
-}
-
+export type LangChainConfig = { tools?: (ClientTool | ServerTool)[], middleware?: AgentMiddleware[] }
 export class LangChainInstance {
   // models and agent
   private readonly openAiSdk: ChatOpenAI
   private readonly agent: ReturnType<typeof createAgent>
-
-  // tool calls
-  readonly dynTool = new LangChainDynamicTool()
 
   // memory
   private readonly memory = new InMemoryChatMessageHistory()
@@ -63,17 +20,18 @@ export class LangChainInstance {
     return this.summary
   }
 
-  constructor(private readonly endpoint: OpenAiEndpointConfig) {
+  constructor(private readonly endpoint: OpenAiEndpointConfig, private readonly config: LangChainConfig = {}) {
     this.openAiSdk = new ChatOpenAI({
       model: endpoint.model,
       apiKey: endpoint.apiKey,
       configuration: {
-        baseURL: endpoint.apiKey,
+        baseURL: endpoint.endpoint,
       },
     })
     this.agent = createAgent({
       model: this.openAiSdk,
-      middleware: [this.dynTool.middleware],
+      middleware: [...(config.middleware || [])],
+      tools: [...(config.tools || [])],
     })
   }
 
@@ -83,6 +41,7 @@ export class LangChainInstance {
       messages: [...history, new HumanMessage(input)],
     })
     this.memory.addMessages(result.messages)
+    return result
   }
 
   async getMessagesAsJson() {
