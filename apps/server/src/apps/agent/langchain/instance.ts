@@ -40,8 +40,8 @@ export class LangChainInstance {
     const result = await this.agent.invoke({
       messages: [...history, new HumanMessage(input)],
     })
-    this.memory.addMessages(result.messages)
-    return result
+    await this.memory.clear()
+    await this.memory.addMessages(result.messages)
   }
 
   async getMessagesAsJson() {

@@ -7,7 +7,6 @@ import type {
   WsConnectionRequest,
 } from '@shared/common/agent/socketio/auth'
 import { JwtService } from '../../../account/jwt.service'
-import { LangChainService } from '../../langchain/langchain.service'
 import { TypeOrmService } from '../../../db/typeorm.service'
 import { AgentSession } from '../instance'
 import { AgentSessionRecoverService } from '../session-recover/agent-session-recover.service'
@@ -19,8 +18,6 @@ export class AgentService {
 
   constructor(
     @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(LangChainService)
-    private readonly langChainService: LangChainService,
     @Inject(TypeOrmService) private readonly typeOrmService: TypeOrmService,
     @Inject(AgentSessionRecoverService)
     private readonly sessionRecoverService: AgentSessionRecoverService,
@@ -42,18 +39,17 @@ export class AgentService {
   }
 
   async allocSessionToConnection(model: WsAgentModel, socket: Socket) {
-    const langChainInstance
-      = await this.langChainService.createLangChainInstanceByEndpointRecordId(
-        model.recordId,
-      )
-    if (!langChainInstance) {
+    const apiConfig = await this.typeOrmService.openAiEndpoint.findOneBy({
+      id: model.recordId,
+    })
+    if (!apiConfig) {
       this.logger.error(
-        `Failed to create LangChainInstance for endpoint record id: ${model.recordId}`,
+        `Failed to find API config for endpoint record id: ${model.recordId}`,
       )
       socket.disconnect(true)
       return null
     }
-    const agentSession = new AgentSession(langChainInstance)
+    const agentSession = new AgentSession(apiConfig)
     this.socketBindService.bindSessionToSocket(agentSession, socket)
     this.sessionRecoverService.registerSession(model.appId, agentSession)
     return agentSession

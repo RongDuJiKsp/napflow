@@ -1,8 +1,9 @@
 import { Logger } from '@nestjs/common'
 import type { Socket } from 'socket.io'
-import type { LangChainInstance } from '../langchain/instance'
 import { LangChainClientRPC as WorkflowEditorClientRPC } from './client-rpc/client-rpc'
 import { v4 as uuidV4 } from 'uuid'
+import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
+import { LangChainInstance } from '../langchain/instance'
 
 export class AgentSession {
   readonly sessionId = uuidV4()
@@ -12,9 +13,12 @@ export class AgentSession {
   )
 
   private readonly clientRpc: WorkflowEditorClientRPC = new WorkflowEditorClientRPC()
-  private socket: Socket | null
+  readonly langChain: LangChainInstance
+  socket: Socket | null
 
-  constructor(readonly langChain: LangChainInstance) {}
+  constructor(readonly apiConfig: OpenAiEndpointConfig) {
+    this.langChain = new LangChainInstance(apiConfig)
+  }
 
   mountToSocket(socket: Socket) {
     this.socket = socket

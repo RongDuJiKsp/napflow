@@ -4,7 +4,6 @@ import { AgentEndpointController } from './config/openai-endpoints/agent-endpoin
 import { AgentGateway } from './connect/agent.gateway'
 import { AgentSessionRecoverController } from './connect/session-recover/agent-session-recover.controller'
 import { AgentService } from './connect/services/agent.service'
-import { LangChainService } from './langchain/langchain.service'
 import { AgentSessionRecoverService } from './connect/session-recover/agent-session-recover.service'
 import { SocketBindService } from './connect/services/socket-bind.service'
 import { MessageService } from './connect/services/message.service'
@@ -17,7 +16,6 @@ import { MessageService } from './connect/services/message.service'
     MessageService,
     AgentGateway,
     AgentService,
-    LangChainService,
   ],
   exports: [
     AgentEndpointService,
@@ -25,7 +23,6 @@ import { MessageService } from './connect/services/message.service'
     SocketBindService,
     MessageService,
     AgentService,
-    LangChainService,
   ],
   controllers: [AgentEndpointController, AgentSessionRecoverController],
 })
