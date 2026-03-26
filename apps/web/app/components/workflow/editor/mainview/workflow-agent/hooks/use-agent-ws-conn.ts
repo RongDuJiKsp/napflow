@@ -1,6 +1,6 @@
 import { useAppParam } from '@/app/components/workflow/hooks/use-app-param'
 import { baseUrl } from '@/config/env'
-import type { WsConnectionRequest } from '@shared/common/agent/websocket'
+import type { WsConnectionRequest } from '@shared/common/agent/socketio/auth'
 import { useCreation } from 'ahooks'
 import { useEffect } from 'react'
 import type { Socket } from 'socket.io-client'

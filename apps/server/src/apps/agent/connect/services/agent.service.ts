@@ -75,6 +75,7 @@ export class AgentService {
     this.logger.log(
       `Successfully recovered session for appId ${recover.appId} with sessionId ${recover.socketSessionId} and associated it with new socket id ${socket.id}`,
     )
+    await recoverdSession.recoverToSocket()
     return recoverdSession
   }
 

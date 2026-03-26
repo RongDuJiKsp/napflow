@@ -21,13 +21,19 @@ const AgentChatConnProvider = ({
   )
 }
 
-const AgentChat = ({ connToken }: { connToken: string }) => {
+const AgentChat = ({
+  connToken,
+  onInterrupt,
+}: {
+  connToken: string;
+  onInterrupt: () => void;
+}) => {
   return (
     <AgentChatConnProvider connToken={connToken}>
       <div className="flex h-full flex-col gap-3">
         <AgentStatus />
         <ChatRecord />
-        <ChatInput />
+        <ChatInput onInterrupt={onInterrupt} />
       </div>
     </AgentChatConnProvider>
   )

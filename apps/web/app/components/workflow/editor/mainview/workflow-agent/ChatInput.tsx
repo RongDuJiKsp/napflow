@@ -3,7 +3,7 @@ import { RiSendPlane2Line } from '@remixicon/react'
 import { useAgentChatStatus } from './hooks/use-agent-chat-status'
 import { useAgentChatQuery } from './hooks/use-agent-chat-query'
 
-const ChatInput = () => {
+const ChatInput = ({ onInterrupt }: { onInterrupt: () => void }) => {
   const { query, setQuery, submitQuery } = useAgentChatQuery()
   const { isConnected } = useAgentChatStatus()
 
@@ -20,7 +20,10 @@ const ChatInput = () => {
         autoSize={{ minRows: 3, maxRows: 6 }}
         placeholder="请输入要发送给 Agent 的 query，按 Enter 发送，Shift + Enter 换行"
       />
-      <div className="mt-3 flex justify-end">
+      <div className="mt-3 flex justify-end gap-2">
+        <Button onClick={onInterrupt} danger>
+          中断会话
+        </Button>
         <Button
           type="primary"
           icon={<RiSendPlane2Line size={16} />}

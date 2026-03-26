@@ -52,7 +52,7 @@ export class LangChainInstance extends LangChainBase {
     }
   }
 
-  async getMessagesAsJson() {
-    return (await this.memory.getMessages()).map(msg => msg.toJSON())
+  async getStoredMessages() {
+    return (await this.memory.getMessages()).map(msg => msg.toDict())
   }
 }

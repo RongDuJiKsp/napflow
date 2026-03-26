@@ -38,6 +38,7 @@ const WorkflowAgent = () => {
       onClose={handleClose}
       mask={false}
       closable={isModelSelection}
+      destroyOnHidden
     >
       {isModelSelection && (
         <ModelSelectionStep
@@ -45,7 +46,12 @@ const WorkflowAgent = () => {
           onEnterChat={handleEnterChat}
         />
       )}
-      {isAgentChat && isReadyForChat && <AgentChatStep connToken={connToken} />}
+      {isAgentChat && isReadyForChat && (
+        <AgentChatStep
+          connToken={connToken}
+          onInterrupt={handleClose}
+        />
+      )}
       {isAgentChat && !isReadyForChat && (
         <div className="flex h-full items-center justify-center">
           <span className="text-sm text-gray-500">

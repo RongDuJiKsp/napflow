@@ -44,6 +44,14 @@ export class AgentSession {
     return this.socket
   }
 
+  async recoverToSocket() {
+    this.logger.log(`Agent session ${this.sessionId} is being recovered to socket ${this.socket?.id}`)
+    const histories = await this.langChain.getStoredMessages()
+    for(const history of histories)
+      this.safeSocket.emit('query.response', history)
+    this.logger.log(`Agent session ${this.sessionId} has recovered chat(total: ${histories.length}) history to socket ${this.socket?.id}`)
+  }
+
   async invokeChat(message: string) {
     this.logger.log(`Invoking chat with message: ${message}`)
     // 首先回显用户输入的消息，以提升响应速度和用户体验
