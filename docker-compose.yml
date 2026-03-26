@@ -40,8 +40,8 @@ services:
       mysql:
         condition: service_healthy
     environment:
-      HOST_NAME: 0.0.0.0
-      PORT: ${SERVER_PORT:-8848}
+      SERVER_HOST_NAME: 0.0.0.0
+      SERVER_PORT: ${SERVER_PORT:-8848}
       MYSQL_USERNAME: ${MYSQL_USER}
       MYSQL_PWD: ${MYSQL_PASSWORD}
       MYSQL_HOSTPORT: mysql:3306
@@ -75,8 +75,6 @@ services:
     restart: unless-stopped
     depends_on:
       - server
-    environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -103,7 +101,6 @@ services:
       - server
     environment:
       LISTEN_HOST: 0.0.0.0
-      LISTEN_PORT: 80
       WEB_TARGET: http://web:3000
       API_TARGET: http://server:8848
     ports:
