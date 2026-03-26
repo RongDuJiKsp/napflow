@@ -35,4 +35,18 @@ export class AgentSession {
     this.socket = null
     this.clientRpc.unmount()
   }
+
+  get safeSocket() {
+    if (!this.socket)
+      throw new Error(`Socket is not mounted for agent session ${this.sessionId}`)
+
+    return this.socket
+  }
+
+  async invokeChat(message: string) {
+    this.logger.log(`Invoking chat with message: ${message}`)
+    const { diff } = await this.langChain.invokeChat(message)
+    for(const msg of diff)
+      this.safeSocket.emit('query.response', msg.toDict())
+  }
 }

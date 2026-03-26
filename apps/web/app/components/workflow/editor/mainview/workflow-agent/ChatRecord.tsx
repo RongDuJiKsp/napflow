@@ -15,6 +15,7 @@ const ChatRecord = () => {
           key={record.id}
           className="mb-3 rounded-xl border border-blue-100 bg-blue-50 p-3"
         >
+          {record.text}
         </div>
       ))}
     </div>
