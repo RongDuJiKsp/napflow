@@ -20,7 +20,8 @@ export type CreateOpenAiEndpointReq = z.infer<
 >
 
 // @/agent/openai-endpoint/:id/update
-export const ZodCheckUpdateOpenAiEndpointReq = ZodCheckOpenAiEndpointConfig.partial()
+export const ZodCheckUpdateOpenAiEndpointReq
+  = ZodCheckOpenAiEndpointConfig.partial()
 export type UpdateOpenAiEndpointReq = z.infer<
   typeof ZodCheckUpdateOpenAiEndpointReq
 >

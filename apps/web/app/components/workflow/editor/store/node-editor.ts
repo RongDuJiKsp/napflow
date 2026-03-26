@@ -10,7 +10,7 @@ type NodeEditorAction = {
 
 export type NodeEditorStoreShape = NodeEditorState & NodeEditorAction
 
-export const createNodeEditorStore: StateCreator<NodeEditorStoreShape> = set => ({
+export const createNodeEditorStoreShape: StateCreator<NodeEditorStoreShape> = set => ({
   selectedNodeId: undefined,
   selectNode: (nodeId: string) => {
     set({ selectedNodeId: nodeId })

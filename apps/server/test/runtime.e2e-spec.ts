@@ -224,13 +224,15 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).post('/bot/record/create').send({
-        name: '新机器人',
-        description: '新机器人描述',
-        commonConfig: {},
-        adapterTag: AdapterTag.napcatWs,
-        adapterConfig: {},
-      })
+      const res = await request(app.getHttpServer())
+        .post('/bot/record/create')
+        .send({
+          name: '新机器人',
+          description: '新机器人描述',
+          commonConfig: {},
+          adapterTag: AdapterTag.napcatWs,
+          adapterConfig: {},
+        })
       expect(res.status).toBe(401)
     })
   })
@@ -557,7 +559,9 @@ describe('Runtime BotManager (e2e)', () => {
     })
 
     it('删除不存在的 Bot 记录时应返回 NotFound', async () => {
-      mockTypeOrmService.botRecord.delete.mockResolvedValueOnce({ affected: 0 })
+      mockTypeOrmService.botRecord.delete.mockResolvedValueOnce({
+        affected: 0,
+      })
 
       const res = await request(app.getHttpServer())
         .post('/bot/record/non-existent-bot/delete')
@@ -572,7 +576,9 @@ describe('Runtime BotManager (e2e)', () => {
       const runningInstance = createMockBotInstance({
         runningState: BotRunningState.running,
       })
-      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(runningInstance)
+      vi.spyOn(botFactoryService, 'createBot').mockResolvedValue(
+        runningInstance,
+      )
 
       await request(app.getHttpServer())
         .post(`/bot/runtime/${TEST_BOT_ID}/run`)

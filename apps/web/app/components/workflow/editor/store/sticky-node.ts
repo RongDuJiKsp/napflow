@@ -15,7 +15,7 @@ type StickyNodeAction = {
 
 export type StickyNodeStoreShape = StickyNodeState & StickyNodeAction
 
-export const createStickyNodeStore: StateCreator<StickyNodeStoreShape> = set => ({
+export const createStickyNodeStoreShape: StateCreator<StickyNodeStoreShape> = set => ({
   stickyElement: undefined,
   stickyNewNode: (node: WorkflowNode) => {
     set({ stickyElement: node })

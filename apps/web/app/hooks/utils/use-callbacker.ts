@@ -1,5 +1,5 @@
 import type { BaseSyntheticEvent } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 export const useNorReturnFn = <T extends (...args: any[]) => any>(fn: T) => {
   return useCallback(
@@ -22,4 +22,18 @@ export const useInputElementEventValueFn = <
     },
     [recv],
   )
+}
+
+export const useArrayDict = <T>(
+  array: T[],
+  indexGetter: (item: T) => string,
+) => {
+  const map = useMemo(
+    () => Object.fromEntries(array.map(item => [indexGetter(item), item])),
+    [array, indexGetter],
+  )
+  const findItem = useCallback((id: string) => map[id], [map])
+  return {
+    findItem,
+  }
 }

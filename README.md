@@ -15,9 +15,12 @@ NapFlow 是一个基于**可视化工作流**的 QQ 机器人管理平台，提�
 ### 📋 工作流编辑器
 - **可视化拖拽编辑**：基于 React Flow 的节点-连线式工作流编辑器
 - **多种节点类型**：
-  - **触发器节点（Trigger）**：支持私聊触发和群聊触发，可配置触发 UID / GID
+  - **触发器节点（Trigger）**：支持好友、群聊触发，可配置 UID / GID
+  - **定时触发节点（Timer）**：支持定时表达式与间隔触发
   - **回复节点（Reply）**：支持向用户、群组或触发源上下文发送消息
   - **条件节点（If）**：支持 IF / ELSE IF / ELSE 多分支条件判断，提供字符串比较（相等、包含、不包含等）和数值比较（大于、小于等）
+  - **循环与迭代节点（Loop / Iterate）**：支持循环次数与数组迭代
+  - **工具节点**：支持 Dify、JSON 取字段、数组取索引等能力
 - **环境变量系统**：支持定义 String / Number / StringArray / NumberArray 类型的环境变量，节点参数中可通过 `$` 引用
 - **变量引用输入框**：基于 Lexical 的富文本输入框，输入 `$` 自动弹出变量选择菜单
 - **右键上下文菜单**：支持在画布右键创建新节点、对节点右键进行操作
@@ -60,6 +63,7 @@ NapFlow 是一个基于**可视化工作流**的 QQ 机器人管理平台，提�
 ### 子项目文档
 - 前端：`apps/web` → [README](./apps/web/README.md)
 - 后端：`apps/server` → [README](./apps/server/README.md)
+- 代理：`apps/proxy` → [README](./apps/proxy/README.md)
 - 共享包：`apps/shared` → [README](./apps/shared/README.md)
 
 ### 基础设施
@@ -117,6 +121,10 @@ napflow/
 │   │       ├── decorator/            # 自定义装饰器
 │   │       └── utils/                # 后端工具函数
 │   │
+│   ├── proxy/                        # 独立入口代理（Express + http-proxy-middleware）
+│   │   └── src/
+│   │       └── index.ts              # /api -> server，其他流量 -> web
+│   │
 │   └── shared/                       # 前后端共享包
 │       ├── common/                   # 共享类型与枚举
 │       │   ├── account/              # 账户类型
@@ -144,8 +152,8 @@ pnpm install
 ```
 
 ### 启动开发环境
-- 前端启动方式与环境变量说明见 [apps/web/README.md](./apps/web/README.md)
-- 后端启动方式与环境变量说明见 [apps/server/README.md](./apps/server/README.md)
+- 前端启动方式见 [apps/web/README.md](./apps/web/README.md)
+- 后端启动方式见 [apps/server/README.md](./apps/server/README.md)
 - 共享包为纯类型与 DTO，不需要独立启动
 
 ## 🧪 运行测试

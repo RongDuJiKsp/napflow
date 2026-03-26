@@ -23,12 +23,28 @@ export class CommErrorExceptionFilter implements ExceptionFilter<CommError> {
   private readonly logger = new Logger(CommErrorExceptionFilter.name)
 
   catch(exception: CommError, host: ArgumentsHost) {
-    const httpHost = new ExpressHttpHost(host)
+    const httpHost = ExpressHttpHost.tryParse(host)
+
+    if (httpHost) {
+      this.catchHttp(exception, httpHost)
+      return
+    }
+
+    this.catchOther(exception, host)
+  }
+
+  catchHttp(exception: CommError, httpHost: ExpressHttpHost) {
     httpHost.response
       .status(400)
       .json(Resp.error(exception.message, exception.code))
     if (exception.logLevel === 'warn') this.logger.warn(exception.message)
 
     if (exception.logLevel === 'error') this.logger.error(exception.message)
+  }
+
+  catchOther(exception: CommError, host: ArgumentsHost) {
+    this.logger.warn(
+      `CommErrorExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
+    )
   }
 }

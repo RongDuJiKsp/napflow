@@ -1,0 +1,28 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "cross-env NODE_ENV=development tsx src/index.ts",
+    "start:dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "start:prod": "cross-env NODE_ENV=production node dist/index.js",
+    "lint": "eslint --fix",
+    "lint:prettier": "npx prettier --write .",
+    "lint:all": "pnpm lint:prettier && pnpm lint"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "pino": "^10.3.1",
+    "pino-pretty": "^13.1.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^22.19.8",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -10,8 +10,17 @@ export class ExpressHttpHost<
   Res extends Response = Response,
 > {
   readonly httpArgumentHost: HttpArgumentsHost
-  constructor(readonly argumentHost: ArgumentsHost) {
+  protected constructor(readonly argumentHost: ArgumentsHost) {
     this.httpArgumentHost = argumentHost.switchToHttp()
+  }
+
+  static tryParse<
+    Req extends Request = Request,
+    Res extends Response = Response,
+  >(argumentHost: ArgumentsHost): ExpressHttpHost<Req, Res> | null {
+    // 只处理HTTP请求，其他类型的请求（如WebSocket、RPC等）不受此Host限制
+    if (argumentHost.getType() !== 'http') return null
+    return new ExpressHttpHost(argumentHost)
   }
 
   get request(): Req {
@@ -32,7 +41,16 @@ export class ExpressExecContext<
   Req extends Request = Request,
   Res extends Response = Response,
 > extends ExpressHttpHost<Req, Res> {
-  constructor(readonly c: ExecutionContext) {
+  protected constructor(readonly c: ExecutionContext) {
     super(c)
+  }
+
+  static tryParse<
+    Req extends Request = Request,
+    Res extends Response = Response,
+  >(argumentHost: ExecutionContext): ExpressExecContext<Req, Res> | null {
+    // 只处理HTTP请求，其他类型的请求（如WebSocket、RPC等）不受此Host限制
+    if (argumentHost.getType() !== 'http') return null
+    return new ExpressExecContext(argumentHost)
   }
 }

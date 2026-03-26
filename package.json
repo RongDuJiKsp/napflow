@@ -3,9 +3,10 @@
   "version": "1.0.3",
   "description": "",
   "scripts": {
-    "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
-    "image:server": "docker build -f apps/server/Dockerfile .  -t napflow/server",
-    "image:all": "pnpm run image:web && pnpm run image:server",
+    "image:web": "docker build -f apps/web/Dockerfile .  -t napflow-web",
+    "image:server": "docker build -f apps/server/Dockerfile .  -t napflow-server",
+    "image:proxy": "docker build -f apps/proxy/Dockerfile .  -t napflow-proxy",
+    "image:all": "pnpm run image:web && pnpm run image:server && pnpm run image:proxy",
     "lint:all": "pnpm -r run lint:all",
     "test": "npx vitest run",
     "test:unit": "npx vitest run --exclude \"**/*.e2e-spec.ts\"",
@@ -32,8 +33,11 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.36",
+    "@langchain/langgraph": "^1.2.5",
     "datastructures-js": "^13.0.0",
     "dotenv": "^17.3.1",
+    "langchain": "^1.2.37",
     "lodash-es": "^4.17.23",
     "mnemonist": "^0.40.3",
     "ring-buffer-ts": "^1.2.0",

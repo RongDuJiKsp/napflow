@@ -2,14 +2,15 @@ import { useAreaChangeHandler } from '@/app/hooks/utils/use-immer'
 import { useSubmitZodFn } from '@/app/hooks/utils/use-form'
 import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-query'
 import { jsonQ } from '@/utils/net'
-import type {
-  OpenAiEndpointConfig,
-} from '@shared/common/agent/entity'
+import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 import type { NullResp } from '@shared/data-transfer/_base'
 import { Code } from '@shared/data-transfer/_base'
 import { useResetState } from 'ahooks'
 import { useCallback, useEffect } from 'react'
-import { ZodCheckCreateOpenAiEndpointReq, ZodCheckUpdateOpenAiEndpointReq } from '@shared/data-transfer/agent/endpoint'
+import {
+  ZodCheckCreateOpenAiEndpointReq,
+  ZodCheckUpdateOpenAiEndpointReq,
+} from '@shared/data-transfer/agent/endpoint'
 import { makeAllCanBeFalseToUndefined } from '@/utils/form'
 /**
  * @description 管理 API Key 配置的表单 Hook
@@ -83,12 +84,23 @@ export const useApiKeyConfigForm = (
   )
 
   const handleSubmit = useCallback(async () => {
-    const res = await ((isEditMode ? submitUpdateForm : submitCreateForm) as typeof submitUpdateForm)(makeAllCanBeFalseToUndefined(formData))
+    const res = await (
+      (isEditMode
+        ? submitUpdateForm
+        : submitCreateForm) as typeof submitUpdateForm
+    )(makeAllCanBeFalseToUndefined(formData))
     if (res?.statusCode !== Code.Ok) return
 
     await refreshConfigList()
     onSuccess?.()
-  }, [formData, onSuccess, refreshConfigList, submitCreateForm, submitUpdateForm, isEditMode])
+  }, [
+    formData,
+    onSuccess,
+    refreshConfigList,
+    submitCreateForm,
+    submitUpdateForm,
+    isEditMode,
+  ])
 
   return {
     formData,

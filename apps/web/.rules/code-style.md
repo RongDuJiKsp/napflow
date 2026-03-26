@@ -1,6 +1,6 @@
 ## 技术栈规则：
 
-使用Next.js 16.0.7 + React 19.2.1 + TypeScript
+使用Next.js 16.1.6 + React 19.2.1 + TypeScript
 
 UI库优先使用HeroUI 3.0.0-beta.3，其次使用Ant Design 6.0.0
 

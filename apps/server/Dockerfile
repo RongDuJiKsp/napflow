@@ -25,7 +25,8 @@ WORKDIR /app/apps/server
 RUN pnpm run test:unit
 RUN pnpm build
 # entrypoint
-ENV HOST_NAME=0.0.0.0
-ENV PORT=8848
-EXPOSE 8848
+ENV SERVER_HOST_NAME=0.0.0.0
+ENV SERVER_PORT=8848
+ENV HOST_NAME=${SERVER_HOST_NAME}
+EXPOSE ${SERVER_PORT}
 CMD ["pnpm", "start:prod"]

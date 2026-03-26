@@ -4,6 +4,7 @@ import { ExpressExecContext } from '@/src/utils/nest-middleware'
 import type { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+
 @Injectable()
 export class UserGroupGuard implements CanActivate {
   constructor(
@@ -14,7 +15,13 @@ export class UserGroupGuard implements CanActivate {
   private readonly logger = new Logger(UserGroupGuard.name)
 
   canActivate(execCtx: ExecutionContext): boolean {
-    const ctx = new ExpressExecContext(execCtx)
+    const httpCtx = ExpressExecContext.tryParse(execCtx)
+    if (httpCtx) return this.canActiveHttp(httpCtx)
+
+    return this.canActiveOther(execCtx)
+  }
+
+  canActiveHttp(ctx: ExpressExecContext): boolean {
     // 没有打标则放行
     const userGroup = this.reflector.get(AllowUserGroup, ctx.c.getHandler())
     if (!userGroup) return true
@@ -23,5 +30,12 @@ export class UserGroupGuard implements CanActivate {
       `用户${account.nickname}(${account.userGroup.map(u => u.groupType).join(',')}) 访问${ctx.request.path}(${userGroup})`,
     )
     return account.userGroup.map(u => u.groupType).includes(userGroup)
+  }
+
+  canActiveOther(execCtx: ExecutionContext): boolean {
+    this.logger.warn(
+      `UserGroupGuard received a unhandled execution context of type ${execCtx.getType()}, allowing by default.`,
+    )
+    return true
   }
 }

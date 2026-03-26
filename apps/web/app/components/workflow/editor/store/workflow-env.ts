@@ -9,11 +9,14 @@ type WorkflowEnvAction = {
   addEnv: (env: Var) => void;
   removeEnv: (envname: string) => void;
   removeEnvByIndex: (index: number) => void;
+  setEnvs: (envs: Var[]) => void;
 }
 
 export type WorkflowEnvStoreShape = WorkflowEnvState & WorkflowEnvAction
 
-export const createWorkflowEnvStore: StateCreator<WorkflowEnvStoreShape> = set => ({
+export const createWorkflowEnvStoreShape: StateCreator<
+  WorkflowEnvStoreShape
+> = set => ({
   envs: [],
   addEnv: (env: Var) => set(state => ({ envs: [...state.envs, env] })),
   removeEnv: (envname: string) =>
@@ -22,4 +25,5 @@ export const createWorkflowEnvStore: StateCreator<WorkflowEnvStoreShape> = set =
     })),
   removeEnvByIndex: (index: number) =>
     set(state => ({ envs: state.envs.filter((_, i) => i !== index) })),
+  setEnvs: (envs: Var[]) => set({ envs }),
 })

@@ -356,9 +356,7 @@ describe('AccountController (e2e)', () => {
     })
 
     it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
-        '/account/query/cur',
-      )
+      const res = await request(app.getHttpServer()).get('/account/query/cur')
 
       expect(res.status).toBe(401)
     })

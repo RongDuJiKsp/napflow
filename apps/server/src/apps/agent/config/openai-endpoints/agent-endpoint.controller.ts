@@ -19,7 +19,8 @@ import { AgentEndpointService } from './agent-endpoint.service'
 @Controller('agent/openai-endpoint')
 export class AgentEndpointController {
   constructor(
-    @Inject(AgentEndpointService) private readonly agentService: AgentEndpointService,
+    @Inject(AgentEndpointService)
+    private readonly agentService: AgentEndpointService,
   ) {}
 
   @Get()

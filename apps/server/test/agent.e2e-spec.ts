@@ -11,6 +11,7 @@ import type { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { Code } from '@shared/data-transfer/_base'
+import { AgentSessionRecoverService } from '../src/apps/agent/connect/session-recover/agent-session-recover.service'
 import {
   createBaseMockTypeOrmService,
   createE2EApp,
@@ -27,6 +28,7 @@ type MockOpenAiEndpoint = {
 describe('AgentController (e2e)', () => {
   let app: INestApplication<App>
   let getUserToken: () => string
+  let sessionRecoverService: AgentSessionRecoverService
   let configs: MockOpenAiEndpoint[] = []
 
   const initialConfigs: MockOpenAiEndpoint[] = [
@@ -60,7 +62,9 @@ describe('AgentController (e2e)', () => {
     openAiEndpoint: {
       find: vi.fn().mockImplementation(() => Promise.resolve([...configs])),
       findOne: vi.fn().mockImplementation(({ where }: any) => {
-        return Promise.resolve(configs.find(item => item.id === where.id) ?? null)
+        return Promise.resolve(
+          configs.find(item => item.id === where.id) ?? null,
+        )
       }),
       save: vi.fn().mockImplementation((data: any) => {
         if (data.id) {
@@ -94,6 +98,7 @@ describe('AgentController (e2e)', () => {
   beforeAll(async () => {
     const ctx = await createE2EApp(mockTypeOrmService)
     app = ctx.app
+    sessionRecoverService = ctx.module.get(AgentSessionRecoverService)
 
     const tokenFactory = createTokenFactory(ctx.jwtService)
     getUserToken = () => tokenFactory.getUserToken()
@@ -120,10 +125,72 @@ describe('AgentController (e2e)', () => {
     })
 
     it('未认证访问应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/agent/openai-endpoint')
+      const res = await request(app.getHttpServer()).get(
+        '/agent/openai-endpoint',
+      )
 
       expect(res.status).toBe(401)
+    })
+  })
+
+  describe('GET /agent/session/recover/list', () => {
+    it('路径未提供 appId 时应返回 404', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/agent/session/recover/list')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+
+      expect(res.status).toBe(404)
+    })
+
+    it('应返回指定 appId 下可恢复会话列表', async () => {
+      const appId = 'app-recover-e2e'
+      sessionRecoverService.registerSession(appId, {
+        sessionId: 'session-a',
+        langChain: {
+          summary: '摘要 A',
+          get chatSummary() {
+            return this.summary
+          },
+        },
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      } as any)
+      sessionRecoverService.registerSession(appId, {
+        sessionId: 'session-b',
+        langChain: {
+          summary: '未摘要对话',
+          get chatSummary() {
+            return this.summary
+          },
+        },
+        createdAt: new Date('2026-01-02T00:00:00.000Z'),
+      } as any)
+
+      const res = await request(app.getHttpServer())
+        .get(`/agent/session/recover/${appId}/list`)
+        .set('Authorization', `Bearer ${getUserToken()}`)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(res.body.data).toEqual([
+        {
+          sessionId: 'session-a',
+          title: '摘要 A',
+          createdAt: '2026-01-01T00:00:00.000Z',
+        },
+        {
+          sessionId: 'session-b',
+          title: '未摘要对话',
+          createdAt: '2026-01-02T00:00:00.000Z',
+        },
+      ])
+    })
+
+    it('指定 appId 不存在会话时应返回空数组', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/agent/session/recover/app-not-exist/list')
+        .set('Authorization', `Bearer ${getUserToken()}`)
+
+      expect(res.body.statusCode).toBe(Code.Ok)
+      expect(res.body.data).toEqual([])
     })
   })
 
@@ -258,7 +325,9 @@ describe('AgentController (e2e)', () => {
 
       expect(listAfterDelete.body.statusCode).toBe(Code.Ok)
       expect(
-        listAfterDelete.body.data.find((item: MockOpenAiEndpoint) => item.id === createdId),
+        listAfterDelete.body.data.find(
+          (item: MockOpenAiEndpoint) => item.id === createdId,
+        ),
       ).toBeUndefined()
     })
   })

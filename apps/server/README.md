@@ -49,6 +49,7 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 | `apps`              | `WorkflowAppEntity`     | 工作流应用表，存储工作流应用元信息                               |
 | `app_datas`         | `WorkflowAppDataEntity` | 工作流应用数据表，存储工作流的版本化数据（节点、边、环境变量等） |
 | `bot_record_entity` | `BotRecordEntity`       | 机器人记录表，存储已配置的机器人 endpoint 信息                   |
+| `openai_endpoint`   | `OpenAiEndpointEntity`  | OpenAI 接口配置表，存储 endpoint / apiKey / model                |
 
 ### 表结构详情
 
@@ -116,13 +117,26 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 | 列名                  | 类型        | 约束                  | 描述                                       |
 | --------------------- | ----------- | --------------------- | ------------------------------------------ |
 | `botId`               | `varchar`   | **PK**，自动生成 UUID | 记录唯一标识                               |
-| `botName`                | `varchar`   | NOT NULL              | 机器人名称                                 |
+| `botName`             | `varchar`   | NOT NULL              | 机器人名称                                 |
 | `description`         | `varchar`   | NOT NULL              | 机器人描述                                 |
 | `commonAdapterConfig` | `json`      | NOT NULL              | 通用适配器配置（含自动启动、绑定工作流等） |
 | `adapterTag`          | `enum('0')` | NOT NULL              | 适配器标签（目前仅 `napcatWs = 0`）        |
 | `adapterConfig`       | `json`      | NOT NULL              | 适配器专用配置                             |
 | `createdAt`           | `datetime`  | NOT NULL，自动生成    | 创建时间                                   |
 | `createdBy`           | `varchar`   | NOT NULL              | 创建者                                     |
+
+**关系**：无外键约束
+
+---
+
+#### `openai_endpoint` — OpenAI 接口配置表
+
+| 列名       | 类型      | 约束                  | 描述             |
+| ---------- | --------- | --------------------- | ---------------- |
+| `id`       | `varchar` | **PK**，自动生成 UUID | 配置记录 ID      |
+| `endpoint` | `varchar` | NOT NULL              | OpenAI 接口地址  |
+| `apiKey`   | `varchar` | NOT NULL              | OpenAI 接口密钥  |
+| `model`    | `varchar` | NOT NULL              | 默认模型名称     |
 
 **关系**：无外键约束
 
@@ -180,55 +194,14 @@ erDiagram
         datetime createdAt
         varchar createdBy
     }
+
+      openai_endpoint {
+        varchar id PK
+        varchar endpoint
+        varchar apiKey
+        varchar model
+      }
 ```
-
-## 环境变量
-
-后端环境变量由 `AppConfigService`（`src/apps/app-config/app-config.service.ts`）通过 Zod Schema 统一解析校验，启动时如果必填项缺失或格式错误会直接报错退出。
-
-| 变量名                   | 说明                                                               | 默认值           | 是否必填 |
-| ------------------------ | ------------------------------------------------------------------ | ---------------- | -------- |
-| `HOST_NAME`              | 服务监听的主机名                                                   | `localhost`      | 否       |
-| `PORT`                   | 服务监听的端口号                                                   | `3000`           | 否       |
-| `MYSQL_USERNAME`         | MySQL 数据库用户名                                                 | —                | **是**   |
-| `MYSQL_PWD`              | MySQL 数据库密码                                                   | —                | **是**   |
-| `MYSQL_HOSTPORT`         | MySQL 数据库地址（`host:port` 格式）                               | `localhost:3306` | 否       |
-| `MYSQL_DATABASE`         | MySQL 数据库名称（不存在时自动创建）                               | `napflow_db`     | 否       |
-| `ACC_ROOT_EMAIL`         | 初始 Root 管理员邮箱（需符合邮箱格式）                             | —                | **是**   |
-| `ACC_ROOT_NICKNAME`      | 初始 Root 管理员昵称                                               | —                | **是**   |
-| `ACC_ROOT_PASSWORD`      | 初始 Root 管理员密码                                               | —                | **是**   |
-| `SYNC_ROOT_ACCOUNT_FLAG` | 启用后每次启动同步 Root 账户为当前配置值；未设置时仅在不存在时创建 | 未设置（不启用） | 否       |
-| `JWT_SECRET_KEY`         | JWT 签名密钥。未设置时每次启动随机生成，重启后已签发 Token 失效    | 随机 32 字节 hex | 否       |
-
-此外，`src/config/env.ts` 还导出了 `NODE_ENV`（默认 `production`）和 `IS_NODE_ENV_PROD` 供内部使用。
-
-### 最小配置示例
-
-**`apps/server/.env`**：
-
-```bash
-HOST_NAME=127.0.0.1
-PORT=8848
-ACC_ROOT_EMAIL=root@napflow.com
-ACC_ROOT_NICKNAME=rootUser
-ACC_ROOT_PASSWORD=root
-```
-
-**`apps/server/.env.local`**（存放数据库敏感配置，不纳入版本控制）：
-
-```bash
-MYSQL_USERNAME=root
-MYSQL_PWD=yourpassword
-MYSQL_HOSTPORT=localhost:3306
-```
-
-**`apps/server/.env.development`**（开发模式下固定 JWT 密钥，防止热重载后 Token 失效）：
-
-```bash
-JWT_SECRET_KEY=abcdef123456
-```
-
-> **注意**：生产环境建议通过 Docker 环境变量或 `.env.production` 文件注入敏感配置，不要将真实密码提交到版本控制中。各 `.env` 文件中已包含详细的注释说明，可直接查看对应文件了解更多信息。
 
 ## Project setup
 
@@ -252,14 +225,20 @@ $ pnpm run start:prod
 ## Run tests
 
 ```bash
-# unit tests
+# all tests
 $ pnpm run test
 
-# e2e tests
-$ pnpm run test:e2e
+# unit tests（排除 e2e）
+$ pnpm run test:unit
+
+# watch mode
+$ pnpm run test:watch
 
 # test coverage
 $ pnpm run test:cov
+
+# debug
+$ pnpm run test:debug
 ```
 
 ## Deployment

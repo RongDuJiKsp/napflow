@@ -29,7 +29,7 @@ export class AccountQueryController {
   ) {}
 
   /**
-  * @route `/account/query/list`
+   * @route `/account/query/list`
    * @method GET
    * @role User
    * @query `isDisabled` (boolean, optional), `roles` (string[], optional)
@@ -55,7 +55,7 @@ export class AccountQueryController {
   }
 
   /**
-  * @route `/account/query/cur`
+   * @route `/account/query/cur`
    * @method GET
    * @role User
    * @reqbody 无
@@ -72,7 +72,7 @@ export class AccountQueryController {
   }
 
   /**
-  * @route `/account/query/info`
+   * @route `/account/query/info`
    * @method GET
    * @role User
    * @query `email` (string)

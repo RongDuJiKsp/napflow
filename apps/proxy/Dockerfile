@@ -1,0 +1,18 @@
+FROM node:22-alpine AS base
+WORKDIR /app
+
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/proxy/package.json apps/proxy/
+RUN pnpm install --frozen-lockfile
+
+COPY apps/proxy/src apps/proxy/src
+COPY apps/proxy/tsconfig.json apps/proxy/tsconfig.json
+COPY apps/proxy/.env.production apps/proxy/.env.production
+
+WORKDIR /app/apps/proxy
+RUN pnpm build
+
+EXPOSE 80
+CMD ["pnpm", "start:prod"]

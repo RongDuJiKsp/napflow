@@ -1,0 +1,86 @@
+import type { Socket } from 'socket.io'
+import z from 'zod'
+import { ClientRPCError } from '../middleware/client-rpc.filter'
+import { CLIENT_RPC_METHODS } from '@shared/rpc/agent/client-rpc/methods'
+import type { RPCMethodItem } from '@shared/rpc/core/ts-check'
+import { PluginService } from '@/src/utils/traits'
+export class BaseLangChainClientRPCRequester extends PluginService<[Socket]> {
+  private socket: Socket | null = null
+
+  mount(socket: Socket): void {
+    this.socket = socket
+  }
+
+  unmount(): void {
+    this.socket = null
+  }
+
+  async emit<A extends any[], R>(...args: A): Promise<R> {
+    return new Promise((resolve, reject) => {
+      if (!this.socket) {
+        reject(new ClientRPCError('Socket is not connected'))
+        return
+      }
+      this.socket.emit('client-rpc', ...args, (response: R) => {
+        resolve(response)
+      })
+    })
+  }
+
+  async emitWithSchema<
+    PS extends z.ZodTuple<any, any>,
+    RS extends z.ZodTypeAny,
+  >(
+    paramSchema: PS,
+    responseSchema: RS,
+    ...args: z.input<PS>
+  ): Promise<z.output<RS>> {
+    const parseResult = paramSchema.safeParse(args)
+    if (!parseResult.success) {
+      throw new ClientRPCError(
+        `Invalid arguments: ${z.prettifyError(parseResult.error)}`,
+      )
+    }
+
+    const response = await this.emit(...parseResult.data)
+    const resp = responseSchema.safeParse(response)
+    if (!resp.success) {
+      throw new ClientRPCError(
+        `Invalid response: ${z.prettifyError(resp.error)}`,
+      )
+    }
+
+    return resp.data
+  }
+}
+export type ClientRPCMethods = typeof CLIENT_RPC_METHODS
+  & Record<string, RPCMethodItem>
+export type ClientRPCHandler<K extends keyof ClientRPCMethods> = (
+  ...args: z.input<ClientRPCMethods[K]['request']>
+) => Promise<z.output<ClientRPCMethods[K]['response']>>
+/**
+ * @description: client rpc 即从客户端拉数据到服务端 这里是具体方法的实现类，
+ * BaseLangChainClientRPCRequester 是基础类，提供了 emit 和 emitWithSchema 两个方法，前者直接发请求，后者带参数和响应的 schema 验证
+ */
+export class LangChainClientRPC extends BaseLangChainClientRPCRequester {
+  private readonly methods: ClientRPCMethods = CLIENT_RPC_METHODS
+
+  getRequestSchema<K extends keyof ClientRPCMethods>(
+    method: K,
+  ): ClientRPCMethods[K]['request'] {
+    return this.methods[method].request
+  }
+
+  getResponseSchema<K extends keyof ClientRPCMethods>(
+    method: K,
+  ): ClientRPCMethods[K]['response'] {
+    return this.methods[method].response
+  }
+
+  getHandler<K extends keyof ClientRPCMethods>(method: K): ClientRPCHandler<K> {
+    const requestSchema = this.getRequestSchema<K>(method)
+    const responseSchema = this.getResponseSchema<K>(method)
+    return (...args: z.input<typeof requestSchema>) =>
+      this.emitWithSchema(requestSchema, responseSchema, ...args)
+  }
+}

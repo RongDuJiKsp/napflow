@@ -135,6 +135,6 @@ export default combine(
   },
   oxlint.configs['flat/recommended'],
   globalIgnores([
-    'node-modules/',
+    'node_modules/',
   ]),
 )

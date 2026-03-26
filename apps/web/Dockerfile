@@ -1,7 +1,6 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
-ARG SERVER_URL
 # precheck
 # pass
 # 准备pnpm 上下文
@@ -30,5 +29,6 @@ WORKDIR /app/apps/web
 RUN pnpm test:unit
 RUN pnpm build
 # entrypoint
-EXPOSE 3000
-CMD ["pnpm", "start"]
+ENV WEB_PORT=3000
+EXPOSE ${WEB_PORT}
+CMD ["pnpm", "start:prod"]

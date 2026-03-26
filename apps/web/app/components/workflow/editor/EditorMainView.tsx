@@ -18,6 +18,7 @@ import {
 } from './hooks/use-reactflow-ext'
 import NodeEditSiderbar from './component-nodes/mainview/node-edit-siderbar'
 import WorkflowEnv from './mainview/workflow-env'
+import WorkflowAgent from './mainview/workflow-agent'
 import { useKeyPress } from 'ahooks'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -28,6 +29,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
       <StickyNode />
       <NodeEditSiderbar />
       <WorkflowEnv />
+      <WorkflowAgent />
       {children}
     </div>
   )

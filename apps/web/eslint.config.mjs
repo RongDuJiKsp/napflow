@@ -16,7 +16,7 @@ export default combine(base, [
     },
   },
   // Override default ignores of eslint-config-next.
-  globalIgnores(['.next/', 'out/', 'build/', 'next-env.d.ts', 'node-modules/']),
+  globalIgnores(['.next/', 'out/', 'build/', 'next-env.d.ts', 'node_modules/']),
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
