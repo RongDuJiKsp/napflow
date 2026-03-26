@@ -3,9 +3,9 @@
   "version": "1.0.3",
   "description": "",
   "scripts": {
-    "image:web": "docker build -f apps/web/Dockerfile .  -t napflow/web",
-    "image:server": "docker build -f apps/server/Dockerfile .  -t napflow/server",
-    "image:proxy": "docker build -f apps/proxy/Dockerfile .  -t napflow/proxy",
+    "image:web": "docker build -f apps/web/Dockerfile .  -t napflow-web",
+    "image:server": "docker build -f apps/server/Dockerfile .  -t napflow-server",
+    "image:proxy": "docker build -f apps/proxy/Dockerfile .  -t napflow-proxy",
     "image:all": "pnpm run image:web && pnpm run image:server && pnpm run image:proxy",
     "lint:all": "pnpm -r run lint:all",
     "test": "npx vitest run",

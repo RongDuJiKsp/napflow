@@ -29,5 +29,6 @@ WORKDIR /app/apps/web
 RUN pnpm test:unit
 RUN pnpm build
 # entrypoint
-EXPOSE ${WEB_PORT:-3000}
+ENV WEB_PORT=3000
+EXPOSE ${WEB_PORT}
 CMD ["pnpm", "start:prod"]
