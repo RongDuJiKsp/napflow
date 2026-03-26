@@ -4,7 +4,7 @@ import z, { ZodError } from 'zod'
 export const AppConfigEnvShema = z.object({
   // 服务配置
   HOST_NAME: z.string().default('localhost'),
-  PORT: z.string().default('3000'),
+  PORT: z.string().default('8848'),
   // 数据库服务配置
   MYSQL_USERNAME: z.string(),
   MYSQL_PWD: z.string(),
