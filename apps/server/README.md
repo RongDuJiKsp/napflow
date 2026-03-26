@@ -49,6 +49,7 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 | `apps`              | `WorkflowAppEntity`     | 工作流应用表，存储工作流应用元信息                               |
 | `app_datas`         | `WorkflowAppDataEntity` | 工作流应用数据表，存储工作流的版本化数据（节点、边、环境变量等） |
 | `bot_record_entity` | `BotRecordEntity`       | 机器人记录表，存储已配置的机器人 endpoint 信息                   |
+| `openai_endpoint`   | `OpenAiEndpointEntity`  | OpenAI 接口配置表，存储 endpoint / apiKey / model                |
 
 ### 表结构详情
 
@@ -128,6 +129,19 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 ---
 
+#### `openai_endpoint` — OpenAI 接口配置表
+
+| 列名       | 类型      | 约束                  | 描述             |
+| ---------- | --------- | --------------------- | ---------------- |
+| `id`       | `varchar` | **PK**，自动生成 UUID | 配置记录 ID      |
+| `endpoint` | `varchar` | NOT NULL              | OpenAI 接口地址  |
+| `apiKey`   | `varchar` | NOT NULL              | OpenAI 接口密钥  |
+| `model`    | `varchar` | NOT NULL              | 默认模型名称     |
+
+**关系**：无外键约束
+
+---
+
 ### ER 关系图
 
 ```mermaid
@@ -180,6 +194,13 @@ erDiagram
         datetime createdAt
         varchar createdBy
     }
+
+      openai_endpoint {
+        varchar id PK
+        varchar endpoint
+        varchar apiKey
+        varchar model
+      }
 ```
 
 ## 环境变量
@@ -252,14 +273,20 @@ $ pnpm run start:prod
 ## Run tests
 
 ```bash
-# unit tests
+# all tests
 $ pnpm run test
 
-# e2e tests
-$ pnpm run test:e2e
+# unit tests（排除 e2e）
+$ pnpm run test:unit
+
+# watch mode
+$ pnpm run test:watch
 
 # test coverage
 $ pnpm run test:cov
+
+# debug
+$ pnpm run test:debug
 ```
 
 ## Deployment

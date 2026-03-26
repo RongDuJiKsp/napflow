@@ -30,29 +30,32 @@ NapFlow 前端应用（Next.js），包含工作流编辑器、Bot 管理、插�
 
 > **说明**：当前推荐由独立 Node.js proxy 承接入口流量并转发 `/api/*` 到后端，前端保留 `NEXT_PUBLIC_API_URL=/api` 即可。若将 `NEXT_PUBLIC_API_URL` 设置为完整后端地址（如 `http://localhost:8848`），前端会直连后端，不经过 proxy。
 
-## Getting Started
-
-First, run the development server:
+## 本地启动
 
 ```bash
-pnpm dev
+pnpm start:dev
 ```
 
-Open `http://localhost:3000` with your browser to see the result.
+默认访问 `http://localhost:3000`。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 构建与生产启动
 
-## Learn More
+```bash
+pnpm build
+pnpm start:prod
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 测试
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# 单元测试
+pnpm test:unit
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# E2E 测试
+pnpm test:e2e
+```
 
-## Deploy on Vercel
+## 说明
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 项目使用 App Router，业务页面位于 `app/(auth)` 与 `app/(noauth)`。
+- 推荐通过独立 proxy 访问（前端 `NEXT_PUBLIC_API_URL=/api`，由 proxy 转发到后端）。
