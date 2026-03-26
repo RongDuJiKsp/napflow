@@ -110,7 +110,7 @@ services:
       WEB_TARGET: http://web:3000
       API_TARGET: http://server:8848
     ports:
-      - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-3000}:3000"
+      - "${WEB_BIND_IP:-0.0.0.0}:${WEB_PORT:-80}:80"
     security_opt:
       - no-new-privileges:true
     cap_drop:

@@ -94,4 +94,4 @@ const ChatMessageItem = ({ record }: MessageBubbleProps) => {
   else return <UnknownMessageItem record={record} />
 }
 
-export default memo (ChatMessageItem)
+export default memo(ChatMessageItem)

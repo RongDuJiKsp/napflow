@@ -2,7 +2,7 @@ import z from 'zod'
 
 const EnvSchema = z.object({
   LISTEN_PORT: z.string().default('80'),
-  LISTEN_HOST: z.string().default('0.0.0.0'),
+  LISTEN_HOST: z.string().default('127.0.0.1'),
   LOGGER_LEVEL: z.string().default('info'),
   PROXY_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
   WEB_TARGET: z.string(),

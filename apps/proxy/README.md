@@ -10,7 +10,7 @@
 
 ## 环境变量
 
-- `PORT`：代理监听端口，默认 `3000`
+- `LISTEN_PORT`：代理监听端口，默认 `80`
 - `WEB_TARGET`：前端 Next.js 服务地址，默认 `http://localhost:3000`
 - `API_TARGET`：后端服务地址，默认 `http://localhost:8848`
 - `PROXY_TIMEOUT_MS`：代理请求超时（毫秒），默认 `15000`
@@ -33,7 +33,7 @@ proxy 使用 `dotenv` 自动加载环境变量文件，加载优先级如下：
 pnpm --filter proxy start:dev
 ```
 
-默认监听 `http://localhost:3100`。
+默认监听 `http://localhost:80`。
 
 ## 构建与运行
 
