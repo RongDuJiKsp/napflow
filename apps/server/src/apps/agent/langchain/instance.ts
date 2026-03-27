@@ -76,6 +76,7 @@ export class LangChainInstance extends LangChainBase {
   async invokeStreamingChat(input: string, onUpdate: (message: BaseMessage) => void) {
     const history = await this.memory.getMessages()
     const messages = [...history, new HumanMessage(input)]
+    await this.memory.addMessages(messages) // 先把用户输入的消息存储到 memory 中，这样在 streaming 过程中就能拿到完整的对话历史
     for await(const respMsgs of await this.streamingInvoke(messages)) {
       await this.memory.addMessages(respMsgs)
       respMsgs.forEach(onUpdate)
