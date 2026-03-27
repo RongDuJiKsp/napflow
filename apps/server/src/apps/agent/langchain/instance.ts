@@ -4,10 +4,12 @@ import type { AgentMiddleware, BaseMessage } from 'langchain'
 import { HumanMessage, createAgent } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history'
+import { Logger } from '@nestjs/common'
 
 export type LangChainConfig = { tools?: (ClientTool | ServerTool)[], middleware?: AgentMiddleware[] }
 // 对 LangChain sdk的包装，提供一些默认的功能和接口的包装，方便在 LangChainInstance 中使用
 class LangChainBase {
+  private readonly logger = new Logger(LangChainBase.name)
   private readonly openAiSdk: ChatOpenAI
   private readonly agent: ReturnType<typeof createAgent>
 
@@ -30,11 +32,18 @@ class LangChainBase {
     return (await this.agent.invoke({ messages: beforeMessages })).messages
   }
 
+  get self() {
+    return this
+  }
+
   private async streamingInvokeIterator(beforeMessages: BaseMessage[]): Promise<() => AsyncGenerator<BaseMessage[], void>> {
     const streamingResponse = await this.agent.stream({ messages: beforeMessages })
+    const self = this.self
     return async function* () {
-      for await(const chunk of streamingResponse)
-        yield chunk.model_request.messages
+      for await(const chunk of streamingResponse) {
+        self.logger.debug('Received new chunk from streaming response', { chunk })
+        yield chunk.model_request?.messages || chunk.tools?.messages || []
+      }
     }
   }
 
