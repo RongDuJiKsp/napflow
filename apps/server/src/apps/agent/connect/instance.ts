@@ -5,6 +5,7 @@ import { v4 as uuidV4 } from 'uuid'
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 import { LangChainInstance } from '../langchain/instance'
 import { HumanMessage } from '@langchain/core/messages'
+import { AgentRPCTool } from './tools/agent-rpc-tool'
 
 export class AgentSession {
   readonly sessionId = uuidV4()
@@ -14,11 +15,15 @@ export class AgentSession {
   )
 
   private readonly clientRpc: WorkflowEditorClientRPC = new WorkflowEditorClientRPC()
+  readonly rpcTool: AgentRPCTool
   readonly langChain: LangChainInstance
   socket: Socket | null = null
 
   constructor(readonly apiConfig: OpenAiEndpointConfig) {
-    this.langChain = new LangChainInstance(apiConfig)
+    this.rpcTool = new AgentRPCTool(this.clientRpc)
+    this.langChain = new LangChainInstance(apiConfig, {
+      tools: [...this.rpcTool.Tools],
+    })
   }
 
   mountToSocket(socket: Socket) {
