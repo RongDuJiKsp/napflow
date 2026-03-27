@@ -12,7 +12,7 @@ export type ClientRPCHandler<K extends keyof ClientRPCMethods> = (
  * @description: client rpc 即从客户端拉数据到服务端 这里是具体方法的实现类，
  * BaseLangChainClientRPCRequester 是基础类，提供了 emit 和 emitWithSchema 两个方法，前者直接发请求，后者带参数和响应的 schema 验证
  */
-export class LangChainClientRPC extends BaseClientRPCRequester {
+export class WorkflowEditorClientRPC extends BaseClientRPCRequester {
   private readonly methods: ClientRPCMethods = CLIENT_RPC_METHODS
 
   getRequestSchema<K extends keyof ClientRPCMethods>(

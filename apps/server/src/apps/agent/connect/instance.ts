@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common'
 import type { Socket } from 'socket.io'
-import { LangChainClientRPC as WorkflowEditorClientRPC } from './client-rpc/client-rpc'
+import { WorkflowEditorClientRPC } from './client-rpc/client-rpc'
 import { v4 as uuidV4 } from 'uuid'
 import type { OpenAiEndpointConfig } from '@shared/common/agent/entity'
 import { LangChainInstance } from '../langchain/instance'
