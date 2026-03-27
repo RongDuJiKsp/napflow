@@ -31,11 +31,11 @@ export class AgentRPCTool {
   constructor(private readonly rpc: WorkflowEditorClientRPC) {
     this.findRpcMethods = tool(() => {
       const methods = this.rpc.methodsList
-      return methods.map(method => ({
+      return JSON.stringify(methods.map(method => ({
         name: method,
         description: this.methodDescriptions[method],
         argsSchema: z.toJSONSchema(CLIENT_RPC_METHODS[method].request),
-      }))
+      })))
     }, {
       name: 'findRpcMethods',
       description: 'Find available RPC methods from the client. No parameters needed.',
@@ -43,7 +43,7 @@ export class AgentRPCTool {
     this.invokeRpcMethod = tool(async ({ method, args }: z.output<typeof ClientRpcToolCallSchema>) => {
       const callArgs = args as z.output<ClientRPCMethods[typeof method]['request']>
       const handler = this.rpc.getHandler(method)
-      return await handler(...callArgs)
+      return JSON.stringify(await handler(...callArgs))
     }, {
       name: 'invokeRpcMethod',
       description: 'Invoke a specific RPC method on the client with the provided arguments.',
