@@ -4,7 +4,8 @@ import type { RpcPS, RpcRS, RpcRecv } from '@shared/rpc/core/ts-check'
 
 export type Remover = () => void
 type RpcAck<R> = (response: R) => void
-export type SocketRPCListener<A extends unknown[] = unknown[], ACK = unknown> = (...args: [...A, RpcAck<ACK>]) => Promise<void>
+type RpcAckFail = () => void
+export type SocketRPCListener<A extends unknown[] = unknown[], ACK = unknown> = (ack: RpcAck<ACK>, fail: RpcAckFail, ...args: A) => Promise<void>
 
 export class BaseClientRPCListener {
   private socket: Socket | null = null
@@ -29,10 +30,7 @@ export class BaseClientRPCListener {
     responseSchema: RS,
     handler: RpcRecv<PS, RS>,
   ): Remover {
-    return this.addListener(methodName, async (...argsWithAck) => {
-      const ack = argsWithAck[argsWithAck.length - 1] as RpcAck<unknown>
-      const requestArgs = argsWithAck.slice(0, -1) as unknown[]
-
+    return this.addListener(methodName, async (ack, fail, ...requestArgs) => {
       const parsedRequest = paramSchema.safeParse(requestArgs)
       if (!parsedRequest.success) {
         console.error('[agent-client-rpc] request schema parse failed', {
@@ -40,7 +38,7 @@ export class BaseClientRPCListener {
           requestArgs,
           issues: parsedRequest.error.issues,
         })
-        ack({ success: false })
+        fail()
         return
       }
 
@@ -50,7 +48,7 @@ export class BaseClientRPCListener {
           method: methodName,
           error,
         })
-        ack({ success: false })
+        fail()
         return
       }
       const parsedResponse = responseSchema.safeParse(response)
@@ -60,7 +58,7 @@ export class BaseClientRPCListener {
           response,
           issues: parsedResponse.error.issues,
         })
-        ack({ success: false })
+        fail()
         return
       }
       ack(parsedResponse.data)
@@ -80,13 +78,18 @@ export class BaseClientRPCListener {
     methodName: string,
     ...argsWithAck: [...unknown[], RpcAck<unknown>]
   ): Promise<void> => {
+    const requestArgs = argsWithAck.slice(0, -1)
+    const ack: RpcAck<unknown> = argsWithAck[argsWithAck.length - 1] as RpcAck<unknown>
+    const fail: RpcAckFail = () => ack({ success: false })
+
     const listener = this.listeners.get(methodName)
     if (!listener) {
       console.error('[agent-client-rpc] method listener not found', {
         method: methodName,
       })
+      fail()
       return
     }
-    await Promise.all([...listener.values()].map(l => l(...argsWithAck)))
+    await Promise.all([...listener.values()].map(l => l(ack, fail, ...requestArgs)))
   }
 }
