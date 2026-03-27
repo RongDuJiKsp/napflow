@@ -44,7 +44,7 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
     const parseResult = paramSchema.safeParse(args)
     if (!parseResult.success) {
       throw new ClientRPCError(
-        `Invalid arguments: ${z.prettifyError(parseResult.error)}`,
+        `Invalid arguments: ${z.prettifyError(parseResult.error)} on method ${method}`,
       )
     }
 
@@ -52,7 +52,7 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
     const resp = responseSchema.safeParse(response)
     if (!resp.success) {
       throw new ClientRPCError(
-        `Invalid response: ${z.prettifyError(resp.error)}`,
+        `Invalid response: ${z.prettifyError(resp.error)} on method ${method}, response: ${JSON.stringify(response)}`,
       )
     }
 

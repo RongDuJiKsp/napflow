@@ -9,7 +9,7 @@ export type SocketRPCListener<A extends unknown[] = unknown[], ACK = unknown> = 
 
 export class BaseClientRPCListener {
   private socket: Socket | null = null
-  private readonly listeners = new Map<string, Set<SocketRPCListener>>()
+  private readonly listeners = new Map<string, SocketRPCListener>()
 
   mount(socket: Socket): void {
     this.socket = socket
@@ -30,7 +30,7 @@ export class BaseClientRPCListener {
     responseSchema: RS,
     handler: RpcRecv<PS, RS>,
   ): Remover {
-    return this.addListener(methodName, async (ack, fail, ...requestArgs) => {
+    return this.setListener(methodName, async (ack, fail, ...requestArgs) => {
       const parsedRequest = paramSchema.safeParse(requestArgs)
       if (!parsedRequest.success) {
         console.error('[agent-client-rpc] request schema parse failed', {
@@ -65,12 +65,10 @@ export class BaseClientRPCListener {
     })
   }
 
-  private addListener(methodName: string, listener: SocketRPCListener): Remover {
-    const existingListeners = this.listeners.get(methodName) || new Set()
-    existingListeners.add(listener)
-    this.listeners.set(methodName, existingListeners)
+  private setListener(methodName: string, listener: SocketRPCListener): Remover {
+    this.listeners.set(methodName, listener)
     return () => {
-      this.listeners.get(methodName)?.delete(listener)
+      this.listeners.delete(methodName)
     }
   }
 
@@ -90,6 +88,6 @@ export class BaseClientRPCListener {
       fail()
       return
     }
-    await Promise.all([...listener.values()].map(l => l(ack, fail, ...requestArgs)))
+    await listener(ack, fail, ...requestArgs)
   }
 }
