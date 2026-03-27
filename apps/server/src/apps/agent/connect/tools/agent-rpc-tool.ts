@@ -2,6 +2,7 @@ import { type ClientTool, tool } from '@langchain/core/tools'
 import type { WorkflowEditorClientRPC } from '../client-rpc/client-rpc'
 import { CLIENT_RPC_METHODS, type ClientRPCMethods } from '@shared/rpc/agent/client-rpc/methods'
 import z from 'zod'
+import { Logger } from '@nestjs/common'
 
 export const ClientRpcToolCallSchema = z.object({
   method: z.enum(Object.keys(CLIENT_RPC_METHODS) as (keyof ClientRPCMethods)[]),
@@ -19,6 +20,7 @@ export const ClientRpcToolCallSchema = z.object({
 })
 
 export class AgentRPCTool {
+  private readonly logger = new Logger(AgentRPCTool.name)
     // tools
   readonly findRpcMethods: ClientTool
   readonly invokeRpcMethod: ClientTool
@@ -30,6 +32,7 @@ export class AgentRPCTool {
 
   constructor(private readonly rpc: WorkflowEditorClientRPC) {
     this.findRpcMethods = tool(() => {
+      this.logger.debug('Finding available RPC methods from the client')
       const methods = this.rpc.methodsList
       return JSON.stringify(methods.map(method => ({
         name: method,
@@ -41,6 +44,7 @@ export class AgentRPCTool {
       description: 'Find available RPC methods from the client. No parameters needed.',
     })
     this.invokeRpcMethod = tool(async ({ method, args }: z.output<typeof ClientRpcToolCallSchema>) => {
+      this.logger.debug(`Invoking RPC method ${method} with arguments: ${JSON.stringify(args)}`)
       const callArgs = args as z.output<ClientRPCMethods[typeof method]['request']>
       const handler = this.rpc.getHandler(method)
       return JSON.stringify(await handler(...callArgs))
