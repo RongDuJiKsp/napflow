@@ -4,11 +4,7 @@ import { CLIENT_RPC_METHODS, type ClientRPCMethods } from '@shared/rpc/agent/cli
 import z from 'zod'
 
 export const ClientRpcToolCallSchema = z.object({
-  method: z.custom<keyof ClientRPCMethods>((val) => {
-    return typeof val === 'string' && val in CLIENT_RPC_METHODS
-  }, {
-    message: 'Invalid RPC method',
-  }),
+  method: z.enum(Object.keys(CLIENT_RPC_METHODS) as (keyof ClientRPCMethods)[]),
   args: z.array(z.unknown()),
 }).superRefine((data, ctx) => {
   const argsSchema = CLIENT_RPC_METHODS[data.method].request
