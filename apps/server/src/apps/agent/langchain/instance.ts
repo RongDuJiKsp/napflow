@@ -29,6 +29,18 @@ class LangChainBase {
   async stateInvoke(beforeMessages: BaseMessage[]): Promise<BaseMessage[]> {
     return (await this.agent.invoke({ messages: beforeMessages })).messages
   }
+
+  private async streamingInvokeIterator(beforeMessages: BaseMessage[]): Promise<() => AsyncGenerator<BaseMessage[], void>> {
+    const streamingResponse = await this.agent.stream({ messages: beforeMessages })
+    return async function* () {
+      for await(const chunk of streamingResponse)
+        yield chunk.model_request.messages
+    }
+  }
+
+  async streamingInvoke(beforeMessages: BaseMessage[]) {
+    return (await this.streamingInvokeIterator(beforeMessages))()
+  }
 }
 
 export class LangChainInstance extends LangChainBase {
@@ -49,6 +61,20 @@ export class LangChainInstance extends LangChainBase {
     return{
       current: messages,
       diff: messages.slice(history.length), // 只返回新产生的消息
+    }
+  }
+
+  async invokeStreamingChat(input: string, onUpdate: (message: BaseMessage) => void) {
+    const history = await this.memory.getMessages()
+    const messages = [...history, new HumanMessage(input)]
+    for await(const respMsgs of await this.streamingInvoke(messages)) {
+      await this.memory.addMessages(respMsgs)
+      respMsgs.forEach(onUpdate)
+    }
+    const current = await this.memory.getMessages()
+    return{
+      current,
+      diff: current.slice(history.length), // 只返回新产生的消息
     }
   }
 

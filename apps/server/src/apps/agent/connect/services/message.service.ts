@@ -17,6 +17,6 @@ export class MessageService {
       this.logger.warn(`未找到与socket ${socket.id}绑定的agent session`)
       return
     }
-    await agentSession.invokeChat(message)
+    await agentSession.invokeStreamingChat(message)
   }
 }

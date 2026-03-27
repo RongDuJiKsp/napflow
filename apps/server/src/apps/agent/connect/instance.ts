@@ -68,4 +68,14 @@ export class AgentSession {
     for(const msg of diff.splice(1))
       this.safeSocket.emit('query.response', msg.toDict())
   }
+
+  async invokeStreamingChat(message: string) {
+    this.logger.log(`Invoking chat with message: ${message}`)
+      // 首先回显用户输入的消息，以提升响应速度和用户体验
+    this.safeSocket.emit('query.response', (new HumanMessage(message)).toDict())
+
+    await this.langChain.invokeStreamingChat(message, (msg) => {
+      this.safeSocket.emit('query.response', msg.toDict())
+    })
+  }
 }
