@@ -29,6 +29,9 @@ importers:
       mnemonist:
         specifier: ^0.40.3
         version: 0.40.3
+      radash:
+        specifier: ^12.1.1
+        version: 12.1.1
       ring-buffer-ts:
         specifier: ^1.2.0
         version: 1.2.0
@@ -7142,6 +7145,10 @@ packages:
 
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
+
+  radash@12.1.1:
+    resolution: {integrity: sha512-h36JMxKRqrAxVD8201FrCpyeNuUY9Y5zZwujr20fFO77tpUtGa6EZzfKw/3WaiBX95fq7+MpsuMLNdSnORAwSA==}
+    engines: {node: '>=14.18.0'}
 
   randomatic@3.1.1:
     resolution: {integrity: sha512-TuDE5KxZ0J461RVjrJZCJc+J+zCkTb1MbH9AQUq68sMhOMcy9jLcb3BrZKgp9q9Ncltdg4QVqWrH02W2EFFVYw==}
@@ -16789,6 +16796,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
+
+  radash@12.1.1: {}
 
   randomatic@3.1.1:
     dependencies:
