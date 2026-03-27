@@ -2,6 +2,7 @@ import { PluginService } from '@/src/utils/traits'
 import type { Socket } from 'socket.io'
 import z from 'zod'
 import { ClientRPCError } from '../middleware/client-rpc.filter'
+import type { RpcPS, RpcRS } from '@shared/rpc/core/ts-check'
 
 export class BaseClientRPCRequester extends PluginService<[Socket]> {
   private socket: Socket | null = null
@@ -27,8 +28,8 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
   }
 
   async emitWithSchema<
-    PS extends z.ZodTuple<any, any>,
-    RS extends z.ZodTypeAny,
+    PS extends RpcPS = RpcPS,
+    RS extends RpcRS = RpcRS,
   >(
     paramSchema: PS,
     responseSchema: RS,

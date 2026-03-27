@@ -1,15 +1,9 @@
 import type { Socket } from 'socket.io-client'
-import type z from 'zod'
 import { tryit } from 'radash'
+import type { RpcPS, RpcRS, RpcRecv } from '@shared/rpc/core/ts-check'
 
 export type Remover = () => void
 type RpcAck<R> = (response: R) => void
-export type SchemaHandler<
-  PS extends z.ZodTuple = z.ZodTuple,
-  RS extends z.ZodTypeAny = z.ZodTypeAny,
-> = (
-  ...args: z.output<PS>
-) => Promise<z.input<RS>> | z.input<RS>
 export type SocketRPCListener<A extends unknown[] = unknown[], ACK = unknown> = (...args: [...A, RpcAck<ACK>]) => Promise<void>
 
 export class BaseClientRPCListener {
@@ -27,13 +21,13 @@ export class BaseClientRPCListener {
   }
 
   listen<
-    PS extends z.ZodTuple = z.ZodTuple,
-    RS extends z.ZodTypeAny = z.ZodTypeAny,
+    PS extends RpcPS = RpcPS,
+    RS extends RpcRS = RpcRS,
   >(
     methodName: string,
     paramSchema: PS,
     responseSchema: RS,
-    handler: SchemaHandler<PS, RS>,
+    handler: RpcRecv<PS, RS>,
   ): Remover {
     return this.addListener(methodName, async (...argsWithAck) => {
       const ack = argsWithAck[argsWithAck.length - 1] as RpcAck<unknown>
