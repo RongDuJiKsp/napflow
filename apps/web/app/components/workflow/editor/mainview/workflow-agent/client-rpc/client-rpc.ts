@@ -1,19 +1,12 @@
+import type { ClientRPCMethods } from '@shared/rpc/agent/client-rpc/methods'
 import { CLIENT_RPC_METHODS } from '@shared/rpc/agent/client-rpc/methods'
-import type { RPCMethodItem } from '@shared/rpc/core/ts-check'
-import type z from 'zod'
+import type { RpcRecv } from '@shared/rpc/core/ts-check'
 import { BaseClientRPCListener } from './base'
 
-export type ClientRPCMethods = typeof CLIENT_RPC_METHODS
-  & Record<string, RPCMethodItem>
-
-export type MethodHandler<M extends Record<string, RPCMethodItem>, K extends keyof M> = (
-  ...args: z.output<M[K]['request']>
-) => Promise<z.input<M[K]['response']>> | z.input<M[K]['response']>
-
-export type ClientRPCListenerHandler<K extends keyof ClientRPCMethods> = (
-  ...args: z.output<ClientRPCMethods[K]['request']>
-) => Promise<z.input<ClientRPCMethods[K]['response']>>
-
+export type ClientRPCListenerHandler<K extends keyof ClientRPCMethods> = RpcRecv<
+  ClientRPCMethods[K]['request'],
+  ClientRPCMethods[K]['response']
+>
 export class AgentClientRPCListener extends BaseClientRPCListener {
   private readonly methods: ClientRPCMethods = CLIENT_RPC_METHODS
 
@@ -31,7 +24,7 @@ export class AgentClientRPCListener extends BaseClientRPCListener {
 
   listenMethod<K extends keyof ClientRPCMethods>(
     method: K,
-    handler: MethodHandler<ClientRPCMethods, K>,
+    handler: ClientRPCListenerHandler<K>,
   ) {
     return this.listen(
       method,
