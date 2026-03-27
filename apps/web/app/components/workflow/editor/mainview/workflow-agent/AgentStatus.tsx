@@ -1,9 +1,11 @@
 import { Tag, Typography } from 'antd'
 import { RiSparkling2Line } from '@remixicon/react'
 import { useAgentChatStatus } from './hooks/use-agent-chat-status'
+import { useAgentChatEditor } from './hooks/use-agent-chat-editor'
 
 const AgentStatus = () => {
   const { isConnected } = useAgentChatStatus()
+  useAgentChatEditor()
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-xs">
