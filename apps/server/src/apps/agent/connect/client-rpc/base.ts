@@ -3,8 +3,10 @@ import type { Socket } from 'socket.io'
 import z from 'zod'
 import { ClientRPCError } from '../middleware/client-rpc.filter'
 import type { RpcPS, RpcRS } from '@shared/rpc/core/ts-check'
+import { Logger } from '@nestjs/common'
 
 export class BaseClientRPCRequester extends PluginService<[Socket]> {
+  private readonly logger = new Logger(BaseClientRPCRequester.name)
   private socket: Socket | null = null
 
   mount(socket: Socket): void {
@@ -16,12 +18,14 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
   }
 
   async emit<A extends any[], R>(...args: A): Promise<R> {
+    this.logger.debug('Emitting client RPC request', { args })
     return new Promise((resolve, reject) => {
       if (!this.socket) {
         reject(new ClientRPCError('Socket is not connected'))
         return
       }
       this.socket.emit('client-rpc', ...args, (response: R) => {
+        this.logger.debug('Received client RPC response', { response })
         resolve(response)
       })
     })
