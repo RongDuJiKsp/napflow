@@ -13,7 +13,8 @@
     "test:withbuild": "pnpm run test && pnpm run image:all ",
     "release:snapshot": "pnpm run image:all && PREFIX=v$(node -p \"require('./package.json').version\")-snapshot-$(date +%y%m%d) && COUNT=$(git tag -l \"${PREFIX}*\" | wc -l | tr -d ' ') && NUM=$(printf '%02d' $((COUNT+1))) && TAG=${PREFIX}${NUM} && echo \"Creating tag: $TAG\" && git tag $TAG && git push origin $TAG",
     "release": "pnpm run image:all && TAG=v$(node -p \"require('./package.json').version\") && echo \"Creating tag: $TAG\" && git tag $TAG && git push origin $TAG",
-    "docker:buildandup": "docker compose --env-file .env.local up -d"
+    "docker:buildandup": "docker compose --env-file .env.local up -d",
+    "docker:down": "docker compose --env-file .env.local down"
   },
   "keywords": [],
   "author": "",
