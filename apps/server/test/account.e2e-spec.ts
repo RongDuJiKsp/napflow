@@ -317,7 +317,7 @@ describe('AccountController (e2e)', () => {
           nickname: 'AnotherUser',
           password: 'password123',
         }),
-    app,
+    () => app,
     )
 
     it('应该在缺少必填字段时返回错误', async () => {
@@ -358,7 +358,7 @@ describe('AccountController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get('/account/query/cur'),
-    app,
+    () => app,
     )
   })
 
@@ -392,7 +392,7 @@ describe('AccountController (e2e)', () => {
       agent
         .get('/account/query/info')
         .query({ email: 'user@test.com' }),
-    app,
+    () => app,
     )
   })
 
@@ -429,7 +429,7 @@ describe('AccountController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get('/account/query/list'),
-    app,
+    () => app,
     )
   })
 
@@ -469,7 +469,7 @@ describe('AccountController (e2e)', () => {
           originPassword: 'password123',
           password: 'newPassword456',
         }),
-    app,
+    () => app,
     )
 
     it('缺少必填字段时应返回错误', async () => {
@@ -502,7 +502,7 @@ describe('AccountController (e2e)', () => {
       agent
         .post('/account/change/nickname')
         .send({ nickname: 'NewNickname' }),
-    app,
+    () => app,
     )
 
     it('缺少 nickname 字段时应返回错误', async () => {
@@ -564,7 +564,7 @@ describe('AccountController (e2e)', () => {
           email: 'user@test.com',
           groupType: [UserRole.Admin],
         }),
-    app,
+    () => app,
     )
 
     it('save 返回空数组时应返回错误', async () => {
@@ -647,7 +647,7 @@ describe('AccountController (e2e)', () => {
           email: 'admin@test.com',
           groupType: [UserRole.Admin],
         }),
-    app,
+    () => app,
     )
 
     it('降级最后一个管理员时应返回错误', async () => {
@@ -705,7 +705,7 @@ describe('AccountController (e2e)', () => {
       agent
         .post('/account/action/disable')
         .send({ email: 'user@test.com' }),
-    app,
+    () => app,
     )
   })
 

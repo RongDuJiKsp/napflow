@@ -50,7 +50,7 @@ type AuthLinkCase = {
 export function itAuthLink<A extends App, Res extends Test>(
   title: string,
   getEndpoint: (agent: TestAgent) => Res,
-  app: INestApplication<A>,
+  getApp: () => INestApplication<A>,
 ) {
   const cases: AuthLinkCase[] = [
     {
@@ -77,6 +77,7 @@ export function itAuthLink<A extends App, Res extends Test>(
 
   for (const { caseName, token } of cases) {
     it(`${title} - ${caseName}`, async () => {
+      const app = getApp()
       const req = getEndpoint(request(app.getHttpServer()))
       if (token) withAuthHeader(req, token)
       const res = await req

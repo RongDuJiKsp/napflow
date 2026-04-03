@@ -127,7 +127,7 @@ describe('AgentController (e2e)', () => {
 
     itAuthLink('未认证访问应返回 401', agent =>
       agent.get('/agent/openai-endpoint'),
-    app,
+    () => app,
     )
   })
 

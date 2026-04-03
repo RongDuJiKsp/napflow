@@ -342,7 +342,7 @@ describe('WorkflowController (e2e)', () => {
       agent
         .post('/workflow/record/create')
         .send({ appName: '新工作流', appDescription: '描述信息' }),
-    app,
+    () => app,
     )
 
     it('缺少必填字段 appName 时应返回错误', async () => {
@@ -416,7 +416,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get('/workflow/record/list'),
-    app,
+    () => app,
     )
   })
 
@@ -447,7 +447,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/record/${TEST_APP_ID}`),
-    app,
+    () => app,
     )
   })
 
@@ -550,7 +550,7 @@ describe('WorkflowController (e2e)', () => {
       agent
         .post(`/workflow/record/${TEST_APP_ID}/update`)
         .send({ appName: '新名称', appDescription: '新描述' }),
-    app,
+    () => app,
     )
   })
 
@@ -584,7 +584,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.post(`/workflow/record/${TEST_APP_ID}/delete`),
-    app,
+    () => app,
     )
   })
 
@@ -689,7 +689,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/flow/${TEST_APP_ID}/draft`),
-    app,
+    () => app,
     )
   })
 
@@ -730,7 +730,7 @@ describe('WorkflowController (e2e)', () => {
       agent
         .post(`/workflow/flow/${TEST_APP_ID}/sync`)
         .send(syncPayload),
-    app,
+    () => app,
     )
 
     it('draft -> sync1 -> draft(1) -> sync2 -> draft(2且不等于1)', async () => {
@@ -894,7 +894,7 @@ describe('WorkflowController (e2e)', () => {
       agent
         .post(`/workflow/flow/${TEST_APP_ID}/publish`)
         .send({ version: 'v2.0.0', description: '未认证发布' }),
-    app,
+    () => app,
     )
   })
 
@@ -925,7 +925,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/versions/${TEST_APP_ID}/list`),
-    app,
+    () => app,
     )
   })
 
@@ -965,7 +965,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/query`),
-    app,
+    () => app,
     )
   })
 
@@ -994,7 +994,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`),
-    app,
+    () => app,
     )
   })
 
@@ -1023,7 +1023,7 @@ describe('WorkflowController (e2e)', () => {
 
     itAuthLink('未认证用户应返回 401', agent =>
       agent.get(`/workflow/versions/${TEST_APP_ID}/last`),
-    app,
+    () => app,
     )
   })
 

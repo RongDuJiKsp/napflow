@@ -234,7 +234,7 @@ describe('Runtime BotManager (e2e)', () => {
           adapterTag: AdapterTag.napcatWs,
           adapterConfig: {},
         }),
-    app,
+    () => app,
     )
   })
 
@@ -252,7 +252,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     itAuthLink('未认证时应返回 401', agent =>
       agent.get('/bot/record/list'),
-    app,
+    () => app,
     )
 
     it('应支持 isRunning + adapterTag 组合筛选', async () => {
@@ -328,7 +328,7 @@ describe('Runtime BotManager (e2e)', () => {
 
     itAuthLink('未认证时应返回 401', agent =>
       agent.post(`/bot/runtime/${TEST_BOT_ID}/run`),
-    app,
+    () => app,
     )
   })
 
@@ -539,7 +539,7 @@ describe('Runtime BotManager (e2e)', () => {
           name: '新名称',
           description: '新描述',
         }),
-    app,
+    () => app,
     )
   })
 
