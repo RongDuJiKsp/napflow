@@ -1,9 +1,7 @@
 import { expect, it } from 'vitest'
-import request from 'supertest'
 import type { INestApplication } from '@nestjs/common'
 import type { App } from 'supertest/types'
-import type TestAgent from 'supertest/lib/agent'
-import type Test from 'supertest/lib/test'
+import supertest from 'supertest'
 
 /**
  * 存在 jwt 三段格式，但内容不可解码。
@@ -27,7 +25,7 @@ export const INVALID_JWT_BROKEN_JSON_TOKEN
 export const INVALID_JWT_BROKEN_SIGNATURE_TOKEN
   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0.broken-signature'
 
-export const withAuthHeader = <T extends Test = Test>(req: T, token: string) => {
+export const withAuthHeader = <T extends supertest.Test = supertest.Test>(req: T, token: string) => {
   req.set('Authorization', `Bearer ${token}`)
 }
 
@@ -47,9 +45,9 @@ type AuthLinkCase = {
  * 5) 头部和 payload 合法但签名损坏 token
  */
 
-export function itAuthLink<A extends App, Res extends Test>(
+export function itAuthLink<A extends App, Res extends supertest.Test>(
   title: string,
-  getEndpoint: (agent: TestAgent) => Res,
+  getEndpoint: (agent: supertest.Agent) => Res,
   getApp: () => INestApplication<A>,
 ) {
   const cases: AuthLinkCase[] = [
@@ -78,7 +76,7 @@ export function itAuthLink<A extends App, Res extends Test>(
   for (const { caseName, token } of cases) {
     it(`${title} - ${caseName}`, async () => {
       const app = getApp()
-      const req = getEndpoint(request(app.getHttpServer()))
+      const req = getEndpoint(supertest(app.getHttpServer()))
       if (token) withAuthHeader(req, token)
       const res = await req
       expect(res.status).toBe(401)
