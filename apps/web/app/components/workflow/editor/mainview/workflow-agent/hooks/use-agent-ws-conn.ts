@@ -23,13 +23,16 @@ export const parseConnToken = (
 }
 
 const getConnTarget = (): { url: string; path: string } => {
-  if(baseUrl.startsWith('/')) {
+  if (baseUrl.startsWith('/')) {
     return {
-      url: '/agent', path: `${baseUrl}/socket.io`,
+      url: '/agent',
+      path: `${baseUrl}/socket.io`,
     }
   }
   // http://example.com -> ws://example.com https://example.com -> wss://example.com /api -> /api
-  const wsFullBaseUrl = baseUrl.startsWith('http') ? baseUrl.replace(/^http/, 'ws') : baseUrl
+  const wsFullBaseUrl = baseUrl.startsWith('http')
+    ? baseUrl.replace(/^http/, 'ws')
+    : baseUrl
   return {
     url: `${wsFullBaseUrl}/agent`,
     path: '/socket.io',

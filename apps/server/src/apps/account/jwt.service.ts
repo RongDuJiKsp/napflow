@@ -20,12 +20,12 @@ export class JwtOperator<T extends JwtPayload> {
   }
 
   jwtVerify(token: string, options?: jwt.VerifyOptions) {
-    try{
+    try {
       return this.zod.parse(jwt.verify(token, this.secret, options))
     }
     catch (err) {
       // 单独捕获 JSON 解析错误，抛出可被拦截到的 VaildJwtError
-      if(err instanceof SyntaxError)
+      if (err instanceof SyntaxError)
         throw new VaildJwtError('Invalid JWT: Payload JSON is malformed')
 
       throw err

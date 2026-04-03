@@ -1,5 +1,8 @@
 import type z from 'zod'
-import type { ClientRPCHandler, ClientRPCMethods } from '@shared/rpc/agent/client-rpc/methods'
+import type {
+  ClientRPCHandler,
+  ClientRPCMethods,
+} from '@shared/rpc/agent/client-rpc/methods'
 import { CLIENT_RPC_METHODS } from '@shared/rpc/agent/client-rpc/methods'
 import { BaseClientRPCRequester } from './base'
 import { Logger } from '@nestjs/common'
@@ -30,7 +33,13 @@ export class WorkflowEditorClientRPC extends BaseClientRPCRequester {
     this.callerLogger.debug(`Getting handler for method: ${method}`)
     const requestSchema = this.getRequestSchema<K>(method)
     const responseSchema = this.getResponseSchema<K>(method)
-    const handler = (...args: z.input<typeof requestSchema>) => this.emitWithSchema<typeof requestSchema, typeof responseSchema>(requestSchema, responseSchema, method, ...args)
+    const handler = (...args: z.input<typeof requestSchema>) =>
+      this.emitWithSchema<typeof requestSchema, typeof responseSchema>(
+        requestSchema,
+        responseSchema,
+        method,
+        ...args,
+      )
     return handler as ClientRPCHandler<K>
   }
 

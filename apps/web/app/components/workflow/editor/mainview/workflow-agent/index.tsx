@@ -47,10 +47,7 @@ const WorkflowAgent = () => {
         />
       )}
       {isAgentChat && isReadyForChat && (
-        <AgentChatStep
-          connToken={connToken}
-          onInterrupt={handleClose}
-        />
+        <AgentChatStep connToken={connToken} onInterrupt={handleClose} />
       )}
       {isAgentChat && !isReadyForChat && (
         <div className="flex h-full items-center justify-center">

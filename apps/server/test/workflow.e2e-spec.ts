@@ -338,11 +338,13 @@ describe('WorkflowController (e2e)', () => {
       expect(typeof res.body.data.appId).toBe('string')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent
-        .post('/workflow/record/create')
-        .send({ appName: '新工作流', appDescription: '描述信息' }),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent
+          .post('/workflow/record/create')
+          .send({ appName: '新工作流', appDescription: '描述信息' }),
+      () => app,
     )
 
     it('缺少必填字段 appName 时应返回错误', async () => {
@@ -414,9 +416,10 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get('/workflow/record/list'),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get('/workflow/record/list'),
+      () => app,
     )
   })
 
@@ -445,9 +448,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/record/${TEST_APP_ID}`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/record/${TEST_APP_ID}`),
+      () => app,
     )
   })
 
@@ -546,11 +550,13 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent
-        .post(`/workflow/record/${TEST_APP_ID}/update`)
-        .send({ appName: '新名称', appDescription: '新描述' }),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent
+          .post(`/workflow/record/${TEST_APP_ID}/update`)
+          .send({ appName: '新名称', appDescription: '新描述' }),
+      () => app,
     )
   })
 
@@ -582,9 +588,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.post(`/workflow/record/${TEST_APP_ID}/delete`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.post(`/workflow/record/${TEST_APP_ID}/delete`),
+      () => app,
     )
   })
 
@@ -687,9 +694,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/flow/${TEST_APP_ID}/draft`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/flow/${TEST_APP_ID}/draft`),
+      () => app,
     )
   })
 
@@ -726,11 +734,11 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent
-        .post(`/workflow/flow/${TEST_APP_ID}/sync`)
-        .send(syncPayload),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.post(`/workflow/flow/${TEST_APP_ID}/sync`).send(syncPayload),
+      () => app,
     )
 
     it('draft -> sync1 -> draft(1) -> sync2 -> draft(2且不等于1)', async () => {
@@ -890,11 +898,13 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent
-        .post(`/workflow/flow/${TEST_APP_ID}/publish`)
-        .send({ version: 'v2.0.0', description: '未认证发布' }),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent
+          .post(`/workflow/flow/${TEST_APP_ID}/publish`)
+          .send({ version: 'v2.0.0', description: '未认证发布' }),
+      () => app,
     )
   })
 
@@ -923,9 +933,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.data).toEqual([])
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/versions/${TEST_APP_ID}/list`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/versions/${TEST_APP_ID}/list`),
+      () => app,
     )
   })
 
@@ -963,9 +974,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/query`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/query`),
+      () => app,
     )
   })
 
@@ -992,9 +1004,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('No Meta')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`),
+      () => app,
     )
   })
 
@@ -1021,9 +1034,10 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    itAuthLink('未认证用户应返回 401', agent =>
-      agent.get(`/workflow/versions/${TEST_APP_ID}/last`),
-    () => app,
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get(`/workflow/versions/${TEST_APP_ID}/last`),
+      () => app,
     )
   })
 

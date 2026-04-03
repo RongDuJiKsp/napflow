@@ -1,7 +1,5 @@
 import { App } from 'antd'
-import {
-  ZodCheckWsMessageEventChatQuery,
-} from '@shared/common/agent/socketio/events'
+import { ZodCheckWsMessageEventChatQuery } from '@shared/common/agent/socketio/events'
 import { useCallback, useContext, useState } from 'react'
 import { AgentWsConnContext } from './use-agent-chat'
 

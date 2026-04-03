@@ -25,7 +25,10 @@ export const INVALID_JWT_BROKEN_JSON_TOKEN
 export const INVALID_JWT_BROKEN_SIGNATURE_TOKEN
   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0.broken-signature'
 
-export const withAuthHeader = <T extends supertest.Test = supertest.Test>(req: T, token: string) => {
+export const withAuthHeader = <T extends supertest.Test = supertest.Test>(
+  req: T,
+  token: string,
+) => {
   req.set('Authorization', `Bearer ${token}`)
 }
 

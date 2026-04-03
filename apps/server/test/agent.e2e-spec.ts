@@ -125,9 +125,10 @@ describe('AgentController (e2e)', () => {
       expect(res.body.data[0].id).toBe('cfg-1')
     })
 
-    itAuthLink('未认证访问应返回 401', agent =>
-      agent.get('/agent/openai-endpoint'),
-    () => app,
+    itAuthLink(
+      '未认证访问应返回 401',
+      agent => agent.get('/agent/openai-endpoint'),
+      () => app,
     )
   })
 

@@ -5,7 +5,10 @@ import type { RpcPS, RpcRS, RpcRecv } from '@shared/rpc/core/ts-check'
 export type Remover = () => void
 type RpcAck<R> = (response: R) => void
 type RpcAckFail = () => void
-export type SocketRPCListener<A extends unknown[] = unknown[], ACK = unknown> = (ack: RpcAck<ACK>, fail: RpcAckFail, ...args: A) => Promise<void>
+export type SocketRPCListener<
+  A extends unknown[] = unknown[],
+  ACK = unknown,
+> = (ack: RpcAck<ACK>, fail: RpcAckFail, ...args: A) => Promise<void>
 
 export class BaseClientRPCListener {
   private socket: Socket | null = null
@@ -21,10 +24,7 @@ export class BaseClientRPCListener {
     this.socket = null
   }
 
-  listen<
-    PS extends RpcPS = RpcPS,
-    RS extends RpcRS = RpcRS,
-  >(
+  listen<PS extends RpcPS = RpcPS, RS extends RpcRS = RpcRS>(
     methodName: string,
     paramSchema: PS,
     responseSchema: RS,
@@ -43,7 +43,7 @@ export class BaseClientRPCListener {
       }
 
       const [error, response] = await tryit(handler)(...parsedRequest.data)
-      if(error) {
+      if (error) {
         console.error('[agent-client-rpc] handler execution failed', {
           method: methodName,
           error,
@@ -65,7 +65,10 @@ export class BaseClientRPCListener {
     })
   }
 
-  private setListener(methodName: string, listener: SocketRPCListener): Remover {
+  private setListener(
+    methodName: string,
+    listener: SocketRPCListener,
+  ): Remover {
     this.listeners.set(methodName, listener)
     return () => {
       this.listeners.delete(methodName)
@@ -77,7 +80,9 @@ export class BaseClientRPCListener {
     ...argsWithAck: [...unknown[], RpcAck<unknown>]
   ): Promise<void> => {
     const requestArgs = argsWithAck.slice(0, -1)
-    const ack: RpcAck<unknown> = argsWithAck[argsWithAck.length - 1] as RpcAck<unknown>
+    const ack: RpcAck<unknown> = argsWithAck[
+      argsWithAck.length - 1
+    ] as RpcAck<unknown>
     const fail: RpcAckFail = () => ack({ success: false })
 
     const listener = this.listeners.get(methodName)

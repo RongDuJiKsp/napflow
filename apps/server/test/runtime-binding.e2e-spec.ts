@@ -399,10 +399,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     itAuthLink(
       '未认证时应返回 401',
       agent =>
-      agent
+        agent
           .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
           .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }]),
-    () => app,
+      () => app,
     )
   })
 
@@ -495,10 +495,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     itAuthLink(
       '未认证时应返回 401',
       agent =>
-      agent
+        agent
           .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
           .send({ bindingIds: [TEST_BINDING_ID] }),
-    () => app,
+      () => app,
     )
   })
 
@@ -553,8 +553,7 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
 
     itAuthLink(
       '未认证时应返回 401',
-      agent =>
-        agent.get(`/bot/bridge/${TEST_BOT_ID}/binding`),
+      agent => agent.get(`/bot/bridge/${TEST_BOT_ID}/binding`),
       () => app,
     )
   })
@@ -596,7 +595,9 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     itAuthLink(
       '未认证时应返回 401',
       agent =>
-        agent.get(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`),
+        agent.get(
+          `/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
+        ),
       () => app,
     )
   })
@@ -675,10 +676,10 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
     itAuthLink(
       '未认证时应返回 401',
       agent =>
-      agent
+        agent
           .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
           .send({ envKV: { key: 'value' } }),
-    () => app,
+      () => app,
     )
   })
 

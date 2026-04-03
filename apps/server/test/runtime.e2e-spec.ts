@@ -224,17 +224,17 @@ describe('Runtime BotManager (e2e)', () => {
       )
     })
 
-    itAuthLink('未认证时应返回 401', agent =>
-      agent
-        .post('/bot/record/create')
-        .send({
+    itAuthLink(
+      '未认证时应返回 401',
+      agent =>
+        agent.post('/bot/record/create').send({
           name: '新机器人',
           description: '新机器人描述',
           commonConfig: {},
           adapterTag: AdapterTag.napcatWs,
           adapterConfig: {},
         }),
-    () => app,
+      () => app,
     )
   })
 
@@ -250,9 +250,10 @@ describe('Runtime BotManager (e2e)', () => {
       expect(Array.isArray(res.body.data)).toBe(true)
     })
 
-    itAuthLink('未认证时应返回 401', agent =>
-      agent.get('/bot/record/list'),
-    () => app,
+    itAuthLink(
+      '未认证时应返回 401',
+      agent => agent.get('/bot/record/list'),
+      () => app,
     )
 
     it('应支持 isRunning + adapterTag 组合筛选', async () => {
@@ -326,9 +327,10 @@ describe('Runtime BotManager (e2e)', () => {
       expect(botFactoryService.createBot).toHaveBeenCalledTimes(1)
     })
 
-    itAuthLink('未认证时应返回 401', agent =>
-      agent.post(`/bot/runtime/${TEST_BOT_ID}/run`),
-    () => app,
+    itAuthLink(
+      '未认证时应返回 401',
+      agent => agent.post(`/bot/runtime/${TEST_BOT_ID}/run`),
+      () => app,
     )
   })
 
@@ -532,14 +534,14 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.BadRequest)
     })
 
-    itAuthLink('未认证时应返回 401', agent =>
-      agent
-        .post(`/bot/record/${TEST_BOT_ID}/update`)
-        .send({
+    itAuthLink(
+      '未认证时应返回 401',
+      agent =>
+        agent.post(`/bot/record/${TEST_BOT_ID}/update`).send({
           name: '新名称',
           description: '新描述',
         }),
-    () => app,
+      () => app,
     )
   })
 
