@@ -1,3 +1,4 @@
+import { dispatchLocalStorageValueSet } from '@/app/hooks/utils/use-storage'
 import { jsonQ } from '@/utils/net'
 import { Code } from '@shared/data-transfer/_base'
 import type {
@@ -18,7 +19,7 @@ export const useLogin = () => {
         message.error(resp.message)
         return
       }
-      localStorage.setItem('auth-token', resp.data?.token)
+      dispatchLocalStorageValueSet('auth-token', resp.data.token)
       message.success('登录成功')
       router.replace('/')
     },
