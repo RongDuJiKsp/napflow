@@ -360,7 +360,6 @@ describe('AccountController (e2e)', () => {
       agent.get('/account/query/cur'),
     app,
     )
-
   })
 
   // =====================================================================
