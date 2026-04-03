@@ -18,6 +18,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
+import { itUnauthorized } from './utils/auth'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
@@ -395,12 +396,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.status).toBe(400)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
-        .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }])
-      expect(res.status).toBe(401)
-    })
+    itUnauthorized(
+      '未认证时应返回 401',
+      () =>
+        request(app.getHttpServer())
+          .post(`/bot/bridge/${TEST_BOT_ID}/bindmany`)
+          .send([{ appId: TEST_APP_ID, appVersion: 'v1.0.0' }]),
+      (res) => {
+        expect(res.body).toBeDefined()
+      },
+    )
   })
 
   // ========== POST /bot/bridge/:botId/unbindmany - 批量解绑插件 ==========
@@ -489,12 +494,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.BadRequest)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
-        .send({ bindingIds: [TEST_BINDING_ID] })
-      expect(res.status).toBe(401)
-    })
+    itUnauthorized(
+      '未认证时应返回 401',
+      () =>
+        request(app.getHttpServer())
+          .post(`/bot/bridge/${TEST_BOT_ID}/unbindmany`)
+          .send({ bindingIds: [TEST_BINDING_ID] }),
+      (res) => {
+        expect(res.status).toBe(401)
+      },
+    )
   })
 
   // ========== GET /bot/bridge/:botId/binding - 获取绑定列表 ==========
@@ -546,12 +555,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.body.data.length).toBe(2)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
-        `/bot/bridge/${TEST_BOT_ID}/binding`,
-      )
-      expect(res.status).toBe(401)
-    })
+    itUnauthorized(
+      '未认证时应返回 401',
+      () =>
+        request(app.getHttpServer()).get(
+          `/bot/bridge/${TEST_BOT_ID}/binding`,
+        ),
+      (res) => {
+        expect(res.status).toBe(401)
+      },
+    )
   })
 
   // ========== GET /bot/bridge/:botId/bindingconfig/:bindingId - 获取绑定配置 ==========
@@ -588,12 +601,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.NotFound)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
-        `/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
-      )
-      expect(res.status).toBe(401)
-    })
+    itUnauthorized(
+      '未认证时应返回 401',
+      () =>
+        request(app.getHttpServer()).get(
+          `/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`,
+        ),
+      (res) => {
+        expect(res.status).toBe(401)
+      },
+    )
   })
 
   // ========== POST /bot/bridge/:botId/bindingconfig/:bindingId - 设置绑定配置 ==========
@@ -667,12 +684,16 @@ describe('Runtime BotBridge - 插件绑定 (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.BadRequest)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
-        .send({ envKV: { key: 'value' } })
-      expect(res.status).toBe(401)
-    })
+    itUnauthorized(
+      '未认证时应返回 401',
+      () =>
+        request(app.getHttpServer())
+          .post(`/bot/bridge/${TEST_BOT_ID}/bindingconfig/${TEST_BINDING_ID}`)
+          .send({ envKV: { key: 'value' } }),
+      (res) => {
+        expect(res.status).toBe(401)
+      },
+    )
   })
 
   // ========== 组合场景 ==========

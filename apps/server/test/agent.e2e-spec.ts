@@ -17,6 +17,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
+import { itUnauthorized } from './utils/auth'
 
 type MockOpenAiEndpoint = {
   id: string;
@@ -124,13 +125,11 @@ describe('AgentController (e2e)', () => {
       expect(res.body.data[0].id).toBe('cfg-1')
     })
 
-    it('未认证访问应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证访问应返回 401', () =>
+      request(app.getHttpServer()).get(
         '/agent/openai-endpoint',
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   describe('GET /agent/session/recover/list', () => {

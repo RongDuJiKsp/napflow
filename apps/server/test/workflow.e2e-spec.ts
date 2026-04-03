@@ -16,6 +16,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
+import { itUnauthorized } from './utils/auth'
 
 /**
  * Workflow 端点 E2E 测试
@@ -337,13 +338,11 @@ describe('WorkflowController (e2e)', () => {
       expect(typeof res.body.data.appId).toBe('string')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer())
         .post('/workflow/record/create')
-        .send({ appName: '新工作流', appDescription: '描述信息' })
-
-      expect(res.status).toBe(401)
-    })
+        .send({ appName: '新工作流', appDescription: '描述信息' }),
+    )
 
     it('缺少必填字段 appName 时应返回错误', async () => {
       const res = await request(app.getHttpServer())
@@ -414,13 +413,11 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         '/workflow/record/list',
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -448,13 +445,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/record/${TEST_APP_ID}`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -552,13 +547,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer())
         .post(`/workflow/record/${TEST_APP_ID}/update`)
-        .send({ appName: '新名称', appDescription: '新描述' })
-
-      expect(res.status).toBe(401)
-    })
+        .send({ appName: '新名称', appDescription: '新描述' }),
+    )
   })
 
   // =====================================================================
@@ -589,13 +582,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).post(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).post(
         `/workflow/record/${TEST_APP_ID}/delete`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -697,13 +688,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/flow/${TEST_APP_ID}/draft`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -739,13 +728,11 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer())
         .post(`/workflow/flow/${TEST_APP_ID}/sync`)
-        .send(syncPayload)
-
-      expect(res.status).toBe(401)
-    })
+        .send(syncPayload),
+    )
 
     it('draft -> sync1 -> draft(1) -> sync2 -> draft(2且不等于1)', async () => {
       // 1. draft: 应该是可读取的 draft，且无错误
@@ -904,13 +891,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer())
         .post(`/workflow/flow/${TEST_APP_ID}/publish`)
-        .send({ version: 'v2.0.0', description: '未认证发布' })
-
-      expect(res.status).toBe(401)
-    })
+        .send({ version: 'v2.0.0', description: '未认证发布' }),
+    )
   })
 
   // =====================================================================
@@ -938,13 +923,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.data).toEqual([])
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/versions/${TEST_APP_ID}/list`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -981,13 +964,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/versions/${TEST_APP_ID}/v1.0.0/query`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -1013,13 +994,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('No Meta')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
@@ -1045,13 +1024,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get(
+    itUnauthorized('未认证用户应返回 401', () =>
+      request(app.getHttpServer()).get(
         `/workflow/versions/${TEST_APP_ID}/last`,
-      )
-
-      expect(res.status).toBe(401)
-    })
+      ),
+    )
   })
 
   // =====================================================================
