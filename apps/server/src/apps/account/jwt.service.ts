@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import jwt from 'jsonwebtoken'
 import zod from 'zod'
 import { AppConfigService } from '../app-config/app-config.service'
@@ -10,10 +10,14 @@ import { VaildJwtError } from './middleware/jwt.filter'
 export type JwtPayload = object | string | Buffer<ArrayBufferLike>
 
 export class JwtOperator<T extends JwtPayload> {
+  private readonly logger
   constructor(
     private readonly secret: string,
     private readonly zod: zod.ZodType<T>,
-  ) {}
+    private readonly name?: string,
+  ) {
+    this.logger = new Logger(name ? `JwtOperator<${name}>` : JwtOperator.name)
+  }
 
   jwtSign(payload: T, options?: jwt.SignOptions) {
     return jwt.sign(this.zod.parse(payload), this.secret, options)
@@ -29,6 +33,16 @@ export class JwtOperator<T extends JwtPayload> {
         throw new VaildJwtError('Invalid JWT: Payload JSON is malformed')
 
       throw err
+    }
+  }
+
+  jwtSafeVerify(token: string, options?: jwt.VerifyOptions) {
+    try {
+      return this.jwtVerify(token, options)
+    }
+    catch (err) {
+      this.logger.warn(`JWT verification failed: ${err instanceof Error ? err.message : String(err)}`)
+      return null
     }
   }
 
@@ -51,10 +65,12 @@ export class JwtService {
     this.account = new JwtOperator(
       this.configService.envs.JWT_SECRET_KEY,
       ZodCheckAccount,
+      'Account',
     )
     this.any = new JwtOperator(
       this.configService.envs.JWT_SECRET_KEY,
       zod.any(),
+      'Any',
     )
   }
 

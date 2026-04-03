@@ -26,7 +26,7 @@ export class AgentService {
   ) {}
 
   private checkAuthConnectionSuccess(auth: WsAuthRequest, socket: Socket) {
-    const user = this.jwtService.account.jwtVerify(auth.token)
+    const user = this.jwtService.account.jwtSafeVerify(auth.token)
     if (!user) {
       this.logger.log(`Unauthorized connection attempt on socket ${socket.id}`)
       socket.disconnect(true)
