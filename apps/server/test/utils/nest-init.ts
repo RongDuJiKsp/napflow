@@ -9,12 +9,18 @@ import { TypeOrmService } from '../../src/apps/db/typeorm.service'
 import { JwtService } from '../../src/apps/account/jwt.service'
 import { UserRole } from '@shared/common/account/core'
 
+/**
+ * E2E 测试启动上下文。
+ */
 export type E2EContext = {
   app: INestApplication<App>;
   jwtService: JwtService;
   module: TestingModule;
 }
 
+/**
+ * 创建基础数据库 mock，实现账号链路常用仓库方法。
+ */
 export function createBaseMockTypeOrmService() {
   return {
     user: {
@@ -32,6 +38,9 @@ export function createBaseMockTypeOrmService() {
   }
 }
 
+/**
+ * 创建并初始化 E2E Nest 应用，注入指定 TypeOrmService mock。
+ */
 export async function createE2EApp(
   mockTypeOrmService: Record<string, any>,
 ): Promise<E2EContext> {
@@ -50,6 +59,9 @@ export async function createE2EApp(
   return { app, jwtService, module: moduleFixture }
 }
 
+/**
+ * 基于 JwtService 构建 Admin/User 两类测试 token 工厂。
+ */
 export function createTokenFactory(jwtService: JwtService) {
   return {
     getAdminToken(overrides?: { email?: string; nickname?: string }): string {

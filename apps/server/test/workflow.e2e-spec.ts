@@ -16,7 +16,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
-import { itUnauthorized } from './utils/auth'
+import { itAuthLink } from './utils/auth'
 
 /**
  * Workflow 端点 E2E 测试
@@ -338,10 +338,11 @@ describe('WorkflowController (e2e)', () => {
       expect(typeof res.body.data.appId).toBe('string')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/workflow/record/create')
         .send({ appName: '新工作流', appDescription: '描述信息' }),
+    app,
     )
 
     it('缺少必填字段 appName 时应返回错误', async () => {
@@ -413,10 +414,9 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        '/workflow/record/list',
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get('/workflow/record/list'),
+    app,
     )
   })
 
@@ -445,10 +445,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/record/${TEST_APP_ID}`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/record/${TEST_APP_ID}`),
+    app,
     )
   })
 
@@ -547,10 +546,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post(`/workflow/record/${TEST_APP_ID}/update`)
         .send({ appName: '新名称', appDescription: '新描述' }),
+    app,
     )
   })
 
@@ -582,10 +582,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).post(
-        `/workflow/record/${TEST_APP_ID}/delete`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.post(`/workflow/record/${TEST_APP_ID}/delete`),
+    app,
     )
   })
 
@@ -688,10 +687,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Not Found')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/flow/${TEST_APP_ID}/draft`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/flow/${TEST_APP_ID}/draft`),
+    app,
     )
   })
 
@@ -728,10 +726,11 @@ describe('WorkflowController (e2e)', () => {
       )
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post(`/workflow/flow/${TEST_APP_ID}/sync`)
         .send(syncPayload),
+    app,
     )
 
     it('draft -> sync1 -> draft(1) -> sync2 -> draft(2且不等于1)', async () => {
@@ -891,10 +890,11 @@ describe('WorkflowController (e2e)', () => {
       expect(res.status).not.toBe(200)
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post(`/workflow/flow/${TEST_APP_ID}/publish`)
         .send({ version: 'v2.0.0', description: '未认证发布' }),
+    app,
     )
   })
 
@@ -923,10 +923,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.data).toEqual([])
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/versions/${TEST_APP_ID}/list`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/versions/${TEST_APP_ID}/list`),
+    app,
     )
   })
 
@@ -964,10 +963,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/versions/${TEST_APP_ID}/v1.0.0/query`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/query`),
+    app,
     )
   })
 
@@ -994,10 +992,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('No Meta')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/versions/${TEST_APP_ID}/v1.0.0/meta`),
+    app,
     )
   })
 
@@ -1024,10 +1021,9 @@ describe('WorkflowController (e2e)', () => {
       expect(res.body.message).toContain('App Version Not Found')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get(
-        `/workflow/versions/${TEST_APP_ID}/last`,
-      ),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get(`/workflow/versions/${TEST_APP_ID}/last`),
+    app,
     )
   })
 

@@ -18,7 +18,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
-import { itUnauthorized } from './utils/auth'
+import { itAuthLink } from './utils/auth'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
@@ -224,8 +224,8 @@ describe('Runtime BotManager (e2e)', () => {
       )
     })
 
-    itUnauthorized('未认证时应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证时应返回 401', agent =>
+      agent
         .post('/bot/record/create')
         .send({
           name: '新机器人',
@@ -234,6 +234,7 @@ describe('Runtime BotManager (e2e)', () => {
           adapterTag: AdapterTag.napcatWs,
           adapterConfig: {},
         }),
+    app,
     )
   })
 
@@ -249,8 +250,9 @@ describe('Runtime BotManager (e2e)', () => {
       expect(Array.isArray(res.body.data)).toBe(true)
     })
 
-    itUnauthorized('未认证时应返回 401', () =>
-      request(app.getHttpServer()).get('/bot/record/list'),
+    itAuthLink('未认证时应返回 401', agent =>
+      agent.get('/bot/record/list'),
+    app,
     )
 
     it('应支持 isRunning + adapterTag 组合筛选', async () => {
@@ -324,10 +326,9 @@ describe('Runtime BotManager (e2e)', () => {
       expect(botFactoryService.createBot).toHaveBeenCalledTimes(1)
     })
 
-    itUnauthorized('未认证时应返回 401', () =>
-      request(app.getHttpServer()).post(
-        `/bot/runtime/${TEST_BOT_ID}/run`,
-      ),
+    itAuthLink('未认证时应返回 401', agent =>
+      agent.post(`/bot/runtime/${TEST_BOT_ID}/run`),
+    app,
     )
   })
 
@@ -531,13 +532,14 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.BadRequest)
     })
 
-    itUnauthorized('未认证时应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证时应返回 401', agent =>
+      agent
         .post(`/bot/record/${TEST_BOT_ID}/update`)
         .send({
           name: '新名称',
           description: '新描述',
         }),
+    app,
     )
   })
 

@@ -14,10 +14,7 @@ import { UserRole } from '@shared/common/account/core'
 import { Code } from '@shared/data-transfer/_base'
 import bcryptjs from 'bcryptjs'
 import {
-  INVALID_BEARER_TOKEN,
-  itForbidden,
-  itUnauthorized,
-  withBearerToken,
+  itAuthLink,
 } from './utils/auth'
 import { createE2EApp, createTokenFactory } from './utils/nest-init'
 
@@ -299,25 +296,28 @@ describe('AccountController (e2e)', () => {
       expect(res.status).toBe(400)
     })
 
-    itForbidden('普通用户不应该能创建账户', () =>
-      request(app.getHttpServer())
+    it('普通用户不应该能创建账户', async () => {
+      const res = await request(app.getHttpServer())
         .post('/account/action/create')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'another@test.com',
           nickname: 'AnotherUser',
           password: 'password123',
-        }),
-    )
+        })
 
-    itUnauthorized('未认证用户不应该能创建账户', () =>
-      request(app.getHttpServer())
+      expect(res.status).toBe(403)
+    })
+
+    itAuthLink('未认证用户不应该能创建账户', agent =>
+      agent
         .post('/account/action/create')
         .send({
           email: 'another@test.com',
           nickname: 'AnotherUser',
           password: 'password123',
         }),
+    app,
     )
 
     it('应该在缺少必填字段时返回错误', async () => {
@@ -356,15 +356,11 @@ describe('AccountController (e2e)', () => {
       expect(res.body.data).toHaveProperty('email', mockUserNormal.email)
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get('/account/query/cur'),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get('/account/query/cur'),
+    app,
     )
 
-    itUnauthorized('使用无效 token 应返回 401', () =>
-      request(app.getHttpServer())
-        .get('/account/query/cur')
-        .set('Authorization', withBearerToken(INVALID_BEARER_TOKEN)),
-    )
   })
 
   // =====================================================================
@@ -393,10 +389,11 @@ describe('AccountController (e2e)', () => {
       expect(res.body.data).toBeNull()
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .get('/account/query/info')
         .query({ email: 'user@test.com' }),
+    app,
     )
   })
 
@@ -431,8 +428,9 @@ describe('AccountController (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.Ok)
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer()).get('/account/query/list'),
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent.get('/account/query/list'),
+    app,
     )
   })
 
@@ -465,13 +463,14 @@ describe('AccountController (e2e)', () => {
       expect(res.body.message).toContain('原密码错误')
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/account/change/password')
         .send({
           originPassword: 'password123',
           password: 'newPassword456',
         }),
+    app,
     )
 
     it('缺少必填字段时应返回错误', async () => {
@@ -500,10 +499,11 @@ describe('AccountController (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.Ok)
     })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/account/change/nickname')
         .send({ nickname: 'NewNickname' }),
+    app,
     )
 
     it('缺少 nickname 字段时应返回错误', async () => {
@@ -546,23 +546,26 @@ describe('AccountController (e2e)', () => {
       expect(res.body.message).toContain('不能对User组进行升降级')
     })
 
-    itForbidden('普通用户不应该能升级用户组', () =>
-      request(app.getHttpServer())
+    it('普通用户不应该能升级用户组', async () => {
+      const res = await request(app.getHttpServer())
         .post('/account/action/upgrade')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'user@test.com',
           groupType: [UserRole.Admin],
-        }),
-    )
+        })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+      expect(res.status).toBe(403)
+    })
+
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/account/action/upgrade')
         .send({
           email: 'user@test.com',
           groupType: [UserRole.Admin],
         }),
+    app,
     )
 
     it('save 返回空数组时应返回错误', async () => {
@@ -626,23 +629,26 @@ describe('AccountController (e2e)', () => {
       expect(res.body.message).toContain('不存在满足条件的组')
     })
 
-    itForbidden('普通用户不应该能降级用户组', () =>
-      request(app.getHttpServer())
+    it('普通用户不应该能降级用户组', async () => {
+      const res = await request(app.getHttpServer())
         .post('/account/action/downgrade')
         .set('Authorization', `Bearer ${getUserToken()}`)
         .send({
           email: 'admin@test.com',
           groupType: [UserRole.Admin],
-        }),
-    )
+        })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+      expect(res.status).toBe(403)
+    })
+
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/account/action/downgrade')
         .send({
           email: 'admin@test.com',
           groupType: [UserRole.Admin],
         }),
+    app,
     )
 
     it('降级最后一个管理员时应返回错误', async () => {
@@ -687,17 +693,20 @@ describe('AccountController (e2e)', () => {
       expect(res.body.message).toContain('不存在满足条件的用户')
     })
 
-    itForbidden('普通用户不应该能禁用账户', () =>
-      request(app.getHttpServer())
+    it('普通用户不应该能禁用账户', async () => {
+      const res = await request(app.getHttpServer())
         .post('/account/action/disable')
         .set('Authorization', `Bearer ${getUserToken()}`)
-        .send({ email: 'user@test.com' }),
-    )
+        .send({ email: 'user@test.com' })
 
-    itUnauthorized('未认证用户应返回 401', () =>
-      request(app.getHttpServer())
+      expect(res.status).toBe(403)
+    })
+
+    itAuthLink('未认证用户应返回 401', agent =>
+      agent
         .post('/account/action/disable')
         .send({ email: 'user@test.com' }),
+    app,
     )
   })
 
