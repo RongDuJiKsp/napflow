@@ -131,12 +131,12 @@ NapFlow 后端服务（NestJS），提供账户、工作流、运行时、健康
 
 #### `openai_endpoint` — OpenAI 接口配置表
 
-| 列名       | 类型      | 约束                  | 描述             |
-| ---------- | --------- | --------------------- | ---------------- |
-| `id`       | `varchar` | **PK**，自动生成 UUID | 配置记录 ID      |
-| `endpoint` | `varchar` | NOT NULL              | OpenAI 接口地址  |
-| `apiKey`   | `varchar` | NOT NULL              | OpenAI 接口密钥  |
-| `model`    | `varchar` | NOT NULL              | 默认模型名称     |
+| 列名       | 类型      | 约束                  | 描述            |
+| ---------- | --------- | --------------------- | --------------- |
+| `id`       | `varchar` | **PK**，自动生成 UUID | 配置记录 ID     |
+| `endpoint` | `varchar` | NOT NULL              | OpenAI 接口地址 |
+| `apiKey`   | `varchar` | NOT NULL              | OpenAI 接口密钥 |
+| `model`    | `varchar` | NOT NULL              | 默认模型名称    |
 
 **关系**：无外键约束
 

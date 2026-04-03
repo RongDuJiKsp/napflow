@@ -6,7 +6,10 @@ import { useAppReactflowInstance } from '../../../hooks/reactflow-re-exports'
 import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 import { useLoopNodeOperator } from '../../../component-nodes/nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../../../component-nodes/nodes/iterate/hooks/use-iterate-operator'
-import { AgentClientRPCListener, type ClientRPCListenerHandler } from './client-rpc'
+import {
+  AgentClientRPCListener,
+  type ClientRPCListenerHandler,
+} from './client-rpc'
 import { useCreation } from 'ahooks'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
@@ -15,26 +18,26 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   const { handleAddLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
 
-  const addCustomNode = useCallback<
-    ClientRPCListenerHandler<'addCustomNode'>
-  >(async ({ type, position }) => {
-    const node = createComponentNode(type)
-    node.position = position
+  const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
+    async ({ type, position }) => {
+      const node = createComponentNode(type)
+      node.position = position
 
-    if (type === ComponentNodesEnum.Loop)
-      handleAddLoopNode(node)
-    else if (type === ComponentNodesEnum.Iterate)
-      handleMoveConstructorIterateNode(node)
-    else reactflow.addNodes(node)
+      if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
+      else if (type === ComponentNodesEnum.Iterate)
+        handleMoveConstructorIterateNode(node)
+      else reactflow.addNodes(node)
 
-    submitSyncDraft()
-    return { success: true }
-  }, [
-    handleAddLoopNode,
-    handleMoveConstructorIterateNode,
-    reactflow,
-    submitSyncDraft,
-  ])
+      submitSyncDraft()
+      return { success: true }
+    },
+    [
+      handleAddLoopNode,
+      handleMoveConstructorIterateNode,
+      reactflow,
+      submitSyncDraft,
+    ],
+  )
 
   const readCurrent = useCallback<
     ClientRPCListenerHandler<'readCurrent'>
@@ -50,15 +53,12 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     }
   }, [getCurrentStateSnapshot])
 
-  const listener = useCreation(
-    () => {
-      const rpc = new AgentClientRPCListener()
-      rpc.listenMethod('addCustomNode', addCustomNode)
-      rpc.listenMethod('readCurrent', readCurrent)
-      return rpc
-    },
-    [addCustomNode, readCurrent],
-  )
+  const listener = useCreation(() => {
+    const rpc = new AgentClientRPCListener()
+    rpc.listenMethod('addCustomNode', addCustomNode)
+    rpc.listenMethod('readCurrent', readCurrent)
+    return rpc
+  }, [addCustomNode, readCurrent])
 
   useEffect(() => {
     if (socket) {

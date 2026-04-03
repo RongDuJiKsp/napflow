@@ -20,4 +20,7 @@ export const CLIENT_RPC_METHODS = defineRpcMethod({
 
 export type ClientRPCMethods = typeof CLIENT_RPC_METHODS
 
-export type ClientRPCHandler<K extends keyof ClientRPCMethods> = RpcEmit<ClientRPCMethods[K]['request'], ClientRPCMethods[K]['response']>
+export type ClientRPCHandler<K extends keyof ClientRPCMethods> = RpcEmit<
+  ClientRPCMethods[K]['request'],
+  ClientRPCMethods[K]['response']
+>

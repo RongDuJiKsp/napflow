@@ -14,7 +14,9 @@ export class AgentSession {
     `AgentSession-${this.sessionId}`,
   )
 
-  private readonly clientRpc: WorkflowEditorClientRPC = new WorkflowEditorClientRPC()
+  private readonly clientRpc: WorkflowEditorClientRPC
+    = new WorkflowEditorClientRPC()
+
   readonly rpcTool: AgentRPCTool
   readonly langChain: LangChainInstance
   socket: Socket | null = null
@@ -43,36 +45,43 @@ export class AgentSession {
   }
 
   get safeSocket() {
-    if (!this.socket)
-      throw new Error(`Socket is not mounted for agent session ${this.sessionId}`)
+    if (!this.socket) {
+      throw new Error(
+        `Socket is not mounted for agent session ${this.sessionId}`,
+      )
+    }
 
     return this.socket
   }
 
   async recoverToSocket() {
-    this.logger.log(`Agent session ${this.sessionId} is being recovered to socket ${this.socket?.id}`)
+    this.logger.log(
+      `Agent session ${this.sessionId} is being recovered to socket ${this.socket?.id}`,
+    )
     const histories = await this.langChain.getStoredMessages()
-    for(const history of histories)
+    for (const history of histories)
       this.safeSocket.emit('query.response', history)
-    this.logger.log(`Agent session ${this.sessionId} has recovered chat(total: ${histories.length}) history to socket ${this.socket?.id}`)
+    this.logger.log(
+      `Agent session ${this.sessionId} has recovered chat(total: ${histories.length}) history to socket ${this.socket?.id}`,
+    )
   }
 
   async invokeChat(message: string) {
     this.logger.log(`Invoking chat with message: ${message}`)
     // 首先回显用户输入的消息，以提升响应速度和用户体验
-    this.safeSocket.emit('query.response', (new HumanMessage(message)).toDict())
+    this.safeSocket.emit('query.response', new HumanMessage(message).toDict())
 
     const { diff } = await this.langChain.invokeChat(message)
 
     // 发送响应消息 splice(1) 是为了去掉第一个消息，因为第一个消息就是用户输入的消息
-    for(const msg of diff.splice(1))
+    for (const msg of diff.splice(1))
       this.safeSocket.emit('query.response', msg.toDict())
   }
 
   async invokeStreamingChat(message: string) {
     this.logger.log(`Invoking chat with message: ${message}`)
-      // 首先回显用户输入的消息，以提升响应速度和用户体验
-    this.safeSocket.emit('query.response', (new HumanMessage(message)).toDict())
+    // 首先回显用户输入的消息，以提升响应速度和用户体验
+    this.safeSocket.emit('query.response', new HumanMessage(message).toDict())
 
     await this.langChain.invokeStreamingChat(message, (msg) => {
       this.safeSocket.emit('query.response', msg.toDict())

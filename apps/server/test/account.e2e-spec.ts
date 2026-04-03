@@ -13,6 +13,7 @@ import type { App } from 'supertest/types'
 import { UserRole } from '@shared/common/account/core'
 import { Code } from '@shared/data-transfer/_base'
 import bcryptjs from 'bcryptjs'
+import { itAuthLink } from './utils/auth'
 import { createE2EApp, createTokenFactory } from './utils/nest-init'
 
 /**
@@ -303,21 +304,19 @@ describe('AccountController (e2e)', () => {
           password: 'password123',
         })
 
-      // Guard 拦截，返回 403
       expect(res.status).toBe(403)
     })
 
-    it('未认证用户不应该能创建账户', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/action/create')
-        .send({
+    itAuthLink(
+      '未认证用户不应该能创建账户',
+      agent =>
+        agent.post('/account/action/create').send({
           email: 'another@test.com',
           nickname: 'AnotherUser',
           password: 'password123',
-        })
-
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
 
     it('应该在缺少必填字段时返回错误', async () => {
       const res = await request(app.getHttpServer())
@@ -355,19 +354,11 @@ describe('AccountController (e2e)', () => {
       expect(res.body.data).toHaveProperty('email', mockUserNormal.email)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/account/query/cur')
-
-      expect(res.status).toBe(401)
-    })
-
-    it('使用无效 token 应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/account/query/cur')
-        .set('Authorization', 'Bearer invalid.jwt.token')
-
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get('/account/query/cur'),
+      () => app,
+    )
   })
 
   // =====================================================================
@@ -396,13 +387,12 @@ describe('AccountController (e2e)', () => {
       expect(res.body.data).toBeNull()
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/account/query/info')
-        .query({ email: 'user@test.com' })
-
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.get('/account/query/info').query({ email: 'user@test.com' }),
+      () => app,
+    )
   })
 
   // =====================================================================
@@ -436,11 +426,11 @@ describe('AccountController (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.Ok)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/account/query/list')
-
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent => agent.get('/account/query/list'),
+      () => app,
+    )
   })
 
   // =====================================================================
@@ -472,16 +462,15 @@ describe('AccountController (e2e)', () => {
       expect(res.body.message).toContain('原密码错误')
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/change/password')
-        .send({
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.post('/account/change/password').send({
           originPassword: 'password123',
           password: 'newPassword456',
-        })
-
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
 
     it('缺少必填字段时应返回错误', async () => {
       const res = await request(app.getHttpServer())
@@ -509,13 +498,14 @@ describe('AccountController (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.Ok)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/change/nickname')
-        .send({ nickname: 'NewNickname' })
-
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent
+          .post('/account/change/nickname')
+          .send({ nickname: 'NewNickname' }),
+      () => app,
+    )
 
     it('缺少 nickname 字段时应返回错误', async () => {
       const res = await request(app.getHttpServer())
@@ -569,16 +559,15 @@ describe('AccountController (e2e)', () => {
       expect(res.status).toBe(403)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/action/upgrade')
-        .send({
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.post('/account/action/upgrade').send({
           email: 'user@test.com',
           groupType: [UserRole.Admin],
-        })
-
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
 
     it('save 返回空数组时应返回错误', async () => {
       mockTypeOrmService.userGroup.save.mockResolvedValueOnce([])
@@ -653,16 +642,15 @@ describe('AccountController (e2e)', () => {
       expect(res.status).toBe(403)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/action/downgrade')
-        .send({
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.post('/account/action/downgrade').send({
           email: 'admin@test.com',
           groupType: [UserRole.Admin],
-        })
-
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
 
     it('降级最后一个管理员时应返回错误', async () => {
       mockTypeOrmService.userGroup.find.mockResolvedValueOnce([
@@ -715,13 +703,12 @@ describe('AccountController (e2e)', () => {
       expect(res.status).toBe(403)
     })
 
-    it('未认证用户应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/account/action/disable')
-        .send({ email: 'user@test.com' })
-
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证用户应返回 401',
+      agent =>
+        agent.post('/account/action/disable').send({ email: 'user@test.com' }),
+      () => app,
+    )
   })
 
   // =====================================================================

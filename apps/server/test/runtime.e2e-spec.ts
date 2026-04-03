@@ -18,6 +18,7 @@ import {
   createE2EApp,
   createTokenFactory,
 } from './utils/nest-init'
+import { itAuthLink } from './utils/auth'
 import { BotFactoryService } from '../src/apps/runtime/bot/core/bot-factory.service'
 import { BotCoreRuntimeService } from '../src/apps/runtime/bot/core/bot-core-runtime.service'
 import type { BotInstance } from '../src/apps/runtime/bot/adapter/_base'
@@ -223,18 +224,18 @@ describe('Runtime BotManager (e2e)', () => {
       )
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/bot/record/create')
-        .send({
+    itAuthLink(
+      '未认证时应返回 401',
+      agent =>
+        agent.post('/bot/record/create').send({
           name: '新机器人',
           description: '新机器人描述',
           commonConfig: {},
           adapterTag: AdapterTag.napcatWs,
           adapterConfig: {},
-        })
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
   })
 
   // ========== GET /bot/record/list ==========
@@ -249,10 +250,11 @@ describe('Runtime BotManager (e2e)', () => {
       expect(Array.isArray(res.body.data)).toBe(true)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).get('/bot/record/list')
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证时应返回 401',
+      agent => agent.get('/bot/record/list'),
+      () => app,
+    )
 
     it('应支持 isRunning + adapterTag 组合筛选', async () => {
       mockTypeOrmService.botRecord.find.mockResolvedValue([
@@ -325,12 +327,11 @@ describe('Runtime BotManager (e2e)', () => {
       expect(botFactoryService.createBot).toHaveBeenCalledTimes(1)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer()).post(
-        `/bot/runtime/${TEST_BOT_ID}/run`,
-      )
-      expect(res.status).toBe(401)
-    })
+    itAuthLink(
+      '未认证时应返回 401',
+      agent => agent.post(`/bot/runtime/${TEST_BOT_ID}/run`),
+      () => app,
+    )
   })
 
   // ========== POST /bot/runtime/:botId/stop - 核心：Manager → BotInstance.signal(SIGSTOP) ==========
@@ -533,15 +534,15 @@ describe('Runtime BotManager (e2e)', () => {
       expect(res.body.statusCode).toBe(Code.BadRequest)
     })
 
-    it('未认证时应返回 401', async () => {
-      const res = await request(app.getHttpServer())
-        .post(`/bot/record/${TEST_BOT_ID}/update`)
-        .send({
+    itAuthLink(
+      '未认证时应返回 401',
+      agent =>
+        agent.post(`/bot/record/${TEST_BOT_ID}/update`).send({
           name: '新名称',
           description: '新描述',
-        })
-      expect(res.status).toBe(401)
-    })
+        }),
+      () => app,
+    )
   })
 
   // ========== POST /bot/record/:botId/delete ==========

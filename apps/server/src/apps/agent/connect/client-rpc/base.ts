@@ -24,7 +24,10 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
         reject(new ClientRPCError('Socket is not connected'))
         return
       }
-      this.logger.debug('Sending client RPC request through socket', { socketId: this.socket.id, args })
+      this.logger.debug('Sending client RPC request through socket', {
+        socketId: this.socket.id,
+        args,
+      })
       this.socket.emit('client-rpc', ...args, (response: R) => {
         this.logger.debug('Received client RPC response', { response })
         resolve(response)
@@ -32,10 +35,7 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
     })
   }
 
-  async emitWithSchema<
-    PS extends RpcPS = RpcPS,
-    RS extends RpcRS = RpcRS,
-  >(
+  async emitWithSchema<PS extends RpcPS = RpcPS, RS extends RpcRS = RpcRS>(
     paramSchema: PS,
     responseSchema: RS,
     method: string,

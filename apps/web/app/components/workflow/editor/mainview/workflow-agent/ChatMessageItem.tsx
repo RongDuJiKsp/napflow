@@ -3,10 +3,10 @@ import { AIMessage, HumanMessage, ToolMessage } from '@langchain/core/messages'
 import { memo } from 'react'
 
 type RoleUi = {
-  label: string
-  wrapperClassName: string
-  bubbleClassName: string
-  badgeClassName: string
+  label: string;
+  wrapperClassName: string;
+  bubbleClassName: string;
+  badgeClassName: string;
 }
 
 const getRoleUi = (role: string): RoleUi => {
@@ -24,7 +24,8 @@ const getRoleUi = (role: string): RoleUi => {
     return {
       label: 'Agent',
       wrapperClassName: 'items-start',
-      bubbleClassName: 'border-slate-200 bg-white text-slate-700 shadow-slate-200/80',
+      bubbleClassName:
+        'border-slate-200 bg-white text-slate-700 shadow-slate-200/80',
       badgeClassName: 'bg-emerald-100 text-emerald-700',
     }
   }
@@ -32,22 +33,22 @@ const getRoleUi = (role: string): RoleUi => {
   return {
     label: role.toUpperCase(),
     wrapperClassName: 'items-start',
-    bubbleClassName: 'border-slate-200 bg-slate-100 text-slate-700 shadow-slate-200/80',
+    bubbleClassName:
+      'border-slate-200 bg-slate-100 text-slate-700 shadow-slate-200/80',
     badgeClassName: 'bg-slate-200 text-slate-700',
   }
 }
 
-const TextMessageBubble = ({ text, role }: {
-  text: string
-  role: string
-}) => {
+const TextMessageBubble = ({ text, role }: { text: string; role: string }) => {
   const roleUi = getRoleUi(role)
 
   return (
     <div className={`mb-3 flex w-full ${roleUi.wrapperClassName}`}>
       <div className="max-w-[88%] sm:max-w-[82%]">
         <div className="mb-1 flex items-center gap-2 text-[11px]">
-          <span className={`rounded-full px-2 py-0.5 font-medium ${roleUi.badgeClassName}`}>
+          <span
+            className={`rounded-full px-2 py-0.5 font-medium ${roleUi.badgeClassName}`}
+          >
             {roleUi.label}
           </span>
         </div>
@@ -62,7 +63,7 @@ const TextMessageBubble = ({ text, role }: {
 }
 
 type MessageBubbleProps<M extends BaseMessage = BaseMessage> = {
-  record: M
+  record: M;
 }
 
 const HumanMessageItem = ({ record }: MessageBubbleProps<HumanMessage>) => {
@@ -84,13 +85,10 @@ const UnknownMessageItem = ({ record }: MessageBubbleProps<BaseMessage>) => {
 const ChatMessageItem = ({ record }: MessageBubbleProps) => {
   if (HumanMessage.isInstance(record))
     return <HumanMessageItem record={record} />
-
   else if (AIMessage.isInstance(record))
     return <AiMessageItem record={record} />
-
   else if (ToolMessage.isInstance(record))
     return <ToolMessageItem record={record} />
-
   else return <UnknownMessageItem record={record} />
 }
 
