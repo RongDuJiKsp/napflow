@@ -23,7 +23,9 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@shared/*": ["../shared/*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@apps/*": ["./src/apps/*"],
+      "@runtime/*": ["./src/apps/runtime/*"]
     }
   }
 }

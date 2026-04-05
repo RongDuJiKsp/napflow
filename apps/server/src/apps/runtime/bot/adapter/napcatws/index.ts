@@ -1,7 +1,7 @@
 import type { BotRecordEntity } from '@/src/apps/db/models/bot.entity'
 import type { BotAdapterFactory, BotInstance } from '../_base'
 import { Logger } from '@nestjs/common'
-import { BotCoreRuntimeError } from '../../../middleware/bot-core-runtime.filter'
+import { BotCoreRuntimeError } from '@runtime/middleware/bot-core-runtime.filter'
 import type { BotAdapter } from '@shared/common/bot/core/adapter'
 import type { BotState } from '@shared/common/bot/core/status'
 import { BotRunningState } from '@shared/common/bot/core/status'

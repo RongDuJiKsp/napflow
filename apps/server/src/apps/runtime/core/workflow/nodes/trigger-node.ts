@@ -5,7 +5,7 @@ import { CommNode } from '../node'
 import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { raiseErrors } from '../../../utils/errors'
+import { raiseErrors } from '@runtime/utils/errors'
 import { TriggerDataSchema } from '@shared/common/workflow/node-data/trigger'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
