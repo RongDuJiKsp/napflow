@@ -9,8 +9,16 @@ const EditorViewOperators = () => {
   return (
     <div className="absolute bottom-4 left-4 z-50">
       <ButtonGroup>
-        <EditorOperatorItem title='聚焦原点' onPress={handleFocusOrigin} Icon={RiFocus3Line}/>
-        <EditorOperatorItem title='整理节点' onPress={handleArrangeNodes} Icon={RiGalleryView2}/>
+        <EditorOperatorItem
+          title="聚焦原点"
+          onPress={handleFocusOrigin}
+          Icon={RiFocus3Line}
+        />
+        <EditorOperatorItem
+          title="整理节点"
+          onPress={handleArrangeNodes}
+          Icon={RiGalleryView2}
+        />
       </ButtonGroup>
     </div>
   )

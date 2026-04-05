@@ -3,15 +3,31 @@ import type { Draft } from 'immer'
 import { produce } from 'immer'
 import { useCallback } from 'react'
 import type { WorkflowEdge, WorkflowNode } from '../../../types'
-import { useAppReactflowFlowStoreApi, useAppReactflowInstance } from '../../../hooks/reactflow-re-exports'
+import {
+  useAppReactflowFlowStoreApi,
+  useAppReactflowInstance,
+} from '../../../hooks/reactflow-re-exports'
 
 // 使用dagre进行布局的工具函数，输入节点和边，输出节点位置的映射
-export const dagreLayout = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+export const dagreLayout = <
+  GNode extends WorkflowNode,
+  GEdge extends WorkflowEdge,
+>(
   nodes: GNode[],
   edges: GEdge[],
-  configs: { nodesep?: number; ranksep?: number, defaultNodeWidth?: number, defaultNodeHeight?: number } = {},
+  configs: {
+    nodesep?: number;
+    ranksep?: number;
+    defaultNodeWidth?: number;
+    defaultNodeHeight?: number;
+  } = {},
 ) => {
-  const { nodesep = 80, ranksep = 120, defaultNodeWidth = 30, defaultNodeHeight = 16 } = configs
+  const {
+    nodesep = 80,
+    ranksep = 120,
+    defaultNodeWidth = 30,
+    defaultNodeHeight = 16,
+  } = configs
   const graph = new dagre.graphlib.Graph()
   graph.setDefaultEdgeLabel(() => ({}))
   graph.setGraph({
@@ -35,7 +51,7 @@ export const dagreLayout = <GNode extends WorkflowNode, GEdge extends WorkflowEd
     })
   }
 
- // 注册边（仅注册连接了有效节点的边，且不注册自环边）
+  // 注册边（仅注册连接了有效节点的边，且不注册自环边）
   for (const edge of edges) {
     if (!nodeIdSet.has(edge.source) || !nodeIdSet.has(edge.target)) continue
     if (edge.source === edge.target) continue
@@ -59,18 +75,20 @@ export const dagreLayout = <GNode extends WorkflowNode, GEdge extends WorkflowEd
 export const layerNodes = <
   GNode extends WorkflowNode,
   GEdge extends WorkflowEdge,
-
->(nodes: GNode[], edges: GEdge[], configs: { defaultNodeWidth?: number, defaultNodeHeight?: number } = {}) => {
+>(
+  nodes: GNode[],
+  edges: GEdge[],
+  configs: { defaultNodeWidth?: number; defaultNodeHeight?: number } = {},
+) => {
   const { defaultNodeWidth = 220, defaultNodeHeight = 120 } = configs
   const isMovableNode = (node: GNode | Draft<GNode>) => !node.parentId
   const movableNodes = nodes.filter(isMovableNode)
   if (movableNodes.length === 0) return nodes
 
-  const dagrePositionMap = dagreLayout(
-    movableNodes,
-    edges,
-    { defaultNodeHeight, defaultNodeWidth },
-  )
+  const dagrePositionMap = dagreLayout(movableNodes, edges, {
+    defaultNodeHeight,
+    defaultNodeWidth,
+  })
 
   // 统一平移：确保左边界在 x=0，且纵向中心在 y=0
   let minLeft = Infinity
