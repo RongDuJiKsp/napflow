@@ -18,6 +18,8 @@ export default defineConfig({
     alias: {
       '@shared': path.resolve(__dirname, '../shared'),
       '@': path.resolve(__dirname, './'),
+      '@apps': path.resolve(__dirname, './src/apps'),
+      '@runtime': path.resolve(__dirname, './src/apps/runtime'),
     },
   },
   test: {
