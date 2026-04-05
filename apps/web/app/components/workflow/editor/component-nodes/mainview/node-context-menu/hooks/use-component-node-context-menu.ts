@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import type { ItemParams } from 'react-contexify'
-import type { ComponentNodeProps } from '../../../types'
-import { useComponentNodeOperations } from '../../../hooks/use-component-node-operations'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
-import { useComponentNodeCurd } from '../../../hooks/use-component-node-curd'
+import type { ComponentNodeProps } from '@workflow/editor/component-nodes/types'
+import { useComponentNodeOperations } from '@workflow/editor/component-nodes/hooks/use-component-node-operations'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
+import { useComponentNodeCurd } from '@workflow/editor/component-nodes/hooks/use-component-node-curd'
 import {
   ComponentNodesEnum,
   hiddenNodeTypes,

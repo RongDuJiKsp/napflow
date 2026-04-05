@@ -5,8 +5,8 @@ import { useNodes } from '@xyflow/react'
 import {
   getIterateStartOutputVar,
   useComponentNodeEnv,
-} from '../../../hooks/use-component-node-env'
-import { safeAssertWorkflowNodeAsComponentNode } from '../../../utils/node-asserts'
+} from '@workflow/editor/component-nodes/hooks/use-component-node-env'
+import { safeAssertWorkflowNodeAsComponentNode } from '@workflow/editor/component-nodes/utils/node-asserts'
 
 export const useIterateStartOutputVars = (id: string): Var[] => {
   const nodes = useNodes<WorkflowNode>()

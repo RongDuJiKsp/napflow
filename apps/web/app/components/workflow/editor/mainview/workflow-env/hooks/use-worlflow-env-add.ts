@@ -2,8 +2,8 @@ import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { useCallback, useState } from 'react'
 import { useWorkflowEnvDialog } from './use-workflow-env-dialog'
 import { App } from 'antd'
-import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
-import { EnvVarRegex } from '../../../component-nodes/common/input-with-env/lex-nodes/env-var-node'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
+import { EnvVarRegex } from '@workflow/editor/component-nodes/common/input-with-env/lex-nodes/env-var-node'
 
 export const useWorkflowEnvAdd = (onFinish?: () => void) => {
   const { submitSyncDraft } = useWorkflowDraft()

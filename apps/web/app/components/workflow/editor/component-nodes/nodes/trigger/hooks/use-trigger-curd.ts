@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
-import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
-import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
-import type { ComponentNode } from '../../../types'
+import { useComponentNodeEnv } from '@workflow/editor/component-nodes/hooks/use-component-node-env'
+import { useStoreImmerCurd } from '@workflow/editor/hooks/use-reactflow-ext'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 import type {
   TriggerData,
   TriggerOn,
 } from '@shared/common/workflow/node-data/trigger'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 
 export const useTriggerCurd = (nodeId: string) => {
   const { vars } = useComponentNodeEnv(nodeId)

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { VarCtx } from '../../../hooks/use-component-node-env'
+import type { VarCtx } from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 import {
   $createEnvVarNode,
   $isEnvVarNode,

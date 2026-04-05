@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from 'react'
-import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
-import type { ComponentNode } from '../../../types'
+import { useStoreImmerCurd } from '@workflow/editor/hooks/use-reactflow-ext'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 import type {
   JsonReadData,
   JsonReadOutputBinding,
 } from '@shared/common/workflow/node-data/json-read'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 import {
   type VarCtx,
   useComponentNodeEnv,
-} from '../../../hooks/use-component-node-env'
+} from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 import {
   type Var,
   VarTypes,

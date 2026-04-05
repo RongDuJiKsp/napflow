@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
-import type { ComponentNode } from '../../../types'
+import { useStoreImmerCurd } from '@workflow/editor/hooks/use-reactflow-ext'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 import type { LoopData } from '@shared/common/workflow/node-data/loop'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 
 export const useLoopCurd = (id: string) => {
   const { editNode } = useStoreImmerCurd()

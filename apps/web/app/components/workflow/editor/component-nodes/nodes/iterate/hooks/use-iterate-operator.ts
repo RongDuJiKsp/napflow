@@ -1,19 +1,19 @@
 import { useReactFlow } from '@xyflow/react'
-import type { WorkflowEdge, WorkflowNode } from '../../../../types'
+import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
 import { useCallback } from 'react'
 import {
   createComponentNode,
   createComponentSubNode,
-} from '../../../utils/node'
+} from '@workflow/editor/component-nodes/utils/node'
 import type { IterateStartData } from '@shared/common/workflow/node-data/iterate-start'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
-import { createWorkflowEdge } from '../../../../utils/nodes'
-import { ComponentNodeCreatorMap } from '../../../constants'
-import type { ComponentNode } from '../../../types'
-import { useCommContainerNodeOperation } from '../../../../hooks/use-comm-node-operation'
+import { createWorkflowEdge } from '@workflow/editor/utils/nodes'
+import { ComponentNodeCreatorMap } from '@workflow/editor/component-nodes/constants'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
+import { useCommContainerNodeOperation } from '@workflow/editor/hooks/use-comm-node-operation'
 import { getLinkedLastNode } from '../../loop/hooks/use-loop-operator'
-import { safeAssertWorkflowNodeAsComponentNode } from '../../../utils/node-asserts'
-import { useComponentContainerNodeOperations } from '../../../hooks/use-component-node-operations'
+import { safeAssertWorkflowNodeAsComponentNode } from '@workflow/editor/component-nodes/utils/node-asserts'
+import { useComponentContainerNodeOperations } from '@workflow/editor/component-nodes/hooks/use-component-node-operations'
 
 export const useIterateNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
