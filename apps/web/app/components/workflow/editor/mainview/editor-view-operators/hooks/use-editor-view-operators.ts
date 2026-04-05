@@ -96,9 +96,10 @@ export const layerNodes = <
     nodeSizeMap,
   )
 
-  // 统一平移：确保布局后的最左上边界落在 (0, 0)
+  // 统一平移：确保左边界在 x=0，且纵向中心在 y=0
   let minLeft = Infinity
   let minTop = Infinity
+  let maxBottom = -Infinity
 
   for (const nodeId of orderedNodeIds) {
     const center = dagrePositionMap.get(nodeId)
@@ -107,12 +108,16 @@ export const layerNodes = <
 
     const left = center.x - size.width / 2
     const top = center.y - size.height / 2
+    const bottom = top + size.height
 
     if (left < minLeft) minLeft = left
     if (top < minTop) minTop = top
+    if (bottom > maxBottom) maxBottom = bottom
   }
 
-  if (!Number.isFinite(minLeft) || !Number.isFinite(minTop)) return nodes
+  if (!Number.isFinite(minLeft) || !Number.isFinite(minTop) || !Number.isFinite(maxBottom)) return nodes
+
+  const centerY = (minTop + maxBottom) / 2
 
   // --- 应用位置 ---
   return produce(nodes, (draftNodes) => {
@@ -125,7 +130,7 @@ export const layerNodes = <
 
       node.position = {
         x: nextCenter.x - size.width / 2 - minLeft,
-        y: nextCenter.y - size.height / 2 - minTop,
+        y: nextCenter.y - size.height / 2 - centerY,
       }
     }
   })
