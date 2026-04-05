@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
-import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
-import type { ComponentNode } from '../../../types'
+import { useStoreImmerCurd } from '@workflow/editor/hooks/use-reactflow-ext'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 import type { TimerTriggerMode } from '@shared/common/workflow/node-data/timer'
 import type { TimerData } from '@shared/common/workflow/node-data/timer'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
-import { useComponentNodeEnv } from '../../../hooks/use-component-node-env'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
+import { useComponentNodeEnv } from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 
 export const useTimerCurd = (nodeId: string) => {
   const { vars } = useComponentNodeEnv(nodeId)

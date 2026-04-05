@@ -12,7 +12,7 @@ import { twMerge } from 'tailwind-merge'
 import {
   type VarCtx,
   getCommVarCtxName,
-} from '../../../hooks/use-component-node-env'
+} from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { $createEnvVarNode } from '../lex-nodes/env-var-node'
 

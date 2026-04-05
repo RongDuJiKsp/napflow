@@ -7,7 +7,7 @@ import {
   type VarCtx,
   type VarCtxName,
   getCommVarCtxName,
-} from '../../../hooks/use-component-node-env'
+} from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 import { VarTypes } from '@shared/common/workflow/core/component-node'
 import { twMerge } from 'tailwind-merge'
 import type { JSX } from 'react'

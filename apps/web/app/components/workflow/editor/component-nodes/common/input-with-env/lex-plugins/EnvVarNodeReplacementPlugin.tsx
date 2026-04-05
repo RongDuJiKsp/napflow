@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { $transformEnvVarNode, LexEnvVarNode } from '../lex-nodes/env-var-node'
 import { mergeRegister } from '@lexical/utils'
 import { TextNode } from 'lexical'
-import type { VarCtx } from '../../../hooks/use-component-node-env'
+import type { VarCtx } from '@workflow/editor/component-nodes/hooks/use-component-node-env'
 
 /**
  * @description 将脏文本节点尝试解析为环境变量节点

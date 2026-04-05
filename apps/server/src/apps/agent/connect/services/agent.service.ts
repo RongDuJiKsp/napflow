@@ -6,8 +6,8 @@ import type {
   WsAuthRequest,
   WsConnectionRequest,
 } from '@shared/common/agent/socketio/auth'
-import { JwtService } from '../../../account/jwt.service'
-import { TypeOrmService } from '../../../db/typeorm.service'
+import { JwtService } from '@apps/account/jwt.service'
+import { TypeOrmService } from '@apps/db/typeorm.service'
 import { AgentSession } from '../instance'
 import { AgentSessionRecoverService } from '../session-recover/agent-session-recover.service'
 import { SocketBindService } from './socket-bind.service'

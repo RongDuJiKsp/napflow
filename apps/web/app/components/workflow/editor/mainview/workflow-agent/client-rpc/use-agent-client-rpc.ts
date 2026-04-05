@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from 'react'
 import type { Socket } from 'socket.io-client'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
-import { createComponentNode } from '../../../component-nodes/utils/node'
-import { useAppReactflowInstance } from '../../../hooks/reactflow-re-exports'
-import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
-import { useLoopNodeOperator } from '../../../component-nodes/nodes/loop/hooks/use-loop-operator'
-import { useIterateNodeOperator } from '../../../component-nodes/nodes/iterate/hooks/use-iterate-operator'
+import { createComponentNode } from '@workflow/editor/component-nodes/utils/node'
+import { useAppReactflowInstance } from '@workflow/editor/hooks/reactflow-re-exports'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
+import { useLoopNodeOperator } from '@workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator'
+import { useIterateNodeOperator } from '@workflow/editor/component-nodes/nodes/iterate/hooks/use-iterate-operator'
 import {
   AgentClientRPCListener,
   type ClientRPCListenerHandler,

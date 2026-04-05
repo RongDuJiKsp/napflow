@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useStore } from 'zustand'
-import { useEditorOutsideStore } from '../../../hooks/use-editor-outside-store'
+import { useEditorOutsideStore } from '@workflow/editor/hooks/use-editor-outside-store'
 export enum AgentPanelStage {
   ModelSelection = 1,
   AgentChat = 2,

@@ -2,12 +2,12 @@ import dagre from '@dagrejs/dagre'
 import type { Draft } from 'immer'
 import { produce } from 'immer'
 import { useCallback } from 'react'
-import type { WorkflowEdge, WorkflowNode } from '../../../types'
+import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
 import {
   useAppReactflowFlowStoreApi,
   useAppReactflowInstance,
-} from '../../../hooks/reactflow-re-exports'
-import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
+} from '@workflow/editor/hooks/reactflow-re-exports'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 
 // 使用dagre进行布局的工具函数，输入节点和边，输出节点位置的映射
 export const dagreLayout = <

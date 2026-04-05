@@ -6,6 +6,7 @@ export default defineConfig({
     alias: {
       '@shared': path.resolve(__dirname, '../shared'),
       '@components': path.resolve(__dirname, './app/components'),
+      '@workflow': path.resolve(__dirname, './app/components/workflow'),
       '@': path.resolve(__dirname, './'),
     },
   },

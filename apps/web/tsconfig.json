@@ -21,7 +21,8 @@
     "paths": {
       "@shared/*": ["../shared/*"],
       "@/*": ["./*"],
-      "@components/*": ["./app/components/*"]
+      "@components/*": ["./app/components/*"],
+      "@workflow/*": ["./app/components/workflow/*"]
     }
   },
   "include": [

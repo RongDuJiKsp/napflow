@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { useStoreImmerCurd } from '../../../../hooks/use-reactflow-ext'
-import { useWorkflowDraft } from '../../../../hooks/use-workflow-draft'
-import type { ComponentNode } from '../../../types'
+import { useStoreImmerCurd } from '@workflow/editor/hooks/use-reactflow-ext'
+import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
+import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 
 export const useEditSiderbarMetaEdit = (nodeId: string) => {
   const { editNode } = useStoreImmerCurd<ComponentNode>()
