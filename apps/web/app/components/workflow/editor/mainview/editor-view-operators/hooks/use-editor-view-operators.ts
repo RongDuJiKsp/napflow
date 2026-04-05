@@ -61,7 +61,7 @@ export const layerNodes = <
   GEdge extends WorkflowEdge,
 
 >(nodes: GNode[], edges: GEdge[], configs: { defaultNodeWidth?: number, defaultNodeHeight?: number } = {}) => {
-  const { defaultNodeWidth = 30, defaultNodeHeight = 16 } = configs
+  const { defaultNodeWidth = 220, defaultNodeHeight = 120 } = configs
   const isMovableNode = (node: GNode | Draft<GNode>) => !node.parentId
   const movableNodes = nodes.filter(isMovableNode)
   if (movableNodes.length === 0) return nodes
