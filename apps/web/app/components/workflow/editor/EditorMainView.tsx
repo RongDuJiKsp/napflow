@@ -20,6 +20,7 @@ import NodeEditSiderbar from './component-nodes/mainview/node-edit-siderbar'
 import WorkflowEnv from './mainview/workflow-env'
 import WorkflowAgent from './mainview/workflow-agent'
 import { useKeyPress } from 'ahooks'
+import EditorViewOperators from './mainview/editor-view-operators'
 const EditorLayout = ({ children }: PropsWithChildren) => {
   return (
     <div id="editor-wrapper" className="h-full">
@@ -30,6 +31,7 @@ const EditorLayout = ({ children }: PropsWithChildren) => {
       <NodeEditSiderbar />
       <WorkflowEnv />
       <WorkflowAgent />
+      <EditorViewOperators />
       {children}
     </div>
   )
