@@ -7,6 +7,7 @@ import {
   useAppReactflowFlowStoreApi,
   useAppReactflowInstance,
 } from '../../../hooks/reactflow-re-exports'
+import { useWorkflowDraft } from '../../../hooks/use-workflow-draft'
 
 // 使用dagre进行布局的工具函数，输入节点和边，输出节点位置的映射
 export const dagreLayout = <
@@ -133,6 +134,7 @@ export const layerNodes = <
 export const useEditorViewOperators = () => {
   const storeApi = useAppReactflowFlowStoreApi()
   const reactflow = useAppReactflowInstance()
+  const { submitSyncDraft } = useWorkflowDraft()
 
   const handleFocusOrigin = useCallback(() => {
     reactflow.setCenter(0, 0, {
@@ -145,7 +147,8 @@ export const useEditorViewOperators = () => {
     const { nodes, edges, setNodes } = storeApi.getState()
     const layeredNodes = layerNodes(nodes, edges)
     setNodes(layeredNodes)
-  }, [storeApi])
+    submitSyncDraft()
+  }, [storeApi, submitSyncDraft])
 
   return {
     handleFocusOrigin,
