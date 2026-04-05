@@ -41,7 +41,9 @@ export class JwtOperator<T extends JwtPayload> {
       return this.jwtVerify(token, options)
     }
     catch (err) {
-      this.logger.warn(`JWT verification failed: ${err instanceof Error ? err.message : String(err)}`)
+      this.logger.warn(
+        `JWT verification failed: ${err instanceof Error ? err.message : String(err)}`,
+      )
       return null
     }
   }
