@@ -2,7 +2,7 @@ import type { ComponentWithClass } from '@/utils/type'
 import { Button, Tooltip } from '@heroui/react'
 import { memo } from 'react'
 
-const EditorOperators = ({ title, onPress, Icon }: { title: string, onPress: () => void, Icon: ComponentWithClass }) => {
+const EditorOperatorItem = ({ title, onPress, Icon }: { title: string, onPress: () => void, Icon: ComponentWithClass }) => {
   return <Tooltip>
     <Button isIconOnly
       aria-label={title}
@@ -10,7 +10,10 @@ const EditorOperators = ({ title, onPress, Icon }: { title: string, onPress: () 
       onPress={onPress}>
       <Icon />
     </Button>
+    <Tooltip.Content>
+      {title}
+    </Tooltip.Content>
   </Tooltip>
 }
 
-export default memo(EditorOperators)
+export default memo(EditorOperatorItem)
