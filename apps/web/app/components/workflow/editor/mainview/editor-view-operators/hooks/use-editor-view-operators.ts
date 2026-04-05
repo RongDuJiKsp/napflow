@@ -1,47 +1,41 @@
 import dagre from '@dagrejs/dagre'
+import type { Draft } from 'immer'
 import { produce } from 'immer'
 import { useCallback } from 'react'
 import type { WorkflowEdge, WorkflowNode } from '../../../types'
 import { useAppReactflowFlowStoreApi, useAppReactflowInstance } from '../../../hooks/reactflow-re-exports'
 
-const DEFAULT_NODE_WIDTH = 30
-const DEFAULT_NODE_HEIGHT = 15
-const DAGRE_NODE_SEP = 80
-const DAGRE_RANK_SEP = 120
-
-// ✅ 完全交给 dagre 的 layout
-const dagreLayout = (
-  nodeIds: string[],
-  edges: WorkflowEdge[],
-  nodeSizeMap: Map<string, { width: number; height: number }>,
+// 使用dagre进行布局的工具函数，输入节点和边，输出节点位置的映射
+export const dagreLayout = <GNode extends WorkflowNode, GEdge extends WorkflowEdge>(
+  nodes: GNode[],
+  edges: GEdge[],
+  configs: { nodesep?: number; ranksep?: number, defaultNodeWidth?: number, defaultNodeHeight?: number } = {},
 ) => {
+  const { nodesep = 80, ranksep = 120, defaultNodeWidth = 30, defaultNodeHeight = 16 } = configs
   const graph = new dagre.graphlib.Graph()
   graph.setDefaultEdgeLabel(() => ({}))
   graph.setGraph({
     rankdir: 'LR',
     align: 'UL',
-    nodesep: DAGRE_NODE_SEP,
-    ranksep: DAGRE_RANK_SEP,
+    nodesep,
+    ranksep,
     marginx: 0,
     marginy: 0,
     ranker: 'network-simplex',
     acyclicer: 'greedy',
   })
 
-  const nodeIdSet = new Set(nodeIds)
+  const nodeIdSet = new Set(nodes.map(node => node.id))
 
   // 注册节点
-  for (const nodeId of nodeIds) {
-    const size = nodeSizeMap.get(nodeId)
-    if (!size) continue
-
-    graph.setNode(nodeId, {
-      width: size.width,
-      height: size.height,
+  for (const node of nodes) {
+    graph.setNode(node.id, {
+      width: node.width ?? defaultNodeWidth,
+      height: node.height ?? defaultNodeHeight,
     })
   }
 
-  // ✅ 使用真实 edges
+ // 注册边（仅注册连接了有效节点的边，且不注册自环边）
   for (const edge of edges) {
     if (!nodeIdSet.has(edge.source) || !nodeIdSet.has(edge.target)) continue
     if (edge.source === edge.target) continue
@@ -51,49 +45,31 @@ const dagreLayout = (
 
   dagre.layout(graph)
 
+  // 提取布局结果
   const positionMap = new Map<string, { x: number; y: number }>()
-
-  for (const nodeId of nodeIds) {
+  for (const nodeId of nodeIdSet) {
     const n = graph.node(nodeId)
     if (!n) continue
 
     positionMap.set(nodeId, { x: n.x, y: n.y })
   }
-
   return positionMap
 }
 
 export const layerNodes = <
   GNode extends WorkflowNode,
   GEdge extends WorkflowEdge,
->(nodes: GNode[], edges: GEdge[]) => {
-  const movableNodes = nodes.filter(node => !node.parentId)
+
+>(nodes: GNode[], edges: GEdge[], configs: { defaultNodeWidth?: number, defaultNodeHeight?: number } = {}) => {
+  const { defaultNodeWidth = 30, defaultNodeHeight = 16 } = configs
+  const isMovableNode = (node: GNode | Draft<GNode>) => !node.parentId
+  const movableNodes = nodes.filter(isMovableNode)
   if (movableNodes.length === 0) return nodes
 
-  const nodeSizeMap = new Map<string, { width: number; height: number }>()
-
-  for (const node of movableNodes) {
-    const size = {
-      width: node.width ?? DEFAULT_NODE_WIDTH,
-      height: node.height ?? DEFAULT_NODE_HEIGHT,
-    }
-
-    nodeSizeMap.set(node.id, size)
-  }
-
-  // 按原画布位置排序，给 dagre 提供稳定的无连接子图顺序
-  const orderedNodeIds = [...movableNodes]
-    .sort((a, b) => {
-      if (a.position.y !== b.position.y) return a.position.y - b.position.y
-      if (a.position.x !== b.position.x) return a.position.x - b.position.x
-      return a.id.localeCompare(b.id)
-    })
-    .map(node => node.id)
-
   const dagrePositionMap = dagreLayout(
-    orderedNodeIds,
+    movableNodes,
     edges,
-    nodeSizeMap,
+    { defaultNodeHeight, defaultNodeWidth },
   )
 
   // 统一平移：确保左边界在 x=0，且纵向中心在 y=0
@@ -101,36 +77,36 @@ export const layerNodes = <
   let minTop = Infinity
   let maxBottom = -Infinity
 
-  for (const nodeId of orderedNodeIds) {
-    const center = dagrePositionMap.get(nodeId)
-    const size = nodeSizeMap.get(nodeId)
-    if (!center || !size) continue
+  for (const node of movableNodes) {
+    const center = dagrePositionMap.get(node.id)
+    if (!center) continue
+    const width = node.width ?? defaultNodeWidth
+    const height = node.height ?? defaultNodeHeight
 
-    const left = center.x - size.width / 2
-    const top = center.y - size.height / 2
-    const bottom = top + size.height
+    const left = center.x - width / 2
+    const top = center.y - height / 2
+    const bottom = top + height
 
     if (left < minLeft) minLeft = left
     if (top < minTop) minTop = top
     if (bottom > maxBottom) maxBottom = bottom
   }
 
-  if (!Number.isFinite(minLeft) || !Number.isFinite(minTop) || !Number.isFinite(maxBottom)) return nodes
-
   const centerY = (minTop + maxBottom) / 2
 
   // --- 应用位置 ---
   return produce(nodes, (draftNodes) => {
     for (const node of draftNodes) {
-      if (node.parentId) continue
+      if (!isMovableNode(node)) continue
 
       const nextCenter = dagrePositionMap.get(node.id)
-      const size = nodeSizeMap.get(node.id)
-      if (!nextCenter || !size) continue
+      const width = node.width ?? defaultNodeWidth
+      const height = node.height ?? defaultNodeHeight
+      if (!nextCenter) continue
 
       node.position = {
-        x: nextCenter.x - size.width / 2 - minLeft,
-        y: nextCenter.y - size.height / 2 - centerY,
+        x: nextCenter.x - width / 2 - minLeft,
+        y: nextCenter.y - height / 2 - centerY,
       }
     }
   })
