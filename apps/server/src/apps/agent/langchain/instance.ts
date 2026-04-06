@@ -130,7 +130,7 @@ export class LangChainInstance extends LangChainBase {
     await this.ensureInitialMemory()
     // 过滤掉 system 消息，外部不需要感知到系统消息的存在
     return (await this.memory.getMessages())
+      .filter(msg => !SystemMessage.isInstance(msg))
       .map(msg => msg.toDict())
-      .filter(msg => msg.type !== 'system')
   }
 }
