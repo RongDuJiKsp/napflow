@@ -11,10 +11,14 @@ import {
   type ClientRPCListenerHandler,
 } from './client-rpc'
 import { useCreation } from 'ahooks'
+import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
+import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
+import { safeAssertIsComponentNode } from '../../../utils/node-asserts'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
+  const { handleConnect } = useComponentNodeOperations()
   const { handleAddLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
 
@@ -43,20 +47,30 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     ClientRPCListenerHandler<'readCurrent'>
   >(async () => {
     const snapshot = getCurrentStateSnapshot()
-    return {
-      success: true,
-      data: {
-        nodes: snapshot.nodes,
-        edges: snapshot.edges,
-        envs: snapshot.envs,
-      },
-    }
+    return ClientRpc.success({
+      nodes: snapshot.nodes,
+      edges: snapshot.edges,
+      envs: snapshot.envs,
+    })
   }, [getCurrentStateSnapshot])
+
+  const connectNode = useCallback<ClientRPCListenerHandler<'connectNode'>>(
+    async ({ source, sourceHandle, target, targetHandle }) => {
+      const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
+      const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
+      if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
+      handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+      submitSyncDraft()
+      return ClientRpc.success()
+    },
+    [reactflow, handleConnect, submitSyncDraft],
+  )
 
   const listener = useCreation(() => {
     const rpc = new AgentClientRPCListener()
     rpc.listenMethod('addCustomNode', addCustomNode)
     rpc.listenMethod('readCurrent', readCurrent)
+    rpc.listenMethod('connectNode', connectNode)
     return rpc
   }, [addCustomNode, readCurrent])
 
