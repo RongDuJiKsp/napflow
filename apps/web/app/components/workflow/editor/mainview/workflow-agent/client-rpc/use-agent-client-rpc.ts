@@ -14,6 +14,7 @@ import { useCreation } from 'ahooks'
 import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
 import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
 import { safeAssertIsComponentNode } from '../../../utils/node-asserts'
+import { useWorkflowHistory } from '../../../hooks/use-workflow-history'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
@@ -21,25 +22,29 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   const { handleConnect } = useComponentNodeOperations()
   const { handleAddLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
+  const { capture } = useWorkflowHistory()
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
     ({ type, position }) => {
-      const node = createComponentNode(type)
-      node.position = position
+      const ret = capture('add node', () => {
+        const node = createComponentNode(type)
+        node.position = position
 
-      if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
-      else if (type === ComponentNodesEnum.Iterate)
-        handleMoveConstructorIterateNode(node)
-      else reactflow.addNodes(node)
-
+        if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
+        else if (type === ComponentNodesEnum.Iterate)
+          handleMoveConstructorIterateNode(node)
+        else reactflow.addNodes(node)
+        return node.id
+      })
       submitSyncDraft()
-      return ClientRpc.success({ nodeId: node.id })
+      return ClientRpc.success({ nodeId: ret })
     },
     [
       handleAddLoopNode,
       handleMoveConstructorIterateNode,
       reactflow,
       submitSyncDraft,
+      capture,
     ],
   )
 
@@ -59,7 +64,9 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
       const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
       if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
-      handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+      capture('connect nodes', () => {
+        handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+      })
       if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
         // 只有在确实添加了连接时才提交draft，避免重复提交
         return ClientRpc.fail('failed to connect nodes, maybe due to invalid connection')
@@ -67,7 +74,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       submitSyncDraft()
       return ClientRpc.success()
     },
-    [reactflow, handleConnect, submitSyncDraft],
+    [reactflow, capture, submitSyncDraft, handleConnect],
   )
 
   const listener = useCreation(() => {

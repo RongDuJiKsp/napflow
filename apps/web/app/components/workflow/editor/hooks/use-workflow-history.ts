@@ -12,27 +12,37 @@ export const useWorkflowHistory = () => {
   const workflowExtStore = useWorkflowExtStore()
   const historyStore = useWorkflowHistoryStore()
 
+  const captureSnapshot = useCallback((title?: string, actionTag: WorkflowHistoryActionTag = WorkflowHistoryActionTag.Current) => {
+    const {
+      nodes,
+      edges,
+    } = workflowStore.getState()
+    const { envs } = workflowExtStore.getState()
+    const { setHistoryState } = historyStore.getState()
+    // save current state to history
+    setHistoryState({
+      nodes,
+      edges,
+      envs,
+      actionTag,
+      title,
+    })
+  }, [historyStore, workflowExtStore, workflowStore])
+
+  // override 保存当前状态到 history，并将传入的状态设置到 workflow
   const override = useCallback(
     (
       { nodes, edges, envs }: WorkflowEditorHistoryState,
       actionMsg?: string,
     ) => {
+      captureSnapshot()
+      // save new state to history
       const {
-        nodes: currNodes,
-        edges: currEdges,
         setNodes,
         setEdges,
       } = workflowStore.getState()
-      const { envs: currEnvs, setEnvs } = workflowExtStore.getState()
+      const { setEnvs } = workflowExtStore.getState()
       const { setHistoryState } = historyStore.getState()
-      // save current state to history
-      setHistoryState({
-        nodes: currNodes,
-        edges: currEdges,
-        envs: currEnvs,
-        actionTag: WorkflowHistoryActionTag.Current,
-      })
-      // save new state to history
       setHistoryState({
         nodes,
         edges,
@@ -44,7 +54,17 @@ export const useWorkflowHistory = () => {
       setEdges(edges)
       setEnvs(envs)
     },
-    [historyStore, workflowStore, workflowExtStore],
+    [historyStore, workflowStore, workflowExtStore, captureSnapshot],
+  )
+
+  const capture = useCallback(
+    <Fn extends(...args: any[]) => any>(actionMsg: string, action: Fn) => {
+      captureSnapshot()
+      const ret = action()
+      captureSnapshot(actionMsg, WorkflowHistoryActionTag.Programme)
+      return ret
+    },
+    [captureSnapshot],
   )
 
   const redo = useCallback(
@@ -76,6 +96,7 @@ export const useWorkflowHistory = () => {
   )
 
   return {
+    capture,
     override,
     redo,
     undo,
