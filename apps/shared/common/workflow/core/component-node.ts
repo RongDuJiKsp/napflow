@@ -1,3 +1,4 @@
+import type { ZodRawShape } from 'zod'
 import z from 'zod'
 import { tryParseJson } from '@shared/utils/zod-transfer'
 // component nodes
@@ -71,7 +72,7 @@ export type ComponentNodeDataMeta = z.infer<
 >
 
 // export
-export const defineZodCheckComponentNodeData = <T extends z.ZodObject>(
+export const defineZodCheckComponentNodeData = <S extends ZodRawShape, T extends z.ZodObject<S>>(
   data: T,
 ) => ZodCheckComponentNodeDataMeta.extend(data.shape)
 export type ComponentNodeData<T = unknown> = ComponentNodeDataMeta & T
