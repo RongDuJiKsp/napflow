@@ -58,20 +58,10 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       capture('Agent操作：连接两个节点', () => {
         handleConnect({ source, target, sourceHandle, targetHandle })
       })
-      if (
-        !reactflow
-          .getEdges()
-          .some(e => e.source === source && e.target === target)
-      ) {
-        // 只有在确实添加了连接时才提交draft，避免重复提交
-        return ClientRpc.fail(
-          'failed to connect nodes, maybe due to invalid connection',
-        )
-      }
       submitSyncDraft()
       return ClientRpc.success()
     },
-    [reactflow, capture, submitSyncDraft, handleConnect],
+    [capture, submitSyncDraft, handleConnect],
   )
 
   const deleteEdge = useCallback<ClientRPCListenerHandler<'deleteEdge'>>(
