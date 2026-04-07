@@ -5,9 +5,10 @@ import { useReactFlow } from '@xyflow/react'
 import { createWorkflowEdge } from '../../utils/nodes'
 import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
-import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+import { ComponentNodesEnum, defineZodCheckComponentNodeData } from '@shared/common/workflow/core/component-node'
 import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../nodes/iterate/hooks/use-iterate-operator'
+import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
 
 export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
@@ -30,7 +31,9 @@ export const useComponentNodeOperations = () => {
 
   const handleOverwriteNodeData = useCallback(
     (node: ComponentNode, data: unknown) => {
-      const schema = ComponentNodeCreatorMap[node.data.type].schema
+      const compSchema = defineZodCheckComponentNodeData(ComponentNodeCreatorMap[node.data.type].schema)
+      const schema = defineZodCheckWorkflowNodeData(compSchema)
+
       const parsedData = schema.safeParse(data)
       if (!parsedData.success) {
         console.error('Invalid node data:', parsedData.error)
