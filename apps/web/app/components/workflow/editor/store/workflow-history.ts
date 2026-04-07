@@ -4,8 +4,11 @@ import { temporal } from 'zundo'
 import isDeepEqual from 'fast-deep-equal'
 
 export enum WorkflowHistoryActionTag {
-  Current = 'current', // current指的是从当前状态保存而来的
-  Programme = 'programme',
+  Override = 'override', // 标记为覆盖类型的历史记录会被保存，即使它与上一个历史记录的内容相同。
+  UnInitial = 'uninitial', // uninitial 标记为未初始化的历史记录，
+  Initial = 'initial', // initial 为初始状态下的Snapshot，标记为Initial的历史记录表示这是初始状态的历史记录，通常在历史记录的最底部。这个状态是不可回退的。
+  Snapshot = 'snapshot', //  Snapshot 即保存的目的为打快照，如果它与上一个历史记录的内容相同，则不会被保存。
+  Programmatic = 'programmatic', // 标记为 Programmatic 的历史记录表示这是为了主动记录状态的操作
 }
 
 export type WorkflowEditorHistoryState = {
@@ -39,18 +42,22 @@ export const createWorkflowHistoryStoreShape
       nodes: [],
       edges: [],
       envs: [],
-      actionTag: WorkflowHistoryActionTag.Current,
+      actionTag: WorkflowHistoryActionTag.UnInitial,
       getHistoryState: () => get(),
       setHistoryState: (state: WorkflowHistoryState) => set(state),
     }),
     {
       // 由于无法区分每次load之前的state是用户的还是 zundo 的，所以使用深比较来判断是否真的有变化
       equality: (past, curr) => {
-        if (curr.actionTag === WorkflowHistoryActionTag.Programme) {
-          // 如果是programme的状态 说明是覆盖action，则不进行比较，直接保存历史记录
+        if (curr.actionTag === WorkflowHistoryActionTag.Override) {
+          // 如果是override的状态 说明是覆盖action，则不进行比较，直接保存历史记录
           return false
         }
-        // 只有当actionTag是current时才进行比较，确保当上一次programme的状态和当前状态相同时不重复存储历史记录
+        if(past.actionTag === WorkflowHistoryActionTag.Initial) {
+          // 如果是初始状态，说明之前没有历史记录了，就算当前状态和上一个状态相同也要保存历史记录，防止用户回退到啥也没有的情况
+          return false
+        }
+
         return isDeepEqual(
           selectEditorHistoryState(past),
           selectEditorHistoryState(curr),

@@ -15,20 +15,23 @@ export const useWorkflowHistory = () => {
 
   const canUndo = useStore(
     historyStore.temporal,
-    state => state.pastStates.length > 0,
+    state => state.pastStates.filter(c => c.actionTag && ![WorkflowHistoryActionTag.Initial, WorkflowHistoryActionTag.UnInitial].includes(c.actionTag)).length > 0,
   )
   const canRedo = useStore(
     historyStore.temporal,
     state => state.futureStates.length > 0,
   )
 
-  const captureSnapshot = useCallback((title?: string, actionTag: WorkflowHistoryActionTag = WorkflowHistoryActionTag.Current) => {
+  const captureSnapshot = useCallback((title?: string, tag?: WorkflowHistoryActionTag) => {
     const {
       nodes,
       edges,
     } = workflowStore.getState()
     const { envs } = workflowExtStore.getState()
     const { setHistoryState } = historyStore.getState()
+    const { pastStates } = historyStore.temporal.getState()
+    // 如果没有历史记录了，说明这是第一次保存历史记录，则update上一条为Initial
+    const actionTag = tag ?? (pastStates.length ? WorkflowHistoryActionTag.Snapshot : WorkflowHistoryActionTag.Initial)
     // save current state to history
     setHistoryState({
       nodes,
@@ -57,7 +60,7 @@ export const useWorkflowHistory = () => {
         nodes,
         edges,
         envs,
-        actionTag: WorkflowHistoryActionTag.Programme,
+        actionTag: WorkflowHistoryActionTag.Override,
         title: actionMsg,
       })
       setNodes(nodes)
@@ -71,7 +74,7 @@ export const useWorkflowHistory = () => {
     <Fn extends(...args: any[]) => any>(actionMsg: string, action: Fn) => {
       captureSnapshot()
       const ret = action()
-      captureSnapshot(actionMsg, WorkflowHistoryActionTag.Programme)
+      captureSnapshot(actionMsg, WorkflowHistoryActionTag.Programmatic)
       return ret
     },
     [captureSnapshot],
