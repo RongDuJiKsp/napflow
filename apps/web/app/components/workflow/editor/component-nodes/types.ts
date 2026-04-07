@@ -4,17 +4,12 @@ import type { ComponentWithClass } from '@/utils/type'
 import type { ComponentType, FC } from 'react'
 import type { NodeProps } from '@xyflow/react'
 import type {
-  ComponentNodeMeta,
+  ComponentNodeData,
   ComponentNodesEnum,
   Var,
 } from '@shared/common/workflow/core/component-node'
 
 // data实例
-export type ComponentNodeDataExtra = {
-  title: string;
-  desc: string;
-} & ComponentNodeMeta
-export type ComponentNodeData<T = unknown> = ComponentNodeDataExtra & T
 export type ComponentNode<T = unknown> = WorkflowNode<ComponentNodeData<T>>
 export type ComponentNodeProps<T = unknown> = NodeProps<ComponentNode<T>>
 export type ComponentNodeReactNode<T = unknown> = ComponentType<

@@ -4,7 +4,7 @@ import {
   NodeClassic,
   ZodCheckNode,
 } from '@shared/common/workflow/core'
-import type { ComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import type { ComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import z from 'zod'
 import type { Class } from 'type-fest'
 import type { WorkflowThread } from './pool'
@@ -21,7 +21,7 @@ export enum TriggerOnEvents {
 }
 
 export const defineCommNodeSchema = <
-  T extends ComponentNodeMeta = ComponentNodeMeta,
+  T extends ComponentNodeDataTag = ComponentNodeDataTag,
 >(
   data: z.ZodType<T>,
 ) =>
@@ -29,7 +29,7 @@ export const defineCommNodeSchema = <
     type: z.enum([NodeClassic.Component]),
     data,
   })
-export type CommNodeType<T extends ComponentNodeMeta = ComponentNodeMeta>
+export type CommNodeType<T extends ComponentNodeDataTag = ComponentNodeDataTag>
   = Omit<Node, 'position' | 'type'> & {
     type: NodeClassic.Component;
     data: T;
@@ -43,7 +43,7 @@ export const CommEdgeSchema = z.object({
 export type CommEdgeType = z.infer<typeof CommEdgeSchema>
 
 export abstract class CommNode<
-  T extends ComponentNodeMeta = ComponentNodeMeta,
+  T extends ComponentNodeDataTag = ComponentNodeDataTag,
 > implements CommNodeType<T> {
   readonly id: string
   // 只有组件节点能跑 所以type固定为Component
@@ -56,7 +56,7 @@ export abstract class CommNode<
     Object.assign(this, data)
   }
 
-  static parse<U extends ComponentNodeMeta>(
+  static parse<U extends ComponentNodeDataTag>(
     schema: z.ZodType<CommNodeType<U>>,
     data: Node | Record<string, any>,
     Klass: Class<CommNode<U>>,

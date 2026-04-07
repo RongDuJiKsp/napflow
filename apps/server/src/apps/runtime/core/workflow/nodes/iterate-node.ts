@@ -1,5 +1,5 @@
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
@@ -9,7 +9,7 @@ import type { WillTask } from '@/src/utils/task-pool'
 import { IterateDataSchema } from '@shared/common/workflow/node-data/iterate'
 import { Logger } from '@nestjs/common'
 
-export const IterateDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const IterateDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   IterateDataSchema.shape,
 )
 

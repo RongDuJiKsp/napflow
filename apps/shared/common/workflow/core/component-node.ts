@@ -48,8 +48,23 @@ export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
   [VarTypes.NumberArray]: z.preprocess(tryParseJson, z.array(z.number())),
 }
 
-export const ZodCheckComponentNodeMeta = z.object({
+// meta
+
+export const ZodCheckComponentNodeDataTag = z.object({
   type: z.enum(ComponentNodesEnum),
   vars: z.array(ZodCheckVar),
 })
-export type ComponentNodeMeta = z.infer<typeof ZodCheckComponentNodeMeta>
+export type ComponentNodeDataTag = z.infer<typeof ZodCheckComponentNodeDataTag>
+
+export const ZodCheckComponentNodeDataExtra = z.object({
+  title: z.string(),
+  desc: z.string(),
+})
+export type ComponentNodeDataExtra = z.infer<typeof ZodCheckComponentNodeDataExtra>
+
+export const ZodCheckComponentNodeDataMeta = ZodCheckComponentNodeDataTag.extend(ZodCheckComponentNodeDataExtra.shape)
+export type ComponentNodeDataMeta = z.infer<typeof ZodCheckComponentNodeDataMeta>
+
+// export
+export const defineZodCheckComponentNodeData = <T extends z.ZodObject>(data: T) => ZodCheckComponentNodeDataMeta.extend(data.shape)
+export type ComponentNodeData<T = unknown> = ComponentNodeDataMeta & T

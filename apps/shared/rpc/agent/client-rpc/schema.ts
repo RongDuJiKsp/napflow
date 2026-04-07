@@ -1,4 +1,5 @@
 import { ZodCheckWorkflowAppDraft } from '@shared/common/workflow/base'
+import { NodeClassic } from '@shared/common/workflow/core'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { ZodCheckXYPosition } from '@shared/common/workflow/core/re-export'
 import z from 'zod'
@@ -65,6 +66,19 @@ export const ZodRpcEditNodeDataRequest = defineZodClientRpcRequest(
   }),
 )
 export const ZodRpcEditNodeDataResponse = defineZodClientRpcResponse(z.void())
+
+// readNodeSchema
+export const ZodRpcReadNodeSchemaRequest = defineZodClientRpcRequest(
+  z.object({
+    nodeId: z.string(),
+  }),
+)
+export const ZodRpcReadNodeSchemaResponse = defineZodClientRpcResponse(
+  z.object({
+    nodeType: z.enum(NodeClassic),
+    nodeDataSchema: z.unknown(),
+  }),
+)
 
 // readCurrent
 export const ZodRpcReadCurrentRequest = ZodClientRpcNullRequest

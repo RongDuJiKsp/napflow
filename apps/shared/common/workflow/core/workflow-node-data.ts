@@ -26,8 +26,8 @@ export type WorkflowEdgeDataPrivate = z.infer<
 // 完整的类型
 
 // meta
-export const ZodCheckWorkflowNodeMeta = ZodCheckWorkflowNodeDataPrivate.and(
-  ZodCheckWorkflowNodeDataExtra,
+export const ZodCheckWorkflowNodeMeta = ZodCheckWorkflowNodeDataPrivate.extend(
+  ZodCheckWorkflowNodeDataExtra.shape,
 )
 export type WorkflowNodeMeta = z.infer<typeof ZodCheckWorkflowNodeMeta>
 
@@ -38,10 +38,10 @@ export type WorkflowEdgeMeta = z.infer<typeof ZodCheckWorkflowEdgeMeta>
 
 export const defineZodCheckWorkflowNodeData = <T extends z.ZodObject>(
   data: T,
-) => ZodCheckWorkflowNodeMeta.and(data)
+) => ZodCheckWorkflowNodeMeta.extend(data.shape)
 export const defineZodCheckWorkflowEdgeData = <T extends z.ZodObject>(
   data: T,
-) => ZodCheckWorkflowEdgeMeta.and(data)
+) => ZodCheckWorkflowEdgeMeta.extend(data.shape)
 
 export type WorkflowNodeData<T = unknown> = T & WorkflowNodeMeta
 export type WorkflowEdgeData<T = unknown> = T & WorkflowEdgeMeta

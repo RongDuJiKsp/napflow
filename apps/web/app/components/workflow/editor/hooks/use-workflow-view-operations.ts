@@ -8,11 +8,13 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 import { useCommNodeOperation } from './use-comm-node-operation'
-import { hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
+import { defineZodCheckComponentNodeData, hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
 import { safeAssertIsComponentNode } from '../utils/node-asserts'
 import { useAppReactflowInstance } from './reactflow-re-exports'
 import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
 import z from 'zod'
+import { ComponentNodeCreatorMap } from '../component-nodes/constants'
+import { NoteDataSchema } from '../note/type'
 
 export const checkAfterConnMakeCycle = <
   GNode extends WorkflowNode,
@@ -74,11 +76,9 @@ export const useWorkflowCommOperations = () => {
   )
 
   const handleCheckedEditNode = useCallback(
-    (nodeId: string, data: unknown) => {
-      const node = reactflow.getNode(nodeId)
-      if (!node) return
+    (node: WorkflowNode, data: unknown) => {
       if (node.type === NodeClassic.Component) {
-        handleComponentNodeOverwriteData(nodeId, data)
+        handleComponentNodeOverwriteData(node.id, data)
         return
       }
       const schema = defineZodCheckWorkflowNodeData(z.looseObject({}))
@@ -87,12 +87,29 @@ export const useWorkflowCommOperations = () => {
         console.error('Invalid node data:', parsedData.error)
         return
       }
-      node.data = parsedData.data
+      (node.data as Record<string, unknown>) = parsedData.data
     },
-    [handleComponentNodeOverwriteData, reactflow],
+    [handleComponentNodeOverwriteData],
   )
 
-  return { handleDeleteNode, handleCheckedEditNode }
+  const handleGetWorkflowNodeJsonSchema = useCallback((
+    node: WorkflowNode,
+  ) => {
+    if (node.type === NodeClassic.Component) {
+      const componentNode = safeAssertIsComponentNode(node)
+      if (!componentNode) return null
+      const componentSchema = defineZodCheckComponentNodeData(ComponentNodeCreatorMap[componentNode.data.type].schema) as z.ZodObject
+      return z.toJSONSchema(
+        defineZodCheckWorkflowNodeData(componentSchema),
+      )
+    }
+
+    if (node.type === NodeClassic.Note)
+      return z.toJSONSchema(defineZodCheckWorkflowNodeData(NoteDataSchema))
+    return null
+  }, [])
+
+  return { handleDeleteNode, handleCheckedEditNode, handleGetWorkflowNodeJsonSchema }
 }
 
 export const useWorkflowViewOperations = () => {

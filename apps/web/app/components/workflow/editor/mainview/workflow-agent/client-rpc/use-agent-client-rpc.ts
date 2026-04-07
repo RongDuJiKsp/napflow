@@ -21,7 +21,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
   const { handleConnect } = useWorkflowViewOperations()
-  const { handleDeleteNode, handleCheckedEditNode }
+  const { handleDeleteNode, handleCheckedEditNode, handleGetWorkflowNodeJsonSchema }
     = useWorkflowCommOperations()
   const { handleMoveConstructorNode: handleMoveConstructorCustomNode }
     = useComponentNodeOperations()
@@ -64,6 +64,20 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     [capture, submitSyncDraft, handleConnect],
   )
 
+  const readNodeSchema = useCallback<
+    ClientRPCListenerHandler<'readNodeSchema'>
+  >(({ nodeId }) => {
+    const node = reactflow.getNode(nodeId)
+    if (!node) return ClientRpc.fail('node not found')
+    const schema = handleGetWorkflowNodeJsonSchema(node)
+    if(!schema)
+      return ClientRpc.fail(`unsupported node type: ${node.type}`)
+    return ClientRpc.success({
+      nodeType: node.type,
+      nodeDataSchema: schema,
+    })
+  }, [reactflow, handleGetWorkflowNodeJsonSchema])
+
   const deleteEdge = useCallback<ClientRPCListenerHandler<'deleteEdge'>>(
     ({ edgeId }) => {
       if (!reactflow.getEdges().some(e => e.id === edgeId))
@@ -98,7 +112,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       if (!node) return ClientRpc.fail('node not found')
 
       capture('Agent操作：编辑节点数据', () => {
-        handleCheckedEditNode(nodeId, data)
+        handleCheckedEditNode(node, data)
       })
 
       submitSyncDraft()
@@ -112,6 +126,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     rpc.listenMethod('addCustomNode', addCustomNode)
     rpc.listenMethod('readCurrent', readCurrent)
     rpc.listenMethod('connectNode', connectNode)
+    rpc.listenMethod('readNodeSchema', readNodeSchema)
     rpc.listenMethod('deleteEdge', deleteEdge)
     rpc.listenMethod('deleteNode', deleteNode)
     rpc.listenMethod('editNodeData', editNodeData)
@@ -120,6 +135,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     addCustomNode,
     readCurrent,
     connectNode,
+    readNodeSchema,
     deleteEdge,
     deleteNode,
     editNodeData,

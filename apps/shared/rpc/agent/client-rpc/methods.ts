@@ -13,6 +13,8 @@ import {
   ZodRpcEditNodeDataResponse,
   ZodRpcReadCurrentRequest,
   ZodRpcReadCurrentResponse,
+  ZodRpcReadNodeSchemaRequest,
+  ZodRpcReadNodeSchemaResponse,
 } from './schema'
 
 export const CLIENT_RPC_METHODS = defineRpcMethod({
@@ -35,6 +37,10 @@ export const CLIENT_RPC_METHODS = defineRpcMethod({
   editNodeData: {
     request: ZodRpcEditNodeDataRequest,
     response: ZodRpcEditNodeDataResponse,
+  },
+  readNodeSchema: {
+    request: ZodRpcReadNodeSchemaRequest,
+    response: ZodRpcReadNodeSchemaResponse,
   },
   readCurrent: {
     request: ZodRpcReadCurrentRequest,

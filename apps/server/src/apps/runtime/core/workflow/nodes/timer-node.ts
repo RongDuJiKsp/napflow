@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import {
   TimerDataSchema,
   TimerTriggerMode,
@@ -10,7 +10,7 @@ import { CommNode, CommNodeRole } from '../node'
 import type { WillTask } from '@/src/utils/task-pool'
 import type { WorkflowThread } from '../pool'
 import { Logger } from '@nestjs/common'
-export const TimerDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const TimerDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   TimerDataSchema.shape,
 )
 export type TimerDataCtx = z.infer<typeof TimerDataCtxSchema>
