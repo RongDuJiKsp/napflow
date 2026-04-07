@@ -1,5 +1,4 @@
 import { useCreation } from 'ahooks'
-import type { WorkflowHistoryStateStoreShape } from '../hooks/use-workflow-history-store'
 import {
   WorkflowHistoryStoreContext, createWorkflowHistoryStore,
 } from '../hooks/use-workflow-history-store'
@@ -8,9 +7,8 @@ import { memo } from 'react'
 
 const HistoryStoreProvider = ({
   children,
-}: PropsWithChildren<{
-  remoteHistoryState?: Partial<WorkflowHistoryStateStoreShape>;
-}>) => {
+}: PropsWithChildren,
+) => {
   const historyStore = useCreation(createWorkflowHistoryStore, [])
 
   return (
