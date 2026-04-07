@@ -12,6 +12,7 @@ export const useWorkflowHistory = () => {
   const workflowStore = useAppReactflowFlowStoreApi()
   const workflowExtStore = useWorkflowExtStore()
   const historyStore = useWorkflowHistoryStore()
+  const title = useStore(historyStore, state => state.title)
 
   const canUndo = useStore(
     historyStore.temporal,
@@ -115,5 +116,6 @@ export const useWorkflowHistory = () => {
     undo,
     canUndo,
     canRedo,
+    title,
   }
 }

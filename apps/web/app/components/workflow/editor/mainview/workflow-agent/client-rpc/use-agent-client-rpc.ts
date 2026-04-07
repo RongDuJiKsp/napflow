@@ -26,7 +26,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
     ({ type, position }) => {
-      const ret = capture('add node', () => {
+      const ret = capture('Agent操作：添加节点', () => {
         const node = createComponentNode(type)
         node.position = position
 
@@ -64,7 +64,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
       const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
       if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
-      capture('connect nodes', () => {
+      capture('Agent操作：连接两个节点', () => {
         handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
       })
       if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
