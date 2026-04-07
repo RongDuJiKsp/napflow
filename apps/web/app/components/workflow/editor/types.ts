@@ -5,7 +5,10 @@ import type {
   Node as ReactFlowNode,
 } from '@xyflow/react'
 import type { ComponentType, FC } from 'react'
-import type { WorkflowEdgeData, WorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
+import type {
+  WorkflowEdgeData,
+  WorkflowNodeData,
+} from '@shared/common/workflow/core/workflow-node-data'
 
 // 重新导出Reactflow的类型
 export type WorkflowNode<T = unknown> = ReactFlowNode<

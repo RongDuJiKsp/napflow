@@ -76,8 +76,8 @@ export const useWorkflowCommOperations = () => {
   const handleCheckedEditNode = useCallback(
     (nodeId: string, data: unknown) => {
       const node = reactflow.getNode(nodeId)
-      if(!node) return
-      if(node.type === NodeClassic.Component) {
+      if (!node) return
+      if (node.type === NodeClassic.Component) {
         handleComponentNodeOverwriteData(nodeId, data)
         return
       }
@@ -88,7 +88,9 @@ export const useWorkflowCommOperations = () => {
         return
       }
       node.data = parsedData.data
-    }, [handleComponentNodeOverwriteData, reactflow])
+    },
+    [handleComponentNodeOverwriteData, reactflow],
+  )
 
   return { handleDeleteNode, handleCheckedEditNode }
 }
@@ -97,9 +99,8 @@ export const useWorkflowViewOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
-  const {
-    handleConnect: handleComponentNodeConnect,
-  } = useComponentNodeOperations()
+  const { handleConnect: handleComponentNodeConnect }
+    = useComponentNodeOperations()
   const { handleDeleteNode } = useWorkflowCommOperations()
 
   const handleConnect = useCallback(
@@ -197,8 +198,7 @@ export const useWorkflowViewOperations = () => {
       )
     }
 
-    for (const node of selectedNodes)
-      handleDeleteNode(node)
+    for (const node of selectedNodes) handleDeleteNode(node)
 
     submitSyncDraft()
   }, [handleDeleteNode, reactflow, submitSyncDraft])

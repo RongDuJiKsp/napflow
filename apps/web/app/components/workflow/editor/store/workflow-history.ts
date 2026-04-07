@@ -53,7 +53,7 @@ export const createWorkflowHistoryStoreShape
           // 如果是override的状态 说明是覆盖action，则不进行比较，直接保存历史记录
           return false
         }
-        if(past.actionTag === WorkflowHistoryActionTag.Initial) {
+        if (past.actionTag === WorkflowHistoryActionTag.Initial) {
           // 如果是初始状态，说明之前没有历史记录了，就算当前状态和上一个状态相同也要保存历史记录，防止用户回退到啥也没有的情况
           return false
         }

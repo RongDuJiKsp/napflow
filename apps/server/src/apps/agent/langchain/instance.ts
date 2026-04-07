@@ -76,14 +76,15 @@ class LangChainBase {
 export class LangChainInstance extends LangChainBase {
   // memory
   private readonly memory = new InMemoryChatMessageHistory()
-  private readonly initialProjectMemory = new SystemMessage(NAPFLOW_PROJECT_CONTEXT)
+  private readonly initialProjectMemory = new SystemMessage(
+    NAPFLOW_PROJECT_CONTEXT,
+  )
 
   private summary = '未摘要对话'
 
   private async ensureInitialMemory() {
     const history = await this.memory.getMessages()
-    if (history.length > 0)
-      return
+    if (history.length > 0) return
 
     await this.memory.addMessages([this.initialProjectMemory])
   }

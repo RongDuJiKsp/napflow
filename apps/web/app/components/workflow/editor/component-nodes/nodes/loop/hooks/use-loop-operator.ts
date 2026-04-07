@@ -150,5 +150,9 @@ export const useLoopNodeOperator = () => {
     [deleteNodeAndChildren, reactflow],
   )
 
-  return { handleMoveConstructLoopNode, handleAddNodeToLoop, handleDeleteLoopNode }
+  return {
+    handleMoveConstructLoopNode,
+    handleAddNodeToLoop,
+    handleDeleteLoopNode,
+  }
 }

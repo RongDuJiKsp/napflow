@@ -11,15 +11,20 @@ import {
 import { useCreation } from 'ahooks'
 import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
 import { useWorkflowHistory } from '../../../hooks/use-workflow-history'
-import { useWorkflowCommOperations, useWorkflowViewOperations } from '../../../hooks/use-workflow-view-operations'
+import {
+  useWorkflowCommOperations,
+  useWorkflowViewOperations,
+} from '../../../hooks/use-workflow-view-operations'
 import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
   const { handleConnect } = useWorkflowViewOperations()
-  const { handleDeleteNode, handleCheckedEditNode } = useWorkflowCommOperations()
-  const { handleMoveConstructorNode: handleMoveConstructorCustomNode } = useComponentNodeOperations()
+  const { handleDeleteNode, handleCheckedEditNode }
+    = useWorkflowCommOperations()
+  const { handleMoveConstructorNode: handleMoveConstructorCustomNode }
+    = useComponentNodeOperations()
   const { capture } = useWorkflowHistory()
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
@@ -53,9 +58,15 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       capture('Agent操作：连接两个节点', () => {
         handleConnect({ source, target, sourceHandle, targetHandle })
       })
-      if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
+      if (
+        !reactflow
+          .getEdges()
+          .some(e => e.source === source && e.target === target)
+      ) {
         // 只有在确实添加了连接时才提交draft，避免重复提交
-        return ClientRpc.fail('failed to connect nodes, maybe due to invalid connection')
+        return ClientRpc.fail(
+          'failed to connect nodes, maybe due to invalid connection',
+        )
       }
       submitSyncDraft()
       return ClientRpc.success()
