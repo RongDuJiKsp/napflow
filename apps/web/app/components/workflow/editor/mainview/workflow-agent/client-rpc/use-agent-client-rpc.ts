@@ -33,7 +33,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
       else reactflow.addNodes(node)
 
       submitSyncDraft()
-      return { success: true }
+      return ClientRpc.success({ nodeId: node.id })
     },
     [
       handleAddLoopNode,

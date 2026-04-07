@@ -21,7 +21,9 @@ export type ToolSchemaAddCustomNode = z.infer<
   typeof ZodToolSchemaAddCustomNode
 >
 export const ZodRpcAddCustomNodeRequest = defineZodClientRpcRequest(ZodToolSchemaAddCustomNode)
-export const ZodRpcAddCustomNodeResponse = defineZodClientRpcResponse(z.void())
+export const ZodRpcAddCustomNodeResponse = defineZodClientRpcResponse(z.object({
+  nodeId: z.string(),
+}))
 
 // connectNode
 export const ZodRpcConnectNodeRequest = defineZodClientRpcRequest(z.object({
