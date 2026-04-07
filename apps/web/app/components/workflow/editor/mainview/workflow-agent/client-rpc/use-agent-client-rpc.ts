@@ -23,7 +23,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
-    async ({ type, position }) => {
+    ({ type, position }) => {
       const node = createComponentNode(type)
       node.position = position
 
@@ -45,7 +45,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
 
   const readCurrent = useCallback<
     ClientRPCListenerHandler<'readCurrent'>
-  >(async () => {
+  >(() => {
     const snapshot = getCurrentStateSnapshot()
     return ClientRpc.success({
       nodes: snapshot.nodes,
@@ -55,11 +55,15 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   }, [getCurrentStateSnapshot])
 
   const connectNode = useCallback<ClientRPCListenerHandler<'connectNode'>>(
-    async ({ source, sourceHandle, target, targetHandle }) => {
+    ({ source, sourceHandle, target, targetHandle }) => {
       const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
       const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
       if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
       handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+      if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
+        // 只有在确实添加了连接时才提交draft，避免重复提交
+        return ClientRpc.fail('failed to connect nodes, maybe due to invalid connection')
+      }
       submitSyncDraft()
       return ClientRpc.success()
     },
