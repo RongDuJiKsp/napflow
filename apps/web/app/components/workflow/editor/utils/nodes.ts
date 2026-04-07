@@ -32,6 +32,7 @@ export const createWorkflowNode = <T = unknown>(
       id: genNodeId(),
       data: {
         _cacheKV: {},
+        expanded: false,
       },
       position: { x: 0, y: 0 },
     },

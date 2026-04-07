@@ -15,6 +15,7 @@ export const createComponentNode = <T>(
       desc: '',
       type: nodeClassic,
       vars: creator.env ?? [],
+      expanded: false,
       ...(creator.create() as T),
     },
   })
