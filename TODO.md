@@ -21,7 +21,7 @@
 | 支持连接agent        | 已完成   |
 | 支持会话中断和恢复   | 已完成   |
 | 支持注册editor方法到agent   | 实现中   |
-| 会话针对edit支持undo redo   | 实现中   |
+| 会话针对edit支持undo redo   | 已完成   |
 
 ### 缺陷修复
 
