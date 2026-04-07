@@ -83,7 +83,7 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     rpc.listenMethod('readCurrent', readCurrent)
     rpc.listenMethod('connectNode', connectNode)
     return rpc
-  }, [addCustomNode, readCurrent])
+  }, [addCustomNode, readCurrent, connectNode])
 
   useEffect(() => {
     if (socket) {
