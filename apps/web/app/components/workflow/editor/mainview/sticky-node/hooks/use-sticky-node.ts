@@ -49,7 +49,7 @@ export const useStickyNode = () => {
 
 export const useStickyEventsRegister = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
-  const { handleAddLoopNode } = useLoopNodeOperator()
+  const { handleMoveConstructLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
@@ -69,7 +69,7 @@ export const useStickyEventsRegister = () => {
       placedNode.type === NodeClassic.Component
       && (placedNode as ComponentNode).data.type === ComponentNodesEnum.Loop
     )
-      handleAddLoopNode(placedNode)
+      handleMoveConstructLoopNode(placedNode)
     // 如果放置的是 Iterate  operations
     else if (
       placedNode.type === NodeClassic.Component

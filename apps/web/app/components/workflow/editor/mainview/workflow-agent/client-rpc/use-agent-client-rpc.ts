@@ -1,27 +1,25 @@
 import { useCallback, useEffect } from 'react'
 import type { Socket } from 'socket.io-client'
-import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+
 import { createComponentNode } from '@workflow/editor/component-nodes/utils/node'
 import { useAppReactflowInstance } from '@workflow/editor/hooks/reactflow-re-exports'
 import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
-import { useLoopNodeOperator } from '@workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator'
-import { useIterateNodeOperator } from '@workflow/editor/component-nodes/nodes/iterate/hooks/use-iterate-operator'
 import {
   AgentClientRPCListener,
   type ClientRPCListenerHandler,
 } from './client-rpc'
 import { useCreation } from 'ahooks'
-import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
 import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
-import { safeAssertIsComponentNode } from '../../../utils/node-asserts'
 import { useWorkflowHistory } from '../../../hooks/use-workflow-history'
+import { useWorkflowCommOperations, useWorkflowViewOperations } from '../../../hooks/use-workflow-view-operations'
+import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
-  const { handleConnect } = useComponentNodeOperations()
-  const { handleAddLoopNode } = useLoopNodeOperator()
-  const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
+  const { handleConnect } = useWorkflowViewOperations()
+  const { handleDeleteNode, handleCheckedEditNode } = useWorkflowCommOperations()
+  const { handleMoveConstructorNode: handleMoveConstructorCustomNode } = useComponentNodeOperations()
   const { capture } = useWorkflowHistory()
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
@@ -30,22 +28,13 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
         const node = createComponentNode(type)
         node.position = position
 
-        if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
-        else if (type === ComponentNodesEnum.Iterate)
-          handleMoveConstructorIterateNode(node)
-        else reactflow.addNodes(node)
+        handleMoveConstructorCustomNode(node)
         return node.id
       })
       submitSyncDraft()
       return ClientRpc.success({ nodeId: ret })
     },
-    [
-      handleAddLoopNode,
-      handleMoveConstructorIterateNode,
-      reactflow,
-      submitSyncDraft,
-      capture,
-    ],
+    [capture, submitSyncDraft, handleMoveConstructorCustomNode],
   )
 
   const readCurrent = useCallback<
@@ -61,11 +50,8 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
 
   const connectNode = useCallback<ClientRPCListenerHandler<'connectNode'>>(
     ({ source, sourceHandle, target, targetHandle }) => {
-      const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
-      const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
-      if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
       capture('Agent操作：连接两个节点', () => {
-        handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+        handleConnect({ source, target, sourceHandle, targetHandle })
       })
       if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
         // 只有在确实添加了连接时才提交draft，避免重复提交
@@ -77,13 +63,66 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
     [reactflow, capture, submitSyncDraft, handleConnect],
   )
 
+  const deleteEdge = useCallback<ClientRPCListenerHandler<'deleteEdge'>>(
+    ({ edgeId }) => {
+      if (!reactflow.getEdges().some(e => e.id === edgeId))
+        return ClientRpc.fail('edge not found')
+
+      capture('Agent操作：删除边', () => {
+        reactflow.setEdges(edges => edges.filter(e => e.id !== edgeId))
+      })
+      submitSyncDraft()
+      return ClientRpc.success()
+    },
+    [reactflow, capture, submitSyncDraft],
+  )
+
+  const deleteNode = useCallback<ClientRPCListenerHandler<'deleteNode'>>(
+    ({ nodeId }) => {
+      const node = reactflow.getNode(nodeId)
+      if (!node) return ClientRpc.fail('node not found')
+
+      capture('Agent操作：删除节点', () => {
+        handleDeleteNode(node)
+      })
+      submitSyncDraft()
+      return ClientRpc.success()
+    },
+    [reactflow, capture, submitSyncDraft, handleDeleteNode],
+  )
+
+  const editNodeData = useCallback<ClientRPCListenerHandler<'editNodeData'>>(
+    ({ nodeId, data }) => {
+      const node = reactflow.getNode(nodeId)
+      if (!node) return ClientRpc.fail('node not found')
+
+      capture('Agent操作：编辑节点数据', () => {
+        handleCheckedEditNode(nodeId, data)
+      })
+
+      submitSyncDraft()
+      return ClientRpc.success()
+    },
+    [reactflow, capture, submitSyncDraft, handleCheckedEditNode],
+  )
+
   const listener = useCreation(() => {
     const rpc = new AgentClientRPCListener()
     rpc.listenMethod('addCustomNode', addCustomNode)
     rpc.listenMethod('readCurrent', readCurrent)
     rpc.listenMethod('connectNode', connectNode)
+    rpc.listenMethod('deleteEdge', deleteEdge)
+    rpc.listenMethod('deleteNode', deleteNode)
+    rpc.listenMethod('editNodeData', editNodeData)
     return rpc
-  }, [addCustomNode, readCurrent, connectNode])
+  }, [
+    addCustomNode,
+    readCurrent,
+    connectNode,
+    deleteEdge,
+    deleteNode,
+    editNodeData,
+  ])
 
   useEffect(() => {
     if (socket) {

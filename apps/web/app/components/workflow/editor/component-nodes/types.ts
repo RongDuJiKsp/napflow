@@ -32,7 +32,7 @@ export type ComponentPanelFc<T = unknown> = FC<{
 // class
 export type ComponentCreator<T = unknown> = {
   create: () => T; // 创建实例data域的默认值
-  schema: z.ZodType; // 发布前校验的schema（平时显示在发布前检查 发布前check）
+  schema: z.ZodObject; // 发布前校验的schema（平时显示在发布前检查 发布前check）
   label: string; // 丢菜单的节点名称
   icon: ComponentWithClass; // 菜单图标
   nodeComponent: ComponentNodeReactNode<T>; // 节点渲染组件

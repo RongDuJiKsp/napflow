@@ -34,6 +34,25 @@ export const ZodRpcConnectNodeRequest = defineZodClientRpcRequest(z.object({
 }))
 export const ZodRpcConnectNodeResponse = defineZodClientRpcResponse(z.void())
 
+// deleteEdge
+export const ZodRpcDeleteEdgeRequest = defineZodClientRpcRequest(z.object({
+  edgeId: z.string(),
+}))
+export const ZodRpcDeleteEdgeResponse = defineZodClientRpcResponse(z.void())
+
+// deleteNode
+export const ZodRpcDeleteNodeRequest = defineZodClientRpcRequest(z.object({
+  nodeId: z.string(),
+}))
+export const ZodRpcDeleteNodeResponse = defineZodClientRpcResponse(z.void())
+
+// editNodeData
+export const ZodRpcEditNodeDataRequest = defineZodClientRpcRequest(z.object({
+  nodeId: z.string(),
+  data: z.record(z.string(), z.unknown()),
+}))
+export const ZodRpcEditNodeDataResponse = defineZodClientRpcResponse(z.void())
+
 // readCurrent
 export const ZodRpcReadCurrentRequest = ZodClientRpcNullRequest
 export const ZodRpcReadCurrentResponse = defineZodClientRpcResponse(

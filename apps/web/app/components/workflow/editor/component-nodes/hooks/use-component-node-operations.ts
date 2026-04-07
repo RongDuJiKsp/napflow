@@ -8,12 +8,36 @@ import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../nodes/iterate/hooks/use-iterate-operator'
+import { safeAssertIsComponentNode } from '../../utils/node-asserts'
 
 export const useComponentNodeOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { editNode } = useStoreImmerCurd()
-  const { handleDeleteLoopNode } = useLoopNodeOperator()
-  const { handleDeleteIterateNode } = useIterateNodeOperator()
+  const { handleDeleteLoopNode, handleMoveConstructLoopNode } = useLoopNodeOperator()
+  const { handleDeleteIterateNode, handleMoveConstructorIterateNode } = useIterateNodeOperator()
+
+  const handleMoveConstructorNode = useCallback((node: ComponentNode) => {
+    if (node.data.type === ComponentNodesEnum.Loop) handleMoveConstructLoopNode(node)
+    else if (node.data.type === ComponentNodesEnum.Iterate)
+      handleMoveConstructorIterateNode(node)
+    else reactflow.addNodes(node)
+  }, [handleMoveConstructLoopNode, handleMoveConstructorIterateNode, reactflow])
+
+  const handleOverwriteNodeData = useCallback((nodeId: string, data: unknown) => {
+    const node = safeAssertIsComponentNode(reactflow.getNode(nodeId))
+    if (!node) return
+    const schema = ComponentNodeCreatorMap[node.data.type].schema
+    const parsedData = schema.safeParse(data)
+    if (!parsedData.success) {
+      console.error('Invalid node data:', parsedData.error)
+      return
+    }
+    editNode<ComponentNode>(nodeId, (draft) => {
+      for (const key of Object.keys(parsedData.data))
+        (draft.data as Record<string, unknown>)[key] = parsedData.data[key]
+    })
+  }, [editNode, reactflow])
+
   const handleConnect = useCallback(
     (
       source: ComponentNode,
@@ -72,6 +96,8 @@ export const useComponentNodeOperations = () => {
     [editNode],
   )
   return {
+    handleMoveConstructorNode,
+    handleOverwriteNodeData,
     handleConnect,
     handleDeleteNode,
     handleFoldUnfoldNode,
