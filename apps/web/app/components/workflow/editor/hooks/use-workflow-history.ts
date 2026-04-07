@@ -6,11 +6,21 @@ import {
   WorkflowHistoryActionTag,
 } from '../store/workflow-history'
 import { useAppReactflowFlowStoreApi } from './reactflow-re-exports'
+import { useStore } from 'zustand'
 
 export const useWorkflowHistory = () => {
   const workflowStore = useAppReactflowFlowStoreApi()
   const workflowExtStore = useWorkflowExtStore()
   const historyStore = useWorkflowHistoryStore()
+
+  const canUndo = useStore(
+    historyStore.temporal,
+    state => state.pastStates.length > 0,
+  )
+  const canRedo = useStore(
+    historyStore.temporal,
+    state => state.futureStates.length > 0,
+  )
 
   const captureSnapshot = useCallback((title?: string, actionTag: WorkflowHistoryActionTag = WorkflowHistoryActionTag.Current) => {
     const {
@@ -100,5 +110,7 @@ export const useWorkflowHistory = () => {
     override,
     redo,
     undo,
+    canUndo,
+    canRedo,
   }
 }
