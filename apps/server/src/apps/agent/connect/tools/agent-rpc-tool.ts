@@ -41,7 +41,7 @@ export class AgentRPCTool {
       deleteEdge: 'Delete an edge in the workflow editor by edge id.',
       deleteNode: 'Delete a node in the workflow editor by node id.',
       editNodeData:
-        'Edit node data in the workflow editor by node id with a partial data patch.',
+        'Edit node data in the workflow editor by node id with replace.',
       readNodeSchema:
         'Read a node data schema by node id in the workflow editor, returned as JSON schema.',
       readCurrent:
