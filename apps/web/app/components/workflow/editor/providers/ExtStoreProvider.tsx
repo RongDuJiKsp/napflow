@@ -7,7 +7,7 @@ import {
 import type { PropsWithChildren } from 'react'
 import { memo, useEffect } from 'react'
 
-const WorkflowExtStoreProvider = ({
+const ExtStoreProvider = ({
   children,
   remoteExtState,
 }: PropsWithChildren<{
@@ -25,4 +25,4 @@ const WorkflowExtStoreProvider = ({
   )
 }
 
-export default memo(WorkflowExtStoreProvider)
+export default memo(ExtStoreProvider)

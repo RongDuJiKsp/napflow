@@ -9,8 +9,9 @@ import { useWorkflowAppDraftQuery } from '@/app/hooks/query/workflow/use-workflo
 import '@xyflow/react/dist/style.css'
 import 'react-contexify/dist/ReactContexify.css'
 import { initEdges, initNodes } from './utils/nodes'
-import WorkflowExtStoreProvider from './providers/WorkflowExtStoreProvider'
+import ExtStoreProvider from './providers/ExtStoreProvider'
 import type { WorkflowExtStateStoreShape } from './hooks/use-workflow-ext-state'
+import HistoryStoreProvider from './providers/HistoryStoreProvider'
 
 const Editor = () => {
   const { appId } = useAppParam()
@@ -39,9 +40,11 @@ const Editor = () => {
   return (
     <ReactFlowProvider>
       <StoreProvider>
-        <WorkflowExtStoreProvider remoteExtState={remoteExtState}>
-          <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
-        </WorkflowExtStoreProvider>
+        <ExtStoreProvider remoteExtState={remoteExtState}>
+          <HistoryStoreProvider>
+            <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
+          </HistoryStoreProvider>
+        </ExtStoreProvider>
       </StoreProvider>
     </ReactFlowProvider>
   )
