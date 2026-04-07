@@ -6,45 +6,79 @@ import {
   WorkflowHistoryActionTag,
 } from '../store/workflow-history'
 import { useAppReactflowFlowStoreApi } from './reactflow-re-exports'
+import { useStore } from 'zustand'
 
 export const useWorkflowHistory = () => {
   const workflowStore = useAppReactflowFlowStoreApi()
   const workflowExtStore = useWorkflowExtStore()
   const historyStore = useWorkflowHistoryStore()
+  const title = useStore(historyStore, state => state.title)
 
+  const canUndo = useStore(
+    historyStore.temporal,
+    state => state.pastStates.filter(c => c.actionTag && ![WorkflowHistoryActionTag.Initial, WorkflowHistoryActionTag.UnInitial].includes(c.actionTag)).length > 0,
+  )
+  const canRedo = useStore(
+    historyStore.temporal,
+    state => state.futureStates.length > 0,
+  )
+
+  const captureSnapshot = useCallback((title?: string, tag?: WorkflowHistoryActionTag) => {
+    const {
+      nodes,
+      edges,
+    } = workflowStore.getState()
+    const { envs } = workflowExtStore.getState()
+    const { setHistoryState } = historyStore.getState()
+    const { pastStates } = historyStore.temporal.getState()
+    // 如果没有历史记录了，说明这是第一次保存历史记录，则update上一条为Initial
+    const actionTag = tag ?? (pastStates.length ? WorkflowHistoryActionTag.Snapshot : WorkflowHistoryActionTag.Initial)
+    // save current state to history
+    setHistoryState({
+      nodes,
+      edges,
+      envs,
+      actionTag,
+      title,
+    })
+  }, [historyStore, workflowExtStore, workflowStore])
+
+  // override 保存当前状态到 history，并将传入的状态设置到 workflow
   const override = useCallback(
     (
       { nodes, edges, envs }: WorkflowEditorHistoryState,
       actionMsg?: string,
     ) => {
+      captureSnapshot()
+      // save new state to history
       const {
-        nodes: currNodes,
-        edges: currEdges,
         setNodes,
         setEdges,
       } = workflowStore.getState()
-      const { envs: currEnvs, setEnvs } = workflowExtStore.getState()
+      const { setEnvs } = workflowExtStore.getState()
       const { setHistoryState } = historyStore.getState()
-      // save current state to history
-      setHistoryState({
-        nodes: currNodes,
-        edges: currEdges,
-        envs: currEnvs,
-        actionTag: WorkflowHistoryActionTag.Current,
-      })
-      // save new state to history
       setHistoryState({
         nodes,
         edges,
         envs,
-        actionTag: WorkflowHistoryActionTag.Programme,
+        actionTag: WorkflowHistoryActionTag.Override,
         title: actionMsg,
       })
       setNodes(nodes)
       setEdges(edges)
       setEnvs(envs)
     },
-    [historyStore, workflowStore, workflowExtStore],
+    [historyStore, workflowStore, workflowExtStore, captureSnapshot],
+  )
+
+  const capture = useCallback(
+    <Fn extends(...args: any[]) => any>(actionMsg: string, action: Fn) => {
+      captureSnapshot()
+      const ret = action()
+      captureSnapshot(actionMsg, WorkflowHistoryActionTag.Programmatic)
+      return ret
+    },
+    [captureSnapshot],
   )
 
   const redo = useCallback(
@@ -76,8 +110,12 @@ export const useWorkflowHistory = () => {
   )
 
   return {
+    capture,
     override,
     redo,
     undo,
+    canUndo,
+    canRedo,
+    title,
   }
 }

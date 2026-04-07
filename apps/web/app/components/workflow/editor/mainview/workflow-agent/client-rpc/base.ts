@@ -1,10 +1,10 @@
 import type { Socket } from 'socket.io-client'
 import { tryit } from 'radash'
 import type { RpcPS, RpcRS, RpcRecv } from '@shared/rpc/core/ts-check'
-
+import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
 export type Remover = () => void
 type RpcAck<R> = (response: R) => void
-type RpcAckFail = () => void
+type RpcAckFail = (errMsg?: string) => void
 export type SocketRPCListener<
   A extends unknown[] = unknown[],
   ACK = unknown,
@@ -38,7 +38,7 @@ export class BaseClientRPCListener {
           requestArgs,
           issues: parsedRequest.error.issues,
         })
-        fail()
+        fail('request schema parse failed')
         return
       }
 
@@ -48,7 +48,7 @@ export class BaseClientRPCListener {
           method: methodName,
           error,
         })
-        fail()
+        fail('handler execution failed')
         return
       }
       const parsedResponse = responseSchema.safeParse(response)
@@ -58,7 +58,7 @@ export class BaseClientRPCListener {
           response,
           issues: parsedResponse.error.issues,
         })
-        fail()
+        fail('response schema parse failed')
         return
       }
       ack(parsedResponse.data)
@@ -83,14 +83,14 @@ export class BaseClientRPCListener {
     const ack: RpcAck<unknown> = argsWithAck[
       argsWithAck.length - 1
     ] as RpcAck<unknown>
-    const fail: RpcAckFail = () => ack({ success: false })
+    const fail: RpcAckFail = (errMsg?: string) => ack(ClientRpc.fail(errMsg))
 
     const listener = this.listeners.get(methodName)
     if (!listener) {
       console.error('[agent-client-rpc] method listener not found', {
         method: methodName,
       })
-      fail()
+      fail('method listener not found')
       return
     }
     await listener(ack, fail, ...requestArgs)

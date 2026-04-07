@@ -1,0 +1,21 @@
+import { useCreation } from 'ahooks'
+import {
+  WorkflowHistoryStoreContext, createWorkflowHistoryStore,
+} from '../hooks/use-workflow-history-store'
+import type { PropsWithChildren } from 'react'
+import { memo } from 'react'
+
+const HistoryStoreProvider = ({
+  children,
+}: PropsWithChildren,
+) => {
+  const historyStore = useCreation(createWorkflowHistoryStore, [])
+
+  return (
+    <WorkflowHistoryStoreContext.Provider value={historyStore}>
+      {children}
+    </WorkflowHistoryStoreContext.Provider>
+  )
+}
+
+export default memo(HistoryStoreProvider)

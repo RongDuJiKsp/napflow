@@ -36,6 +36,8 @@ export class AgentRPCTool {
     = {
       addCustomNode:
         'Add a custom node to the workflow editor with specified type and position.',
+      connectNode:
+        'Connect two nodes in the workflow editor with specified source, target, and their handles(if needed).',
       readCurrent:
         'Read the current state of the workflow editor, including nodes, edges, and environment variables.',
     }

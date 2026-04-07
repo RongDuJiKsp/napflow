@@ -11,54 +11,79 @@ import {
   type ClientRPCListenerHandler,
 } from './client-rpc'
 import { useCreation } from 'ahooks'
+import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
+import { ClientRpc } from '@shared/rpc/agent/client-rpc/tools'
+import { safeAssertIsComponentNode } from '../../../utils/node-asserts'
+import { useWorkflowHistory } from '../../../hooks/use-workflow-history'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
+  const { handleConnect } = useComponentNodeOperations()
   const { handleAddLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
+  const { capture } = useWorkflowHistory()
 
   const addCustomNode = useCallback<ClientRPCListenerHandler<'addCustomNode'>>(
-    async ({ type, position }) => {
-      const node = createComponentNode(type)
-      node.position = position
+    ({ type, position }) => {
+      const ret = capture('Agent操作：添加节点', () => {
+        const node = createComponentNode(type)
+        node.position = position
 
-      if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
-      else if (type === ComponentNodesEnum.Iterate)
-        handleMoveConstructorIterateNode(node)
-      else reactflow.addNodes(node)
-
+        if (type === ComponentNodesEnum.Loop) handleAddLoopNode(node)
+        else if (type === ComponentNodesEnum.Iterate)
+          handleMoveConstructorIterateNode(node)
+        else reactflow.addNodes(node)
+        return node.id
+      })
       submitSyncDraft()
-      return { success: true }
+      return ClientRpc.success({ nodeId: ret })
     },
     [
       handleAddLoopNode,
       handleMoveConstructorIterateNode,
       reactflow,
       submitSyncDraft,
+      capture,
     ],
   )
 
   const readCurrent = useCallback<
     ClientRPCListenerHandler<'readCurrent'>
-  >(async () => {
+  >(() => {
     const snapshot = getCurrentStateSnapshot()
-    return {
-      success: true,
-      data: {
-        nodes: snapshot.nodes,
-        edges: snapshot.edges,
-        envs: snapshot.envs,
-      },
-    }
+    return ClientRpc.success({
+      nodes: snapshot.nodes,
+      edges: snapshot.edges,
+      envs: snapshot.envs,
+    })
   }, [getCurrentStateSnapshot])
+
+  const connectNode = useCallback<ClientRPCListenerHandler<'connectNode'>>(
+    ({ source, sourceHandle, target, targetHandle }) => {
+      const sourceNode = safeAssertIsComponentNode(reactflow.getNode(source))
+      const targetNode = safeAssertIsComponentNode(reactflow.getNode(target))
+      if (!sourceNode || !targetNode) return ClientRpc.fail('source or target node not found')
+      capture('Agent操作：连接两个节点', () => {
+        handleConnect(sourceNode, targetNode, sourceHandle, targetHandle)
+      })
+      if (!reactflow.getEdges().some(e => e.source === source && e.target === target)) {
+        // 只有在确实添加了连接时才提交draft，避免重复提交
+        return ClientRpc.fail('failed to connect nodes, maybe due to invalid connection')
+      }
+      submitSyncDraft()
+      return ClientRpc.success()
+    },
+    [reactflow, capture, submitSyncDraft, handleConnect],
+  )
 
   const listener = useCreation(() => {
     const rpc = new AgentClientRPCListener()
     rpc.listenMethod('addCustomNode', addCustomNode)
     rpc.listenMethod('readCurrent', readCurrent)
+    rpc.listenMethod('connectNode', connectNode)
     return rpc
-  }, [addCustomNode, readCurrent])
+  }, [addCustomNode, readCurrent, connectNode])
 
   useEffect(() => {
     if (socket) {

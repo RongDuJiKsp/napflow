@@ -3,6 +3,8 @@ import { defineRpcMethod } from '@shared/rpc/core/ts-check'
 import {
   ZodRpcAddCustomNodeRequest,
   ZodRpcAddCustomNodeResponse,
+  ZodRpcConnectNodeRequest,
+  ZodRpcConnectNodeResponse,
   ZodRpcReadCurrentRequest,
   ZodRpcReadCurrentResponse,
 } from './schema'
@@ -11,6 +13,10 @@ export const CLIENT_RPC_METHODS = defineRpcMethod({
   addCustomNode: {
     request: ZodRpcAddCustomNodeRequest,
     response: ZodRpcAddCustomNodeResponse,
+  },
+  connectNode: {
+    request: ZodRpcConnectNodeRequest,
+    response: ZodRpcConnectNodeResponse,
   },
   readCurrent: {
     request: ZodRpcReadCurrentRequest,
