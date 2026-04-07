@@ -8,8 +8,17 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 import { useCommNodeOperation } from './use-comm-node-operation'
-import { hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
+import {
+  defineZodCheckComponentNodeData,
+  hiddenNodeTypes,
+} from '@shared/common/workflow/core/component-node'
 import { safeAssertIsComponentNode } from '../utils/node-asserts'
+import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
+import z from 'zod'
+import { ComponentNodeCreatorMap } from '../component-nodes/constants'
+import type { NoteData } from '../note/type'
+import { NoteDataSchema } from '../note/type'
+import { useNoteNodeOperation } from '../note/hooks/use-note-node-operation'
 
 export const checkAfterConnMakeCycle = <
   GNode extends WorkflowNode,
@@ -50,15 +59,70 @@ export const checkAfterConnMakeCycle = <
   return false
 }
 
+export const useWorkflowCommOperations = () => {
+  const {
+    handleDeleteNode: handleComponentNodeDelete,
+    handleOverwriteNodeData: handleComponentNodeOverwriteData,
+  } = useComponentNodeOperations()
+  const { checkedEditNode } = useNoteNodeOperation()
+
+  const { deleteNode: deleteCommNode } = useCommNodeOperation()
+
+  const handleDeleteNode = useCallback(
+    (node: WorkflowNode) => {
+      if (node.type === NodeClassic.Component) {
+        handleComponentNodeDelete(node as ComponentNode)
+        return
+      }
+      deleteCommNode(node)
+    },
+    [handleComponentNodeDelete, deleteCommNode],
+  )
+
+  const handleCheckedEditNode = useCallback(
+    (node: WorkflowNode, data: unknown) => {
+      if (node.type === NodeClassic.Component) {
+        handleComponentNodeOverwriteData(node as ComponentNode, data)
+        return
+      }
+      if(node.type === NodeClassic.Note) {
+        checkedEditNode(node as WorkflowNode<NoteData>, data)
+        return
+      }
+      throw new Error(`Unsupported node type: ${node.type}`)
+    },
+    [handleComponentNodeOverwriteData, checkedEditNode],
+  )
+
+  const handleGetWorkflowNodeJsonSchema = useCallback((node: WorkflowNode) => {
+    if (node.type === NodeClassic.Component) {
+      const componentNode = safeAssertIsComponentNode(node)
+      if (!componentNode) return null
+      const componentSchema = defineZodCheckComponentNodeData(
+        ComponentNodeCreatorMap[componentNode.data.type].schema,
+      )
+      return z.toJSONSchema(defineZodCheckWorkflowNodeData(componentSchema))
+    }
+
+    if (node.type === NodeClassic.Note)
+      return z.toJSONSchema(defineZodCheckWorkflowNodeData(NoteDataSchema))
+    return null
+  }, [])
+
+  return {
+    handleDeleteNode,
+    handleCheckedEditNode,
+    handleGetWorkflowNodeJsonSchema,
+  }
+}
+
 export const useWorkflowViewOperations = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
-  const {
-    handleConnect: handleComponentNodeConnect,
-    handleDeleteNode: handleComponentNodeDelete,
-  } = useComponentNodeOperations()
-  const { deleteNode: deleteCommNode } = useCommNodeOperation()
+  const { handleConnect: handleComponentNodeConnect }
+    = useComponentNodeOperations()
+  const { handleDeleteNode } = useWorkflowCommOperations()
 
   const handleConnect = useCallback(
     ({ source, target, sourceHandle, targetHandle }: Connection) => {
@@ -155,16 +219,10 @@ export const useWorkflowViewOperations = () => {
       )
     }
 
-    for (const node of selectedNodes) {
-      if (node.type === NodeClassic.Component) {
-        handleComponentNodeDelete(node as ComponentNode)
-        continue
-      }
-      deleteCommNode(node)
-    }
+    for (const node of selectedNodes) handleDeleteNode(node)
 
     submitSyncDraft()
-  }, [reactflow, handleComponentNodeDelete, deleteCommNode, submitSyncDraft])
+  }, [handleDeleteNode, reactflow, submitSyncDraft])
 
   return {
     handleConnect,

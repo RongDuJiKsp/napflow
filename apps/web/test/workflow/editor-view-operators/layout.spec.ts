@@ -59,7 +59,8 @@ describe('dagreLayout', () => {
     expect(centerB).toBeDefined()
     expect(centerC).toBeDefined()
 
-    if (!centerA || !centerB || !centerC) throw new Error('布局结果缺少节点坐标')
+    if (!centerA || !centerB || !centerC)
+      throw new Error('布局结果缺少节点坐标')
 
     expect(centerA.x).toBeLessThan(centerB.x)
     expect(centerB.x).toBeLessThan(centerC.x)
@@ -67,11 +68,7 @@ describe('dagreLayout', () => {
 
   test('应忽略自环边和无效端点边', () => {
     const nodes = [node({ id: 'A' }), node({ id: 'B' })]
-    const edges = [
-      edge('A', 'A'),
-      edge('A', 'X'),
-      edge('A', 'B'),
-    ]
+    const edges = [edge('A', 'A'), edge('A', 'X'), edge('A', 'B')]
 
     const positions = dagreLayout(
       nodes as WorkflowNode[],
@@ -94,10 +91,14 @@ describe('dagreLayout', () => {
     const nodes = [node({ id: 'A' }), node({ id: 'B' })]
     const edges = [edge('A', 'B')]
 
-    const compact = dagreLayout(nodes as WorkflowNode[], edges as WorkflowEdge[], {
-      defaultNodeWidth: 30,
-      defaultNodeHeight: 16,
-    })
+    const compact = dagreLayout(
+      nodes as WorkflowNode[],
+      edges as WorkflowEdge[],
+      {
+        defaultNodeWidth: 30,
+        defaultNodeHeight: 16,
+      },
+    )
     const wide = dagreLayout(nodes as WorkflowNode[], edges as WorkflowEdge[], {
       defaultNodeWidth: 300,
       defaultNodeHeight: 16,
@@ -108,7 +109,8 @@ describe('dagreLayout', () => {
     const wideA = wide.get('A')
     const wideB = wide.get('B')
 
-    if (!compactA || !compactB || !wideA || !wideB) throw new Error('布局结果缺少节点坐标')
+    if (!compactA || !compactB || !wideA || !wideB)
+      throw new Error('布局结果缺少节点坐标')
 
     const compactGap = compactB.x - compactA.x
     const wideGap = wideB.x - wideA.x
@@ -145,10 +147,7 @@ describe('layerNodes', () => {
       node({ id: 'B', x: 900, y: 400 }),
       node({ id: 'C', x: 88, y: 99, parentId: 'PARENT' }),
     ]
-    const edges = [
-      edge('A', 'B'),
-      edge('B', 'C'),
-    ]
+    const edges = [edge('A', 'B'), edge('B', 'C')]
 
     const layered = layerNodes(
       nodes as WorkflowNode[],

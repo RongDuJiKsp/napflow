@@ -42,7 +42,10 @@ const Editor = () => {
       <StoreProvider>
         <ExtStoreProvider remoteExtState={remoteExtState}>
           <HistoryStoreProvider>
-            <EditorMainView remoteNodes={remoteNodes} remoteEdges={remoteEdges} />
+            <EditorMainView
+              remoteNodes={remoteNodes}
+              remoteEdges={remoteEdges}
+            />
           </HistoryStoreProvider>
         </ExtStoreProvider>
       </StoreProvider>

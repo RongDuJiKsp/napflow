@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
@@ -8,7 +8,7 @@ import { raiseErrors } from '@runtime/utils/errors'
 import { ReplyDataSchema } from '@shared/common/workflow/node-data/reply'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
-export const ReplyDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const ReplyDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   ReplyDataSchema.shape,
 )
 

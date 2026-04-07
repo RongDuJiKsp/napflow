@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
@@ -8,7 +8,7 @@ import { CompareOperator } from '@shared/common/workflow/node-data/if'
 import { IfDataSchema } from '@shared/common/workflow/node-data/if'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
-export const IfDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const IfDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   IfDataSchema.shape,
 )
 

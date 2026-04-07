@@ -5,8 +5,16 @@ import {
   ZodRpcAddCustomNodeResponse,
   ZodRpcConnectNodeRequest,
   ZodRpcConnectNodeResponse,
+  ZodRpcDeleteEdgeRequest,
+  ZodRpcDeleteEdgeResponse,
+  ZodRpcDeleteNodeRequest,
+  ZodRpcDeleteNodeResponse,
+  ZodRpcEditNodeDataRequest,
+  ZodRpcEditNodeDataResponse,
   ZodRpcReadCurrentRequest,
   ZodRpcReadCurrentResponse,
+  ZodRpcReadNodeSchemaRequest,
+  ZodRpcReadNodeSchemaResponse,
 } from './schema'
 
 export const CLIENT_RPC_METHODS = defineRpcMethod({
@@ -17,6 +25,22 @@ export const CLIENT_RPC_METHODS = defineRpcMethod({
   connectNode: {
     request: ZodRpcConnectNodeRequest,
     response: ZodRpcConnectNodeResponse,
+  },
+  deleteEdge: {
+    request: ZodRpcDeleteEdgeRequest,
+    response: ZodRpcDeleteEdgeResponse,
+  },
+  deleteNode: {
+    request: ZodRpcDeleteNodeRequest,
+    response: ZodRpcDeleteNodeResponse,
+  },
+  editNodeData: {
+    request: ZodRpcEditNodeDataRequest,
+    response: ZodRpcEditNodeDataResponse,
+  },
+  readNodeSchema: {
+    request: ZodRpcReadNodeSchemaRequest,
+    response: ZodRpcReadNodeSchemaResponse,
   },
   readCurrent: {
     request: ZodRpcReadCurrentRequest,

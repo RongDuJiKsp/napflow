@@ -20,14 +20,14 @@ const AgentStatus = () => {
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-slate-700">
           <RiSparkling2Line size={18} className="text-sky-500" />
-          <span className="text-sm font-medium text-slate-700">
-            Agent 对话
-          </span>
+          <span className="text-sm font-medium text-slate-700">Agent 对话</span>
         </div>
         <span
-          className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-medium ${isConnected
-            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-            : 'border-slate-300 bg-white text-slate-500'}`}
+          className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-medium ${
+            isConnected
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+              : 'border-slate-300 bg-white text-slate-500'
+          }`}
         >
           <span
             className={`h-1.5 w-1.5 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-slate-400'}`}
@@ -35,9 +35,7 @@ const AgentStatus = () => {
           {isConnected ? '已连接' : '连接中'}
         </span>
       </div>
-      <p className="text-xs text-slate-500">
-        使用Agent快速生成工作流
-      </p>
+      <p className="text-xs text-slate-500">使用Agent快速生成工作流</p>
 
       <div className="mt-2 flex items-center gap-1.5 rounded-md bg-white/60 px-2 py-1 text-[11px] text-slate-500">
         <span className="shrink-0">历史:</span>

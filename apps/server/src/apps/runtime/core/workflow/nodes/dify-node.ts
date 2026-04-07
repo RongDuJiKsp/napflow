@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
@@ -10,7 +10,7 @@ import {
 } from '@shared/common/workflow/node-data/dify'
 import { Logger } from '@nestjs/common'
 
-export const DifyDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const DifyDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   DifyDataSchema.shape,
 )
 

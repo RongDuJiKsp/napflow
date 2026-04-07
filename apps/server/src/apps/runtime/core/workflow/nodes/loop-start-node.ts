@@ -1,4 +1,4 @@
-import { ZodCheckComponentNodeMeta } from '@shared/common/workflow/core/component-node'
+import { ZodCheckComponentNodeDataTag } from '@shared/common/workflow/core/component-node'
 import type z from 'zod'
 import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
@@ -9,7 +9,7 @@ import { Logger } from '@nestjs/common'
 import { merge } from 'lodash-es'
 
 // 使用 MetaSchema.extend(sharedSchema) 做兼容
-export const LoopStartDataCtxSchema = ZodCheckComponentNodeMeta.extend(
+export const LoopStartDataCtxSchema = ZodCheckComponentNodeDataTag.extend(
   LoopStartDataSchema.shape,
 )
 

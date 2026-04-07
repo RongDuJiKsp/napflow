@@ -58,7 +58,7 @@ export const getLinkedLastNode = <
 export const useLoopNodeOperator = () => {
   const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
   const { deleteNodeAndChildren } = useCommContainerNodeOperation()
-  const handleAddLoopNode = useCallback(
+  const handleMoveConstructLoopNode = useCallback(
     (loopNode: WorkflowNode) => {
       // 设置容器节点的初始宽高，配合 NodeResizer 使用
       loopNode.style = { ...loopNode.style, width: 500, height: 150 }
@@ -150,5 +150,9 @@ export const useLoopNodeOperator = () => {
     [deleteNodeAndChildren, reactflow],
   )
 
-  return { handleAddLoopNode, handleAddNodeToLoop, handleDeleteLoopNode }
+  return {
+    handleMoveConstructLoopNode,
+    handleAddNodeToLoop,
+    handleDeleteLoopNode,
+  }
 }

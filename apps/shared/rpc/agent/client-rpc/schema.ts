@@ -1,10 +1,12 @@
 import { ZodCheckWorkflowAppDraft } from '@shared/common/workflow/base'
+import { NodeClassic } from '@shared/common/workflow/core'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
 import { ZodCheckXYPosition } from '@shared/common/workflow/core/re-export'
 import z from 'zod'
 
 export const ZodClientRpcNullRequest = z.tuple([])
-export const defineZodClientRpcRequest = <T extends z.ZodTypeAny>(data: T) => z.tuple([data])
+export const defineZodClientRpcRequest = <T extends z.ZodTypeAny>(data: T) =>
+  z.tuple([data])
 export const defineZodClientRpcResponse = <T extends z.ZodTypeAny>(data: T) =>
   z.object({
     data: data.optional(),
@@ -20,19 +22,63 @@ export const ZodToolSchemaAddCustomNode = z.object({
 export type ToolSchemaAddCustomNode = z.infer<
   typeof ZodToolSchemaAddCustomNode
 >
-export const ZodRpcAddCustomNodeRequest = defineZodClientRpcRequest(ZodToolSchemaAddCustomNode)
-export const ZodRpcAddCustomNodeResponse = defineZodClientRpcResponse(z.object({
-  nodeId: z.string(),
-}))
+export const ZodRpcAddCustomNodeRequest = defineZodClientRpcRequest(
+  ZodToolSchemaAddCustomNode,
+)
+export const ZodRpcAddCustomNodeResponse = defineZodClientRpcResponse(
+  z.object({
+    nodeId: z.string(),
+  }),
+)
 
 // connectNode
-export const ZodRpcConnectNodeRequest = defineZodClientRpcRequest(z.object({
-  source: z.string(),
-  sourceHandle: z.string().nullable(),
-  target: z.string(),
-  targetHandle: z.string().nullable(),
-}))
+export const ZodRpcConnectNodeRequest = defineZodClientRpcRequest(
+  z.object({
+    source: z.string(),
+    sourceHandle: z.string().nullable(),
+    target: z.string(),
+    targetHandle: z.string().nullable(),
+  }),
+)
 export const ZodRpcConnectNodeResponse = defineZodClientRpcResponse(z.void())
+
+// deleteEdge
+export const ZodRpcDeleteEdgeRequest = defineZodClientRpcRequest(
+  z.object({
+    edgeId: z.string(),
+  }),
+)
+export const ZodRpcDeleteEdgeResponse = defineZodClientRpcResponse(z.void())
+
+// deleteNode
+export const ZodRpcDeleteNodeRequest = defineZodClientRpcRequest(
+  z.object({
+    nodeId: z.string(),
+  }),
+)
+export const ZodRpcDeleteNodeResponse = defineZodClientRpcResponse(z.void())
+
+// editNodeData
+export const ZodRpcEditNodeDataRequest = defineZodClientRpcRequest(
+  z.object({
+    nodeId: z.string(),
+    data: z.record(z.string(), z.unknown()),
+  }),
+)
+export const ZodRpcEditNodeDataResponse = defineZodClientRpcResponse(z.void())
+
+// readNodeSchema
+export const ZodRpcReadNodeSchemaRequest = defineZodClientRpcRequest(
+  z.object({
+    nodeId: z.string(),
+  }),
+)
+export const ZodRpcReadNodeSchemaResponse = defineZodClientRpcResponse(
+  z.object({
+    nodeType: z.enum(NodeClassic),
+    nodeDataSchema: z.unknown(),
+  }),
+)
 
 // readCurrent
 export const ZodRpcReadCurrentRequest = ZodClientRpcNullRequest

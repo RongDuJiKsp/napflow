@@ -19,8 +19,8 @@ export class JwtTokenPipe<R extends JwtPayload> implements PipeTransform<
   }
 }
 
-export type JwtBodyConfig = {
-  zod?: z.ZodType;
+export type JwtBodyConfig<S extends z.ZodRawShape = z.ZodRawShape> = {
+  zod?: z.ZodObject<S>;
 }
 
 export const JwtBody = ({ zod }: JwtBodyConfig) =>

@@ -13,7 +13,7 @@ type NoteHandlerProps = ItemParams<{ id: string } & NoteOperators>
 
 const NoteContextMenu = () => {
   const { submitSyncDraft } = useWorkflowDraft()
-  const { deleteNoteNode } = useNoteNodeOperation()
+  const { deleteNoteNodeById } = useNoteNodeOperation()
 
   const handleToggleEdit = useCallback(({ props }: NoteHandlerProps) => {
     props?.onToggleEdit?.()
@@ -23,10 +23,10 @@ const NoteContextMenu = () => {
     ({ props }: NoteHandlerProps) => {
       if (!props?.id) return
       const nodeId = props.id
-      deleteNoteNode(nodeId)
+      deleteNoteNodeById(nodeId)
       submitSyncDraft()
     },
-    [deleteNoteNode, submitSyncDraft],
+    [deleteNoteNodeById, submitSyncDraft],
   )
 
   return (
