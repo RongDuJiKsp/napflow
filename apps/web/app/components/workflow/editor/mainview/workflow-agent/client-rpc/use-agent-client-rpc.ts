@@ -21,8 +21,11 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
   const reactflow = useAppReactflowInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
   const { handleConnect } = useWorkflowViewOperations()
-  const { handleDeleteNode, handleCheckedEditNode, handleGetWorkflowNodeJsonSchema }
-    = useWorkflowCommOperations()
+  const {
+    handleDeleteNode,
+    handleCheckedEditNode,
+    handleGetWorkflowNodeJsonSchema,
+  } = useWorkflowCommOperations()
   const { handleMoveConstructorNode: handleMoveConstructorCustomNode }
     = useComponentNodeOperations()
   const { capture } = useWorkflowHistory()
@@ -66,17 +69,19 @@ export const useAgentClientRPCImpl = (socket?: Socket) => {
 
   const readNodeSchema = useCallback<
     ClientRPCListenerHandler<'readNodeSchema'>
-  >(({ nodeId }) => {
-    const node = reactflow.getNode(nodeId)
-    if (!node) return ClientRpc.fail('node not found')
-    const schema = handleGetWorkflowNodeJsonSchema(node)
-    if(!schema)
-      return ClientRpc.fail(`unsupported node type: ${node.type}`)
-    return ClientRpc.success({
-      nodeType: node.type,
-      nodeDataSchema: schema,
-    })
-  }, [reactflow, handleGetWorkflowNodeJsonSchema])
+  >(
+    ({ nodeId }) => {
+      const node = reactflow.getNode(nodeId)
+      if (!node) return ClientRpc.fail('node not found')
+      const schema = handleGetWorkflowNodeJsonSchema(node)
+      if (!schema) return ClientRpc.fail(`unsupported node type: ${node.type}`)
+      return ClientRpc.success({
+        nodeType: node.type,
+        nodeDataSchema: schema,
+      })
+    },
+    [reactflow, handleGetWorkflowNodeJsonSchema],
+  )
 
   const deleteEdge = useCallback<ClientRPCListenerHandler<'deleteEdge'>>(
     ({ edgeId }) => {

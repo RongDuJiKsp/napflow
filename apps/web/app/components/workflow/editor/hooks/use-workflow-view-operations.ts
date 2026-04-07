@@ -8,9 +8,11 @@ import type { ComponentNode } from '../component-nodes/types'
 import { useWorkflowDraft } from './use-workflow-draft'
 import { useEditorStore } from './use-editor-store'
 import { useCommNodeOperation } from './use-comm-node-operation'
-import { defineZodCheckComponentNodeData, hiddenNodeTypes } from '@shared/common/workflow/core/component-node'
+import {
+  defineZodCheckComponentNodeData,
+  hiddenNodeTypes,
+} from '@shared/common/workflow/core/component-node'
 import { safeAssertIsComponentNode } from '../utils/node-asserts'
-import { useAppReactflowInstance } from './reactflow-re-exports'
 import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
 import z from 'zod'
 import { ComponentNodeCreatorMap } from '../component-nodes/constants'
@@ -60,7 +62,6 @@ export const useWorkflowCommOperations = () => {
     handleDeleteNode: handleComponentNodeDelete,
     handleOverwriteNodeData: handleComponentNodeOverwriteData,
   } = useComponentNodeOperations()
-  const reactflow = useAppReactflowInstance()
 
   const { deleteNode: deleteCommNode } = useCommNodeOperation()
 
@@ -92,16 +93,14 @@ export const useWorkflowCommOperations = () => {
     [handleComponentNodeOverwriteData],
   )
 
-  const handleGetWorkflowNodeJsonSchema = useCallback((
-    node: WorkflowNode,
-  ) => {
+  const handleGetWorkflowNodeJsonSchema = useCallback((node: WorkflowNode) => {
     if (node.type === NodeClassic.Component) {
       const componentNode = safeAssertIsComponentNode(node)
       if (!componentNode) return null
-      const componentSchema = defineZodCheckComponentNodeData(ComponentNodeCreatorMap[componentNode.data.type].schema) as z.ZodObject
-      return z.toJSONSchema(
-        defineZodCheckWorkflowNodeData(componentSchema),
-      )
+      const componentSchema = defineZodCheckComponentNodeData(
+        ComponentNodeCreatorMap[componentNode.data.type].schema,
+      ) as z.ZodObject
+      return z.toJSONSchema(defineZodCheckWorkflowNodeData(componentSchema))
     }
 
     if (node.type === NodeClassic.Note)
@@ -109,7 +108,11 @@ export const useWorkflowCommOperations = () => {
     return null
   }, [])
 
-  return { handleDeleteNode, handleCheckedEditNode, handleGetWorkflowNodeJsonSchema }
+  return {
+    handleDeleteNode,
+    handleCheckedEditNode,
+    handleGetWorkflowNodeJsonSchema,
+  }
 }
 
 export const useWorkflowViewOperations = () => {

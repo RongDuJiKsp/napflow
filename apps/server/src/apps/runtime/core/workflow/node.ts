@@ -29,11 +29,12 @@ export const defineCommNodeSchema = <
     type: z.enum([NodeClassic.Component]),
     data,
   })
-export type CommNodeType<T extends ComponentNodeDataTag = ComponentNodeDataTag>
-  = Omit<Node, 'position' | 'type'> & {
-    type: NodeClassic.Component;
-    data: T;
-  }
+export type CommNodeType<
+  T extends ComponentNodeDataTag = ComponentNodeDataTag,
+> = Omit<Node, 'position' | 'type'> & {
+  type: NodeClassic.Component;
+  data: T;
+}
 
 export const CommEdgeSchema = z.object({
   id: z.string(),

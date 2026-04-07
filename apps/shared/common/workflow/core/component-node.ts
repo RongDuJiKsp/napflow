@@ -60,11 +60,18 @@ export const ZodCheckComponentNodeDataExtra = z.object({
   title: z.string(),
   desc: z.string(),
 })
-export type ComponentNodeDataExtra = z.infer<typeof ZodCheckComponentNodeDataExtra>
+export type ComponentNodeDataExtra = z.infer<
+  typeof ZodCheckComponentNodeDataExtra
+>
 
-export const ZodCheckComponentNodeDataMeta = ZodCheckComponentNodeDataTag.extend(ZodCheckComponentNodeDataExtra.shape)
-export type ComponentNodeDataMeta = z.infer<typeof ZodCheckComponentNodeDataMeta>
+export const ZodCheckComponentNodeDataMeta
+  = ZodCheckComponentNodeDataTag.extend(ZodCheckComponentNodeDataExtra.shape)
+export type ComponentNodeDataMeta = z.infer<
+  typeof ZodCheckComponentNodeDataMeta
+>
 
 // export
-export const defineZodCheckComponentNodeData = <T extends z.ZodObject>(data: T) => ZodCheckComponentNodeDataMeta.extend(data.shape)
+export const defineZodCheckComponentNodeData = <T extends z.ZodObject>(
+  data: T,
+) => ZodCheckComponentNodeDataMeta.extend(data.shape)
 export type ComponentNodeData<T = unknown> = ComponentNodeDataMeta & T
