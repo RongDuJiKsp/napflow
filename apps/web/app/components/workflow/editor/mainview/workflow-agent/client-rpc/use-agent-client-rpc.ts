@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import type { Socket } from 'socket.io-client'
 
 import { createComponentNode } from '@workflow/editor/component-nodes/utils/node'
-import { useAppReactflowInstance } from '@workflow/editor/hooks/reactflow-re-exports'
+import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
 import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 import {
   AgentClientRPCListener,
@@ -18,7 +18,7 @@ import {
 import { useComponentNodeOperations } from '../../../component-nodes/hooks/use-component-node-operations'
 
 export const useAgentClientRPCImpl = (socket?: Socket) => {
-  const reactflow = useAppReactflowInstance()
+  const reactflow = useWorkflowEditorInstance()
   const { getCurrentStateSnapshot, submitSyncDraft } = useWorkflowDraft()
   const { handleConnect } = useWorkflowViewOperations()
   const {

@@ -1,4 +1,4 @@
-import { useReactFlow } from '@xyflow/react'
+import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
 import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
 import { useCallback } from 'react'
 import { createComponentNode } from '@workflow/editor/component-nodes/utils/node'
@@ -56,7 +56,7 @@ export const getLinkedLastNode = <
 }
 
 export const useLoopNodeOperator = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const { deleteNodeAndChildren } = useCommContainerNodeOperation()
   const handleMoveConstructLoopNode = useCallback(
     (loopNode: WorkflowNode) => {

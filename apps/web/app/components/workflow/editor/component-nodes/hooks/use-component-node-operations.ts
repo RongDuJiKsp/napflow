@@ -1,17 +1,19 @@
 import { useCallback } from 'react'
 import type { ComponentNode } from '../types'
 import { ComponentNodeCreatorMap } from '../constants'
-import { useReactFlow } from '@xyflow/react'
+import { useWorkflowEditorInstance } from '../../hooks/reactflow-re-exports'
 import { createWorkflowEdge } from '../../utils/nodes'
-import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
-import { ComponentNodesEnum, defineZodCheckComponentNodeData } from '@shared/common/workflow/core/component-node'
+import {
+  ComponentNodesEnum,
+  defineZodCheckComponentNodeData,
+} from '@shared/common/workflow/core/component-node'
 import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../nodes/iterate/hooks/use-iterate-operator'
 import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
 
 export const useComponentNodeOperations = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const { editNode } = useStoreImmerCurd()
   const { handleDeleteLoopNode, handleMoveConstructLoopNode }
     = useLoopNodeOperator()
@@ -31,7 +33,9 @@ export const useComponentNodeOperations = () => {
 
   const handleOverwriteNodeData = useCallback(
     (node: ComponentNode, data: unknown) => {
-      const compSchema = defineZodCheckComponentNodeData(ComponentNodeCreatorMap[node.data.type].schema)
+      const compSchema = defineZodCheckComponentNodeData(
+        ComponentNodeCreatorMap[node.data.type].schema,
+      )
       const schema = defineZodCheckWorkflowNodeData(compSchema)
 
       const parsedData = schema.safeParse(data)
@@ -114,7 +118,7 @@ export const useComponentNodeOperations = () => {
 }
 
 export const useComponentContainerNodeOperations = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const moveConstructorNodeAndChildren = useCallback(
     (parentNode: ComponentNode, subNode: ComponentNode) => {
       parentNode.style = { ...parentNode.style, width: 500, height: 150 }

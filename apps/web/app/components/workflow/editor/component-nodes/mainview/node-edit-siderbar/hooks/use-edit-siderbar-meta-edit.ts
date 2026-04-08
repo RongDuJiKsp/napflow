@@ -4,12 +4,12 @@ import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 import type { ComponentNode } from '@workflow/editor/component-nodes/types'
 
 export const useEditSiderbarMetaEdit = (nodeId: string) => {
-  const { editNode } = useStoreImmerCurd<ComponentNode>()
+  const { editNode } = useStoreImmerCurd()
   const { submitSyncDraft } = useWorkflowDraft()
 
   const handleChangeTitle = useCallback(
     (title: string) => {
-      editNode(nodeId, (draft) => {
+      editNode<ComponentNode>(nodeId, (draft) => {
         draft.data.title = title
       })
       submitSyncDraft()
@@ -19,7 +19,7 @@ export const useEditSiderbarMetaEdit = (nodeId: string) => {
 
   const handleChangeDescription = useCallback(
     (description: string) => {
-      editNode(nodeId, (draft) => {
+      editNode<ComponentNode>(nodeId, (draft) => {
         draft.data.desc = description
       })
       submitSyncDraft()

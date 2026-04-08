@@ -4,8 +4,8 @@ import { produce } from 'immer'
 import { useCallback } from 'react'
 import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
 import {
-  useAppReactflowFlowStoreApi,
-  useAppReactflowInstance,
+  useWorkflowEditorInstance,
+  useWorkflowStoreApi,
 } from '@workflow/editor/hooks/reactflow-re-exports'
 import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 
@@ -132,8 +132,8 @@ export const layerNodes = <
 }
 
 export const useEditorViewOperators = () => {
-  const storeApi = useAppReactflowFlowStoreApi()
-  const reactflow = useAppReactflowInstance()
+  const storeApi = useWorkflowStoreApi()
+  const reactflow = useWorkflowEditorInstance()
   const { submitSyncDraft } = useWorkflowDraft()
 
   const handleFocusOrigin = useCallback(() => {

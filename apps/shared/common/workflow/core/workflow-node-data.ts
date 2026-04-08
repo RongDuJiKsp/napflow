@@ -36,10 +36,16 @@ export type WorkflowEdgeMeta = z.infer<typeof ZodCheckWorkflowEdgeMeta>
 
 // export
 
-export const defineZodCheckWorkflowNodeData = <S extends z.ZodRawShape, T extends z.ZodObject<S>>(
+export const defineZodCheckWorkflowNodeData = <
+  S extends z.ZodRawShape,
+  T extends z.ZodObject<S>,
+>(
   data: T,
 ) => ZodCheckWorkflowNodeMeta.extend(data.shape)
-export const defineZodCheckWorkflowEdgeData = <S extends z.ZodRawShape, T extends z.ZodObject<S>>(
+export const defineZodCheckWorkflowEdgeData = <
+  S extends z.ZodRawShape,
+  T extends z.ZodObject<S>,
+>(
   data: T,
 ) => ZodCheckWorkflowEdgeMeta.extend(data.shape)
 

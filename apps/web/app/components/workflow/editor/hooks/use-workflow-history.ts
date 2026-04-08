@@ -5,11 +5,11 @@ import {
   type WorkflowEditorHistoryState,
   WorkflowHistoryActionTag,
 } from '../store/workflow-history'
-import { useAppReactflowFlowStoreApi } from './reactflow-re-exports'
+import { useWorkflowStoreApi } from './reactflow-re-exports'
 import { useStore } from 'zustand'
 
 export const useWorkflowHistory = () => {
-  const workflowStore = useAppReactflowFlowStoreApi()
+  const workflowStore = useWorkflowStoreApi()
   const workflowExtStore = useWorkflowExtStore()
   const historyStore = useWorkflowHistoryStore()
   const title = useStore(historyStore, state => state.title)

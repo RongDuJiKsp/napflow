@@ -1,9 +1,9 @@
-import { useReactFlow } from '@xyflow/react'
+import { useWorkflowEditorInstance } from './reactflow-re-exports'
 import { useCallback } from 'react'
-import type { WorkflowEdge, WorkflowNode } from '../types'
+import type { WorkflowNode } from '../types'
 
 export const useCommNodeOperation = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const deleteNodeById = useCallback(
     (nodeId: string) => {
       reactflow.setEdges(edges =>
@@ -27,7 +27,7 @@ export const useCommNodeOperation = () => {
 }
 
 export const useCommContainerNodeOperation = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const deleteNodeAndChildrenById = useCallback(
     (nodeId: string) => {
       const nodes = reactflow.getNodes()

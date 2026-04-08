@@ -1,5 +1,5 @@
 import type { Connection, NodeChange } from '@xyflow/react'
-import { useReactFlow } from '@xyflow/react'
+import { useWorkflowEditorInstance } from './reactflow-re-exports'
 import { useCallback } from 'react'
 import type { WorkflowEdge, WorkflowNode } from '../types'
 import { NodeClassic } from '@shared/common/workflow/core'
@@ -85,7 +85,7 @@ export const useWorkflowCommOperations = () => {
         handleComponentNodeOverwriteData(node as ComponentNode, data)
         return
       }
-      if(node.type === NodeClassic.Note) {
+      if (node.type === NodeClassic.Note) {
         checkedEditNode(node as WorkflowNode<NoteData>, data)
         return
       }
@@ -117,7 +117,7 @@ export const useWorkflowCommOperations = () => {
 }
 
 export const useWorkflowViewOperations = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const editorStore = useEditorStore()
   const { submitSyncDraft } = useWorkflowDraft()
   const { handleConnect: handleComponentNodeConnect }

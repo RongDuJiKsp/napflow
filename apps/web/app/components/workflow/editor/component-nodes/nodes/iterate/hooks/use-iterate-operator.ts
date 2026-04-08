@@ -1,5 +1,5 @@
-import { useReactFlow } from '@xyflow/react'
-import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
+import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
+import type { WorkflowNode } from '@workflow/editor/types'
 import { useCallback } from 'react'
 import {
   createComponentNode,
@@ -16,7 +16,7 @@ import { safeAssertWorkflowNodeAsComponentNode } from '@workflow/editor/componen
 import { useComponentContainerNodeOperations } from '@workflow/editor/component-nodes/hooks/use-component-node-operations'
 
 export const useIterateNodeOperator = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const { moveConstructorNodeAndChildren }
     = useComponentContainerNodeOperations()
   const { deleteNodeAndChildren } = useCommContainerNodeOperation()
