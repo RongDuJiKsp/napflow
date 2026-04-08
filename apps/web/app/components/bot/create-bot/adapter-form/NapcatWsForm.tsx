@@ -18,7 +18,7 @@ const NapcatWsForm = () => {
   return (
     <div className="space-y-4">
       <TextField
-        value={config.endpoint?.wsUrl}
+        value={config.endpoint?.wsUrl ?? ''}
         onChange={handleEndpointWsUrlChange}
       >
         <Label className="block text-sm font-medium text-purple-700 mb-2">
