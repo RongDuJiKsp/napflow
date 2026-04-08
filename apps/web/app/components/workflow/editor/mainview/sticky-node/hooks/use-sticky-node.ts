@@ -4,9 +4,7 @@ import { nodeTypes } from '@workflow/editor/constants'
 import { useMemo } from 'react'
 import { useEventListener } from 'ahooks'
 import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
-import type {
-  WorkflowProps,
-} from '@workflow/editor/types'
+import type { WorkflowProps } from '@workflow/editor/types'
 import { useWorkflowDraft } from '@workflow/editor/hooks/use-workflow-draft'
 import { overwrite } from '@/utils/comm'
 import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'

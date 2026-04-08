@@ -14,7 +14,8 @@ export const useWorkflowStore = <Selected>(
   equalityFn?: (a: Selected, b: Selected) => boolean,
 ) => {
   return useStore<Selected>(
-    state => selector(state as unknown as ReactFlowState<WorkflowNode, WorkflowEdge>),
+    state =>
+      selector(state as unknown as ReactFlowState<WorkflowNode, WorkflowEdge>),
     equalityFn,
   )
 }
