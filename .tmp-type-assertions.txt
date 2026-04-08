@@ -1,0 +1,79 @@
+apps/server/src/apps/agent/connect/client-rpc/client-rpc.ts:43: [as] handler as ClientRPCHandler<K>
+apps/server/src/apps/agent/connect/client-rpc/client-rpc.ts:51: [as] Object.keys(this.methods) as (keyof ClientRPCMethods)[]
+apps/server/src/apps/agent/connect/tools/agent-rpc-tool.ts:13: [as] Object.keys(CLIENT_RPC_METHODS) as (keyof ClientRPCMethods)[]
+apps/server/src/apps/agent/connect/tools/agent-rpc-tool.ts:75: [as] args as z.output< ClientRPCMethods[typeof method]['request'] >
+apps/server/src/apps/health/check-gc.service.ts:25: [as] entry as any
+apps/server/src/apps/runtime/bot/adapter/napcatws/index.ts:100: [as] [this.healthChecker].filter(Boolean) as PluginService<[]>[]
+apps/server/src/apps/runtime/core/workflow/nodes/dify-node.ts:80: [as] (await resp.json()) as { answer?: string }
+apps/server/src/apps/runtime/core/workflow/nodes/dify-node.ts:84: [as] (await resp.json()) as { data?: { outputs?: unknown } }
+apps/server/src/apps/runtime/core/workflow/nodes/json-read-node.ts:43: [as] parsed as Record<string, unknown>
+apps/server/src/apps/runtime/core/workflow/nodes/json-read-node.ts:50: [as] sourceRaw as Record<string, unknown>
+apps/server/src/apps/runtime/core/workflow/pool.ts:55: [as] node as CommNodeType
+apps/server/src/apps/runtime/core/workflow/pool.ts:74: [as] commNodes.filter( node => node.role === CommNodeRole.Trigger, ) as (CommNode & CommTrigger)[]
+apps/server/src/apps/zod/middleware/zod.filter.ts:56: [as] exception.getZodError() as ZodError
+apps/shared/common/health-check/health-check.ts:32: [as] { healthy: 'healthy', warning: 'warning', critical: 'critical', } as const
+apps/web/app/components/_base/input/Password.tsx:20: [as] { checks: {}, strength: 0 } as Ret
+apps/web/app/components/_base/input/Password.tsx:23: [as] { checks, strength } as Ret
+apps/web/app/components/bot/create-bot/hooks/use-create-bot.ts:27: [as] useContext(AdapterConfigContecxt) as T
+apps/web/app/components/bot/create-bot/hooks/use-create-bot.ts:30: [as] useContext(AdapterConfigSetterContext) as Dispatch<SetStateAction<T>>
+apps/web/app/components/setting/models/hooks/use-api-key-config-form.ts:88: [as] (isEditMode ? submitUpdateForm : submitCreateForm) as typeof submitUpdateForm
+apps/web/app/components/workflow/editor/component-nodes/common/input-with-env/lex-plugins/EnvVarMenuPlugin.tsx:158: [as] {} as Record<string, { title: string; options: VarOption[] }>
+apps/web/app/components/workflow/editor/component-nodes/common/input-with-env/lex-plugins/EnvVarSyncPlugin.tsx:22: [as] dfs.node as LexEnvVarNode
+apps/web/app/components/workflow/editor/component-nodes/constants.ts:17: [as] { [ComponentNodesEnum.Trigger]: TriggerNodeCreator, [ComponentNodesEnum.Timer]: TimerNodeCreator, [ComponentNodesEnum.Reply]: ReplyNodeCreator, [ComponentNodesEnum.If]: IfNodeCreator, [ComponentNodesEnum.Loop]: LoopNodeC
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-curd.ts:21: [as] node as ComponentNode
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-curd.ts:34: [as] wNodes.filter( node => node.type === NodeClassic.Component, ) as ComponentNode[]
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:50: [as] getArrayElementVarType(sourceVar.type) as VarTypes
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:74: [as] [...originalVars, iterateStartVar].filter(Boolean) as Var[]
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:83: [as] {} as Record<string, boolean>
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:97: [as] {} as Record<string, string[]>
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:105: [as] {} as Record<string, string[]>
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:113: [as] {} as Record<string, ComponentNode>
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-env.ts:131: [as] {} as Record<string, VarCtx[]>
+apps/web/app/components/workflow/editor/component-nodes/hooks/use-component-node-operations.ts:48: [as] draft.data as Record<string, unknown>
+apps/web/app/components/workflow/editor/component-nodes/mainview/node-context-menu/hooks/use-component-node-context-menu.ts:51: [as] node?.data.type as ComponentNodesEnum
+apps/web/app/components/workflow/editor/component-nodes/mainview/node-context-menu/hooks/use-component-node-context-menu.ts:61: [as] node?.data.type as ComponentNodesEnum
+apps/web/app/components/workflow/editor/component-nodes/mainview/node-context-menu/index.tsx:25: [as] key as ComponentNodesEnum
+apps/web/app/components/workflow/editor/component-nodes/mainview/node-context-menu/index.tsx:36: [as] key as ComponentNodesEnum
+apps/web/app/components/workflow/editor/component-nodes/mainview/node-edit-siderbar/index.tsx:86: [as] currNode.data as ComponentNode['data']
+apps/web/app/components/workflow/editor/component-nodes/nodes/dify/panel.tsx:32: [as] v as DifyMode
+apps/web/app/components/workflow/editor/component-nodes/nodes/if/hooks/use-if-curd.ts:25: [as] value as CompareOperator
+apps/web/app/components/workflow/editor/component-nodes/nodes/if/panel.tsx:20: [as] [ 'string_equal', 'string_not_equal', 'contains', 'contained_by', 'not_contains', 'not_contained_by', ] as CompareOperator[]
+apps/web/app/components/workflow/editor/component-nodes/nodes/if/panel.tsx:29: [as] [ 'number_gt', 'number_lt', 'number_gte', 'number_lte', ] as CompareOperator[]
+apps/web/app/components/workflow/editor/component-nodes/nodes/if/panel.tsx:93: [as] v as string
+apps/web/app/components/workflow/editor/component-nodes/nodes/iterate-start/hooks/use-iterate-start-output-vars.ts:22: [as] [outputVar].filter(Boolean) as Var[]
+apps/web/app/components/workflow/editor/component-nodes/nodes/iterate/hooks/use-iterate-operator.ts:49: [as] allNodes.filter( n => n.parentId === iterateNodeId, ) as ComponentNode[]
+apps/web/app/components/workflow/editor/component-nodes/nodes/json-read/panel.tsx:111: [as] v as VarTypes
+apps/web/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator.ts:90: [as] allNodes.filter( n => n.parentId === loopNodeId, ) as ComponentNode[]
+apps/web/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator.ts:145: [as] loopNode as ComponentNode
+apps/web/app/components/workflow/editor/component-nodes/nodes/reply/panel.tsx:29: [as] v as ReplyTarget
+apps/web/app/components/workflow/editor/component-nodes/nodes/timer/panel.tsx:25: [as] v as TimerTriggerMode
+apps/web/app/components/workflow/editor/component-nodes/nodes/trigger/panel.tsx:28: [as] v as TriggerOn
+apps/web/app/components/workflow/editor/component-nodes/utils/node-asserts.ts:40: [as] node as NodeTypeForEnum[E]
+apps/web/app/components/workflow/editor/component-nodes/utils/node.ts:13: [angle] <ComponentNode<T>['data']>{ title: creator.label, desc: '', type: nodeClassic, vars: creator.env ?? [], expanded: false, ...(creator.create() as T), }
+apps/web/app/components/workflow/editor/component-nodes/utils/node.ts:19: [as] creator.create() as T
+apps/web/app/components/workflow/editor/constants.ts:9: [as] { [NodeClassic.Component]: ComponentNodesNode, [NodeClassic.Note]: NoteNode, } as unknown as Record<NodeClassic, WorkflowReactComponent>
+apps/web/app/components/workflow/editor/constants.ts:9: [as] { [NodeClassic.Component]: ComponentNodesNode, [NodeClassic.Note]: NoteNode, } as unknown
+apps/web/app/components/workflow/editor/hooks/reactflow-re-exports.ts:18: [as] state as unknown as ReactFlowState<WorkflowNode, WorkflowEdge>
+apps/web/app/components/workflow/editor/hooks/reactflow-re-exports.ts:18: [as] state as unknown
+apps/web/app/components/workflow/editor/hooks/use-reactflow-ext.ts:76: [as] node as Draft<Cast>
+apps/web/app/components/workflow/editor/hooks/use-reactflow-ext.ts:101: [as] edge as Draft<Cast>
+apps/web/app/components/workflow/editor/hooks/use-workflow-view-operations.ts:74: [as] node as ComponentNode
+apps/web/app/components/workflow/editor/hooks/use-workflow-view-operations.ts:85: [as] node as ComponentNode
+apps/web/app/components/workflow/editor/hooks/use-workflow-view-operations.ts:89: [as] node as WorkflowNode<NoteData>
+apps/web/app/components/workflow/editor/hooks/use-workflow-view-operations.ts:158: [as] sourceNode as ComponentNode
+apps/web/app/components/workflow/editor/hooks/use-workflow-view-operations.ts:159: [as] targetNode as ComponentNode
+apps/web/app/components/workflow/editor/mainview/editor-panel-context-menu/CreateComponentNodeSubMenu.tsx:9: [as] key as ComponentNodesEnum
+apps/web/app/components/workflow/editor/mainview/editor-panel-context-menu/CreateComponentNodeSubMenu.tsx:11: [as] key as ComponentNodesEnum
+apps/web/app/components/workflow/editor/mainview/sticky-node/hooks/use-sticky-node.ts:70: [as] placedNode as ComponentNode
+apps/web/app/components/workflow/editor/mainview/sticky-node/hooks/use-sticky-node.ts:76: [as] placedNode as ComponentNode
+apps/web/app/components/workflow/editor/mainview/workflow-agent/AgentSelect.tsx:111: [as] value as AgentWsConnType
+apps/web/app/components/workflow/editor/mainview/workflow-agent/client-rpc/base.ts:83: [as] argsWithAck[ argsWithAck.length - 1 ] as RpcAck<unknown>
+apps/web/app/components/workflow/editor/mainview/workflow-agent/hooks/use-agent-ws-conn.ts:22: [as] type as AgentWsConnType
+apps/web/app/components/workflow/editor/mainview/workflow-agent/hooks/use-agent-ws-conn.ts:46: [angle] <Pick<WsConnectionRequest, 'auth' | 'model'>>{ auth: { token: localStorage.getItem('auth-token') }, model: { appId, recordId, }, }
+apps/web/app/components/workflow/editor/mainview/workflow-agent/hooks/use-agent-ws-conn.ts:60: [angle] <Pick<WsConnectionRequest, 'auth' | 'recovery'>>{ auth: { token: localStorage.getItem('auth-token') }, recovery: { socketSessionId: recoverId, appId, }, }
+apps/web/app/components/workflow/editor/mainview/workflow-env/index.tsx:117: [as] v as VarTypes
+apps/web/app/components/workflow/editor/note/hooks/use-note-node-operation.ts:26: [as] node as WorkflowNode<NoteData>
+apps/web/app/components/workflow/editor/utils/node-asserts.ts:16: [as] node as NodeTypeForEnum[E]
+apps/web/app/hooks/query/_base.ts:21: [as] res.data as QData
+apps/web/app/hooks/utils/use-immer.ts:43: [as] dispatch as (value: Value[Area]) => Value[Area]
+apps/web/utils/form.ts:19: [as] transform(obj) as PartialDeep<T>

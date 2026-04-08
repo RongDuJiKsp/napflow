@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { NodeGCPerformanceDetail,constants } from 'node:perf_hooks'
 import { PerformanceObserver } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'
@@ -22,10 +23,11 @@ export class CheckGcService {
       const entries = list.getEntries()
       entries.forEach((entry) => {
         if (entry.entryType === 'gc') {
-          const detail = (entry as any).detail
+          const measureEntry = entry as PerformanceMeasure
+          const detail = measureEntry.detail as NodeGCPerformanceDetail
           const gcMetric: GCMetric = {
             timestamp: Date.now() / 1000,
-            type: this.getGCTypeName(detail?.type || 0),
+            type: this.getGCTypeName(detail.kind || 0),
             duration: entry.duration,
             flags: detail?.flags || 0,
           }
@@ -41,11 +43,10 @@ export class CheckGcService {
 
   private getGCTypeName(type: number): string {
     const gcTypes: Record<number, string> = {
-      1: 'Scavenge',
-      2: 'Mark-Sweep',
-      4: 'Incremental-Marking',
-      8: 'Weak-Processing',
-      15: 'All',
+      [constants.NODE_PERFORMANCE_GC_MAJOR]: 'Major GC',
+      [constants.NODE_PERFORMANCE_GC_MINOR]: 'Minor GC',
+      [constants.NODE_PERFORMANCE_GC_INCREMENTAL]: 'Incremental GC',
+      [constants.NODE_PERFORMANCE_GC_WEAKCB]: 'Weak Callback GC',
     }
     return gcTypes[type] || `Unknown(${type})`
   }
