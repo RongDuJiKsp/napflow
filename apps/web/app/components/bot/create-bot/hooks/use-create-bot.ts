@@ -11,24 +11,16 @@ import {
   useAreaChangeHandler,
   useImmerCallback,
 } from '@/app/hooks/utils/use-immer'
-import type { Dispatch, SetStateAction } from 'react'
-import { createContext, useCallback, useContext } from 'react'
-import { noop } from 'lodash-es'
+import { useCallback } from 'react'
 import { jsonQ } from '@/utils/net'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
 import { App } from 'antd'
 import z from 'zod'
 import { useRouter } from 'next/navigation'
+import { createContextState } from '@/utils/react-wrap'
 
-export const AdapterConfigContecxt = createContext({})
-export const AdapterConfigSetterContext
-  = createContext<(config: CreateBotReq['adapterConfig']) => void>(noop)
-export const useCreateBotConfig = <T>() => {
-  return useContext(AdapterConfigContecxt) as T
-}
-export const useCreateBotSetConfig = <T>() => {
-  return useContext(AdapterConfigSetterContext) as Dispatch<SetStateAction<T>>
-}
+const { Provider: AdapterConfigStateProvider, useValue: useCreateBotConfig, useSetter: useCreateBotSetConfig } = createContextState<CreateBotReq['adapterConfig']>()
+export{ AdapterConfigStateProvider, useCreateBotConfig, useCreateBotSetConfig }
 
 const onSubmit = async (form: CreateBotReq) =>
   await jsonQ.Post<CreateBotResp>('/bot/record/create', form)

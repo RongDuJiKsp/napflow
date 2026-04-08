@@ -1,6 +1,7 @@
 import type { NapcatWsAdapterConfig } from '@shared/common/bot/napcatws-adapter'
 import { useCreateBotConfig, useCreateBotSetConfig } from './use-create-bot'
 import { useImmerCallback } from '@/app/hooks/utils/use-immer'
+import type { PartialDeep } from 'type-fest'
 
 export const defaultNapcatForm = (): Omit<
   NapcatWsAdapterConfig,
@@ -14,7 +15,7 @@ export const defaultNapcatForm = (): Omit<
 })
 
 export const useNapcatWsConfigForm = () => {
-  const config = useCreateBotConfig<NapcatWsAdapterConfig>()
+  const config = useCreateBotConfig() as PartialDeep<NapcatWsAdapterConfig>
   const setConfig = useCreateBotSetConfig<NapcatWsAdapterConfig>()
   const handleEndpointWsUrlChange = useImmerCallback(
     setConfig,

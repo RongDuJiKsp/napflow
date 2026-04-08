@@ -1,8 +1,8 @@
 'use client'
 import { memo, useMemo } from 'react'
 import {
-  AdapterConfigContecxt,
-  AdapterConfigSetterContext,
+
+  AdapterConfigStateProvider,
   useCreateBot,
 } from './hooks/use-create-bot'
 import { adapterComponent } from './constances'
@@ -168,13 +168,9 @@ const CreateBotWindow = () => {
                 连接配置
               </div>
 
-              <AdapterConfigContecxt.Provider value={form.adapterConfig}>
-                <AdapterConfigSetterContext.Provider
-                  value={adapterConfigChangeDispath}
-                >
-                  <ConfigArea />
-                </AdapterConfigSetterContext.Provider>
-              </AdapterConfigContecxt.Provider>
+              <AdapterConfigStateProvider value={form.adapterConfig} setValue={adapterConfigChangeDispath}>
+                <ConfigArea />
+              </AdapterConfigStateProvider>
             </div>
           </div>
         </div>
