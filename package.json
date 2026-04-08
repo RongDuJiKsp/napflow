@@ -3,9 +3,9 @@
   "version": "1.0.4",
   "description": "",
   "scripts": {
-    "image:web": "docker build --build-arg NPM_REGISTRY -f apps/web/Dockerfile .  -t napflow-web",
-    "image:server": "docker build --build-arg NPM_REGISTRY -f apps/server/Dockerfile .  -t napflow-server",
-    "image:proxy": "docker build --build-arg NPM_REGISTRY -f apps/proxy/Dockerfile .  -t napflow-proxy",
+    "image:web": "docker build --build-arg NPM_REGISTRY=${NPM_REGISTRY:-https://registry.npmjs.org} -f apps/web/Dockerfile .  -t napflow-web",
+    "image:server": "docker build --build-arg NPM_REGISTRY=${NPM_REGISTRY:-https://registry.npmjs.org} -f apps/server/Dockerfile .  -t napflow-server",
+    "image:proxy": "docker build --build-arg NPM_REGISTRY=${NPM_REGISTRY:-https://registry.npmjs.org} -f apps/proxy/Dockerfile .  -t napflow-proxy",
     "image:all": "pnpm run image:web && pnpm run image:server && pnpm run image:proxy",
     "lint:all": "pnpm -r run lint:all",
     "test": "npx vitest run",
