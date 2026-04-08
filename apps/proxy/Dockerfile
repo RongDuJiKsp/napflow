@@ -18,5 +18,6 @@ COPY apps/proxy/.env.production apps/proxy/.env.production
 WORKDIR /app/apps/proxy
 RUN pnpm build
 
-EXPOSE 80
+ENV WEBUI_PORT=80
+EXPOSE ${WEBUI_PORT}
 CMD ["pnpm", "start:prod"]
