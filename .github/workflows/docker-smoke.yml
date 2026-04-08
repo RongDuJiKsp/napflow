@@ -29,3 +29,10 @@ jobs:
           context: .
           file: apps/server/Dockerfile
           push: false
+
+      - name: Build proxy image (smoke)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/proxy/Dockerfile
+          push: false
