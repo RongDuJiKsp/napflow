@@ -1,11 +1,12 @@
-import { useEdges, useNodes, useReactFlow } from '@xyflow/react'
+import { useEdges, useNodes } from '@xyflow/react'
 import { useCallback, useMemo } from 'react'
 import type { WorkflowEdge, WorkflowNode } from '../../types'
 import { NodeClassic } from '@shared/common/workflow/core'
 import type { ComponentNode } from '../types'
+import { useWorkflowEditorInstance } from '../../hooks/reactflow-re-exports'
 
 export const useComponentNodeCurd = () => {
-  const reactflow = useReactFlow<WorkflowNode>()
+  const reactflow = useWorkflowEditorInstance()
   const getNode = useCallback(
     (nodeId?: string) => {
       if (!nodeId) return null

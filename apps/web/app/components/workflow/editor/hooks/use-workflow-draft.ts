@@ -1,6 +1,5 @@
-import { useStoreApi } from '@xyflow/react'
+import { useWorkflowStoreApi } from './reactflow-re-exports'
 import { useCallback, useMemo } from 'react'
-import type { WorkflowEdge, WorkflowNode } from '../types'
 import type { WorkflowAppDraft } from '@shared/common/workflow/base'
 import { ZodCheckWorkflowAppDraft } from '@shared/common/workflow/base'
 import { jsonQ } from '@/utils/net'
@@ -12,7 +11,7 @@ import { useWorkflowExtStore } from './use-workflow-ext-state'
 
 export const useWorkflowDraft = () => {
   const { appId } = useAppParam()
-  const workflowStore = useStoreApi<WorkflowNode, WorkflowEdge>()
+  const workflowStore = useWorkflowStoreApi()
   const workflowExtStore = useWorkflowExtStore()
   const getCurrentStateSnapshot = useCallback((): WorkflowAppDraft => {
     const { nodes, edges } = workflowStore.getState()

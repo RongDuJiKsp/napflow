@@ -1,5 +1,5 @@
-import { useReactFlow } from '@xyflow/react'
-import type { WorkflowEdge, WorkflowNode } from '../../types'
+import { useWorkflowEditorInstance } from '../../hooks/reactflow-re-exports'
+import type { WorkflowNode } from '../../types'
 import { useCallback } from 'react'
 import { useCommNodeOperation } from '../../hooks/use-comm-node-operation'
 import { NodeClassic } from '@shared/common/workflow/core'
@@ -10,7 +10,7 @@ import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
 export const useNoteNodeOperation = () => {
   const { editNode } = useStoreImmerCurd()
   const { deleteNode } = useCommNodeOperation()
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
 
   const deleteNoteNode = useCallback((node: WorkflowNode<NoteData>) => {
     deleteNode(node)

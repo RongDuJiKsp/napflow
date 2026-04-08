@@ -1,6 +1,4 @@
 import type {
-  Edge as BaseEdge,
-  Node as BaseNode,
   OnEdgesChange,
   OnNodesChange,
 } from '@xyflow/react'
@@ -8,22 +6,23 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   useStore,
-  useStoreApi,
 } from '@xyflow/react'
 import type { Draft } from 'immer'
 import { produce } from 'immer'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback } from 'react'
+import { useWorkflowStoreApi } from './reactflow-re-exports'
+import type { WorkflowEdge, WorkflowNode } from '../types'
 
 // like useNodesState but conn with store
-export const useStoreNodesState = <Node extends BaseNode = BaseNode>(): [
-  Node[],
-  Dispatch<SetStateAction<Node[]>>,
-  OnNodesChange<Node>,
+export const useStoreNodesState = (): [
+  WorkflowNode[],
+  Dispatch<SetStateAction<WorkflowNode[]>>,
+  OnNodesChange<WorkflowNode>,
 ] => {
-  const rfStore = useStoreApi<Node>()
-  const nodes = useStore(s => s.nodes) as Node[]
-  const setNodes = useCallback<Dispatch<SetStateAction<Node[]>>>(
+  const rfStore = useWorkflowStoreApi()
+  const nodes = useStore(s => s.nodes) as WorkflowNode[]
+  const setNodes = useCallback<Dispatch<SetStateAction<WorkflowNode[]>>>(
     (dispatch) => {
       const { nodes: storeNodes, setNodes: setStoreNodes } = rfStore.getState()
       setStoreNodes(
@@ -32,20 +31,20 @@ export const useStoreNodesState = <Node extends BaseNode = BaseNode>(): [
     },
     [rfStore],
   )
-  const handleNodesChange: OnNodesChange<Node> = (changes) => {
+  const handleNodesChange: OnNodesChange<WorkflowNode> = (changes) => {
     setNodes(nds => applyNodeChanges(changes, nds))
   }
   return [nodes, setNodes, handleNodesChange]
 }
 
-export const useStoreEdgesState = <Edge extends BaseEdge = BaseEdge>(): [
-  Edge[],
-  Dispatch<SetStateAction<Edge[]>>,
-  OnEdgesChange<Edge>,
+export const useStoreEdgesState = (): [
+  WorkflowEdge[],
+  Dispatch<SetStateAction<WorkflowEdge[]>>,
+  OnEdgesChange<WorkflowEdge>,
 ] => {
-  const rfStore = useStoreApi<BaseNode, Edge>()
-  const edges = useStore(s => s.edges) as Edge[]
-  const setEdges = useCallback<Dispatch<SetStateAction<Edge[]>>>(
+  const rfStore = useWorkflowStoreApi()
+  const edges = useStore(s => s.edges) as WorkflowEdge[]
+  const setEdges = useCallback<Dispatch<SetStateAction<WorkflowEdge[]>>>(
     (dispatch) => {
       const { edges: storeEdges, setEdges: setStoreEdges } = rfStore.getState()
       setStoreEdges(
@@ -54,27 +53,24 @@ export const useStoreEdgesState = <Edge extends BaseEdge = BaseEdge>(): [
     },
     [rfStore],
   )
-  const handleEdgesChange: OnEdgesChange<Edge> = (changes) => {
+  const handleEdgesChange: OnEdgesChange<WorkflowEdge> = (changes) => {
     setEdges(eds => applyEdgeChanges(changes, eds))
   }
   return [edges, setEdges, handleEdgesChange]
 }
 
-export const useStoreImmerCurd = <
-  Node extends BaseNode = BaseNode,
-  Edge extends BaseEdge = BaseEdge,
->() => {
-  const rfStore = useStoreApi<Node, Edge>()
+export const useStoreImmerCurd = () => {
+  const rfStore = useWorkflowStoreApi()
 
   const editNodes = useCallback(
-    (recipe: (draft: Draft<Node[]>) => void) => {
+    (recipe: (draft: Draft<WorkflowNode[]>) => void) => {
       const { nodes, setNodes } = rfStore.getState()
       setNodes(produce(nodes, recipe))
     },
     [rfStore],
   )
   const editNode = useCallback(
-    <Cast extends Node = Node>(
+    <Cast = WorkflowNode>(
       nodeId: string,
       recipe: (draft: Draft<Cast>) => void,
     ) => {
@@ -90,14 +86,14 @@ export const useStoreImmerCurd = <
   )
 
   const editEdges = useCallback(
-    (recipe: (draft: Draft<Edge[]>) => void) => {
+    (recipe: (draft: Draft<WorkflowEdge[]>) => void) => {
       const { edges, setEdges } = rfStore.getState()
       setEdges(produce(edges, recipe))
     },
     [rfStore],
   )
   const editEdge = useCallback(
-    <Cast extends Edge = Edge>(
+    <Cast = WorkflowEdge>(
       edgeId: string,
       recipe: (draft: Draft<Cast>) => void,
     ) => {

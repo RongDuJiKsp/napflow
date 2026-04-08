@@ -3,7 +3,7 @@ import { useEditorStore } from '@workflow/editor/hooks/use-editor-store'
 import { nodeTypes } from '@workflow/editor/constants'
 import { useMemo } from 'react'
 import { useEventListener } from 'ahooks'
-import { useReactFlow } from '@xyflow/react'
+import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
 import type {
   WorkflowEdge,
   WorkflowNode,
@@ -52,7 +52,7 @@ export const useStickyNode = () => {
 }
 
 export const useStickyEventsRegister = () => {
-  const reactflow = useReactFlow<WorkflowNode, WorkflowEdge>()
+  const reactflow = useWorkflowEditorInstance()
   const { handleMoveConstructLoopNode } = useLoopNodeOperator()
   const { handleMoveConstructorIterateNode } = useIterateNodeOperator()
   const editorStore = useEditorStore()
