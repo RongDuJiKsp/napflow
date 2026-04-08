@@ -56,14 +56,16 @@ export const useStoreImmerCurd = () => {
   const rfStore = useWorkflowStoreApi()
 
   const editNodes = useCallback(
-    (recipe: (draft: Draft<WorkflowNode[]>) => void) => {
+    <Cast extends WorkflowNode = WorkflowNode>(
+      recipe: (draft: Draft<Cast[]>) => void,
+    ) => {
       const { nodes, setNodes } = rfStore.getState()
       setNodes(produce(nodes, recipe))
     },
     [rfStore],
   )
   const editNode = useCallback(
-    <Cast = WorkflowNode>(
+    <Cast extends WorkflowNode = WorkflowNode>(
       nodeId: string,
       recipe: (draft: Draft<Cast>) => void,
     ) => {
@@ -79,14 +81,16 @@ export const useStoreImmerCurd = () => {
   )
 
   const editEdges = useCallback(
-    (recipe: (draft: Draft<WorkflowEdge[]>) => void) => {
+    <Cast extends WorkflowEdge = WorkflowEdge>(
+      recipe: (draft: Draft<Cast[]>) => void,
+    ) => {
       const { edges, setEdges } = rfStore.getState()
       setEdges(produce(edges, recipe))
     },
     [rfStore],
   )
   const editEdge = useCallback(
-    <Cast = WorkflowEdge>(
+    <Cast extends WorkflowEdge = WorkflowEdge>(
       edgeId: string,
       recipe: (draft: Draft<Cast>) => void,
     ) => {
