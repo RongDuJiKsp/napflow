@@ -1,10 +1,13 @@
 import type { OnEdgesChange, OnNodesChange } from '@xyflow/react'
-import { applyEdgeChanges, applyNodeChanges, useStore } from '@xyflow/react'
+import { applyEdgeChanges, applyNodeChanges } from '@xyflow/react'
 import type { Draft } from 'immer'
 import { produce } from 'immer'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback } from 'react'
-import { useWorkflowStoreApi } from './reactflow-re-exports'
+import {
+  useWorkflowStore,
+  useWorkflowStoreApi,
+} from './reactflow-re-exports'
 import type { WorkflowEdge, WorkflowNode } from '../types'
 
 // like useNodesState but conn with store
@@ -14,7 +17,7 @@ export const useStoreNodesState = (): [
   OnNodesChange<WorkflowNode>,
 ] => {
   const rfStore = useWorkflowStoreApi()
-  const nodes = useStore(s => s.nodes) as WorkflowNode[]
+  const nodes = useWorkflowStore(state => state.nodes)
   const setNodes = useCallback<Dispatch<SetStateAction<WorkflowNode[]>>>(
     (dispatch) => {
       const { nodes: storeNodes, setNodes: setStoreNodes } = rfStore.getState()
@@ -36,7 +39,7 @@ export const useStoreEdgesState = (): [
   OnEdgesChange<WorkflowEdge>,
 ] => {
   const rfStore = useWorkflowStoreApi()
-  const edges = useStore(s => s.edges) as WorkflowEdge[]
+  const edges = useWorkflowStore(state => state.edges)
   const setEdges = useCallback<Dispatch<SetStateAction<WorkflowEdge[]>>>(
     (dispatch) => {
       const { edges: storeEdges, setEdges: setStoreEdges } = rfStore.getState()
