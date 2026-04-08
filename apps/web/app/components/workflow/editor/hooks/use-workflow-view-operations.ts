@@ -85,7 +85,7 @@ export const useWorkflowCommOperations = () => {
         handleComponentNodeOverwriteData(node as ComponentNode, data)
         return
       }
-      if(node.type === NodeClassic.Note) {
+      if (node.type === NodeClassic.Note) {
         checkedEditNode(node as WorkflowNode<NoteData>, data)
         return
       }

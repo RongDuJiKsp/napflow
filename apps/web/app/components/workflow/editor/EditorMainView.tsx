@@ -46,10 +46,8 @@ const EditorMainView = ({
 }) => {
   const editorStore = useEditorStore()
   // 本地修改时具有自己状态 远端更新时直接覆盖本地
-  const [nodes, setNodes, handleNodesChangeForStore]
-    = useStoreNodesState()
-  const [edges, setEdges, handleEdgesChange]
-    = useStoreEdgesState()
+  const [nodes, setNodes, handleNodesChangeForStore] = useStoreNodesState()
+  const [edges, setEdges, handleEdgesChange] = useStoreEdgesState()
 
   useEffect(() => {
     setNodes(remoteNodes)

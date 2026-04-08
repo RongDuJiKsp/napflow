@@ -25,7 +25,10 @@ export type ComponentPanelFc<T = unknown> = FC<{
   data: ComponentNode<T>['data'];
 }>
 // class
-export type ComponentCreator<T = unknown, S extends z.ZodRawShape = z.ZodRawShape> = {
+export type ComponentCreator<
+  T = unknown,
+  S extends z.ZodRawShape = z.ZodRawShape,
+> = {
   create: () => T; // 创建实例data域的默认值
   schema: z.ZodObject<S>; // 发布前校验的schema（平时显示在发布前检查 发布前check）
   label: string; // 丢菜单的节点名称

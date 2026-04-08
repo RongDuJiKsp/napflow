@@ -1,5 +1,5 @@
 import { useWorkflowEditorInstance } from '@workflow/editor/hooks/reactflow-re-exports'
-import type { WorkflowEdge, WorkflowNode } from '@workflow/editor/types'
+import type { WorkflowNode } from '@workflow/editor/types'
 import { useCallback } from 'react'
 import {
   createComponentNode,

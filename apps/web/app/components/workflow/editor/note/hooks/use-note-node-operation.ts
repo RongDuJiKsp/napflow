@@ -12,9 +12,12 @@ export const useNoteNodeOperation = () => {
   const { deleteNode } = useCommNodeOperation()
   const reactflow = useWorkflowEditorInstance()
 
-  const deleteNoteNode = useCallback((node: WorkflowNode<NoteData>) => {
-    deleteNode(node)
-  }, [deleteNode])
+  const deleteNoteNode = useCallback(
+    (node: WorkflowNode<NoteData>) => {
+      deleteNode(node)
+    },
+    [deleteNode],
+  )
 
   const deleteNoteNodeById = useCallback(
     (nodeId: string) => {
@@ -25,17 +28,23 @@ export const useNoteNodeOperation = () => {
     [deleteNoteNode, reactflow],
   )
 
-  const checkedEditNode = useCallback((node: WorkflowNode<NoteData>, data: unknown) => {
-    const schema = defineZodCheckWorkflowNodeData<(typeof NoteDataSchema)['shape'], typeof NoteDataSchema>(NoteDataSchema)
-    const checkedData = schema.safeParse(data)
-    if (!checkedData.success) {
-      console.error('Invalid node data:', checkedData.error)
-      return
-    }
-    editNode<WorkflowNode<NoteData>>(node.id, (draft) => {
-      draft.data = checkedData.data
-    })
-  }, [editNode])
+  const checkedEditNode = useCallback(
+    (node: WorkflowNode<NoteData>, data: unknown) => {
+      const schema = defineZodCheckWorkflowNodeData<
+        (typeof NoteDataSchema)['shape'],
+        typeof NoteDataSchema
+      >(NoteDataSchema)
+      const checkedData = schema.safeParse(data)
+      if (!checkedData.success) {
+        console.error('Invalid node data:', checkedData.error)
+        return
+      }
+      editNode<WorkflowNode<NoteData>>(node.id, (draft) => {
+        draft.data = checkedData.data
+      })
+    },
+    [editNode],
+  )
   return {
     deleteNoteNodeById,
     checkedEditNode,

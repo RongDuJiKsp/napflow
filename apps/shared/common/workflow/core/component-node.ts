@@ -72,7 +72,10 @@ export type ComponentNodeDataMeta = z.infer<
 >
 
 // export
-export const defineZodCheckComponentNodeData = <S extends ZodRawShape, T extends z.ZodObject<S>>(
+export const defineZodCheckComponentNodeData = <
+  S extends ZodRawShape,
+  T extends z.ZodObject<S>,
+>(
   data: T,
 ) => ZodCheckComponentNodeDataMeta.extend(data.shape)
 export type ComponentNodeData<T = unknown> = ComponentNodeDataMeta & T

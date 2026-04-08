@@ -4,7 +4,10 @@ import { ComponentNodeCreatorMap } from '../constants'
 import { useWorkflowEditorInstance } from '../../hooks/reactflow-re-exports'
 import { createWorkflowEdge } from '../../utils/nodes'
 import { useStoreImmerCurd } from '../../hooks/use-reactflow-ext'
-import { ComponentNodesEnum, defineZodCheckComponentNodeData } from '@shared/common/workflow/core/component-node'
+import {
+  ComponentNodesEnum,
+  defineZodCheckComponentNodeData,
+} from '@shared/common/workflow/core/component-node'
 import { useLoopNodeOperator } from '../nodes/loop/hooks/use-loop-operator'
 import { useIterateNodeOperator } from '../nodes/iterate/hooks/use-iterate-operator'
 import { defineZodCheckWorkflowNodeData } from '@shared/common/workflow/core/workflow-node-data'
@@ -30,7 +33,9 @@ export const useComponentNodeOperations = () => {
 
   const handleOverwriteNodeData = useCallback(
     (node: ComponentNode, data: unknown) => {
-      const compSchema = defineZodCheckComponentNodeData(ComponentNodeCreatorMap[node.data.type].schema)
+      const compSchema = defineZodCheckComponentNodeData(
+        ComponentNodeCreatorMap[node.data.type].schema,
+      )
       const schema = defineZodCheckWorkflowNodeData(compSchema)
 
       const parsedData = schema.safeParse(data)
