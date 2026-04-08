@@ -39,20 +39,20 @@
 
 #### 高风险
 
-| 风险级别 | 文件/位置 | 问题描述 | 处理建议 | 状态 |
-| -------- | --------- | -------- | -------- | ---- |
-| 高 | apps/server/src/apps/health/check-gc.service.ts:25 | 使用 `as any` 读取 GC 事件 detail，绕过类型系统 | 改为显式类型守卫或定义最小可用接口，移除 `any` | 已完成 |
-| 高 | apps/server/src/apps/runtime/core/workflow/nodes/dify-node.ts:80,84 | 对外部 HTTP JSON 响应直接断言结构，缺少校验 | 对响应做 zod 校验或手动结构判定后再读取字段 | 计划中 |
-| 高 | apps/web/app/components/bot/create-bot/hooks/use-create-bot.ts:27,30 | `useContext` 结果用泛型强转，调用方可传任意类型 | 改为强类型 Context + 专用 hook，去掉自由泛型断言 | 已完成 |
-| 高 | apps/web/app/hooks/query/_base.ts:21 | `res.data as QData` 未建立可靠类型约束 | 在泛型签名中约束 `QResp` 与 `QData`，必要时增加 schema 校验 | 计划中 |
-| 高 | apps/web/utils/form.ts:19 | 递归 transform 后整体强转 `PartialDeep<T>`，结构语义可能漂移 | 收紧返回类型或按对象/数组分支建立精确类型守卫 | 计划中 |
-| 高 | apps/web/app/components/workflow/editor/mainview/workflow-agent/hooks/use-agent-ws-conn.ts:22 | token 解析后直接断言为枚举值 | 增加 `AgentWsConnType` 成员校验后再返回 | 计划中 |
+| 风险级别 | 文件/位置 | 问题描述 | 状态 |
+| -------- | --------- | -------- | ---- |
+| 高 | apps/server/src/apps/health/check-gc.service.ts:25 | 使用 `as any` 读取 GC 事件 detail，绕过类型系统 | 已完成 |
+| 高 | apps/server/src/apps/runtime/core/workflow/nodes/dify-node.ts:80,84 | 对外部 HTTP JSON 响应直接断言结构，缺少校验 | 计划中 |
+| 高 | apps/web/app/components/bot/create-bot/hooks/use-create-bot.ts:27,30 | `useContext` 结果用泛型强转，调用方可传任意类型 | 已完成 |
+| 高 | apps/web/app/hooks/query/_base.ts:21 | `res.data as QData` 未建立可靠类型约束 | 计划中 |
+| 高 | apps/web/utils/form.ts:19 | 递归 transform 后整体强转 `PartialDeep<T>`，结构语义可能漂移 | 计划中 |
+| 高 | apps/web/app/components/workflow/editor/mainview/workflow-agent/hooks/use-agent-ws-conn.ts:22 | token 解析后直接断言为枚举值 | 计划中 |
 
 #### 中风险
 
-| 风险级别 | 文件/位置 | 问题描述 | 处理建议 | 状态 |
-| -------- | --------- | -------- | -------- | ---- |
-| 中 | apps/web/app/components/workflow/editor/constants.ts:9 | `as unknown as` 双重断言注册节点类型 | 尽量改为 `satisfies` 或精确映射类型 | 计划中 |
-| 中 | apps/web/app/components/workflow/editor/hooks/reactflow-re-exports.ts:18 | `state as unknown as ...` 适配外部库状态类型 | 封装受限适配层并最小化双重断言范围 | 计划中 |
-| 中 | apps/web/app/components/workflow/editor/component-nodes/utils/node.ts:13,19 | 构造节点数据时泛型断言可能掩盖 creator 与类型不一致 | 通过 creator 泛型绑定返回类型，减少 `as T` | 计划中 |
-| 中 | apps/web/app/components/workflow/editor/component-nodes/nodes/iterate/hooks/use-iterate-operator.ts:49<br>apps/web/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator.ts:90 | 按 parentId 过滤后直接断言 `ComponentNode[]` | 增加 `node.type`/判别式过滤再推导为组件节点 | 计划中 |
+| 风险级别 | 文件/位置 | 问题描述 | 状态 |
+| -------- | --------- | -------- | ---- |
+| 中 | apps/web/app/components/workflow/editor/constants.ts:9 | `as unknown as` 双重断言注册节点类型 | 计划中 |
+| 中 | apps/web/app/components/workflow/editor/hooks/reactflow-re-exports.ts:18 | `state as unknown as ...` 适配外部库状态类型 | 计划中 |
+| 中 | apps/web/app/components/workflow/editor/component-nodes/utils/node.ts:13,19 | 构造节点数据时泛型断言可能掩盖 creator 与类型不一致 | 计划中 |
+| 中 | apps/web/app/components/workflow/editor/component-nodes/nodes/iterate/hooks/use-iterate-operator.ts:49<br>apps/web/app/components/workflow/editor/component-nodes/nodes/loop/hooks/use-loop-operator.ts:90 | 按 parentId 过滤后直接断言 `ComponentNode[]` | 计划中 |
