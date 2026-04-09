@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { NodeGCPerformanceDetail,constants } from 'node:perf_hooks'
+import type { NodeGCPerformanceDetail } from 'node:perf_hooks'
+import { constants } from 'node:perf_hooks'
 import { PerformanceObserver } from 'node:perf_hooks'
 import { RingBuffer } from 'ring-buffer-ts'
 import * as ss from 'simple-statistics'

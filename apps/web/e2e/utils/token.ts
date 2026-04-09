@@ -2,17 +2,17 @@ import type { APIRequestContext } from '@playwright/test'
 import E2eEnvs from '../config'
 
 type LoginResp = {
-  statusCode: number
-  message?: string
+  statusCode: number;
+  message?: string;
   data?: {
-    token?: string
-  }
+    token?: string;
+  };
 }
 
 type GetTokenOptions = {
-  email?: string
-  password?: string
-  url?: string
+  email?: string;
+  password?: string;
+  url?: string;
 }
 
 /**
@@ -22,10 +22,15 @@ export const getToken = async (
   request: APIRequestContext,
   options: GetTokenOptions = {},
 ): Promise<string> => {
-  const { email = E2eEnvs.E2E_LOGIN_ACC_EMAIL, password = E2eEnvs.E2E_LOGIN_ACC_PASSWORD, url = `${E2eEnvs.E2E_BASE_URL}/api/account/login` } = options
+  const {
+    email = E2eEnvs.E2E_LOGIN_ACC_EMAIL,
+    password = E2eEnvs.E2E_LOGIN_ACC_PASSWORD,
+    url = `${E2eEnvs.E2E_BASE_URL}/api/account/login`,
+  } = options
   const response = await request.post(url, {
     data: {
-      email, password,
+      email,
+      password,
     },
   })
 

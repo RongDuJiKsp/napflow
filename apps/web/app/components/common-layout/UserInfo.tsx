@@ -62,8 +62,10 @@ const UserInfo = () => {
             ))}
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
-              <div className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-colors duration-200 cursor-pointer"
-                onClick={handleLogout}>
+              <div
+                className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-colors duration-200 cursor-pointer"
+                onClick={handleLogout}
+              >
                 <RiLogoutBoxRLine className="w-4 h-4 mr-3" />
                 <span className="font-medium">退出登录</span>
               </div>
