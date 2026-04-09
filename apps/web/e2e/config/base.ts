@@ -1,6 +1,6 @@
 import path from 'node:path'
 import dotenv from 'dotenv'
-import z from 'zod'
+import type z from 'zod'
 const envFiles = [
   '.env.e2e.local',
   '.env.e2e',
@@ -13,11 +13,4 @@ const envFiles = [
 for (const file of envFiles)
   dotenv.config({ path: path.resolve(process.cwd(), file), override: false })
 
-export const E2E_ENVS = z.object({
-  baseUrl: z.string().catch('http://localhost'),
-  accountEmail: z.email().catch('root@napflow.com'),
-  accountPassword: z.string().catch('root'),
-}).parse(process.env)
-
-console.log('Using E2E Envs')
-console.table(E2E_ENVS)
+export const defineE2eEnvs = <S extends z.ZodObject>(schema: S) => schema.parse(process.env)
