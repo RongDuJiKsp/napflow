@@ -1,12 +1,7 @@
 import z from 'zod'
 
 const ZodConstantsVaild = z.object({
-  STRENGTH_PASSWORD_LENGTH: z
-    .string()
-    .min(1)
-    .catch('8')
-    .transform(val => Number(val))
-    .pipe(z.number().nonnegative().int()),
+  STRENGTH_PASSWORD_LENGTH: z.coerce.number().int().nonnegative().catch(8),
 })
 
 const { STRENGTH_PASSWORD_LENGTH } = ZodConstantsVaild.parse({
