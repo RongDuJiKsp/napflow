@@ -9,3 +9,6 @@ build
 .env.test.local
 .env.production.local
 .env.local
+
+#tests
+midscene_run
