@@ -32,7 +32,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* 测试报告 */
   reporter: process.env.CI ? 'github' : 'html',
-  /* 全局超时：单个测试最多 60 秒 */
+  /* 全局超时：单个测试最多 0 秒 */
   timeout: 60_000,
   /* expect 断言超时 */
   expect: {

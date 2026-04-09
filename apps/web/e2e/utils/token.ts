@@ -21,7 +21,7 @@ export const getToken = async (
   request: APIRequestContext,
   options: GetTokenOptions = {},
 ): Promise<string> => {
-  const { email = 'root@napflow.com', password = 'root', url = 'http://localhost/api/account/login' } = options
+  const { email = 'root@napflow.com', password = 'root', url = '/api/account/login' } = options
   const response = await request.post(url, {
     data: {
       email, password,
