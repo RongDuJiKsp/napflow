@@ -9,7 +9,7 @@ import { UserRole } from '@shared/common/account/core'
 export const ZodCheckLoginReq = ZodCheckAccountInfo.pick({
   email: true,
 }).extend({
-  password: z.string(),
+  password: z.string().min(1, 'Password is required'),
 })
 export type LoginReq = z.infer<typeof ZodCheckLoginReq>
 
