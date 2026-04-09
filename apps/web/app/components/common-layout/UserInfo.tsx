@@ -1,5 +1,6 @@
 'use client'
 import { useCurAccountQuery } from '@/app/hooks/query/account/use-cur-account-query'
+import { dispatchLocalStorageValueSet } from '@/app/hooks/utils/use-storage'
 import type { ComponentWithClass } from '@/utils/type'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import {
@@ -11,7 +12,7 @@ import {
   RiUserSettingsLine,
 } from '@remixicon/react'
 import Link from 'next/link'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 type LinkItem = {
   label: string;
   icon: ComponentWithClass;
@@ -27,6 +28,9 @@ const clickableLinks: LinkItem[] = [
 
 const UserInfo = () => {
   const { data: user } = useCurAccountQuery()
+  const handleLogout = useCallback(() => {
+    dispatchLocalStorageValueSet('auth-token', undefined)
+  }, [])
 
   return (
     <div>
@@ -58,7 +62,8 @@ const UserInfo = () => {
             ))}
             <div className="mx-3 my-1 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
             <MenuItem>
-              <div className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-colors duration-200">
+              <div className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-colors duration-200 cursor-pointer"
+                onClick={handleLogout}>
                 <RiLogoutBoxRLine className="w-4 h-4 mr-3" />
                 <span className="font-medium">退出登录</span>
               </div>
