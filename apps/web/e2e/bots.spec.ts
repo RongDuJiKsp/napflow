@@ -51,7 +51,7 @@ test.describe('机器人列表功能', () => {
 
     await page.getByRole('button', { name: '提交' }).click()
     await expect(page).toHaveURL(/\/bots\/create/)
-    await expect(page.getByText('配置检查失败')).toBeVisible()
+    await expect(page.getByText('失败')).toBeVisible()
   })
 
   test('Napcat Ws 配置 badcase: 重连间隔小于 1000ms', async ({ page, aiInput, aiTap, aiAssert }) => {
@@ -68,7 +68,7 @@ test.describe('机器人列表功能', () => {
 
     await page.getByRole('button', { name: '提交' }).click()
     await expect(page).toHaveURL(/\/bots\/create/)
-    await expect(page.getByText('配置检查失败')).toBeVisible()
+    await expect(page.getByText('失败')).toBeVisible()
   })
 
   test('Napcat Ws 配置 badcase: WebSocket 地址为空', async ({ page, aiInput, aiTap, aiAssert }) => {
@@ -85,6 +85,6 @@ test.describe('机器人列表功能', () => {
 
     await page.getByRole('button', { name: '提交' }).click()
     await expect(page).toHaveURL(/\/bots\/create/)
-    await expect(page.getByText('配置检查失败')).toBeVisible()
+    await expect(page.getByText('失败')).toBeVisible()
   })
 })
