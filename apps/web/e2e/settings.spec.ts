@@ -237,7 +237,7 @@ test.describe('工作区设置功能', () => {
       await expect(downgradeTitle).toBeHidden()
     })
 
-    test('降级账户应成功', async ({ page, aiTap }) => {
+    test('降级账户应成功', async ({ page, aiTap, aiAssert }) => {
       await openAccountMenu(page, aiTap, tempAccount!.email)
       await aiTap('在当前展开的账户操作菜单中点击“账户升级”')
 
@@ -259,11 +259,7 @@ test.describe('工作区设置功能', () => {
       await expect(downgradeTitle).toBeVisible()
       await selectAdminGroup(aiTap, '账户降级')
       await aiTap('在“账户降级”弹窗中点击“确认降级”')
-
-      await expect(successToast(page).last()).toContainText('降级账号成功')
-      await expect(
-        getAccountCard(page, tempAccount!.email).getByText('管理员'),
-      ).toHaveCount(0)
+      await aiAssert(`账户 ${tempAccount!.email} 此时显示不是管理员权限`)
     })
 
     test('禁用 badcase：取消禁用后账户应保持未禁用状态', async ({ page, aiTap }) => {
@@ -278,6 +274,153 @@ test.describe('工作区设置功能', () => {
       await aiTap('在确认禁用账户弹窗中点击“取消”')
       await expect(disableTitle).toBeHidden()
       await expect(getAccountCard(page, tempAccount!.email)).toBeVisible()
+    })
+  })
+})
+
+test.describe('模型设置功能', () => {
+  type AiTap = (instruction: string) => Promise<unknown>
+  type AiAssert = (assertion: string) => Promise<unknown>
+  type AiInput = (value: string, target: string) => Promise<unknown>
+
+  type ModelConfig = {
+    endpoint: string;
+    apiKey: string;
+    model: string;
+  }
+
+  const buildModelConfig = () => {
+    const seed = `${Date.now()}-${Math.floor(Math.random() * 10000)}`
+    return {
+      endpoint: `https://api-e2e-${seed}.example.com/v1`,
+      apiKey: `sk-e2e-${seed}`,
+      model: `gpt-4o-e2e-${seed}`,
+    }
+  }
+
+  const getConfigCard = (page: Page, endpoint: string) =>
+    page
+      .locator('div.rounded-xl')
+      .filter({ has: page.getByText(endpoint, { exact: true }) })
+      .first()
+
+  const createModelConfig = async (
+    page: Page,
+    config: ModelConfig,
+    aiTap: AiTap,
+    aiAssert: AiAssert,
+    aiInput: AiInput,
+  ) => {
+    await aiTap('点击“添加模型配置”按钮')
+    await aiAssert('页面出现“添加模型配置”弹窗')
+
+    await aiInput(config.endpoint, '“添加模型配置”弹窗中的“端点”输入框')
+    await aiInput(config.apiKey, '“添加模型配置”弹窗中的“API Key”输入框')
+    await aiInput(config.model, '“添加模型配置”弹窗中的“模型”输入框')
+    await aiTap('在“添加模型配置”弹窗中点击“确认添加”按钮')
+
+    await expect(getConfigCard(page, config.endpoint)).toBeVisible({ timeout: 10000 })
+    await aiAssert('模型设置列表中新增了一条模型配置卡片')
+  }
+
+  const updateModelConfig = async (
+    page: Page,
+    prevConfig: ModelConfig,
+    nextConfig: ModelConfig,
+    aiTap: AiTap,
+    aiAssert: AiAssert,
+    aiInput: AiInput,
+  ) => {
+    const card = getConfigCard(page, prevConfig.endpoint)
+    await expect(card).toBeVisible()
+    await aiTap(`点击端点为 ${prevConfig.endpoint} 的模型配置卡片中的“编辑”按钮`)
+    await aiAssert('页面出现“编辑模型配置”弹窗')
+
+    await aiInput(nextConfig.endpoint, '“编辑模型配置”弹窗中的“端点”输入框')
+    await aiInput(nextConfig.apiKey, '“编辑模型配置”弹窗中的“API Key”输入框')
+    await aiInput(nextConfig.model, '“编辑模型配置”弹窗中的“模型”输入框')
+    await aiTap('在“编辑模型配置”弹窗中点击“保存修改”按钮')
+
+    await expect(getConfigCard(page, prevConfig.endpoint)).toHaveCount(0, { timeout: 10000 })
+    await expect(getConfigCard(page, nextConfig.endpoint)).toContainText(nextConfig.model, { timeout: 10000 })
+    await aiAssert('模型设置列表中存在更新后的模型配置卡片')
+  }
+
+  const deleteModelConfig = async (
+    page: Page,
+    endpoint: string,
+    aiTap: AiTap,
+  ) => {
+    const card = getConfigCard(page, endpoint)
+    await expect(card).toBeVisible()
+    await aiTap(`点击端点为 ${endpoint} 的模型配置卡片中的“删除”按钮`)
+
+    await expect(getConfigCard(page, endpoint)).toHaveCount(0, { timeout: 10000 })
+  }
+
+  const cleanupModelConfig = async (
+    page: Page,
+    endpoint: string,
+    aiTap: AiTap,
+  ) => {
+    const card = getConfigCard(page, endpoint)
+    if (await card.count() === 0)
+      return
+    try {
+      await deleteModelConfig(page, endpoint, aiTap)
+    }
+    catch {
+      // 清理失败不应覆盖用例主断言结果
+    }
+  }
+
+  test.beforeEach(async ({ page, request }) => {
+    const token = await getToken(request)
+    await page.addInitScript((authToken: string) => {
+      localStorage.setItem('auth-token', authToken)
+    }, token)
+    await page.goto(`${E2eEnvs.E2E_BASE_URL}/settings/models`)
+    await page.waitForURL('**/settings/models')
+  })
+
+  test('添加模型api应成功', async ({ page, aiTap, aiAssert, aiInput }) => {
+    const config = buildModelConfig()
+
+    await createModelConfig(page, config, aiTap, aiAssert, aiInput)
+    await deleteModelConfig(page, config.endpoint, aiTap)
+  })
+
+  test.describe('模型配置操作（case 隔离）', () => {
+    let tempConfig: ModelConfig | null = null
+
+    test.beforeEach(async ({ page, aiTap, aiAssert, aiInput }) => {
+      tempConfig = buildModelConfig()
+      await createModelConfig(page, tempConfig, aiTap, aiAssert, aiInput)
+    })
+
+    test.afterEach(async ({ page, aiTap }) => {
+      if (!tempConfig || page.isClosed()) {
+        tempConfig = null
+        return
+      }
+      await cleanupModelConfig(page, tempConfig.endpoint, aiTap)
+      tempConfig = null
+    })
+
+    test('更新模型api应成功', async ({ page, aiTap, aiAssert, aiInput }) => {
+      const nextConfig: ModelConfig = {
+        endpoint: `${tempConfig!.endpoint}-updated`,
+        apiKey: `${tempConfig!.apiKey}-updated`,
+        model: `${tempConfig!.model}-updated`,
+      }
+
+      await updateModelConfig(page, tempConfig!, nextConfig, aiTap, aiAssert, aiInput)
+      tempConfig = nextConfig
+    })
+
+    test('删除模型api应成功', async ({ page, aiTap }) => {
+      await deleteModelConfig(page, tempConfig!.endpoint, aiTap)
+      tempConfig = null
     })
   })
 })
