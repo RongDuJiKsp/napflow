@@ -30,9 +30,8 @@ test.describe('账户设置功能', () => {
     const currentNicknameRaw = await aiString(
       '读取页面顶部显示的当前登录用户名（例如 root），只返回用户名文本，不要返回其他内容',
     )
-    const currentNickname = String(currentNicknameRaw)
-      .replaceAll(/["']/g, '')
-      .trim() || 'root'
+    const currentNickname
+      = String(currentNicknameRaw).replaceAll(/["']/g, '').trim() || 'root'
 
     await page.getByPlaceholder('请输入新昵称').fill(currentNickname)
     await page.getByRole('button', { name: '更新昵称' }).click()
@@ -44,7 +43,9 @@ test.describe('账户设置功能', () => {
   })
 
   test('更新密码时两次输入不一致应展示错误弹窗', async ({ page }) => {
-    await page.getByPlaceholder('请输入当前密码').fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
+    await page
+      .getByPlaceholder('请输入当前密码')
+      .fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
     await page.getByPlaceholder('请输入新密码').fill('E2ePassword#123')
     await page.getByPlaceholder('请再次输入新密码').fill('AnotherPassword#456')
     await page.getByRole('button', { name: '更新密码' }).click()
@@ -56,9 +57,15 @@ test.describe('账户设置功能', () => {
   })
 
   test('更新密码后应展示成功弹窗', async ({ page }) => {
-    await page.getByPlaceholder('请输入当前密码').fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
-    await page.getByPlaceholder('请输入新密码').fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
-    await page.getByPlaceholder('请再次输入新密码').fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
+    await page
+      .getByPlaceholder('请输入当前密码')
+      .fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
+    await page
+      .getByPlaceholder('请输入新密码')
+      .fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
+    await page
+      .getByPlaceholder('请再次输入新密码')
+      .fill(E2eEnvs.E2E_LOGIN_ACC_PASSWORD)
     await page.getByRole('button', { name: '更新密码' }).click()
 
     const successToast = page.locator(
@@ -131,10 +138,13 @@ test.describe('工作区设置功能', () => {
     await aiTap(`在“${dialogTitle}”弹窗中选择“管理员”权限组`)
   }
 
-  const cleanupTempAccount = async (page: Page, aiTap: AiTap, email: string) => {
+  const cleanupTempAccount = async (
+    page: Page,
+    aiTap: AiTap,
+    email: string,
+  ) => {
     const accountCard = getAccountCard(page, email)
-    if (await accountCard.count() === 0)
-      return
+    if ((await accountCard.count()) === 0) return
     try {
       await disableAccount(page, aiTap, email)
     }
@@ -186,10 +196,15 @@ test.describe('工作区设置功能', () => {
       await page.getByPlaceholder('设置初始密码').fill(password)
       await page.getByPlaceholder('请再次确认密码').fill('AnotherPassword#456')
       await page.getByRole('button', { name: '添加账户' }).click()
-      await expect(errorNotice(page).last()).toContainText('新密码和确认密码不一致')
+      await expect(errorNotice(page).last()).toContainText(
+        '新密码和确认密码不一致',
+      )
     })
 
-    test('升级 badcase：未选择权限组时确认升级按钮不可用', async ({ page, aiTap }) => {
+    test('升级 badcase：未选择权限组时确认升级按钮不可用', async ({
+      page,
+      aiTap,
+    }) => {
       await openAccountMenu(page, aiTap, tempAccount!.email)
       await aiTap('在当前展开的账户操作菜单中点击“账户升级”')
 
@@ -218,10 +233,15 @@ test.describe('工作区设置功能', () => {
       await aiTap('在“账户升级”弹窗中点击“确认升级”')
 
       await expect(successToast(page).last()).toContainText('升级账号成功')
-      await expect(getAccountCard(page, tempAccount!.email)).toContainText('管理员')
+      await expect(getAccountCard(page, tempAccount!.email)).toContainText(
+        '管理员',
+      )
     })
 
-    test('降级 badcase：未选择权限组时确认降级按钮不可用', async ({ page, aiTap }) => {
+    test('降级 badcase：未选择权限组时确认降级按钮不可用', async ({
+      page,
+      aiTap,
+    }) => {
       await openAccountMenu(page, aiTap, tempAccount!.email)
       await aiTap('在当前展开的账户操作菜单中点击“账户降级”')
 
@@ -262,7 +282,10 @@ test.describe('工作区设置功能', () => {
       await aiAssert(`账户 ${tempAccount!.email} 此时显示不是管理员权限`)
     })
 
-    test('禁用 badcase：取消禁用后账户应保持未禁用状态', async ({ page, aiTap }) => {
+    test('禁用 badcase：取消禁用后账户应保持未禁用状态', async ({
+      page,
+      aiTap,
+    }) => {
       await openAccountMenu(page, aiTap, tempAccount!.email)
       await aiTap('在当前展开的账户操作菜单中点击“禁用账户”')
 
@@ -319,7 +342,9 @@ test.describe('模型设置功能', () => {
     await aiInput(config.model, '“添加模型配置”弹窗中的“模型”输入框')
     await aiTap('在“添加模型配置”弹窗中点击“确认添加”按钮')
 
-    await expect(getConfigCard(page, config.endpoint)).toBeVisible({ timeout: 10000 })
+    await expect(getConfigCard(page, config.endpoint)).toBeVisible({
+      timeout: 10000,
+    })
     await aiAssert('模型设置列表中新增了一条模型配置卡片')
   }
 
@@ -333,7 +358,9 @@ test.describe('模型设置功能', () => {
   ) => {
     const card = getConfigCard(page, prevConfig.endpoint)
     await expect(card).toBeVisible()
-    await aiTap(`点击端点为 ${prevConfig.endpoint} 的模型配置卡片中的“编辑”按钮`)
+    await aiTap(
+      `点击端点为 ${prevConfig.endpoint} 的模型配置卡片中的“编辑”按钮`,
+    )
     await aiAssert('页面出现“编辑模型配置”弹窗')
 
     await aiInput(nextConfig.endpoint, '“编辑模型配置”弹窗中的“端点”输入框')
@@ -341,8 +368,13 @@ test.describe('模型设置功能', () => {
     await aiInput(nextConfig.model, '“编辑模型配置”弹窗中的“模型”输入框')
     await aiTap('在“编辑模型配置”弹窗中点击“保存修改”按钮')
 
-    await expect(getConfigCard(page, prevConfig.endpoint)).toHaveCount(0, { timeout: 10000 })
-    await expect(getConfigCard(page, nextConfig.endpoint)).toContainText(nextConfig.model, { timeout: 10000 })
+    await expect(getConfigCard(page, prevConfig.endpoint)).toHaveCount(0, {
+      timeout: 10000,
+    })
+    await expect(getConfigCard(page, nextConfig.endpoint)).toContainText(
+      nextConfig.model,
+      { timeout: 10000 },
+    )
     await aiAssert('模型设置列表中存在更新后的模型配置卡片')
   }
 
@@ -355,7 +387,9 @@ test.describe('模型设置功能', () => {
     await expect(card).toBeVisible()
     await aiTap(`点击端点为 ${endpoint} 的模型配置卡片中的“删除”按钮`)
 
-    await expect(getConfigCard(page, endpoint)).toHaveCount(0, { timeout: 10000 })
+    await expect(getConfigCard(page, endpoint)).toHaveCount(0, {
+      timeout: 10000,
+    })
   }
 
   const cleanupModelConfig = async (
@@ -364,8 +398,7 @@ test.describe('模型设置功能', () => {
     aiTap: AiTap,
   ) => {
     const card = getConfigCard(page, endpoint)
-    if (await card.count() === 0)
-      return
+    if ((await card.count()) === 0) return
     try {
       await deleteModelConfig(page, endpoint, aiTap)
     }
@@ -414,7 +447,14 @@ test.describe('模型设置功能', () => {
         model: `${tempConfig!.model}-updated`,
       }
 
-      await updateModelConfig(page, tempConfig!, nextConfig, aiTap, aiAssert, aiInput)
+      await updateModelConfig(
+        page,
+        tempConfig!,
+        nextConfig,
+        aiTap,
+        aiAssert,
+        aiInput,
+      )
       tempConfig = nextConfig
     })
 

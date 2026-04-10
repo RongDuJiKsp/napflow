@@ -41,8 +41,6 @@ export default defineConfig({
 
   /* 所有项目的公共配置 */
   use: {
-    /* Next.js 开发服务器默认地址 */
-    baseURL: 'http://localhost:3000',
     /* 失败时自动截图 */
     screenshot: 'only-on-failure',
     /* 首次重试时收集 trace */
@@ -68,17 +66,4 @@ export default defineConfig({
     //   use: { ...devices['Desktop Safari'] },
     // },
   ],
-
-  /* 测试前启动 Next.js 开发服务器 */
-  webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3000',
-    /* 如果服务器已启动则复用，CI 环境下强制重新启动 */
-    reuseExistingServer: !process.env.CI,
-    /* 等待服务器启动的超时时间（Next.js 首次启动可能较慢） */
-    timeout: 120_000,
-    /* 将服务器输出打印到终端，方便调试 */
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
 })
