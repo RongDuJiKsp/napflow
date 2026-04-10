@@ -60,10 +60,9 @@ test.describe('健康面板功能', () => {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
       })
 
-      // FIXME: 滚动有问题
-    //   await aiAssert(
-    //     '当前已滚动到趋势图区域，可见底部趋势图卡片（例如“GC 次数趋势”“GC 时延趋势”）。',
-    //   )
+      await aiAssert(
+        '当前已滚动到趋势图区域，可见底部趋势图卡片（例如“GC 次数趋势”“GC 时延趋势”）。',
+      )
 
       const trendChartTitles = [
         'CPU 使用趋势',
