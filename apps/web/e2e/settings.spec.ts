@@ -74,6 +74,7 @@ test.describe('账户设置功能', () => {
 
 test.describe('工作区设置功能', () => {
   const password = 'E2ePassword#123'
+  type AiTap = (instruction: string) => Promise<unknown>
 
   const buildTempAccount = () => {
     const seed = `${Date.now()}-${Math.floor(Math.random() * 10000)}`
@@ -95,10 +96,10 @@ test.describe('工作区设置功能', () => {
       .filter({ has: page.getByText(email, { exact: true }) })
       .first()
 
-  const openAccountMenu = async (page: Page, email: string) => {
+  const openAccountMenu = async (page: Page, aiTap: AiTap, email: string) => {
     const accountCard = getAccountCard(page, email)
     await expect(accountCard).toBeVisible()
-    await accountCard.locator('button').first().click()
+    await aiTap(`点击邮箱为 ${email} 的账户卡片右侧更多按钮（三个点）`)
   }
 
   const createAccount = async (
@@ -114,26 +115,32 @@ test.describe('工作区设置功能', () => {
     await expect(getAccountCard(page, account.email)).toBeVisible()
   }
 
-  const disableAccount = async (page: Page, email: string) => {
-    await openAccountMenu(page, email)
-    await page.getByRole('button', { name: '禁用账户' }).click()
-    const disableDialog = page
-      .getByRole('dialog')
-      .filter({ hasText: '确认禁用账户' })
-      .first()
-    await expect(disableDialog).toBeVisible()
-    await disableDialog.getByRole('button', { name: '确认禁用' }).click()
+  const disableAccount = async (page: Page, aiTap: AiTap, email: string) => {
+    await openAccountMenu(page, aiTap, email)
+    await aiTap('在当前展开的账户操作菜单中点击“禁用账户”')
+    await expect(
+      page.getByRole('heading', { name: '确认禁用账户', exact: true }),
+    ).toBeVisible()
+    await aiTap('在确认禁用账户弹窗中点击“确认禁用”')
     await expect(successToast(page).last()).toContainText('禁用账号成功')
-    await expect(getAccountCard(page, email)).toContainText('已禁用')
+    await expect(getAccountCard(page, email)).toHaveCount(0)
   }
 
-  const cleanupTempAccount = async (page: Page, email: string) => {
+  const selectAdminGroup = async (aiTap: AiTap, dialogTitle: string) => {
+    await aiTap(`在“${dialogTitle}”弹窗中点击“选择权限组”下拉框`)
+    await aiTap(`在“${dialogTitle}”弹窗中选择“管理员”权限组`)
+  }
+
+  const cleanupTempAccount = async (page: Page, aiTap: AiTap, email: string) => {
     const accountCard = getAccountCard(page, email)
     if (await accountCard.count() === 0)
       return
-    if ((await accountCard.getByText('已禁用').count()) > 0)
-      return
-    await disableAccount(page, email)
+    try {
+      await disableAccount(page, aiTap, email)
+    }
+    catch {
+      // 清理失败不应覆盖用例主断言结果
+    }
   }
 
   test.beforeEach(async ({ page, request }) => {
@@ -145,14 +152,14 @@ test.describe('工作区设置功能', () => {
     await page.waitForURL('**/settings/workspace')
   })
 
-  test('正常创建并禁用账户', async ({ page }) => {
+  test('正常创建并禁用账户', async ({ page, aiTap }) => {
     const account = buildTempAccount()
     await expect(
       page.getByRole('heading', { name: '工作区设置', exact: true }),
     ).toBeVisible()
 
     await createAccount(page, account)
-    await disableAccount(page, account.email)
+    await disableAccount(page, aiTap, account.email)
   })
 
   test.describe('工作区账户操作（case 隔离）', () => {
@@ -163,12 +170,12 @@ test.describe('工作区设置功能', () => {
       await createAccount(page, tempAccount)
     })
 
-    test.afterEach(async ({ page }) => {
+    test.afterEach(async ({ page, aiTap }) => {
       if (!tempAccount || page.isClosed()) {
         tempAccount = null
         return
       }
-      await cleanupTempAccount(page, tempAccount.email)
+      await cleanupTempAccount(page, aiTap, tempAccount.email)
       tempAccount = null
     })
 
@@ -182,75 +189,76 @@ test.describe('工作区设置功能', () => {
       await expect(errorNotice(page).last()).toContainText('新密码和确认密码不一致')
     })
 
-    test('升级 badcase：未选择权限组时确认升级按钮不可用', async ({ page }) => {
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '账户升级' }).click()
+    test('升级 badcase：未选择权限组时确认升级按钮不可用', async ({ page, aiTap }) => {
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“账户升级”')
 
-      const upgradeDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '账户升级' })
-        .first()
-      await expect(upgradeDialog).toBeVisible()
+      const upgradeTitle = page.getByRole('heading', {
+        name: '账户升级',
+        exact: true,
+      })
+      await expect(upgradeTitle).toBeVisible()
       await expect(
-        upgradeDialog.getByRole('button', { name: '确认升级' }),
+        page.getByRole('button', { name: '确认升级', exact: true }),
       ).toBeDisabled()
-      await upgradeDialog.getByRole('button', { name: '取消' }).click()
+      await aiTap('在“账户升级”弹窗中点击“取消”')
+      await expect(upgradeTitle).toBeHidden()
     })
 
-    test('升级账户应成功', async ({ page }) => {
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '账户升级' }).click()
+    test('升级账户应成功', async ({ page, aiTap }) => {
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“账户升级”')
 
-      const upgradeDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '账户升级' })
-        .first()
-      await expect(upgradeDialog).toBeVisible()
-      await upgradeDialog.locator('.ant-select').click()
-      await page.getByRole('option', { name: '管理员' }).click()
-      await upgradeDialog.getByRole('button', { name: '确认升级' }).click()
+      const upgradeTitle = page.getByRole('heading', {
+        name: '账户升级',
+        exact: true,
+      })
+      await expect(upgradeTitle).toBeVisible()
+      await selectAdminGroup(aiTap, '账户升级')
+      await aiTap('在“账户升级”弹窗中点击“确认升级”')
 
       await expect(successToast(page).last()).toContainText('升级账号成功')
       await expect(getAccountCard(page, tempAccount!.email)).toContainText('管理员')
     })
 
-    test('降级 badcase：未选择权限组时确认降级按钮不可用', async ({ page }) => {
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '账户降级' }).click()
+    test('降级 badcase：未选择权限组时确认降级按钮不可用', async ({ page, aiTap }) => {
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“账户降级”')
 
-      const downgradeDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '账户降级' })
-        .first()
-      await expect(downgradeDialog).toBeVisible()
+      const downgradeTitle = page.getByRole('heading', {
+        name: '账户降级',
+        exact: true,
+      })
+      await expect(downgradeTitle).toBeVisible()
       await expect(
-        downgradeDialog.getByRole('button', { name: '确认降级' }),
+        page.getByRole('button', { name: '确认降级', exact: true }),
       ).toBeDisabled()
-      await downgradeDialog.getByRole('button', { name: '取消' }).click()
+      await aiTap('在“账户降级”弹窗中点击“取消”')
+      await expect(downgradeTitle).toBeHidden()
     })
 
-    test('降级账户应成功', async ({ page }) => {
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '账户升级' }).click()
+    test('降级账户应成功', async ({ page, aiTap }) => {
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“账户升级”')
 
-      const upgradeDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '账户升级' })
-        .first()
-      await upgradeDialog.locator('.ant-select').click()
-      await page.getByRole('option', { name: '管理员' }).click()
-      await upgradeDialog.getByRole('button', { name: '确认升级' }).click()
+      const upgradeTitle = page.getByRole('heading', {
+        name: '账户升级',
+        exact: true,
+      })
+      await expect(upgradeTitle).toBeVisible()
+      await selectAdminGroup(aiTap, '账户升级')
+      await aiTap('在“账户升级”弹窗中点击“确认升级”')
       await expect(successToast(page).last()).toContainText('升级账号成功')
 
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '账户降级' }).click()
-      const downgradeDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '账户降级' })
-        .first()
-      await downgradeDialog.locator('.ant-select').click()
-      await page.getByRole('option', { name: '管理员' }).click()
-      await downgradeDialog.getByRole('button', { name: '确认降级' }).click()
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“账户降级”')
+      const downgradeTitle = page.getByRole('heading', {
+        name: '账户降级',
+        exact: true,
+      })
+      await expect(downgradeTitle).toBeVisible()
+      await selectAdminGroup(aiTap, '账户降级')
+      await aiTap('在“账户降级”弹窗中点击“确认降级”')
 
       await expect(successToast(page).last()).toContainText('降级账号成功')
       await expect(
@@ -258,18 +266,18 @@ test.describe('工作区设置功能', () => {
       ).toHaveCount(0)
     })
 
-    test('禁用 badcase：取消禁用后账户应保持未禁用状态', async ({ page }) => {
-      await openAccountMenu(page, tempAccount!.email)
-      await page.getByRole('button', { name: '禁用账户' }).click()
+    test('禁用 badcase：取消禁用后账户应保持未禁用状态', async ({ page, aiTap }) => {
+      await openAccountMenu(page, aiTap, tempAccount!.email)
+      await aiTap('在当前展开的账户操作菜单中点击“禁用账户”')
 
-      const disableDialog = page
-        .getByRole('dialog')
-        .filter({ hasText: '确认禁用账户' })
-        .first()
-      await expect(disableDialog).toBeVisible()
-      await disableDialog.getByRole('button', { name: '取消' }).click()
-      await expect(disableDialog).toBeHidden()
-      await expect(getAccountCard(page, tempAccount!.email)).not.toContainText('已禁用')
+      const disableTitle = page.getByRole('heading', {
+        name: '确认禁用账户',
+        exact: true,
+      })
+      await expect(disableTitle).toBeVisible()
+      await aiTap('在确认禁用账户弹窗中点击“取消”')
+      await expect(disableTitle).toBeHidden()
+      await expect(getAccountCard(page, tempAccount!.email)).toBeVisible()
     })
   })
 })
