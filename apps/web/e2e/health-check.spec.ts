@@ -84,6 +84,31 @@ test.describe('健康面板功能', () => {
       )
       expect(hasConsistentXAxis).toBe(true)
 
+      const xAxisIsChronological = Boolean(
+        await aiBoolean(
+          '请判断上述趋势图中每个图表的横轴时间标签是否整体从左到右按时间递进（允许个别标签省略），不存在明显逆序。仅返回 true 或 false。',
+        ),
+      )
+      expect(xAxisIsChronological).toBe(true)
+
+      const unitsMatchChartSemantics = Boolean(
+        await aiBoolean(
+          '请判断各趋势图纵轴单位或数值语义是否与标题一致：CPU 使用趋势应为百分比或比例语义，事件循环延迟/GC 时延应为时间单位（如 ms），内存使用趋势应为容量单位（如 MB/GB），GC 次数趋势应为次数语义。仅返回 true 或 false。',
+        ),
+      )
+      expect(unitsMatchChartSemantics).toBe(true)
+
+      const scoreCardsAreReasonable = Boolean(
+        await aiBoolean(
+          '请判断顶部三个健康度卡片（内存健康度、事件循环健康度、GC 健康度）中的分数展示是否都在 0-100 的合理范围内，且没有明显占位符（如 -- 或 NaN）。仅返回 true 或 false。',
+        ),
+      )
+      expect(scoreCardsAreReasonable).toBe(true)
+
+      await aiAssert(
+        '趋势图区域的布局应满足“标题-图表-坐标轴”结构完整：每张图都能看到标题与可读坐标轴，不应出现仅有标题但图表主体缺失的卡片。',
+      )
+
       const gcStatsCardTitle = page.getByRole('heading', {
         name: 'GC 统计信息',
         exact: true,
