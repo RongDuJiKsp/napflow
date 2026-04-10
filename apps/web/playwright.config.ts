@@ -41,6 +41,8 @@ export default defineConfig({
 
   /* 所有项目的公共配置 */
   use: {
+    /* 统一 midscene 和 playwright的分辨率 防止截断 */
+    viewport: { width: 1920, height: 1080 },
     /* 失败时自动截图 */
     screenshot: 'only-on-failure',
     /* 首次重试时收集 trace */
