@@ -38,14 +38,62 @@ test.describe('健康面板功能', () => {
       await aiAssert(
         '界面应与健康监控图表展示页一致：顶部包含“系统健康监控”和“最后更新”，下方展示健康度卡片与趋势图卡片。',
       )
+      await aiAssert(
+        '展示面板结构应清晰：先看到顶部标题与评分卡（内存健康度、事件循环健康度、GC 健康度），然后再向下查看趋势图区域。',
+      )
       await expect(
         page.getByRole('heading', { name: '系统健康监控', exact: true }),
       ).toBeVisible()
       await expect(page.getByText('内存健康度')).toBeVisible()
       await expect(page.getByText('事件循环健康度')).toBeVisible()
       await expect(page.getByText('GC 健康度')).toBeVisible()
-      await expect(page.getByText('CPU 使用趋势')).toBeVisible()
-      await expect(page.getByText('事件循环延迟趋势')).toBeVisible()
+
+      const hasValidLastUpdateTime = Boolean(
+        await aiBoolean(
+          '“最后更新”后面的内容是否为合法时间文本（例如 HH:mm 或 HH:mm:ss），且看起来不是占位符或空值？仅返回 true 或 false。',
+        ),
+      )
+      expect(hasValidLastUpdateTime).toBe(true)
+
+      // 由于分辨率限制，趋势图相关断言前先滚动到底部区域。
+      await page.evaluate(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
+      })
+
+      await aiAssert(
+        '当前已滚动到趋势图区域，可见底部趋势图卡片（例如“GC 次数趋势”“GC 时延趋势”）。',
+      )
+
+      const trendChartTitles = [
+        'CPU 使用趋势',
+        '事件循环延迟趋势',
+        '内存使用趋势',
+        'GC 次数趋势',
+        'GC 时延趋势',
+      ] as const
+      for (const title of trendChartTitles) {
+        const heading = page.getByRole('heading', { name: title, exact: true })
+        await heading.scrollIntoViewIfNeeded()
+        await expect(heading).toBeVisible()
+      }
+
+      const hasConsistentXAxis = Boolean(
+        await aiBoolean(
+          '请判断当前页面这些趋势图（CPU 使用趋势、事件循环延迟趋势、内存使用趋势、GC 次数趋势、GC 时延趋势）的横轴是否都表示同一时间线，并使用一致的时间刻度格式（例如 HH:mm）。仅返回 true 或 false。',
+        ),
+      )
+      expect(hasConsistentXAxis).toBe(true)
+
+      const gcStatsCardTitle = page.getByRole('heading', {
+        name: 'GC 统计信息',
+        exact: true,
+      })
+
+      if (await gcStatsCardTitle.isVisible().catch(() => false)) {
+        await aiAssert(
+          '“GC 统计信息”卡片中应包含“GC 频率”“平均耗时”“健康分数”三项指标，并带有对应单位信息（次/分钟、ms、分）。',
+        )
+      }
     }
   })
 })
