@@ -19,8 +19,16 @@ import z from 'zod'
 import { useRouter } from 'next/navigation'
 import { createContextState } from '@/utils/react-wrap'
 
-const { Provider: AdapterConfigStateProvider, useValue: useCreateBotConfig, useSetter: useCreateBotSetConfig } = createContextState<CreateBotReq['adapterConfig']>()
-export{ AdapterConfigStateProvider, useCreateBotConfig, useCreateBotSetConfig }
+const {
+  Provider: AdapterConfigStateProvider,
+  useValue: useCreateBotConfig,
+  useSetter: useCreateBotSetConfig,
+} = createContextState<CreateBotReq['adapterConfig']>()
+export {
+  AdapterConfigStateProvider,
+  useCreateBotConfig,
+  useCreateBotSetConfig,
+}
 
 const onSubmit = async (form: CreateBotReq) =>
   await jsonQ.Post<CreateBotResp>('/bot/record/create', form)

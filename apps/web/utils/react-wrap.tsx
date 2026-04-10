@@ -12,7 +12,15 @@ export function createContextState<State>() {
     // 只允许在Setter 向下转型
     return useContext(SetterContext) as Dispatch<SetStateAction<DownCast>>
   }
-  const Provider = ({ children, value, setValue }: { children: React.ReactNode; value: State; setValue: Dispatch<SetStateAction<State>> }) => (
+  const Provider = ({
+    children,
+    value,
+    setValue,
+  }: {
+    children: React.ReactNode;
+    value: State;
+    setValue: Dispatch<SetStateAction<State>>;
+  }) => (
     <ValueContext.Provider value={value}>
       <SetterContext.Provider value={setValue}>
         {children}

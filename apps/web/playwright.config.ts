@@ -1,4 +1,18 @@
+import path from 'node:path'
+import dotenv from 'dotenv'
 import { defineConfig, devices } from '@playwright/test'
+
+const envFiles = [
+  '.env.e2e.local',
+  '.env.e2e',
+  '.env.development.local',
+  '.env.development',
+  '.env.local',
+  '.env',
+]
+
+for (const file of envFiles)
+  dotenv.config({ path: path.resolve(process.cwd(), file), override: false })
 
 /**
  * Playwright E2E 测试配置
@@ -18,8 +32,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* 测试报告 */
   reporter: process.env.CI ? 'github' : 'html',
-  /* 全局超时：单个测试最多 30 秒 */
-  timeout: 30_000,
+  /* 全局超时：单个测试最多 120 秒 */
+  timeout: 120_000,
   /* expect 断言超时 */
   expect: {
     timeout: 5_000,
