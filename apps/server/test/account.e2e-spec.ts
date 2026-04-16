@@ -112,6 +112,14 @@ describe('AccountController (e2e)', () => {
       find: vi.fn().mockImplementation((_opts?: any) => {
         return Promise.resolve(mutableUsers)
       }),
+      count: vi.fn().mockImplementation((opts?: any) => {
+        if (!opts?.where) return Promise.resolve(mutableUsers.length)
+        if (Object.hasOwn(opts.where, 'disabledAt')) {
+          const availableUsers = mutableUsers.filter(u => !u.disabledAt)
+          return Promise.resolve(availableUsers.length)
+        }
+        return Promise.resolve(mutableUsers.length)
+      }),
       save: vi.fn().mockImplementation((data: any) => {
         const savedUser = {
           ...data,
@@ -692,6 +700,19 @@ describe('AccountController (e2e)', () => {
         .send({ email: 'nonexist@test.com' })
 
       expect(res.body.message).toContain('不存在满足条件的用户')
+    })
+
+    it('禁用最后一个可用账户时应返回错误', async () => {
+      mockTypeOrmService.user.count.mockResolvedValueOnce(1)
+
+      const res = await request(app.getHttpServer())
+        .post('/account/action/disable')
+        .set('Authorization', `Bearer ${getAdminToken()}`)
+        .send({ email: 'admin@test.com' })
+
+      expect(res.status).toBe(400)
+      expect(res.body.message).toContain('不能禁用最后一个可用账户')
+      expect(mockTypeOrmService.user.softDelete).not.toHaveBeenCalled()
     })
 
     it('普通用户不应该能禁用账户', async () => {
