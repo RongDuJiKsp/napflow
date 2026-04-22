@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    "experimentalDecorators": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",

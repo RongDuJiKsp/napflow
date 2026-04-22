@@ -7,6 +7,7 @@ import { memo } from 'react'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { AntDesignTheme } from '@/app/style/ant-design-theme'
 import { useCreation } from 'ahooks'
+import InternErrorCaptureBootstrap from './InternErrorCaptureBootstrap'
 
 const AppProvider = ({ children }: PropsWithChildren) => {
   const queryClient = useCreation(() => new QueryClient(), [])
@@ -16,7 +17,10 @@ const AppProvider = ({ children }: PropsWithChildren) => {
       <StyleProvider layer>
         <ConfigProvider theme={AntDesignTheme}>
           <AntdRegistry>
-            <App>{children}</App>
+            <App>
+              <InternErrorCaptureBootstrap />
+              {children}
+            </App>
           </AntdRegistry>
         </ConfigProvider>
       </StyleProvider>
