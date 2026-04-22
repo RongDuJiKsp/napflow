@@ -9,13 +9,11 @@ import {
   ServerOnly,
 } from './shared/runtime-guard'
 
-const sharedApi = {
-  internErrorReportPayloadSchema,
-  internErrorSourceSchema,
-}
-
 class DataReportFacade {
-  readonly shared = sharedApi
+  readonly shared = {
+    internErrorReportPayloadSchema,
+    internErrorSourceSchema,
+  } as const
 
   @ClientOnly('dataReport.client')
   get client() {
