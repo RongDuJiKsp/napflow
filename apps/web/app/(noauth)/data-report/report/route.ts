@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const result = dataReport.server.addReport(parseResult.data)
+  const result = dataReport.server.addErrorRecord(parseResult.data)
 
   return NextResponse.json({
     ok: true,

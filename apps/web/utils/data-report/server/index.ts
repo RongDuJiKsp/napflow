@@ -6,18 +6,18 @@ import { ServerOnly } from '../shared/runtime-guard'
 import { getInternErrorStore } from './error-report-store'
 
 class DataReportServer {
-  @ServerOnly('dataReport.server.addReport')
-  addReport(payload: InternErrorReportPayload, nowMs?: number) {
+  @ServerOnly('dataReport.server.addErrorRecord')
+  addErrorRecord(payload: InternErrorReportPayload, nowMs?: number) {
     return getInternErrorStore().addReport(payload, nowMs)
   }
 
-  @ServerOnly('dataReport.server.clear')
-  clear() {
+  @ServerOnly('dataReport.server.clearErrorRecords')
+  clearErrorRecords() {
     getInternErrorStore().clear()
   }
 
-  @ServerOnly('dataReport.server.getSnapshot')
-  getSnapshot(nowMs?: number): InternErrorDashboardData {
+  @ServerOnly('dataReport.server.getErrorRecordSnapshot')
+  getErrorRecordSnapshot(nowMs?: number): InternErrorDashboardData {
     return getInternErrorStore().getSnapshot(nowMs)
   }
 }

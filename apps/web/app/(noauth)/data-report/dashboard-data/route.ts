@@ -5,7 +5,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const data = dataReport.server.getSnapshot()
+  const data = dataReport.server.getErrorRecordSnapshot()
 
   return NextResponse.json(
     {
