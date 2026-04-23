@@ -17,7 +17,9 @@ export const ZodCheckInternErrorReportPayload = z.object({
   digest: z.string().max(256).optional(),
 })
 
-export type InternErrorReportPayload = z.infer<typeof ZodCheckInternErrorReportPayload>
+export type InternErrorReportPayload = z.infer<
+  typeof ZodCheckInternErrorReportPayload
+>
 
 export type InternErrorItem = {
   id: string;

@@ -51,8 +51,13 @@ describe('intern error report store', () => {
     expect(inWindowSnapshot.items[0].duplicateCount).toBe(2)
     expect(inWindowSnapshot.total).toBe(2)
 
-    store.addReport(createPayload('same-error'), baseMs + dedupeWindowMs + 4000)
-    const outOfWindowSnapshot = store.getSnapshot(baseMs + dedupeWindowMs + 4000)
+    store.addReport(
+      createPayload('same-error'),
+      baseMs + dedupeWindowMs + 4000,
+    )
+    const outOfWindowSnapshot = store.getSnapshot(
+      baseMs + dedupeWindowMs + 4000,
+    )
 
     expect(outOfWindowSnapshot.items).toHaveLength(2)
     expect(outOfWindowSnapshot.total).toBe(3)
@@ -66,8 +71,14 @@ describe('intern error report store', () => {
 
     const baseMs = 4_000_000_000
 
-    store.addReport(createPayload('window-1', InternErrorSource.WindowError), baseMs)
-    store.addReport(createPayload('window-2', InternErrorSource.WindowError), baseMs + 10_000)
+    store.addReport(
+      createPayload('window-1', InternErrorSource.WindowError),
+      baseMs,
+    )
+    store.addReport(
+      createPayload('window-2', InternErrorSource.WindowError),
+      baseMs + 10_000,
+    )
     store.addReport(
       createPayload('rejection-1', InternErrorSource.UnhandledRejection),
       baseMs + 70_000,
@@ -82,8 +93,12 @@ describe('intern error report store', () => {
     const firstMinute = Math.floor(baseMs / 60000) * 60000
     const secondMinute = firstMinute + 60000
 
-    const firstTrend = snapshot.trend.find(point => point.minuteStartMs === firstMinute)
-    const secondTrend = snapshot.trend.find(point => point.minuteStartMs === secondMinute)
+    const firstTrend = snapshot.trend.find(
+      point => point.minuteStartMs === firstMinute,
+    )
+    const secondTrend = snapshot.trend.find(
+      point => point.minuteStartMs === secondMinute,
+    )
 
     expect(firstTrend?.count).toBe(2)
     expect(secondTrend?.count).toBe(1)
@@ -99,15 +114,21 @@ describe('intern error report store', () => {
     const secondNowMs = firstNowMs + 3000
     const happenedAtMs = firstNowMs - 2000
 
-    store.addReport({
-      ...createPayload('time-semantics-error'),
-      at: happenedAtMs,
-    }, firstNowMs)
+    store.addReport(
+      {
+        ...createPayload('time-semantics-error'),
+        at: happenedAtMs,
+      },
+      firstNowMs,
+    )
 
-    store.addReport({
-      ...createPayload('time-semantics-error'),
-      at: happenedAtMs + 1000,
-    }, secondNowMs)
+    store.addReport(
+      {
+        ...createPayload('time-semantics-error'),
+        at: happenedAtMs + 1000,
+      },
+      secondNowMs,
+    )
 
     const snapshot = store.getSnapshot(secondNowMs)
     expect(snapshot.items).toHaveLength(1)

@@ -5,9 +5,7 @@ import { memo } from 'react'
 import { ChartCard } from './common'
 import { formatDateTime, sourceLabel } from './utils'
 
-const DetailTableArea = ({ items }: {
-  items: InternErrorItem[]
-}) => {
+const DetailTableArea = ({ items }: { items: InternErrorItem[] }) => {
   return (
     <ChartCard title="错误明细">
       <div className="overflow-x-auto">
@@ -35,7 +33,9 @@ const DetailTableArea = ({ items }: {
                   {item.duplicateCount}
                 </td>
                 <td className="px-2 py-2 text-xs text-slate-700">
-                  <pre className="whitespace-pre-wrap wrap-break-word">{item.message}</pre>
+                  <pre className="whitespace-pre-wrap wrap-break-word">
+                    {item.message}
+                  </pre>
                   {item.digest && (
                     <div className="mt-2 text-[11px] text-slate-500">
                       digest: {item.digest}

@@ -9,13 +9,8 @@ import { EmptyState, LoadingState } from './common'
 import { formatDateTime } from './utils'
 
 const DataReportDashboard = () => {
-  const {
-    data,
-    isLoading,
-    isFetching,
-    error,
-    refetch,
-  } = useDataReportDashboardQuery()
+  const { data, isLoading, isFetching, error, refetch }
+    = useDataReportDashboardQuery()
 
   if (isLoading) {
     return (

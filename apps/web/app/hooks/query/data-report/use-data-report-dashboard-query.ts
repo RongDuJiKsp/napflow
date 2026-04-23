@@ -6,7 +6,9 @@ export const useDataReportDashboardQuery = () => {
   return useQuery({
     queryKey: ['data-report-dashboard'],
     queryFn: async () => {
-      const body = await jsonIntern.Get<DataReportDashboardResp>('/__intern_view__/dashboard-data')
+      const body = await jsonIntern.Get<DataReportDashboardResp>(
+        '/__intern_view__/dashboard-data',
+      )
       if (!body.ok || !body.data)
         throw new Error(body.message || '面板数据解析失败')
       return body.data

@@ -35,7 +35,10 @@ const createBySource = (): Record<InternErrorSource, number> => ({
 
 const toMinuteStart = (timeMs: number) => Math.floor(timeMs / 60000) * 60000
 
-const compactText = (value: string | undefined, limit: number): string | null => {
+const compactText = (
+  value: string | undefined,
+  limit: number,
+): string | null => {
   if (!value) return null
   if (value.length <= limit) return value
   return `${value.slice(0, limit)}...`
@@ -119,7 +122,10 @@ export class InternErrorStore {
       .map(([minuteStartMs, count]) => ({ minuteStartMs, count }))
   }
 
-  addReport(payload: InternErrorReportPayload, nowMs = Date.now()): AddReportResult {
+  addReport(
+    payload: InternErrorReportPayload,
+    nowMs = Date.now(),
+  ): AddReportResult {
     this.cleanup(nowMs)
 
     const fingerprint = buildFingerprint(payload)
@@ -190,7 +196,9 @@ export class InternErrorStore {
       total,
       bySource,
       trend: this.getTrend(nowMs),
-      items: [...this.items].sort((left, right) => right.lastSeenAtMs - left.lastSeenAtMs),
+      items: [...this.items].sort(
+        (left, right) => right.lastSeenAtMs - left.lastSeenAtMs,
+      ),
     }
   }
 
@@ -200,8 +208,9 @@ export class InternErrorStore {
   }
 }
 
-export const createInternErrorStore = (options: InternErrorStoreOptions = {}): InternErrorStore =>
-  new InternErrorStore(options)
+export const createInternErrorStore = (
+  options: InternErrorStoreOptions = {},
+): InternErrorStore => new InternErrorStore(options)
 
 type GlobalStoreCarrier = {
   __napflowInternErrorStore?: InternErrorStore;

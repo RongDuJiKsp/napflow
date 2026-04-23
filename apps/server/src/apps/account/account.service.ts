@@ -149,8 +149,7 @@ export class AccountService {
 
   async disableAccount(email: string) {
     const account = await this.getAccount(email)
-    if (!account || account.disabledAt)
-      return null
+    if (!account || account.disabledAt) return null
 
     const availableAccountCount = await this.db.user.count({
       where: {

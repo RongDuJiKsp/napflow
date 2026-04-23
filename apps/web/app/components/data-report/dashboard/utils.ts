@@ -1,8 +1,6 @@
 import dayjs from 'dayjs'
 import type { InternErrorTrendPoint } from '@/utils/data-report/shared/error-report-contract'
-import {
-  InternErrorSource,
-} from '@/utils/data-report/shared/error-report-contract'
+import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 import type { ChartTsItem } from '@/app/hooks/antd-charts/use-line-graph'
 
 export const sourceLabel: Record<InternErrorSource, string> = {

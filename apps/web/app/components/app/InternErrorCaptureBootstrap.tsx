@@ -8,10 +8,11 @@ import { useEventListener } from 'ahooks'
 
 const InternErrorCaptureBootstrap = ({ children }: PropsWithChildren) => {
   useEventListener('error', (event: ErrorEvent) => {
-    const fallbackMessage = event.message
-        || (event.filename
-          ? `Script error at ${event.filename}:${event.lineno}:${event.colno}`
-          : 'Unknown window error')
+    const fallbackMessage
+      = event.message
+      || (event.filename
+        ? `Script error at ${event.filename}:${event.lineno}:${event.colno}`
+        : 'Unknown window error')
 
     dataReportClient.reportClientError({
       source: InternErrorSource.WindowError,

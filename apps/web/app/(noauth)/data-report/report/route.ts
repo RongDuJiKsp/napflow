@@ -8,8 +8,10 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
-  const [err, payload] = await tryit(async (req: Request) => await req.json())(request)
-  if(err) {
+  const [err, payload] = await tryit(async (req: Request) => await req.json())(
+    request,
+  )
+  if (err) {
     return NextResponse.json(
       {
         ok: false,

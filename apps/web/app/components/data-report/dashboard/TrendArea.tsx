@@ -25,9 +25,13 @@ const TrendArea = ({ trend }: TrendAreaProps) => {
 
   return (
     <ChartCard title="分钟趋势（最近 30 分钟）">
-      {chartData.length === 0
-        ? <div className="py-8 text-center text-sm text-gray-400">暂无趋势数据</div>
-        : <Line {...config} />}
+      {chartData.length === 0 ? (
+        <div className="py-8 text-center text-sm text-gray-400">
+          暂无趋势数据
+        </div>
+      ) : (
+        <Line {...config} />
+      )}
     </ChartCard>
   )
 }
