@@ -18,8 +18,9 @@ const AppProvider = ({ children }: PropsWithChildren) => {
         <ConfigProvider theme={AntDesignTheme}>
           <AntdRegistry>
             <App>
-              <InternErrorCaptureBootstrap />
-              {children}
+              <InternErrorCaptureBootstrap >
+                {children}
+              </InternErrorCaptureBootstrap>
             </App>
           </AntdRegistry>
         </ConfigProvider>
