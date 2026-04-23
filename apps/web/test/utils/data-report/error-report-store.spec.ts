@@ -1,10 +1,10 @@
-import type { InternErrorSource } from '@/utils/data-report'
+import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 import { createInternErrorStore } from '@/utils/data-report/server/error-report-store'
 import { describe, expect, test } from 'vitest'
 
 const createPayload = (
   message: string,
-  source: InternErrorSource = 'window-error',
+  source: InternErrorSource = InternErrorSource.WindowError,
 ) => ({
   source,
   message,
@@ -66,18 +66,18 @@ describe('intern error report store', () => {
 
     const baseMs = 4_000_000_000
 
-    store.addReport(createPayload('window-1', 'window-error'), baseMs)
-    store.addReport(createPayload('window-2', 'window-error'), baseMs + 10_000)
+    store.addReport(createPayload('window-1', InternErrorSource.WindowError), baseMs)
+    store.addReport(createPayload('window-2', InternErrorSource.WindowError), baseMs + 10_000)
     store.addReport(
-      createPayload('rejection-1', 'unhandledrejection'),
+      createPayload('rejection-1', InternErrorSource.UnhandledRejection),
       baseMs + 70_000,
     )
 
     const snapshot = store.getSnapshot(baseMs + 70_000)
 
     expect(snapshot.total).toBe(3)
-    expect(snapshot.bySource['window-error']).toBe(2)
-    expect(snapshot.bySource.unhandledrejection).toBe(1)
+    expect(snapshot.bySource[InternErrorSource.WindowError]).toBe(2)
+    expect(snapshot.bySource[InternErrorSource.UnhandledRejection]).toBe(1)
 
     const firstMinute = Math.floor(baseMs / 60000) * 60000
     const secondMinute = firstMinute + 60000
