@@ -88,4 +88,33 @@ describe('intern error report store', () => {
     expect(firstTrend?.count).toBe(2)
     expect(secondTrend?.count).toBe(1)
   })
+
+  test('时间字段语义区分：发生时间、首次接收时间、最近命中时间', () => {
+    const store = createInternErrorStore({
+      windowMs: 30 * 60 * 1000,
+      dedupeWindowMs: 10 * 1000,
+    })
+
+    const firstNowMs = 5_000_000_000
+    const secondNowMs = firstNowMs + 3000
+    const happenedAtMs = firstNowMs - 2000
+
+    store.addReport({
+      ...createPayload('time-semantics-error'),
+      at: happenedAtMs,
+    }, firstNowMs)
+
+    store.addReport({
+      ...createPayload('time-semantics-error'),
+      at: happenedAtMs + 1000,
+    }, secondNowMs)
+
+    const snapshot = store.getSnapshot(secondNowMs)
+    expect(snapshot.items).toHaveLength(1)
+
+    const [item] = snapshot.items
+    expect(item.happenedAtMs).toBe(happenedAtMs)
+    expect(item.receivedAtMs).toBe(firstNowMs)
+    expect(item.lastSeenAtMs).toBe(secondNowMs)
+  })
 })

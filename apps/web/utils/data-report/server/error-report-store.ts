@@ -130,7 +130,6 @@ export class InternErrorStore {
       if (hit) {
         hit.duplicateCount += 1
         hit.lastSeenAtMs = nowMs
-        hit.receivedAtMs = nowMs
 
         this.refs.set(fingerprint, {
           itemId: hit.id,
