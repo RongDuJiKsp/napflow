@@ -18,3 +18,12 @@ export const jsonQ = createAlova({
     return resp.json()
   },
 })
+
+export const jsonIntern = createAlova({
+  baseURL: '',
+  requestAdapter: adapterFetch(),
+  cacheFor: null,
+  responded: (resp) => {
+    return resp.json()
+  },
+})

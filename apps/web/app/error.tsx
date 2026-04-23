@@ -3,13 +3,9 @@
 import { useEffect } from 'react'
 import { dataReport } from '@/utils/data-report'
 import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
+import type { NextErrorBoundaryProps } from '@/utils/type'
 
-type ErrorPageProps = {
-  error: Error & { digest?: string };
-  reset: () => void;
-}
-
-export default function ErrorPage({ error, reset }: ErrorPageProps) {
+export default function ErrorPage({ error, reset }: NextErrorBoundaryProps) {
   useEffect(() => {
     dataReport.client.reportClientError({
       source: InternErrorSource.NextErrorBoundary,
@@ -31,7 +27,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
         </pre>
         <button
           className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-500"
-          onClick={() => reset()}
+          onClick={reset}
           type="button"
         >
           重新尝试
