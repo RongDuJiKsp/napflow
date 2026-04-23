@@ -7,3 +7,8 @@ export type PartialWithout<T, K extends keyof T> = Partial<Omit<T, K>>
 
 export type ParamTypeofReactComp<T extends React.FunctionComponent>
   = Parameters<T>[0]
+
+export type NextErrorBoundaryProps = {
+  error: Error & { digest?: string };
+  reset: () => void;
+}

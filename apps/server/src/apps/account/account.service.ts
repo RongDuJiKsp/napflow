@@ -148,6 +148,17 @@ export class AccountService {
   }
 
   async disableAccount(email: string) {
+    const account = await this.getAccount(email)
+    if (!account || account.disabledAt) return null
+
+    const availableAccountCount = await this.db.user.count({
+      where: {
+        disabledAt: IsNull(),
+      },
+    })
+    if (availableAccountCount <= 1)
+      throw new AccountError('不能禁用最后一个可用账户')
+
     return await this.db.user.softDelete({ email })
   }
 

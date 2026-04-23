@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  rewrites() {
+    return [
+      {
+        source: '/__intern_view__/:path*',
+        destination: '/data-report/:path*',
+      },
+    ]
+  },
+  logging: {
+    browserToTerminal: true,
+  },
 }
 
 export default nextConfig

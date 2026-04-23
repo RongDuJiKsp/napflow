@@ -56,7 +56,10 @@ export default defineConfig({
     {
       name: 'chromium',
       /* viewport 在 device 展开后显式覆盖，防止 Desktop Chrome 预设覆盖全局配置 */
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
     },
 
     // 如需测试多浏览器，取消以下注释
