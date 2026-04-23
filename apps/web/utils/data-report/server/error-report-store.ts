@@ -26,18 +26,6 @@ export type AddReportResult = {
   item: InternErrorItem;
 }
 
-export type InternErrorStore = {
-  addReport: (payload: InternErrorReportPayload, nowMs?: number) => AddReportResult;
-  getSnapshot: (nowMs?: number) => InternErrorDashboardData;
-  clear: () => void;
-}
-
-type InternErrorStoreState = {
-  items: InternErrorItem[];
-  refs: Map<string, FingerprintRef>;
-  seq: number;
-}
-
 const createBySource = (): Record<InternErrorSource, number> => ({
   'window-error': 0,
   'unhandledrejection': 0,
@@ -68,54 +56,83 @@ const pickHappenedAt = (payloadAt: number | undefined, nowMs: number) => {
   return payloadAt
 }
 
-export const createInternErrorStore = ({
-  windowMs = DEFAULT_WINDOW_MS,
-  dedupeWindowMs = DEFAULT_DEDUPE_WINDOW_MS,
-  maxItems = DEFAULT_MAX_ITEMS,
-}: InternErrorStoreOptions = {}): InternErrorStore => {
-  const state: InternErrorStoreState = {
-    items: [],
-    refs: new Map(),
-    seq: 0,
+export class InternErrorStore {
+  private readonly windowMs: number
+
+  private readonly dedupeWindowMs: number
+
+  private readonly maxItems: number
+
+  private items: InternErrorItem[] = []
+
+  private refs = new Map<string, FingerprintRef>()
+
+  private seq = 0
+
+  constructor({
+    windowMs = DEFAULT_WINDOW_MS,
+    dedupeWindowMs = DEFAULT_DEDUPE_WINDOW_MS,
+    maxItems = DEFAULT_MAX_ITEMS,
+  }: InternErrorStoreOptions = {}) {
+    this.windowMs = windowMs
+    this.dedupeWindowMs = dedupeWindowMs
+    this.maxItems = maxItems
   }
 
-  const rebuildRefs = () => {
-    state.refs.clear()
-    for (const item of state.items) {
-      state.refs.set(item.fingerprint, {
+  private rebuildRefs() {
+    this.refs.clear()
+
+    for (const item of this.items) {
+      this.refs.set(item.fingerprint, {
         itemId: item.id,
         lastSeenAtMs: item.lastSeenAtMs,
       })
     }
   }
 
-  const cleanup = (nowMs: number) => {
-    const expireBefore = nowMs - windowMs
-    state.items = state.items.filter(item => item.lastSeenAtMs >= expireBefore)
+  private cleanup(nowMs: number) {
+    const expireBefore = nowMs - this.windowMs
+    this.items = this.items.filter(item => item.lastSeenAtMs >= expireBefore)
 
-    if (state.items.length > maxItems)
-      state.items = state.items.slice(state.items.length - maxItems)
+    if (this.items.length > this.maxItems)
+      this.items = this.items.slice(this.items.length - this.maxItems)
 
-    rebuildRefs()
+    this.rebuildRefs()
   }
 
-  const addReport = (
-    payload: InternErrorReportPayload,
-    nowMs = Date.now(),
-  ): AddReportResult => {
-    cleanup(nowMs)
+  private getTrend(nowMs: number): InternErrorTrendPoint[] {
+    const start = toMinuteStart(nowMs - this.windowMs)
+    const end = toMinuteStart(nowMs)
+    const buckets = new Map<number, number>()
+
+    for (let cursor = start; cursor <= end; cursor += 60000)
+      buckets.set(cursor, 0)
+
+    for (const item of this.items) {
+      const bucket = toMinuteStart(item.lastSeenAtMs)
+      if (!buckets.has(bucket)) continue
+      buckets.set(bucket, (buckets.get(bucket) ?? 0) + item.duplicateCount)
+    }
+
+    return Array.from(buckets.entries())
+      .sort(([left], [right]) => left - right)
+      .map(([minuteStartMs, count]) => ({ minuteStartMs, count }))
+  }
+
+  addReport(payload: InternErrorReportPayload, nowMs = Date.now()): AddReportResult {
+    this.cleanup(nowMs)
 
     const fingerprint = buildFingerprint(payload)
-    const ref = state.refs.get(fingerprint)
+    const ref = this.refs.get(fingerprint)
 
-    if (ref && nowMs - ref.lastSeenAtMs <= dedupeWindowMs) {
-      const hit = state.items.find(item => item.id === ref.itemId)
+    if (ref && nowMs - ref.lastSeenAtMs <= this.dedupeWindowMs) {
+      const hit = this.items.find(item => item.id === ref.itemId)
       if (hit) {
         hit.duplicateCount += 1
         hit.lastSeenAtMs = nowMs
         hit.receivedAtMs = nowMs
 
-        state.refs.set(fingerprint, {
+        this.refs.set(fingerprint, {
           itemId: hit.id,
           lastSeenAtMs: nowMs,
         })
@@ -127,10 +144,10 @@ export const createInternErrorStore = ({
       }
     }
 
-    state.seq += 1
+    this.seq += 1
 
     const item: InternErrorItem = {
-      id: `${nowMs}-${state.seq}`,
+      id: `${nowMs}-${this.seq}`,
       source: payload.source,
       message: payload.message.trim().slice(0, 4000),
       stack: compactText(payload.stack?.trim(), 16000),
@@ -144,9 +161,9 @@ export const createInternErrorStore = ({
       digest: compactText(payload.digest?.trim(), 256),
     }
 
-    state.items.push(item)
+    this.items.push(item)
 
-    state.refs.set(fingerprint, {
+    this.refs.set(fingerprint, {
       itemId: item.id,
       lastSeenAtMs: nowMs,
     })
@@ -157,55 +174,35 @@ export const createInternErrorStore = ({
     }
   }
 
-  const getTrend = (nowMs: number): InternErrorTrendPoint[] => {
-    const start = toMinuteStart(nowMs - windowMs)
-    const end = toMinuteStart(nowMs)
-    const buckets = new Map<number, number>()
-
-    for (let cursor = start; cursor <= end; cursor += 60000)
-      buckets.set(cursor, 0)
-
-    for (const item of state.items) {
-      const bucket = toMinuteStart(item.lastSeenAtMs)
-      if (!buckets.has(bucket)) continue
-      buckets.set(bucket, (buckets.get(bucket) ?? 0) + item.duplicateCount)
-    }
-
-    return Array.from(buckets.entries())
-      .sort(([left], [right]) => left - right)
-      .map(([minuteStartMs, count]) => ({ minuteStartMs, count }))
-  }
-
-  const getSnapshot = (nowMs = Date.now()): InternErrorDashboardData => {
-    cleanup(nowMs)
+  getSnapshot(nowMs = Date.now()): InternErrorDashboardData {
+    this.cleanup(nowMs)
 
     const bySource = createBySource()
     let total = 0
 
-    for (const item of state.items) {
+    for (const item of this.items) {
       bySource[item.source] += item.duplicateCount
       total += item.duplicateCount
     }
 
     return {
       nowMs,
-      windowMinutes: Math.floor(windowMs / 60000),
+      windowMinutes: Math.floor(this.windowMs / 60000),
       total,
       bySource,
-      trend: getTrend(nowMs),
-      items: [...state.items].sort((left, right) => right.lastSeenAtMs - left.lastSeenAtMs),
+      trend: this.getTrend(nowMs),
+      items: [...this.items].sort((left, right) => right.lastSeenAtMs - left.lastSeenAtMs),
     }
   }
 
-  return {
-    addReport,
-    getSnapshot,
-    clear: () => {
-      state.items = []
-      state.refs.clear()
-    },
+  clear() {
+    this.items = []
+    this.refs.clear()
   }
 }
+
+export const createInternErrorStore = (options: InternErrorStoreOptions = {}): InternErrorStore =>
+  new InternErrorStore(options)
 
 type GlobalStoreCarrier = {
   __napflowInternErrorStore?: InternErrorStore;
