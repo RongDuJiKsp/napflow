@@ -1,7 +1,7 @@
 'use client'
 
 import { memo, useEffect } from 'react'
-import { dataReport } from '@/utils/data-report'
+import { dataReportClient } from '@/utils/data-report/client'
 import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 
 const InternErrorCaptureBootstrap = () => {
@@ -12,7 +12,7 @@ const InternErrorCaptureBootstrap = () => {
           ? `Script error at ${event.filename}:${event.lineno}:${event.colno}`
           : 'Unknown window error')
 
-      dataReport.client.reportClientError({
+      dataReportClient.reportClientError({
         source: InternErrorSource.WindowError,
         error: event.error,
         message: fallbackMessage,
@@ -20,7 +20,7 @@ const InternErrorCaptureBootstrap = () => {
     }
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-      dataReport.client.reportClientError({
+      dataReportClient.reportClientError({
         source: InternErrorSource.UnhandledRejection,
         error: event.reason,
         message: 'Unhandled promise rejection',

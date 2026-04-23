@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { dataReport } from '@/utils/data-report'
+import { dataReportServer } from '@/utils/data-report/server'
 import { ZodCheckInternErrorReportPayload } from '@/utils/data-report/shared/error-report-contract'
 import { tryit } from 'radash'
 
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const result = dataReport.server.addErrorRecord(parseResult.data)
+  const result = dataReportServer.addErrorRecord(parseResult.data)
 
   return NextResponse.json({
     ok: true,

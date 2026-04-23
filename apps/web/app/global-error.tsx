@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
-import { dataReport } from '@/utils/data-report'
+import { dataReportClient } from '@/utils/data-report/client'
 import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 import type { NextErrorBoundaryProps } from '@/utils/type'
 
 export default function GlobalErrorPage({ error, reset }: NextErrorBoundaryProps) {
   useEffect(() => {
-    dataReport.client.reportClientError({
+    dataReportClient.reportClientError({
       source: InternErrorSource.NextGlobalErrorBoundary,
       error,
       digest: error.digest,

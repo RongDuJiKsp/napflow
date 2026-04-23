@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { dataReport } from '@/utils/data-report'
+import { dataReportServer } from '@/utils/data-report/server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const data = dataReport.server.getErrorRecordSnapshot()
+  const data = dataReportServer.getErrorRecordSnapshot()
 
   return NextResponse.json(
     {
