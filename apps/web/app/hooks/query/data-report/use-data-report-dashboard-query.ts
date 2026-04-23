@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { InternErrorDashboardData } from '@/utils/data-report'
+import type { InternErrorDashboardData } from '@/utils/data-report/shared/error-report-contract'
 
 type DataReportDashboardResp = {
   ok: boolean;

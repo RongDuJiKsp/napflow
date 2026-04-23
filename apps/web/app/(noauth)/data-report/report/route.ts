@@ -1,17 +1,15 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { dataReport } from '@/utils/data-report'
+import { ZodCheckInternErrorReportPayload } from '@/utils/data-report/shared/error-report-contract'
+import { tryit } from 'radash'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
-  let payload: unknown
-
-  try {
-    payload = await request.json()
-  }
-  catch {
+  const [err, payload] = await tryit(async (req: Request) => await req.json())(request)
+  if(err) {
     return NextResponse.json(
       {
         ok: false,
@@ -21,7 +19,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const parseResult = dataReport.shared.internErrorReportPayloadSchema.safeParse(payload)
+  const parseResult = ZodCheckInternErrorReportPayload.safeParse(payload)
   if (!parseResult.success) {
     return NextResponse.json(
       {

@@ -1,16 +1,14 @@
 import z from 'zod'
 
-export const internErrorSourceSchema = z.enum([
-  'window-error',
-  'unhandledrejection',
-  'next-error-boundary',
-  'next-global-error-boundary',
-])
+export enum InternErrorSource {
+  WindowError = 'window-error',
+  UnhandledRejection = 'unhandledrejection',
+  NextErrorBoundary = 'next-error-boundary',
+  NextGlobalErrorBoundary = 'next-global-error-boundary',
+}
 
-export type InternErrorSource = z.infer<typeof internErrorSourceSchema>
-
-export const internErrorReportPayloadSchema = z.object({
-  source: internErrorSourceSchema,
+export const ZodCheckInternErrorReportPayload = z.object({
+  source: z.enum(InternErrorSource),
   message: z.string().trim().min(1).max(4000),
   stack: z.string().trim().max(16000).optional(),
   url: z.string().trim().max(2000).optional(),
@@ -19,7 +17,7 @@ export const internErrorReportPayloadSchema = z.object({
   digest: z.string().trim().max(256).optional(),
 })
 
-export type InternErrorReportPayload = z.infer<typeof internErrorReportPayloadSchema>
+export type InternErrorReportPayload = z.infer<typeof ZodCheckInternErrorReportPayload>
 
 export type InternErrorItem = {
   id: string;

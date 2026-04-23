@@ -1,15 +1,15 @@
 import dayjs from 'dayjs'
-import type {
+import type { InternErrorTrendPoint } from '@/utils/data-report/shared/error-report-contract'
+import {
   InternErrorSource,
-  InternErrorTrendPoint,
-} from '@/utils/data-report'
+} from '@/utils/data-report/shared/error-report-contract'
 import type { ChartTsItem } from '@/app/hooks/antd-charts/use-line-graph'
 
 export const sourceLabel: Record<InternErrorSource, string> = {
-  'window-error': 'Window Error',
-  'unhandledrejection': 'Unhandled Rejection',
-  'next-error-boundary': 'Next Error Boundary',
-  'next-global-error-boundary': 'Next Global Error Boundary',
+  [InternErrorSource.WindowError]: 'Window Error',
+  [InternErrorSource.UnhandledRejection]: 'Unhandled Rejection',
+  [InternErrorSource.NextErrorBoundary]: 'Next Error Boundary',
+  [InternErrorSource.NextGlobalErrorBoundary]: 'Next Global Error Boundary',
 }
 
 export const formatDateTime = (timeMs: number) => {

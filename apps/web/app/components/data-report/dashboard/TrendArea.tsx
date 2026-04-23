@@ -2,7 +2,7 @@
 
 import { Line } from '@ant-design/charts'
 import { useMemo } from 'react'
-import type { InternErrorTrendPoint } from '@/utils/data-report'
+import type { InternErrorTrendPoint } from '@/utils/data-report/shared/error-report-contract'
 import { useLineGraphConfig } from '@/app/hooks/antd-charts/use-line-graph'
 import { ChartCard } from './common'
 import {

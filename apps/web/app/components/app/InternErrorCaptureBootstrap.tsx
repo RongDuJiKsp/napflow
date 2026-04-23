@@ -2,6 +2,7 @@
 
 import { memo, useEffect } from 'react'
 import { dataReport } from '@/utils/data-report'
+import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 
 const InternErrorCaptureBootstrap = () => {
   useEffect(() => {
@@ -12,7 +13,7 @@ const InternErrorCaptureBootstrap = () => {
           : 'Unknown window error')
 
       dataReport.client.reportClientError({
-        source: 'window-error',
+        source: InternErrorSource.WindowError,
         error: event.error,
         message: fallbackMessage,
       })
@@ -20,7 +21,7 @@ const InternErrorCaptureBootstrap = () => {
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
       dataReport.client.reportClientError({
-        source: 'unhandledrejection',
+        source: InternErrorSource.UnhandledRejection,
         error: event.reason,
         message: 'Unhandled promise rejection',
       })

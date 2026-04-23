@@ -1,6 +1,6 @@
 'use client'
 
-import type { InternErrorItem } from '@/utils/data-report'
+import type { InternErrorItem } from '@/utils/data-report/shared/error-report-contract'
 import { memo } from 'react'
 import { ChartCard } from './common'
 import { formatDateTime, sourceLabel } from './utils'

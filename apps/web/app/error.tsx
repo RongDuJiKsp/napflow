@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { dataReport } from '@/utils/data-report'
+import { InternErrorSource } from '@/utils/data-report/shared/error-report-contract'
 
 type ErrorPageProps = {
   error: Error & { digest?: string };
@@ -11,7 +12,7 @@ type ErrorPageProps = {
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   useEffect(() => {
     dataReport.client.reportClientError({
-      source: 'next-error-boundary',
+      source: InternErrorSource.NextErrorBoundary,
       error,
       digest: error.digest,
       message: error.message || 'Next.js error boundary captured an exception',

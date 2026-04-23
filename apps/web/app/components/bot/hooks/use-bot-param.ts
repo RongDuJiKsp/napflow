@@ -1,4 +1,4 @@
-import { defineZodParamChecker } from '@/utils/next'
+import { defineZodParamChecker } from '@/utils/next-client'
 import { z } from 'zod'
 
 export const ZodCheckBotParam = z.object({
