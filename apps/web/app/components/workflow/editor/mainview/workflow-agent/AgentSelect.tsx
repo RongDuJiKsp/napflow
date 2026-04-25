@@ -32,7 +32,7 @@ const AgentSelect = ({
     setSelectedConfigId,
   } = useModelSelection()
   const {
-    data: recoverableSessions = [],
+    data: recoverableSessions,
     error: recoverSessionListError,
     isError: isRecoverSessionListError,
     isPending: isRecoverSessionListPending,
@@ -40,7 +40,7 @@ const AgentSelect = ({
 
   const recoverSessionOptions = useMemo(
     () =>
-      recoverableSessions.map(item => ({
+      recoverableSessions?.map(item => ({
         label: item.title,
         value: item.sessionId,
       })),
@@ -49,7 +49,7 @@ const AgentSelect = ({
 
   const selectedRecoverSession = useMemo(
     () =>
-      recoverableSessions.find(
+      recoverableSessions?.find(
         item => item.sessionId === selectedRecoverSessionId,
       ),
     [recoverableSessions, selectedRecoverSessionId],
@@ -184,10 +184,10 @@ const AgentSelect = ({
             value={selectedRecoverSessionId}
             onChange={setSelectedRecoverSessionId}
             disabled={
-              isRecoverSessionListPending || recoverSessionOptions.length === 0
+              isRecoverSessionListPending || recoverSessionOptions?.length === 0
             }
             optionRender={(option) => {
-              const session = recoverableSessions.find(
+              const session = recoverableSessions?.find(
                 item => item.sessionId === option.data.value,
               )
               return (
@@ -279,6 +279,7 @@ const AgentSelect = ({
       {sessionMode === AgentWsConnType.RecoveryConnection
         && !isRecoverSessionListPending
         && !isRecoverSessionListError
+        && recoverSessionOptions
         && recoverSessionOptions.length === 0 && (
         <Alert
           type="info"

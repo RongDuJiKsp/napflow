@@ -13,7 +13,7 @@ import ApiKeyConfigFormDialog from './ApiKeyConfigFormDialog'
 import { useApiKeyListQuery } from '@/app/hooks/query/agent/use-api-key-list-query'
 
 const ApiKeyConfigListWindow = () => {
-  const { data: configs = [] } = useApiKeyListQuery()
+  const { data: configs } = useApiKeyListQuery()
   const {
     editTarget,
     handleAddConfig,
@@ -35,13 +35,13 @@ const ApiKeyConfigListWindow = () => {
       </div>
 
       <div className="space-y-3">
-        {configs.length === 0 && (
+        {configs?.length === 0 && (
           <div className="rounded-xl border border-dashed border-pink-200 bg-white/70 p-4 text-sm text-pink-500">
             暂无配置，请点击右上角按钮添加模型配置。
           </div>
         )}
 
-        {configs.map(config => (
+        {configs?.map(config => (
           <div
             key={config.id}
             className="rounded-xl border border-pink-100 bg-white/90 p-4 shadow-sm"

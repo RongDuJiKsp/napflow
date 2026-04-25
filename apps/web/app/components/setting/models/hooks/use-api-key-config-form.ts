@@ -26,7 +26,7 @@ export const useApiKeyConfigForm = (
       apiKey: '',
       model: '',
     })
-  const { data: configs = [], refetch: refreshConfigList }
+  const { data: configs, refetch: refreshConfigList }
     = useApiKeyListQuery()
 
   const isEditMode = Boolean(editId)
@@ -37,7 +37,7 @@ export const useApiKeyConfigForm = (
       return
     }
 
-    const target = configs.find(config => config.id === editId)
+    const target = configs?.find(config => config.id === editId)
     if (!target) return
 
     setFormData({
