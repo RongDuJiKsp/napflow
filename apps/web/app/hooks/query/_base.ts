@@ -37,7 +37,7 @@ export const defineZodQueryFn = <
   schema: RespSchema,
   fn: () => Promise<z.output<RespSchema>>,
   { errMsgFallback = '请求失败' }: DefineZodQueryFnConfig = {},
-): () => Promise<QData | null> => {
+): (() => Promise<QData | null>) => {
   return async () => {
     const res = schema.parse(await fn())
     if (res.statusCode !== Code.Ok)

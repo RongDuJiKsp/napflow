@@ -26,8 +26,7 @@ export const useApiKeyConfigForm = (
       apiKey: '',
       model: '',
     })
-  const { data: configs, refetch: refreshConfigList }
-    = useApiKeyListQuery()
+  const { data: configs, refetch: refreshConfigList } = useApiKeyListQuery()
 
   const isEditMode = Boolean(editId)
 
