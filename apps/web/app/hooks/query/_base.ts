@@ -1,3 +1,4 @@
+import type { ZodBaseRespType } from '@shared/data-transfer/_base'
 import { type BaseRespType, Code } from '@shared/data-transfer/_base'
 import type z from 'zod'
 
@@ -29,17 +30,17 @@ export const defineQueryFn = <
 export type DefineZodQueryFnConfig = {
   errMsgFallback?: string; // 错误信息兜底
 }
-export const defineZodQueryFn = <QSchema extends z.ZodAny>(
-  schema: QSchema,
-  fn: () => Promise<z.output<QSchema>>,
+export const defineZodQueryFn = <QData, RespSchema extends ZodBaseRespType<QData> = ZodBaseRespType<QData>>(
+  schema: RespSchema,
+  fn: () => Promise<z.output<RespSchema>>,
   {
     errMsgFallback = '请求失败',
   }: DefineZodQueryFnConfig = {},
 ) => {
   return async () => {
-    const res = await fn()
+    const res = schema.parse(await fn())
     if (res.statusCode !== Code.Ok)
       throw new Error(res.message || errMsgFallback)
-    return schema.parse(res.data)
+    return res.data
   }
 }

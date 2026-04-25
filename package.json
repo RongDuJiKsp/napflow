@@ -38,12 +38,14 @@
     "@langchain/langgraph": "^1.2.5",
     "datastructures-js": "^13.0.0",
     "dotenv": "^17.3.1",
+    "json-date-parser": "^1.0.1",
     "langchain": "^1.2.37",
     "lodash-es": "^4.18.1",
     "mnemonist": "^0.40.3",
     "radash": "^12.1.1",
     "ring-buffer-ts": "^1.2.0",
     "serialize-error": "^13.0.1",
+    "superjson": "^2.2.6",
     "zod": "^4.1.12",
     "zod-deep-partial": "^1.2.0"
   }

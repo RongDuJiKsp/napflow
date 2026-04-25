@@ -1,8 +1,9 @@
 import { jsonQ } from '@/utils/net'
 import { useQuery } from '@tanstack/react-query'
+import { ZodCheckGetAllBotsResp } from '@shared/data-transfer/bot/manager'
 import type { GetAllBotsResp } from '@shared/data-transfer/bot/manager'
 import type { CommonBotInfo } from '@shared/common/bot/base'
-import { defineQueryFn } from '../../_base'
+import { defineZodQueryFn } from '../../_base'
 
 /**
  * 获取所有机器人
@@ -10,7 +11,7 @@ import { defineQueryFn } from '../../_base'
 export const useBotsQuery = () => {
   return useQuery({
     queryKey: ['bots'],
-    queryFn: defineQueryFn<GetAllBotsResp, CommonBotInfo[]>(
+    queryFn: defineZodQueryFn(ZodCheckGetAllBotsResp,
       async () => await jsonQ.Get<GetAllBotsResp>('/bot/record/list'),
     ),
   })
