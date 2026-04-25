@@ -7,7 +7,8 @@ import { defineZodQueryFn } from '../_base'
 export const useApiKeyListQuery = () => {
   return useQuery({
     queryKey: ['api-key-list'],
-    queryFn: defineZodQueryFn(ZodCheckGetOpenAiEndpointListResp,
+    queryFn: defineZodQueryFn(
+      ZodCheckGetOpenAiEndpointListResp,
       async () =>
         await jsonQ.Get<GetOpenAiEndpointListResp>('/agent/openai-endpoint'),
       { errMsgFallback: '获取模型配置列表失败' },

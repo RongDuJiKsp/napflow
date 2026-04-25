@@ -11,12 +11,16 @@ import { defineZodQueryFn } from '../_base'
  */
 export const useWorkflowAppDraftQuery = (
   appId: string,
-  options?: Omit<UseQueryOptions<WorkflowAppDraft | null>, 'queryKey' | 'queryFn'>,
+  options?: Omit<
+    UseQueryOptions<WorkflowAppDraft | null>,
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
     ...options,
     queryKey: ['workflow-app-draft', appId],
-    queryFn: defineZodQueryFn(ZodCheckLoadDraftResp,
+    queryFn: defineZodQueryFn(
+      ZodCheckLoadDraftResp,
       async () =>
         await jsonQ.Get<LoadDraftResp>(`/workflow/flow/${appId}/draft`),
     ),

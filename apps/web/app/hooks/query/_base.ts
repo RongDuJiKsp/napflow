@@ -30,12 +30,13 @@ export const defineQueryFn = <
 export type DefineZodQueryFnConfig = {
   errMsgFallback?: string; // 错误信息兜底
 }
-export const defineZodQueryFn = <QData, RespSchema extends ZodBaseRespType<QData> = ZodBaseRespType<QData>>(
+export const defineZodQueryFn = <
+  QData,
+  RespSchema extends ZodBaseRespType<QData> = ZodBaseRespType<QData>,
+>(
   schema: RespSchema,
   fn: () => Promise<z.output<RespSchema>>,
-  {
-    errMsgFallback = '请求失败',
-  }: DefineZodQueryFnConfig = {},
+  { errMsgFallback = '请求失败' }: DefineZodQueryFnConfig = {},
 ) => {
   return async () => {
     const res = schema.parse(await fn())

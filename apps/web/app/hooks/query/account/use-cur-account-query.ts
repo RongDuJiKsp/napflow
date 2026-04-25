@@ -11,7 +11,8 @@ import { defineZodQueryFn } from '../_base'
 export const useCurAccountQuery = () => {
   return useQuery({
     queryKey: ['cur-account'],
-    queryFn: defineZodQueryFn<AccountInfo | null>(ZodCheckAccountInfoResp,
+    queryFn: defineZodQueryFn<AccountInfo | null>(
+      ZodCheckAccountInfoResp,
       async () => await jsonQ.Get<AccountInfoResp>('/account/query/cur'),
     ),
   })

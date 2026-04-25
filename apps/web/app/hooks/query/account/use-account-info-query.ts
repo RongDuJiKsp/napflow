@@ -12,7 +12,8 @@ import type { AccountInfo } from '@shared/common/account/base'
 export const useAccountInfoQuery = (accEmail: string) => {
   return useQuery({
     queryKey: ['account-info', accEmail],
-    queryFn: defineZodQueryFn<AccountInfo | null>(ZodCheckAccountInfoResp,
+    queryFn: defineZodQueryFn<AccountInfo | null>(
+      ZodCheckAccountInfoResp,
       async () =>
         await jsonQ.Get<AccountInfoResp>('/account/query/info', {
           params: { email: accEmail },

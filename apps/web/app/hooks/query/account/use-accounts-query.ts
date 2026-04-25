@@ -4,7 +4,6 @@ import type {
   AccountInfoListResp,
 } from '@shared/data-transfer/account/account'
 import { ZodCheckAccountInfoListResp } from '@shared/data-transfer/account/account'
-import type { AccountInfo } from '@shared/common/account/base'
 import type { UserRole } from '@shared/common/account/core'
 import { useQuery } from '@tanstack/react-query'
 import { defineZodQueryFn } from '../_base'
@@ -22,7 +21,8 @@ export const useAccountsQuery = (isDisabled?: boolean, roles?: UserRole[]) => {
     }
   return useQuery({
     queryKey: ['accounts', queryParams],
-    queryFn: defineZodQueryFn(ZodCheckAccountInfoListResp,
+    queryFn: defineZodQueryFn(
+      ZodCheckAccountInfoListResp,
       async () =>
         await jsonQ.Get<AccountInfoListResp>('/account/query/list', {
           params: queryParams,

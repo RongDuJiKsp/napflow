@@ -7,7 +7,8 @@ import { jsonQ } from '@/utils/net'
 export const useBindingBotQuery = (botId: string) => {
   return useQuery({
     queryKey: ['binding-bot', botId],
-    queryFn: defineZodQueryFn(ZodCheckBotBridgeBindStatusResp,
+    queryFn: defineZodQueryFn(
+      ZodCheckBotBridgeBindStatusResp,
       async () =>
         await jsonQ.Get<BotBridgeBindStatusResp>(
           `/bot/bridge/${botId}/binding`,

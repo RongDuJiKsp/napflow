@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { ZodCheckGetAppsResp } from '@shared/data-transfer/workflow/info'
 import type { GetAppsResp } from '@shared/data-transfer/workflow/info'
 import { jsonQ } from '@/utils/net'
-import type { WorkflowApp } from '@shared/common/workflow/entity'
 import { defineZodQueryFn } from '../_base'
 
 /**
@@ -12,10 +11,12 @@ import { defineZodQueryFn } from '../_base'
 export const useAppsQuery = (onlySelf?: boolean) => {
   return useQuery({
     queryKey: ['apps', onlySelf],
-    queryFn: defineZodQueryFn(ZodCheckGetAppsResp,
-      async () => await jsonQ.Get<GetAppsResp>('/workflow/record/list', {
-        params: { onlySelf },
-      }),
+    queryFn: defineZodQueryFn(
+      ZodCheckGetAppsResp,
+      async () =>
+        await jsonQ.Get<GetAppsResp>('/workflow/record/list', {
+          params: { onlySelf },
+        }),
       { errMsgFallback: '获取插件列表失败' },
     ),
   })

@@ -21,7 +21,8 @@ export const useConform = (onConfirmed: () => void | Promise<void>) => {
     try {
       await onConfirmed()
       setIsModelOpen(false)
-    } finally {
+    }
+    finally {
       setIsSubmitting(false)
     }
   }, [isModelOpen, isSubmitting, onConfirmed])
