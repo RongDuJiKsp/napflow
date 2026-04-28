@@ -27,7 +27,7 @@ export class AccountExceptionFilter implements ExceptionFilter<AccountError> {
     this.catchOther(exception, host)
   }
 
-  catchHttp(exception: AccountError, httpHost: ExpressHttpHost) {
+  private catchHttp(exception: AccountError, httpHost: ExpressHttpHost) {
     const account = this.jwtService.account.jwtHttpRequest(httpHost.request)
     // 在请求阶段发生的记录为BadRequest
     httpHost.response
@@ -38,7 +38,7 @@ export class AccountExceptionFilter implements ExceptionFilter<AccountError> {
     )
   }
 
-  catchOther(exception: AccountError, host: ArgumentsHost) {
+  private catchOther(exception: AccountError, host: ArgumentsHost) {
     this.logger.warn(
       `AccountExceptionFilter caught a unhandled(${host.getType()}) exception: ${exception.message}`,
     )

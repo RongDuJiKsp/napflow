@@ -24,7 +24,7 @@ export class BotCoreRuntimeExceptionFilter implements ExceptionFilter<BotCoreRun
     this.catchOther(exception, host)
   }
 
-  catchHttp(exception: BotCoreRuntimeError, httpHost: ExpressHttpHost) {
+ private catchHttp(exception: BotCoreRuntimeError, httpHost: ExpressHttpHost) {
     httpHost.response
       .status(400)
       .json(Resp.error(exception.message, Code.BadRequest))
@@ -33,7 +33,7 @@ export class BotCoreRuntimeExceptionFilter implements ExceptionFilter<BotCoreRun
     )
   }
 
-  catchOther(exception: BotCoreRuntimeError, host: ArgumentsHost) {
+ private catchOther(exception: BotCoreRuntimeError, host: ArgumentsHost) {
     this.logger.warn(
       `BotCoreRuntimeExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )

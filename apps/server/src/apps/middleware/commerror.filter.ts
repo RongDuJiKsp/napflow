@@ -33,7 +33,7 @@ export class CommErrorExceptionFilter implements ExceptionFilter<CommError> {
     this.catchOther(exception, host)
   }
 
-  catchHttp(exception: CommError, httpHost: ExpressHttpHost) {
+ private catchHttp(exception: CommError, httpHost: ExpressHttpHost) {
     httpHost.response
       .status(400)
       .json(Resp.error(exception.message, exception.code))
@@ -42,7 +42,7 @@ export class CommErrorExceptionFilter implements ExceptionFilter<CommError> {
     if (exception.logLevel === 'error') this.logger.error(exception.message)
   }
 
-  catchOther(exception: CommError, host: ArgumentsHost) {
+ private catchOther(exception: CommError, host: ArgumentsHost) {
     this.logger.warn(
       `CommErrorExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
