@@ -2,6 +2,7 @@ import { dispatchLocalStorageValueSet } from '@/app/hooks/utils/use-storage'
 import { baseUrl } from '@/config/env'
 import { createAlova } from 'alova'
 import adapterFetch from 'alova/fetch'
+import { jsonDateParser } from 'json-date-parser'
 export const jsonQ = createAlova({
   baseURL: baseUrl,
   requestAdapter: adapterFetch(),
@@ -15,7 +16,8 @@ export const jsonQ = createAlova({
       dispatchLocalStorageValueSet('auth-token', undefined)
       throw new Error('Unauthorized')
     }
-    return resp.json()
+    // 由于前后端统一用一个schema 而且schema里面date都是直接写成z.date()，所以这里需要用jsonDateParser来解析一下日期字符串
+    return resp.text().then(text => JSON.parse(text, jsonDateParser))
   },
 })
 
@@ -24,6 +26,7 @@ export const jsonIntern = createAlova({
   requestAdapter: adapterFetch(),
   cacheFor: null,
   responded: (resp) => {
-    return resp.json()
+    // 同上
+    return resp.text().then(text => JSON.parse(text, jsonDateParser))
   },
 })

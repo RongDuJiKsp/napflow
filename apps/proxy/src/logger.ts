@@ -29,7 +29,7 @@ export const loggerIgnoreMiddleware = (keywords: string[]) => {
 
       if (keywords.some(keyword => text?.includes(keyword))) return
 
-      method.apply(this, args)
+      return method.apply(this, args)
     }
   return logMethod
 }

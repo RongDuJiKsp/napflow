@@ -8,6 +8,8 @@ import { Item, Menu, useContextMenu } from 'react-contexify'
 import { twMerge } from 'tailwind-merge'
 import { RiDeleteBin2Line } from '@remixicon/react'
 import { useAppActions } from '../hooks/use-app-actions'
+import { useConform } from '@/app/hooks/utils/use-conform'
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 
 export type AppCardProps = {
   app: WorkflowApp;
@@ -17,6 +19,7 @@ const AppCard = ({ app }: AppCardProps) => {
   const menuId = `workflow-app-card-menu-${app.appId}`
   const { show } = useContextMenu({ id: menuId })
   const { deleteApp } = useAppActions(app)
+  const { isModelOpen, onCancel, onConform } = useConform(deleteApp)
   const [showMore, setShowMoreAction] = useBoolean(false)
 
   const handleMouseEnter = useCallback(() => {
@@ -85,13 +88,44 @@ const AppCard = ({ app }: AppCardProps) => {
         </div>
       </Link>
       <Menu id={menuId}>
-        <Item onClick={deleteApp} className="contexify-item-danger">
+        <Item onClick={onConform} className="contexify-item-danger">
           <div className="flex gap-2 items-center">
             <RiDeleteBin2Line className="h-5 w-5" />
             <div>删除应用</div>
           </div>
         </Item>
       </Menu>
+      <Dialog open={isModelOpen} onClose={onCancel} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="mx-auto w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+            <div className="bg-linear-to-r from-red-500 to-pink-500 px-6 py-4">
+              <DialogTitle className="text-lg font-semibold text-white">
+                确认删除工作流
+              </DialogTitle>
+            </div>
+            <div className="px-6 py-5 text-sm text-gray-700">
+              删除后不可恢复，确认删除「{app.appName || app.appId}」吗？
+            </div>
+            <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={onConform}
+                className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+              >
+                确认删除
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </>
   )
 }

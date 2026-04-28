@@ -6,7 +6,7 @@ const getApiKeyListIndex = (config: OpenAiEndpointConfigRecord) => config.id
 
 export const useModelSelection = () => {
   const {
-    data: modelConfigs = [],
+    data: modelConfigs,
     error: apiKeyListError,
     isError: isApiKeyListError,
     isPending: isApiKeyListPending,
@@ -14,13 +14,13 @@ export const useModelSelection = () => {
   const [selectedConfigId, setSelectedConfigId] = useState<string>()
 
   const { findItem: findApiKeyItem } = useArrayDict(
-    modelConfigs,
+    modelConfigs || [],
     getApiKeyListIndex,
   )
 
   const modelOptions = useMemo(
     () =>
-      modelConfigs.map(config => ({
+      (modelConfigs || []).map(config => ({
         label: config.model,
         value: config.id,
       })),
@@ -28,7 +28,7 @@ export const useModelSelection = () => {
   )
 
   const selectedModelConfig = useMemo(
-    () => modelConfigs.find(config => config.id === selectedConfigId),
+    () => modelConfigs?.find(config => config.id === selectedConfigId),
     [modelConfigs, selectedConfigId],
   )
 

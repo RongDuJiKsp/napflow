@@ -1,16 +1,14 @@
 import { jsonQ } from '@/utils/net'
-import type { OpenAiEndpointConfigRecord } from '@shared/common/agent/entity'
+import { ZodCheckGetOpenAiEndpointListResp } from '@shared/data-transfer/agent/endpoint'
 import type { GetOpenAiEndpointListResp } from '@shared/data-transfer/agent/endpoint'
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from '../_base'
+import { defineZodQueryFn } from '../_base'
 
 export const useApiKeyListQuery = () => {
   return useQuery({
     queryKey: ['api-key-list'],
-    queryFn: defineQueryFn<
-      GetOpenAiEndpointListResp,
-      OpenAiEndpointConfigRecord[]
-    >(
+    queryFn: defineZodQueryFn(
+      ZodCheckGetOpenAiEndpointListResp,
       async () =>
         await jsonQ.Get<GetOpenAiEndpointListResp>('/agent/openai-endpoint'),
       { errMsgFallback: '获取模型配置列表失败' },

@@ -18,7 +18,7 @@ export const LimitExecEnvClass = (
       constructor(...args: any[]) {
         if (env !== currentRuntime()) {
           throw new Error(
-            `[data-report] ${scopeWithClassFallback} 仅支持 ${env} 运行时调用。`,
+            `${scopeWithClassFallback} 仅支持 ${env} 运行时调用。`,
           )
         }
         super(...args)

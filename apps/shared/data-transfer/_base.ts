@@ -8,21 +8,26 @@ export enum Code {
   NotFound = 404,
   ServerError = 500,
 }
-export const defineZodResp = <T>(schema: z.ZodType<T>) =>
+export const defineZodResp = <Schema extends z.ZodTypeAny>(schema: Schema) =>
   z.object({
     statusCode: z.number(),
     message: z.string().optional(),
-    data: schema.optional(),
+    data: schema.nullable(),
   })
 
 export type BaseRespType<T> = {
   statusCode: Code;
   message?: string;
-  data?: T;
+  data: T | null;
 }
+export type ZodBaseRespType<T> = z.ZodObject<{
+  statusCode: z.ZodNumber;
+  message: z.ZodOptional<z.ZodString>;
+  data: z.ZodNullable<z.ZodType<T>>;
+}>
 export class Resp {
   static ok<T>(
-    data?: T,
+    data: T | null = null,
     statusCode = Code.Ok,
     message = 'Success',
   ): BaseRespType<T> {
@@ -40,9 +45,10 @@ export class Resp {
     return {
       statusCode,
       message,
+      data: null,
     }
   }
 }
 
-export const ZodCheckNullResp = defineZodResp(z.undefined().optional())
+export const ZodCheckNullResp = defineZodResp(z.void())
 export type NullResp = z.infer<typeof ZodCheckNullResp>

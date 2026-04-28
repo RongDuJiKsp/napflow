@@ -8,6 +8,7 @@ import { Item, Menu, useContextMenu } from 'react-contexify'
 import { useBotInfoOperator, useBotOperate } from './hooks/use-bot-operate'
 import { dateFmt } from '@/utils/date'
 import { useRouter } from 'next/navigation'
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import {
   RiCloseCircleLine,
   RiDeleteBin2Line,
@@ -16,6 +17,7 @@ import {
   RiRefreshLine,
   RiStopCircleLine,
 } from '@remixicon/react'
+import { useConform } from '@/app/hooks/utils/use-conform'
 
 const formatDate = (date?: Date) => {
   if (!date) return '未启动'
@@ -36,6 +38,7 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
   } = useBotState(item)
   const { startBot, stopBot, killBot, reloadBot } = useBotOperate(item)
   const { editBot, deleteBot } = useBotInfoOperator(item)
+  const { isModelOpen, onCancel, onConform } = useConform(deleteBot)
 
   const handleClick = useCallback(() => {
     router.push(`/bots/${item.botId}`)
@@ -159,13 +162,44 @@ const BotListItemCard = ({ item }: { item: CommonBotInfo }) => {
             <div>编辑Bot</div>
           </div>
         </Item>
-        <Item onClick={deleteBot} className="contexify-item-danger">
+        <Item onClick={onConform} className="contexify-item-danger">
           <div className="flex gap-2 items-center">
             <RiDeleteBin2Line className="h-5 w-5" />
             <div>删除Bot</div>
           </div>
         </Item>
       </Menu>
+      <Dialog open={isModelOpen} onClose={onCancel} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="mx-auto w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+            <div className="bg-linear-to-r from-red-500 to-pink-500 px-6 py-4">
+              <DialogTitle className="text-lg font-semibold text-white">
+                确认删除 Bot
+              </DialogTitle>
+            </div>
+            <div className="px-6 py-5 text-sm text-gray-700">
+              删除后不可恢复，确认删除「{item.botName || item.botId}」吗？
+            </div>
+            <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                onClick={onConform}
+                className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+              >
+                确认删除
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </>
   )
 }

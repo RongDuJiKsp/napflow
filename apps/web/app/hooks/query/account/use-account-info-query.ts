@@ -1,8 +1,8 @@
 import { jsonQ } from '@/utils/net'
+import { ZodCheckAccountInfoResp } from '@shared/data-transfer/account/account'
 import type { AccountInfoResp } from '@shared/data-transfer/account/account'
 import { useQuery } from '@tanstack/react-query'
-import { defineQueryFn } from '../_base'
-import type { AccountInfo } from '@shared/common/account/base'
+import { defineZodQueryFn } from '../_base'
 
 /**
  * 获取账号信息
@@ -11,7 +11,8 @@ import type { AccountInfo } from '@shared/common/account/base'
 export const useAccountInfoQuery = (accEmail: string) => {
   return useQuery({
     queryKey: ['account-info', accEmail],
-    queryFn: defineQueryFn<AccountInfoResp, AccountInfo | null>(
+    queryFn: defineZodQueryFn(
+      ZodCheckAccountInfoResp,
       async () =>
         await jsonQ.Get<AccountInfoResp>('/account/query/info', {
           params: { email: accEmail },
