@@ -4,18 +4,22 @@ import type {
   InternErrorSource,
 } from '../shared/error-report-contract'
 import { ClientOnly } from '../shared/runtime-guard'
+import { tryit } from 'radash'
 
 const reporter = {
   endpoint: '/__intern_view__/report',
   sendByFetch(payloadText: string) {
-    return fetch(this.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: payloadText,
-      keepalive: true,
-    }).catch(() => undefined)
+    const [err] = tryit(() => {
+      fetch(this.endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payloadText,
+        keepalive: true,
+      }).catch(() => undefined)
+    })()
+    return !err
   },
   sendByBeacon(payloadText: string) {
     if (typeof navigator === 'undefined' || !navigator.sendBeacon) return false
@@ -30,9 +34,9 @@ export type ReportClientErrorInput = {
   source: InternErrorSource;
   error?: unknown;
   message?: string;
-  stack?: string | null;
-  digest?: string | null;
-  url?: string | null;
+  stack?: string;
+  digest?: string;
+  url?: string;
 }
 
 class DataReportClient {
@@ -52,8 +56,7 @@ class DataReportClient {
     url,
   }: ReportClientErrorInput) {
     const extracted = serializeError(error)
-
-    const payload: InternErrorReportPayload = {
+    this.reportInternErrorPayload({
       source,
       message: message?.trim() || extracted.message || 'Unknown error',
       stack: stack ?? extracted.stack,
@@ -61,10 +64,7 @@ class DataReportClient {
       url: url ?? window.location.href,
       userAgent: navigator.userAgent,
       at: Date.now(),
-    }
-
-    const payloadText = JSON.stringify(payload)
-    if (!reporter.sendByBeacon(payloadText)) reporter.sendByFetch(payloadText)
+    })
   }
 }
 

@@ -52,13 +52,6 @@ const buildFingerprint = (payload: InternErrorReportPayload) => {
   return `${source}|${message}|${stack}|${url}`
 }
 
-const pickHappenedAt = (payloadAt: number | undefined, nowMs: number) => {
-  if (!payloadAt) return nowMs
-  if (payloadAt > nowMs + 60 * 1000) return nowMs
-  if (payloadAt < nowMs - 24 * 60 * 60 * 1000) return nowMs
-  return payloadAt
-}
-
 export class InternErrorStore {
   private readonly windowMs: number
 
@@ -158,7 +151,7 @@ export class InternErrorStore {
       stack: compactText(payload.stack?.trim(), 16000),
       url: compactText(payload.url?.trim(), 2000),
       userAgent: compactText(payload.userAgent?.trim(), 2000),
-      happenedAtMs: pickHappenedAt(payload.at, nowMs),
+      happenedAtMs: payload.at,
       receivedAtMs: nowMs,
       lastSeenAtMs: nowMs,
       duplicateCount: 1,

@@ -13,7 +13,7 @@ export const ZodCheckInternErrorReportPayload = z.object({
   stack: z.string().max(16000).optional(),
   url: z.string().max(2000).optional(),
   userAgent: z.string().max(2000).optional(),
-  at: z.number().int().positive().optional(),
+  at: z.number().int().positive(),
   digest: z.string().max(256).optional(),
 })
 
