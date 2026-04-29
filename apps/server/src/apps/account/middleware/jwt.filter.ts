@@ -27,7 +27,7 @@ export class VaildJwtErrorFilter implements ExceptionFilter<VaildJwtError> {
     )
   }
 
-  catchHttp(exception: VaildJwtError, httpHost: ExpressHttpHost) {
+  private catchHttp(exception: VaildJwtError, httpHost: ExpressHttpHost) {
     // 在请求阶段发生的记录为UnAuth
     httpHost.response
       .status(HttpStatus.UNAUTHORIZED)
@@ -55,7 +55,7 @@ export class JsonWebTokenErrorFilter implements ExceptionFilter<JsonWebTokenErro
     )
   }
 
-  catchHttp(exception: JsonWebTokenError, httpHost: ExpressHttpHost) {
+  private catchHttp(exception: JsonWebTokenError, httpHost: ExpressHttpHost) {
     // 在请求阶段发生的记录为UnAuth
     httpHost.response
       .status(HttpStatus.UNAUTHORIZED)

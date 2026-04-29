@@ -20,7 +20,7 @@ export class ZodErrExceptionFilter implements ExceptionFilter<ZodError> {
     this.catchOther(exception, host)
   }
 
-  catchHttp(exception: ZodError, httpHost: ExpressHttpHost) {
+  private catchHttp(exception: ZodError, httpHost: ExpressHttpHost) {
     const issuesMsg = exception.issues
       .map(i => `${i.path.join('::')}has error:${i.message}`)
       .join(';')
@@ -29,7 +29,7 @@ export class ZodErrExceptionFilter implements ExceptionFilter<ZodError> {
     httpHost.response.status(400).json(Resp.error(errMsg, Code.BadRequest))
   }
 
-  catchOther(exception: ZodError, host: ArgumentsHost) {
+  private catchOther(exception: ZodError, host: ArgumentsHost) {
     this.logger.warn(
       `ZodErrExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
@@ -60,7 +60,10 @@ export class ZodSerializationExceptionFilter implements ExceptionFilter<ZodSeria
       .json(Resp.error('Controller响应校验失败', Code.ServerError))
   }
 
-  catchOther(exception: ZodSerializationException, host: ArgumentsHost) {
+  private catchOther(
+    exception: ZodSerializationException,
+    host: ArgumentsHost,
+  ) {
     this.logger.warn(
       `ZodSerializationExceptionFilter caught an unhandled(${host.getType()}) exception: ${exception.message}`,
     )
