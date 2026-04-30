@@ -692,8 +692,6 @@ describe('AccountController (e2e)', () => {
     })
 
     it('禁用不存在的用户时应返回错误', async () => {
-      mockTypeOrmService.user.softDelete.mockResolvedValueOnce({ affected: 0 })
-
       const res = await request(app.getHttpServer())
         .post('/account/action/disable')
         .set('Authorization', `Bearer ${getAdminToken()}`)
