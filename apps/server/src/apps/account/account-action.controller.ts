@@ -47,7 +47,7 @@ export class AccountActionController {
       req.email,
       req.groupType,
     )
-    if (!res.length) return Resp.error('不存在满足条件的组')
+    if (!res.length) return Resp.error('不存在满足条件的组', Code.NotFound)
 
     return Resp.ok({ effectLines: res.length })
   }
@@ -72,7 +72,7 @@ export class AccountActionController {
       req.email,
       req.groupType,
     )
-    if (!res.affected) return Resp.error('不存在满足条件的组')
+    if (!res.affected) return Resp.error('不存在满足条件的组', Code.NotFound)
 
     return Resp.ok({ effectLines: res.affected })
   }
@@ -92,7 +92,7 @@ export class AccountActionController {
     @ZodBody({ zod: ZodCheckAccountDisableReq }) req: AccountDisableReq,
   ) {
     const result = await this.accountService.disableAccount(req.email)
-    if (!result?.affected) return Resp.error('不存在满足条件的用户')
+    if (!result?.affected) return Resp.error('不存在满足条件的用户', Code.NotFound)
 
     return Resp.ok()
   }
@@ -118,7 +118,7 @@ export class AccountActionController {
         req.password,
       ))
     )
-      return Resp.error('用户已存在')
+      return Resp.error('用户已存在', Code.BadRequest)
 
     return Resp.ok()
   }
