@@ -23,7 +23,9 @@ export const useCreateApp = () => {
     setForm,
     'appDescription',
   )
-  const onSubmit = useSubmitZod(form, ZodCheckCreateWorkflowReq, submitForm)
+  const onSubmit = useSubmitZod(form, ZodCheckCreateWorkflowReq, submitForm, {
+    successText: '创建应用成功',
+  })
   const handleSubmit = useCallback(async () => {
     const resp = await onSubmit()
     if (!resp?.data) return

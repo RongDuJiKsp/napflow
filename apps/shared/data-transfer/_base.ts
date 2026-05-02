@@ -7,6 +7,7 @@ export enum Code {
   Unauthorized = 401,
   NotFound = 404,
   ServerError = 500,
+  BadGateway = 502,
 }
 export const defineZodResp = <Schema extends z.ZodTypeAny>(schema: Schema) =>
   z.object({

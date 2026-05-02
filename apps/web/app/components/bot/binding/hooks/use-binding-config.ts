@@ -19,6 +19,7 @@ export const useBindingConfig = (bindingId: string) => {
   const submitConfig = useSubmitZodFn(
     ZodCheckBotWorkflowAppBindingConfig,
     submitReqFn,
+    { successText: '绑定配置更新成功' },
   )
   return {
     submitConfig,
