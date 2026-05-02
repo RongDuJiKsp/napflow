@@ -57,8 +57,10 @@ export class NcReplyNode extends ReplyNode {
     groupId: string,
     content: string,
   ): Promise<void> {
+    const groupIdCompiled = thread.compileEnvTemplate(groupId)
+    this.logger.debug(`Sending group message to groupId: ${groupIdCompiled}`)
     await thread.plugin.sdk?.send_group_msg({
-      group_id: Number(groupId),
+      group_id: Number(groupIdCompiled),
       message: [Structs.text(content)],
     })
   }
@@ -68,8 +70,10 @@ export class NcReplyNode extends ReplyNode {
     userId: string,
     content: string,
   ): Promise<void> {
+    const userIdCompiled = thread.compileEnvTemplate(userId)
+    this.logger.debug(`Sending private message to userId: ${userIdCompiled}`)
     await thread.plugin.sdk?.send_private_msg({
-      user_id: Number(userId),
+      user_id: Number(userIdCompiled),
       message: [Structs.text(content)],
     })
   }
