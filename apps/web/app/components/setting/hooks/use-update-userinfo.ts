@@ -7,16 +7,23 @@ import {
 } from '@shared/data-transfer/account/account'
 import { useResetState } from 'ahooks'
 import { useSubmitZod } from '@/app/hooks/utils/use-form'
+import { useCurAccountQuery } from '@/app/hooks/query/account/use-cur-account-query'
+import { useCallback } from 'react'
 
 const submitChange = async (data: AccountChangeNicknameReq) =>
   await jsonQ.Post<NullResp>('/account/change/nickname', data)
 
 export const useUpdateNickname = () => {
+  const { refetch } = useCurAccountQuery()
   const [formValue, setFormValue, resetForm]
     = useResetState<AccountChangeNicknameReq>({
       nickname: '',
     })
   const handleChangeNickname = useAreaChangeHandler(setFormValue, 'nickname')
+  const handleAfterSuccess = useCallback(() => {
+    resetForm()
+    refetch()
+  }, [refetch, resetForm])
   const handleSubmit = useSubmitZod(
     formValue,
     ZodCheckAccountChangeNicknameReq,
@@ -24,7 +31,7 @@ export const useUpdateNickname = () => {
     {
       successText: '修改昵称成功',
       errorText: '提交失败',
-      afterSuccess: resetForm,
+      afterSuccess: handleAfterSuccess,
     },
   )
 
