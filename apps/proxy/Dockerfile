@@ -9,6 +9,7 @@ RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/proxy/package.json apps/proxy/
+COPY apps/shared  apps/shared/
 RUN pnpm install --frozen-lockfile
 
 COPY apps/proxy/src apps/proxy/src
