@@ -4,6 +4,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 import { PROCESS_ENV } from './config'
 import { logger, loggerIgnoreMiddleware, loggerStream } from './logger'
 import pino from 'pino'
+import { ServerResponse } from 'node:http'
+import { Code, Resp } from '@shared/data-transfer/_base'
 
 const mountProxy = (app: express.Express) => {
   const webTarget = PROCESS_ENV.WEB_TARGET
@@ -38,6 +40,12 @@ const mountProxy = (app: express.Express) => {
         '^/api': '',
       },
       logger: apiLogger,
+      on: {
+        error: (err, _req, res) => {
+          if(res instanceof ServerResponse)
+            res.status(502).json(Resp.error(`网关层错误${err.message}`, Code.BadGateway))
+        },
+      },
     }),
   )
 
