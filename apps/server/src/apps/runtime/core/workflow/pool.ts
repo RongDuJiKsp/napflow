@@ -353,11 +353,17 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private async execNode(currNode: CommNode, nextTask: WillTask) {
-    await currNode.onThread(
-      this,
-      nextTask,
-      this.kvManager.initNodeKv(currNode),
-    )
+    try{
+      await currNode.onThread(
+        this,
+        nextTask,
+        this.kvManager.initNodeKv(currNode),
+      )
+    }
+    catch (e) {
+      this.logger.error(`Error executing node ${currNode.id}:`, e)
+      nextTask.abort()
+    }
   }
 
   async tick(nextTask: WillTask) {
