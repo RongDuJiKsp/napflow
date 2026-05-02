@@ -117,14 +117,21 @@ export class NapcatWsAdapter implements BotInstance {
         this.botConfigDB.botId,
         appBinding.bindingId,
       )
-      this.plugins.push(
-        new NapcatWsTriggerPlugin(
-          app.nodes,
-          app.edges,
-          app.envs || [],
-          bindingConfig || {},
-        ),
-      )
+      try{
+        this.plugins.push(
+          new NapcatWsTriggerPlugin(
+            app.nodes,
+            app.edges,
+            app.envs || [],
+            bindingConfig || {},
+          ),
+        )
+      }
+      catch (err) {
+        this.logger.error(
+          `Failed to create plugin for app ${app.ofAppId}@${app.version} with binding ${appBinding.bindingId}. Error: ${err}`,
+        )
+      }
     }
   }
 
