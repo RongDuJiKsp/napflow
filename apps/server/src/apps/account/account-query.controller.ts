@@ -31,10 +31,6 @@ export class AccountQueryController {
   /**
    * @route `/account/query/list`
    * @method GET
-   * @role User
-   * @query `isDisabled` (boolean, optional), `roles` (string[], optional)
-   * @reqbody 无
-   * @resp `AccountInfoListResp`（账号列表）
    * @description 返回账号列表，支持按是否禁用和角色筛选
    */
   @Get('query/list')
@@ -57,9 +53,6 @@ export class AccountQueryController {
   /**
    * @route `/account/query/cur`
    * @method GET
-   * @role User
-   * @reqbody 无
-   * @resp `AccountInfoResp`（当前用户详情）
    * @description 返回当前登录用户的详情
    */
   @Get('query/cur')
@@ -74,10 +67,6 @@ export class AccountQueryController {
   /**
    * @route `/account/query/info`
    * @method GET
-   * @role User
-   * @query `email` (string)
-   * @reqbody 无
-   * @resp `AccountInfoResp`（指定用户详情）
    * @description 根据 email 返回指定用户信息
    */
   @Get('query/info')

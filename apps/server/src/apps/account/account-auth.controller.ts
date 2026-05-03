@@ -21,7 +21,7 @@ import { JwtService } from './jwt.service'
 
 /**
  * @route `/account`
- * @description 处理账号认证与当前用户资料修改。
+ * @description 处理账号认证与当前用户资料修改
  */
 @Controller('account')
 export class AccountAuthController {
@@ -33,9 +33,6 @@ export class AccountAuthController {
   /**
    * @route `/account/login`
    * @method POST
-   * @role Public（无需登录）
-   * @reqbody 使用 Zod 验证的 `LoginReq`（包含 `email` 和 `password`）
-   * @resp `LoginResp`（包含 `token`）
    * @description 登录并返回 JWT
    */
   @Post('login')
@@ -56,9 +53,6 @@ export class AccountAuthController {
   /**
    * @route `/account/change/password`
    * @method POST
-   * @role User
-   * @reqbody `AccountChangePasswordReq`（包含 `originPassword` 与 `password`）
-   * @resp `NullResp`（无内容）
    * @description 修改当前登录用户的密码，需校验原密码
    */
   @Post('change/password')
@@ -82,9 +76,6 @@ export class AccountAuthController {
   /**
    * @route `/account/change/nickname`
    * @method POST
-   * @role User
-   * @reqbody `AccountChangeNicknameReq`（包含 `nickname`）
-   * @resp `NullResp`（无内容）
    * @description 修改当前登录用户的昵称
    */
   @Post('change/nickname')
