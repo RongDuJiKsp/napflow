@@ -49,7 +49,6 @@ const mountProxy = (app: express.Express) => {
             res.status(502).json(Resp.error(`网关层错误${err.message}`, Code.BadGateway))
         },
       },
-      secure: !!PROCESS_ENV.SECURITY_KEY_PATH && !!PROCESS_ENV.SECURITY_CERT_PATH,
     }),
   )
 
@@ -61,7 +60,6 @@ const mountProxy = (app: express.Express) => {
       timeout: proxyTimeoutMs,
       proxyTimeout: proxyTimeoutMs,
       logger: webLogger,
-      secure: !!PROCESS_ENV.SECURITY_KEY_PATH && !!PROCESS_ENV.SECURITY_CERT_PATH,
     }),
   )
 }
@@ -70,7 +68,7 @@ const createServer = async (app: express.Express) => {
   if(!!PROCESS_ENV.SECURITY_KEY_PATH && !!PROCESS_ENV.SECURITY_CERT_PATH) {
     const keyPath = PROCESS_ENV.SECURITY_KEY_PATH
     const certPath = PROCESS_ENV.SECURITY_CERT_PATH
-    logger.info(`http(key: ${keyPath},cert: ${certPath}) enabled`)
+    logger.info(`https(key: ${keyPath},cert: ${certPath}) enabled`)
     const [key, cert] = await Promise.all([fs.readFile(keyPath), fs.readFile(certPath)])
     return https.createServer({ key, cert }, app)
   }
