@@ -26,6 +26,7 @@
       "@/*": ["./*"],
       "@apps/*": ["./src/apps/*"],
       "@runtime/*": ["./src/apps/runtime/*"]
-    }
+    },
+    "strictPropertyInitialization": false
   }
 }
