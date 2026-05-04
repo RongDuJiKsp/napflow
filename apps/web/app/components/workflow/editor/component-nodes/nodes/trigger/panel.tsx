@@ -17,7 +17,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* ─── 触发类型选择 ─── */}
+      {/*   触发类型选择   */}
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
@@ -50,7 +50,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
         </div>
       </div>
 
-      {/* ─── 私聊触发参数 ─── */}
+      {/*   私聊触发参数   */}
       {data.on === TriggerOn.Friend && (
         <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col gap-1">
@@ -72,7 +72,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
         </div>
       )}
 
-      {/* ─── 群聊触发参数 ─── */}
+      {/*   群聊触发参数   */}
       {data.on === TriggerOn.Group && (
         <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col gap-1">
@@ -94,7 +94,7 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
         </div>
       )}
 
-      {/* ─── 提供的环境变量 ─── */}
+      {/*   提供的环境变量   */}
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <ProviderEnv envs={data.vars} />
       </div>

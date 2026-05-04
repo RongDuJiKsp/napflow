@@ -83,7 +83,8 @@ export class AccountActionController {
     @ZodBody({ zod: ZodCheckAccountDisableReq }) req: AccountDisableReq,
   ) {
     const result = await this.accountService.disableAccount(req.email)
-    if (!result?.affected) return Resp.error('不存在满足条件的用户', Code.NotFound)
+    if (!result?.affected)
+      return Resp.error('不存在满足条件的用户', Code.NotFound)
 
     return Resp.ok()
   }

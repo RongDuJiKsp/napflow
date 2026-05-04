@@ -182,12 +182,10 @@ export class GraphRunner {
     this.availableNodes.enqueueNextMany(nodes)
   }
 
-  /** 当前待执行队列的节点数量 */
   size(): number {
     return this.availableNodes.size()
   }
 
-  /** 是否还有待执行的节点 */
   hasNext(): boolean {
     return this.availableNodes.size() > 0
   }
@@ -353,7 +351,7 @@ export class WorkflowThread<SDK = unknown> {
   }
 
   private async execNode(currNode: CommNode, nextTask: WillTask) {
-    try{
+    try {
       await currNode.onThread(
         this,
         nextTask,

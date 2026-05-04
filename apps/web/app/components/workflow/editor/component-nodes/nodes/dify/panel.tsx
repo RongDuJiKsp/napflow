@@ -21,7 +21,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* ─── 模式选择 ─── */}
+      {/*  模式选择  */}
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
           <Label className="text-sky-600 text-xs font-semibold tracking-wide">
@@ -54,7 +54,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
         </div>
       </div>
 
-      {/* ─── API 地址 ─── */}
+      {/* API 地址  */}
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
           <Label className="text-sky-600 text-xs font-semibold tracking-wide">
@@ -74,7 +74,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
         </div>
       </div>
 
-      {/* ─── API Key ─── */}
+      {/*  API Key */}
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
           <Label className="text-sky-600 text-xs font-semibold tracking-wide">
@@ -94,7 +94,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
         </div>
       </div>
 
-      {/* ─── Chatflow: 请求内容 ─── */}
+      {/*  Chatflow: 请求内容 */}
       {data.mode === DifyMode.Chatflow && (
         <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col gap-1">
@@ -116,7 +116,7 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
         </div>
       )}
 
-      {/* ─── Workflow: 输入变量列表 ─── */}
+      {/* Workflow: 输入变量列表  */}
       {data.mode === DifyMode.Workflow && (
         <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-sky-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">

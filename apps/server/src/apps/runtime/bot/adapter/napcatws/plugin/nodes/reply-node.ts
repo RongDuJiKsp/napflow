@@ -41,11 +41,21 @@ export class NcReplyNode extends ReplyNode {
       )
       const sourceKv = thread.nodeKv[triggerSourceId]
 
-      if (sourceKv['trigger.uid'])
-        await this.replyToUser(thread, String(sourceKv['trigger.uid']), content)
-      else if (sourceKv['trigger.gid'])
-        await this.replyToGroup(thread, String(sourceKv['trigger.gid']), content)
-      else this.logger.warn('Not Hit any reply target in reply source')
+      if (sourceKv['trigger.uid']) {
+        await this.replyToUser(
+          thread,
+          String(sourceKv['trigger.uid']),
+          content,
+        )
+      }
+      else if (sourceKv['trigger.gid']) {
+        await this.replyToGroup(
+          thread,
+          String(sourceKv['trigger.gid']),
+          content,
+        )
+      }
+      else { this.logger.warn('Not Hit any reply target in reply source') }
     }
     else {
       this.logger.warn('Not Hit any reply target')
