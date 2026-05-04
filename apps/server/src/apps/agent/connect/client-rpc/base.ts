@@ -17,7 +17,7 @@ export class BaseClientRPCRequester extends PluginService<[Socket]> {
     this.socket = null
   }
 
-  async emit<A extends any[], R>(...args: A): Promise<R> {
+  private async emit<A extends any[], R>(...args: A): Promise<R> {
     this.logger.debug('Emitting client RPC request', { args })
     return new Promise((resolve, reject) => {
       if (!this.socket) {
