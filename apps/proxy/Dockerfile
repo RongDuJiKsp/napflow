@@ -13,8 +13,9 @@ COPY apps/shared  apps/shared/
 RUN pnpm install --frozen-lockfile
 
 COPY apps/proxy/src apps/proxy/src
-COPY apps/proxy/tsconfig.json apps/proxy/tsconfig.json
-COPY apps/proxy/.env.production apps/proxy/.env.production
+COPY apps/proxy/tsconfig.json apps/proxy/tsconfig.build.json apps/proxy/
+COPY apps/proxy/nest-cli.json apps/proxy/
+COPY apps/proxy/.env apps/proxy/.env.production apps/proxy/
 
 WORKDIR /app/apps/proxy
 RUN pnpm build

@@ -27,6 +27,8 @@
       "@apps/*": ["./src/apps/*"],
       "@runtime/*": ["./src/apps/runtime/*"]
     },
-    "strictPropertyInitialization": false
-  }
+    "strictPropertyInitialization": false,
+    "ignoreDeprecations": "6.0"
+  },
+  "references": [{ "path": "../shared" }]
 }
