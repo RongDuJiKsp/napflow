@@ -99,4 +99,7 @@ const bootstrap = async () => {
   })
 }
 
-bootstrap()
+bootstrap().catch((err) => {
+  logger.error(`Start Failed: ${err.message}`)
+  process.exit(1)
+})
