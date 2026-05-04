@@ -70,9 +70,6 @@ export class CheckCpuService {
     this.metrics.clear()
   }
 
-  /**
-   * 计算CPU统计数据（基于最近的样本窗口）
-   */
   calculateStatistics(windowSize: number = 6): CPUStatistics | null {
     const cpuData = this.getRecentMetrics(windowSize)
 
