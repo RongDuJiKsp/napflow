@@ -70,7 +70,7 @@ const createServer = async (app: express.Express) => {
   if(!!PROCESS_ENV.SECURITY_KEY_PATH && !!PROCESS_ENV.SECURITY_CERT_PATH) {
     const keyPath = PROCESS_ENV.SECURITY_KEY_PATH
     const certPath = PROCESS_ENV.SECURITY_CERT_PATH
-    logger.info(`发现安全证书配置文件（key: ${keyPath}，cert: ${certPath}），启用 HTTPS`)
+    logger.info(`http(key: ${keyPath},cert: ${certPath}) enabled`)
     const [key, cert] = await Promise.all([fs.readFile(keyPath), fs.readFile(certPath)])
     return https.createServer({ key, cert }, app)
   }
