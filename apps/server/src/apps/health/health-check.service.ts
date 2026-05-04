@@ -8,7 +8,6 @@ import { CheckGcService } from './check-gc.service'
 import { RingBuffer } from 'ring-buffer-ts'
 import type {
   AggregatedMetrics,
-  HealthSummary,
   RealTimeSamples,
 } from '@shared/common/health-check/health-check'
 
@@ -70,11 +69,9 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
   }
 
   private collectAllMetrics(): void {
-    // 触发各个小服务收集数据（数据存储在小服务内部）
     this.checkMemService.collectSnapshot()
     this.checkCpuService.collectSnapshot()
     this.checkEventLoopService.collectSnapshot()
-    // GC数据通过观察器自动收集，无需手动触发
   }
 
   private startStatisticalAggregation(): void {
@@ -118,123 +115,6 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     this.logger.debug(`统计聚合完成 - 时间戳: ${new Date(now).toISOString()}`)
   }
 
-  // 公共API方法
-
-  /**
-   * 获取实时采样数据（最近6次采样，约1分钟内）
-   */
-  public getRealTimeSamples(): RealTimeSamples {
-    const gcSnapshot = this.checkGcService.collectSnapshot(this.outputInterval)
-
-    return {
-      memory: this.checkMemService.getRecentMetrics(6),
-      cpu: this.checkCpuService.getRecentMetrics(6),
-      eventLoop: this.checkEventLoopService.getRecentMetrics(6),
-      gc: gcSnapshot.recentGCs,
-      timestamp: Date.now(),
-      note: '最近6次采样数据（1分钟内）',
-    }
-  }
-
-  /**
-   * 获取统计聚合数据（1分钟间隔的统计结果）
-   */
-  public getAggregatedMetrics(samples: number = 20): AggregatedMetrics[] {
-    return this.aggregatedMetricsArray.slice(-samples) // 最近samples条记录
-  }
-
-  /**
-   * 获取健康状况摘要
-   */
-  public getHealthSummary(): HealthSummary {
-    const healthScore = this.calculateOverallHealthScore()
-    const latest = this.aggregatedMetricsArray.slice(-1)[0]
-
-    return {
-      status:
-        healthScore > 80
-          ? 'healthy'
-          : healthScore > 60
-            ? 'warning'
-            : 'critical',
-      score: healthScore,
-      timestamp: Date.now(),
-      details: {
-        memory: latest?.memory
-          ? {
-            heapUtilization: `${latest.memory.utilization.mean.toFixed(2)}%`,
-          }
-          : null,
-        cpu: latest?.cpu
-          ? {
-            avgLoad: `${latest.cpu.total.mean.toFixed(2)}%`,
-            maxLoad: `${latest.cpu.total.max.toFixed(2)}%`,
-          }
-          : null,
-        eventLoop: latest?.eventLoop
-          ? {
-            health:
-                latest.eventLoop.healthScore > 80
-                  ? 'excellent'
-                  : latest.eventLoop.healthScore > 60
-                    ? 'good'
-                    : 'poor',
-            avgDelay: `${(latest.eventLoop.mean.mean / 1e6).toFixed(2)}ms`,
-          }
-          : null,
-        gc: latest?.gc
-          ? {
-            pressureScore: latest.gc.pressureScore,
-            frequency: latest.gc.frequency,
-            avgDuration: latest.gc.duration
-              ? `${latest.gc.duration.mean.toFixed(2)}ms`
-              : '0ms',
-          }
-          : null,
-      },
-    }
-  }
-
-  /**
-   * 计算整体健康评分
-   */
-  private calculateOverallHealthScore(): number {
-    let score = 100
-
-    // 从小服务获取最近的指标计算健康分数
-    const recentMemory = this.checkMemService.getRecentMetrics(5)
-    const recentEventLoop = this.checkEventLoopService.getRecentMetrics(5)
-    const gcSnapshot = this.checkGcService.collectSnapshot(60 * 1e3)
-
-    // 内存健康检查
-    if (recentMemory.length > 0) {
-      const avgHeapUsage
-        = recentMemory.reduce(
-          (sum, m) => sum + m.process.heapUsed / m.process.heapTotal,
-          0,
-        ) / recentMemory.length
-
-      if (avgHeapUsage > 0.9) score -= 30
-      else if (avgHeapUsage > 0.8) score -= 15
-    }
-
-    // 事件循环健康检查
-    if (recentEventLoop.length > 0) {
-      const avgDelay
-        = recentEventLoop.reduce((sum, e) => sum + e.mean, 0)
-        / recentEventLoop.length
-
-      if (avgDelay > 50 * 1e6)
-        score -= 25 // 50ms
-      else if (avgDelay > 20 * 1e6) score -= 10 // 20ms
-    }
-
-    // GC健康检查
-    if (gcSnapshot.frequency > 10) score -= 15
-
-    return Math.max(0, score)
-  }
-
   private cleanup(): void {
     if (this.collectInterval_) clearInterval(this.collectInterval_)
 
@@ -250,5 +130,22 @@ export class HealthCheckService implements OnModuleInit, OnModuleDestroy {
     this.checkGcService.clearMetrics()
 
     this.logger.log('性能监控服务已关闭')
+  }
+
+  getRealTimeSamples(): RealTimeSamples {
+    const gcSnapshot = this.checkGcService.collectSnapshot(this.outputInterval)
+
+    return {
+      memory: this.checkMemService.getRecentMetrics(6),
+      cpu: this.checkCpuService.getRecentMetrics(6),
+      eventLoop: this.checkEventLoopService.getRecentMetrics(6),
+      gc: gcSnapshot.recentGCs,
+      timestamp: Date.now(),
+      note: '最近6次采样数据（1分钟内）',
+    }
+  }
+
+  getAggregatedMetrics(samples: number = 20): AggregatedMetrics[] {
+    return this.aggregatedMetricsArray.slice(-samples)
   }
 }

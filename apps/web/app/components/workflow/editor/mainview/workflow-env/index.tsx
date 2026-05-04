@@ -30,7 +30,6 @@ const typeLabels: Record<VarTypes, string> = {
 
 const varTypeOptions = Object.values(VarTypes)
 
-/* ──────────────── 环境变量列表 ──────────────── */
 const EnvList = ({ isAdding }: { isAdding: boolean }) => {
   const { envs, deleteEnv } = useWorkflowEnvDialog()
 
@@ -81,7 +80,6 @@ const EnvList = ({ isAdding }: { isAdding: boolean }) => {
   )
 }
 
-/* ──────────────── 手风琴添加表单 ──────────────── */
 const EnvAddAccordion = ({
   isAdding,
   setIsAdding,
@@ -156,7 +154,6 @@ const EnvAddAccordion = ({
   )
 }
 
-/* ──────────────── 主 Dialog ──────────────── */
 const WorkflowEnvDialog = () => {
   const { isOpen, close } = useWorkflowEnvDialog()
   const [isAdding, setIsAdding] = useState(false)

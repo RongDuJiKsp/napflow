@@ -117,7 +117,7 @@ export class NapcatWsAdapter implements BotInstance {
         this.botConfigDB.botId,
         appBinding.bindingId,
       )
-      try{
+      try {
         this.plugins.push(
           new NapcatWsTriggerPlugin(
             app.nodes,

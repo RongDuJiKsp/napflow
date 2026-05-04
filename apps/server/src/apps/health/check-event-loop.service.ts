@@ -35,16 +35,10 @@ export class CheckEventLoopService {
     return metric
   }
 
-  /**
-   * 获取存储的指标数据
-   */
   getMetrics(): EventLoopMetric[] {
     return this.metrics.toArray()
   }
 
-  /**
-   * 获取最近N条记录
-   */
   getRecentMetrics(count: number): EventLoopMetric[] {
     return this.metrics.toArray().slice(-count)
   }
@@ -75,9 +69,6 @@ export class CheckEventLoopService {
     return Math.max(0, score)
   }
 
-  /**
-   * 清空存储的数据
-   */
   clearMetrics(): void {
     this.metrics.clear()
   }
@@ -86,16 +77,10 @@ export class CheckEventLoopService {
     this.histogram.enable()
   }
 
-  /**
-   * 销毁监控器
-   */
   destroy(): void {
     this.histogram.disable()
   }
 
-  /**
-   * 计算事件循环统计数据（基于最近的样本窗口）
-   */
   calculateStatistics(windowSize: number = 6): EventLoopStatistics | null {
     const eventLoopData = this.getRecentMetrics(windowSize)
 

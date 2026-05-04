@@ -33,7 +33,6 @@ export class CheckGcService {
             flags: detail?.flags || 0,
           }
 
-          // 存储到内部数组
           this.metrics.add(gcMetric)
         }
       })
@@ -52,9 +51,6 @@ export class CheckGcService {
     return gcTypes[type] || `Unknown(${type})`
   }
 
-  /**
-   * 收集GC快照（指定时间窗口内的数据）
-   */
   collectSnapshot(timeWindowMs: number): GCSnapshot {
     const now = Date.now() / 1000
     const windowStart = now - timeWindowMs / 1000
@@ -112,37 +108,22 @@ export class CheckGcService {
     return score
   }
 
-  /**
-   * 获取存储的指标数据
-   */
   getMetrics(): GCMetric[] {
     return this.metrics.toArray()
   }
 
-  /**
-   * 获取最近N条记录
-   */
   getRecentMetrics(count: number): GCMetric[] {
     return this.metrics.toArray().slice(-count)
   }
 
-  /**
-   * 清空存储的数据
-   */
   clearMetrics(): void {
     this.metrics.clear()
   }
 
-  /**
-   * 销毁观察器
-   */
   destroy(): void {
     if (this.observer) this.observer.disconnect()
   }
 
-  /**
-   * 计算GC统计数据（基于最近的GC事件）
-   */
   calculateStatistics(timeWindow: number = 60 * 1e3): GCStatistics {
     const gcSnapshot = this.collectSnapshot(timeWindow)
 

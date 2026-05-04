@@ -31,7 +31,6 @@ const typeLabels: Record<VarTypes, string> = {
   [VarTypes.NumberArray]: 'NumberArray',
 }
 
-/* ──────────────── 单个环境变量行 ──────────────── */
 const EnvItem = ({
   env,
   value,
@@ -109,7 +108,6 @@ const EnvItem = ({
   )
 }
 
-/* ──────────────── 环境变量配置表单 ──────────────── */
 const EnvProviderForm = ({
   bindingId,
   ofAppId,

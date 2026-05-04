@@ -13,9 +13,6 @@ export class CheckMemService {
     this.maxStorageSize,
   )
 
-  /**
-   * 收集当前内存快照并存储
-   */
   collectSnapshot(): MemoryMetric {
     const processMemory = process.memoryUsage()
     const v8Memory = v8.getHeapStatistics()
@@ -29,38 +26,23 @@ export class CheckMemService {
     return metric
   }
 
-  /**
-   * 获取存储的指标数据
-   */
   getMetrics(): MemoryMetric[] {
     return this.metrics.toArray()
   }
 
-  /**
-   * 获取最近N条记录
-   */
   getRecentMetrics(count: number): MemoryMetric[] {
     return this.metrics.toArray().slice(-count)
   }
 
-  /**
-   * 获取内存使用率
-   */
   getMemoryUtilization(): number {
     const memory = process.memoryUsage()
     return (memory.heapUsed / memory.heapTotal) * 100
   }
 
-  /**
-   * 清空存储的数据
-   */
   clearMetrics(): void {
     this.metrics.clear()
   }
 
-  /**
-   * 计算内存统计数据（基于最近的样本窗口）
-   */
   calculateStatistics(windowSize: number = 6): MemoryStatistics | null {
     const memoryData = this.getRecentMetrics(windowSize)
 

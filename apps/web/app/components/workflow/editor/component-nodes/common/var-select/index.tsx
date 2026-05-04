@@ -19,7 +19,7 @@ export const varTypeLabels: Record<VarTypes, string> = {
   [VarTypes.NumberArray]: 'Num[]',
 }
 
-// ─── 变量选择器渲染项 ───
+//   变量选择器渲染项
 const VarItem = ({ varCtx }: { varCtx: VarCtx }) => (
   <div className="flex items-center justify-between w-full gap-2">
     <div className="flex items-center gap-1.5 min-w-0 flex-1">
@@ -42,7 +42,7 @@ const VarItem = ({ varCtx }: { varCtx: VarCtx }) => (
   </div>
 )
 
-// ─── 已选变量的显示组件 ───
+//   已选变量的显示组件
 const SelectedVarDisplay = ({
   variable,
   vars,
@@ -74,7 +74,7 @@ const SelectedVarDisplay = ({
   )
 }
 
-// ─── 变量选择器 ───
+//   变量选择器
 type VarSelectProps = {
   value: string;
   vars: VarCtx[];

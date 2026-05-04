@@ -16,7 +16,7 @@ import { RiAddLine, RiCloseLine } from '@remixicon/react'
 import { twMerge } from 'tailwind-merge'
 import VarSelect from '../../common/var-select'
 
-// ─── 操作符分组（字符串类 / 数值类）───
+//   操作符分组（字符串类 / 数值类）───
 const stringOperators = [
   'string_equal',
   'string_not_equal',
@@ -47,7 +47,7 @@ const operatorColors: Record<string, string> = {
   number_lte: 'text-emerald-600',
 }
 
-// ─── 单个条件编辑器 ───
+//   单个条件编辑器
 const ConditionEditor = memo(
   ({
     branchId,
@@ -70,7 +70,7 @@ const ConditionEditor = memo(
   }) => {
     return (
       <div className="flex flex-col gap-2.5">
-        {/* ─── 选择变量 ─── */}
+        {/*  选择变量 */}
         <div className="flex flex-col gap-1">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
             变量
@@ -82,7 +82,7 @@ const ConditionEditor = memo(
           />
         </div>
 
-        {/* ─── 选择操作符 ─── */}
+        {/* 选择操作符 */}
         <div className="flex flex-col gap-1">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
             条件
@@ -148,7 +148,7 @@ const ConditionEditor = memo(
           </Select>
         </div>
 
-        {/* ─── 比较值 ─── */}
+        {/*   比较值   */}
         <div className="flex flex-col gap-1">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
             比较值
@@ -171,7 +171,7 @@ const ConditionEditor = memo(
 )
 ConditionEditor.displayName = 'ConditionEditor'
 
-// ─── 分支标签颜色 ───
+//   分支标签颜色
 const branchLabelStyles: Record<BranchType, string> = {
   [BranchType.If]: 'bg-gradient-to-r from-violet-500 to-purple-500 text-white',
   [BranchType.ElseIf]:
