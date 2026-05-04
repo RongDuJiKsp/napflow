@@ -41,8 +41,8 @@ export const checkAfterConnMakeCycle = <
   for (const node of nodes) state.set(node.id, 0)
 
   const hasCycle = (nodeId: string): boolean => {
-    if (state.get(nodeId) === 1) return true // 正在访问中，说明存在环
-    if (state.get(nodeId) === 2) return false // 已完成，无需重复访问
+    if (state.get(nodeId) === 1) return true
+    if (state.get(nodeId) === 2) return false
 
     state.set(nodeId, 1)
     for (const neighbor of adjMap.get(nodeId) ?? [])

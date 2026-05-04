@@ -30,9 +30,6 @@ export class AccountActionController {
   /**
    * @route `/account/action/upgrade`
    * @method POST
-   * @role Admin
-   * @reqbody `AccountUpDownGradeReq`（包含 `email` 与 `groupType`，且不可包含 `User` 组）
-   * @resp `AccountUpDownGradeResp`（包含影响行数）
    * @description 提升目标账号的用户组
    */
   @Post('action/upgrade')
@@ -55,9 +52,6 @@ export class AccountActionController {
   /**
    * @route `/account/action/downgrade`
    * @method POST
-   * @role Admin
-   * @reqbody `AccountUpDownGradeReq`（包含 `email` 与 `groupType`，且不可包含 `User` 组）
-   * @resp `AccountUpDownGradeResp`（包含影响行数）
    * @description 降低目标账号的用户组
    */
   @Post('action/downgrade')
@@ -80,9 +74,6 @@ export class AccountActionController {
   /**
    * @route `/account/action/disable`
    * @method POST
-   * @role Admin
-   * @reqbody `AccountDisableReq`（包含 `email`）
-   * @resp `NullResp`（无内容）
    * @description 禁用指定账号
    */
   @Post('action/disable')
@@ -100,9 +91,6 @@ export class AccountActionController {
   /**
    * @route `/account/action/create`
    * @method POST
-   * @role Admin
-   * @reqbody `AccountCreateReq`（包含 `email`, `nickname`, `password`）
-   * @resp `NullResp`（无内容）
    * @description 创建自定义账号
    */
   @Post('action/create')
