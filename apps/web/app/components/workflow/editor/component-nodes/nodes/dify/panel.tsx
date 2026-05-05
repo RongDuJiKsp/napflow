@@ -5,6 +5,7 @@ import { Label, ListBox, Select } from '@heroui/react'
 import InputWithEnv from '../../common/input-with-env'
 import { useDifyCurd } from './hooks/use-dify-curd'
 import { DifyMode } from '@shared/common/workflow/node-data/dify'
+import ProviderEnv from '../../common/provider-env'
 
 const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
   const {
@@ -164,6 +165,10 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
           ))}
         </div>
       )}
+
+      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
+        <ProviderEnv envs={data.vars} />
+      </div>
     </div>
   )
 }

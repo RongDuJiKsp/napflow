@@ -51,10 +51,6 @@ const DifyNode: ComponentNodeFc<DifyData> = ({ id, data }) => {
           </span>
         </div>
       )}
-      <div className="flex items-center justify-between gap-2 text-xs px-2 py-1 rounded bg-white/60 border border-pink-100">
-        <span className="text-purple-500 font-medium">输出变量</span>
-        <span className="truncate text-gray-500 max-w-28">output</span>
-      </div>
     </div>
   )
 }
