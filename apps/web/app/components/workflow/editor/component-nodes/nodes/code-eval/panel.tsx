@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import type { ComponentPanelFc } from '../../types'
 import type { CodeEvalData } from '@shared/common/workflow/node-data/code-eval'
 import { Label, ListBox, Select } from '@heroui/react'
@@ -6,6 +6,34 @@ import InputWithEnv from '../../common/input-with-env'
 import ProviderEnv from '../../common/provider-env'
 import { useCodeEvalCurd } from './hooks/use-code-eval-curd'
 import { VarTypes } from '@shared/common/workflow/core/component-node'
+import { useBoolean } from 'ahooks'
+import { Dialog, DialogPanel } from '@headlessui/react'
+import { Editor } from '@monaco-editor/react'
+import { RiCloseLine } from '@remixicon/react'
+const CodeEditorModal = ({ open, onClose, code, onCodeChange}: { open: boolean, onClose: () => void, code: string, onCodeChange: (code: string) => void }) => {
+  const handleCodeChange = useCallback(
+    (value: string | undefined) => {
+      onCodeChange(value || '')
+    },
+    [onCodeChange],
+  )
+  return (
+    <Dialog open={open} onClose={onClose} className="relative z-99999">
+      {/* Background */}
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden px-3 py-2
+         min-h-[45vh]  flex flex-col">
+          <div className='flex flex-row-reverse'>
+            <RiCloseLine className='text-gray-400 my-3 hover:text-gray-600' onClick={onClose}/>
+          </div>
+          <Editor value={code} onChange={handleCodeChange} language="javascript" height={'50vh'}
+            width={'75vw'}/>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  )
+}
 
 const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
   const {
@@ -14,9 +42,10 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
     handleArgRemove,
     handleArgKvTargetChange,
     handleArgTypeChange,
+    handleCodeChange,
   } = useCodeEvalCurd(id)
 
-  const args = data.args || []
+  const [isCodeEditorOpen, setIsCodeEditorOpen] = useBoolean()
 
   return (
     <div className="flex flex-col gap-3">
@@ -34,11 +63,11 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
           </button>
         </div>
 
-        {args.length === 0 && (
+        {data.args.length === 0 && (
           <span className="text-xs text-gray-400 italic">暂无参数</span>
         )}
 
-        {args.map((item, index) => (
+        {data.args.map((item, index) => (
           <div
             key={index}
             className="flex flex-col gap-1.5 p-2 rounded border border-purple-100 bg-white"
@@ -109,6 +138,11 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
           </div>
         ))}
       </div>
+
+      <div className="flex flex-col gap-2.5  bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
+        <h4 className="text-sm font-medium text-purple-700 my-3 text-center cursor-pointer" onClick={setIsCodeEditorOpen.setTrue}>打开代码编辑面板</h4>
+      </div>
+      <CodeEditorModal open={isCodeEditorOpen} onClose={setIsCodeEditorOpen.setFalse} code={data.code} onCodeChange={handleCodeChange} />
 
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <ProviderEnv envs={data.vars} />
