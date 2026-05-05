@@ -11,6 +11,7 @@ import { DifyNode } from '@/src/apps/runtime/core/workflow/nodes/dify-node'
 import { JsonReadNode } from '@/src/apps/runtime/core/workflow/nodes/json-read-node'
 import { ArrayIndexReadNode } from '@/src/apps/runtime/core/workflow/nodes/array-index-read-node'
 import { TimerNode } from '@/src/apps/runtime/core/workflow/nodes/timer-node'
+import { CodeEvalNode } from '@/src/apps/runtime/core/workflow/nodes/code-eval'
 
 export const NcKlassMap: typeof NodeKlassMap = {
   [ComponentNodesEnum.Trigger]: NcTriggerNode,
@@ -24,4 +25,5 @@ export const NcKlassMap: typeof NodeKlassMap = {
   [ComponentNodesEnum.JsonRead]: JsonReadNode,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadNode,
   [ComponentNodesEnum.Timer]: TimerNode,
+  [ComponentNodesEnum.CodeEval]: CodeEvalNode,
 }

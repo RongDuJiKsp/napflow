@@ -28,5 +28,6 @@ export const TimerNodeCreator: ComponentCreator<TimerData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
 }

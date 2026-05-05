@@ -15,6 +15,7 @@ export enum ComponentNodesEnum {
   Dify = 'dify',
   JsonRead = 'json-read',
   ArrayIndexRead = 'array-index-read',
+  CodeEval = 'code-eval',
 }
 
 // x-start 节点只能作为 x 节点的子节点被自动创建，不出现在菜单中

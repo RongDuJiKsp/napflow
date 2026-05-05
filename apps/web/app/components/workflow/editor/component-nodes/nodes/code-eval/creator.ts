@@ -1,23 +1,23 @@
-import { ComponentNodesEnum } from '@shared/common/workflow/core/component-node'
+import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/core/component-node'
 import type { ComponentCreator } from '../../types'
-import JsonReadNode from './node'
-import JsonReadPanel from './panel'
-import { RiFileList3Line } from '@remixicon/react'
+import CodeEvalNode from './node'
+import CodeEvalPanel from './panel'
+import { RiCodeSSlashLine } from '@remixicon/react'
 import {
-  type JsonReadData,
-  JsonReadDataSchema,
-} from '@shared/common/workflow/node-data/json-read'
+  type CodeEvalData,
+  CodeEvalDataSchema,
+} from '@shared/common/workflow/node-data/code-eval'
 
-export const JsonReadNodeCreator: ComponentCreator<JsonReadData> = {
+export const CodeEvalNodeCreator: ComponentCreator<CodeEvalData> = {
   create: () => ({
-    sourceVarName: '',
-    outputs: [],
+    code: 'function doit(...args) {\n  \n}',
+    args: [],
   }),
-  schema: JsonReadDataSchema,
-  label: 'JSON取字段',
-  icon: RiFileList3Line,
-  nodeComponent: JsonReadNode,
-  editPanelComponent: JsonReadPanel,
+  schema: CodeEvalDataSchema,
+  label: '代码执行',
+  icon: RiCodeSSlashLine,
+  nodeComponent: CodeEvalNode,
+  editPanelComponent: CodeEvalPanel,
   prevNodes: [
     ComponentNodesEnum.Trigger,
     ComponentNodesEnum.Timer,
@@ -42,5 +42,5 @@ export const JsonReadNodeCreator: ComponentCreator<JsonReadData> = {
     ComponentNodesEnum.ArrayIndexRead,
     ComponentNodesEnum.CodeEval,
   ],
-  env: [],
+  env: [{ type: VarTypes.String, name: 'result' }],
 }

@@ -1,104 +1,84 @@
-import { memo, useCallback } from 'react'
+import { memo } from 'react'
 import type { ComponentPanelFc } from '../../types'
-import type { JsonReadData } from '@shared/common/workflow/node-data/json-read'
+import type { CodeEvalData } from '@shared/common/workflow/node-data/code-eval'
 import { Label, ListBox, Select } from '@heroui/react'
-import VarSelect from '../../common/var-select'
-import { useJsonReadCurd } from './hooks/use-json-read-curd'
+import InputWithEnv from '../../common/input-with-env'
+import ProviderEnv from '../../common/provider-env'
+import { useCodeEvalCurd } from './hooks/use-code-eval-curd'
 import { VarTypes } from '@shared/common/workflow/core/component-node'
 
-const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
+const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
   const {
-    stringVars,
-    handleSourceVarNameChange,
-    handleOutputAdd,
-    handleOutputRemove,
-    handleOutputNameChange,
-    handleOutputFieldChange,
-    handleOutputTypeChange,
-  } = useJsonReadCurd(id)
+    vars,
+    handleArgAdd,
+    handleArgRemove,
+    handleArgKvTargetChange,
+    handleArgTypeChange,
+  } = useCodeEvalCurd(id)
 
-  const handleSourceVarChange = useCallback(
-    (value: string) => {
-      handleSourceVarNameChange(value)
-    },
-    [handleSourceVarNameChange],
-  )
+  const args = data.args || []
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex flex-col gap-1">
-          <Label className="text-purple-600 text-xs font-semibold tracking-wide">
-            JSON 字符串变量
-          </Label>
-          <VarSelect
-            value={data.sourceVarName}
-            vars={stringVars}
-            onChange={handleSourceVarChange}
-          />
-        </div>
-      </div>
 
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
-            输出绑定
+            参数
           </Label>
           <button
-            onClick={handleOutputAdd}
+            onClick={handleArgAdd}
             className="text-xs text-purple-600 hover:text-purple-700 font-medium"
           >
             + 添加
           </button>
         </div>
 
-        {data.outputs.length === 0 && (
-          <span className="text-xs text-gray-400 italic">暂无输出变量绑定</span>
+        {args.length === 0 && (
+          <span className="text-xs text-gray-400 italic">暂无参数</span>
         )}
 
-        {data.outputs.map((item, index) => {
-          const type = item.type || VarTypes.String
+        {args.map((item, index) => {
+          const type = item.transJsValueType || VarTypes.String
           return (
             <div
               key={index}
               className="flex flex-col gap-1.5 p-2 rounded border border-purple-100 bg-white"
             >
               <div className="flex items-center gap-1">
-                <input
-                  value={item.name}
-                  onChange={e =>
-                    handleOutputNameChange(index, e.target.value)
-                  }
-                  placeholder="输出变量名"
-                  className="text-xs border border-purple-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-purple-400"
-                />
+                <div className="flex-1 min-w-0">
+                  <InputWithEnv
+                    envs={vars}
+                    value={item.kvTarget}
+                    onChange={v => handleArgKvTargetChange(index, v)}
+                    placeholder="输入值或 $ 引用变量"
+                    className={{
+                      contentEditable:
+                        'text-sm border border-purple-200 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 p-2 transition-all',
+                      placeHolder: 'text-gray-300',
+                    }}
+                  />
+                </div>
                 <button
-                  onClick={() => handleOutputRemove(index)}
+                  onClick={() => handleArgRemove(index)}
                   className="text-gray-300 hover:text-red-400 text-xs shrink-0"
                 >
                   ✕
                 </button>
               </div>
-              <div className="flex items-center gap-1 text-xs text-gray-400">
-                <span className="shrink-0">字段</span>
-                <input
-                  value={item.field}
-                  onChange={e =>
-                    handleOutputFieldChange(index, e.target.value)
-                  }
-                  placeholder="如 a"
-                  className="text-xs border border-purple-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-purple-400"
-                />
+
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="shrink-0">类型</span>
                 <Select
                   value={type}
-                  onChange={v => handleOutputTypeChange(index, v as VarTypes)}
+                  onChange={v => handleArgTypeChange(index, v as VarTypes)}
                 >
-                  <Select.Trigger className="border-purple-200 hover:border-purple-400 transition-colors rounded w-32 min-h-8 h-8 px-2">
+                  <Select.Trigger className="border-purple-200 hover:border-purple-400 transition-colors rounded w-40 min-h-8 h-8 px-2">
                     <span className="text-sm font-medium text-gray-700">
                       <Select.Value />
                     </span>
                   </Select.Trigger>
-                  <Select.Popover className="min-w-36">
+                  <Select.Popover className="min-w-40">
                     <ListBox>
                       <ListBox.Item
                         id={VarTypes.String}
@@ -132,8 +112,12 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
           )
         })}
       </div>
+
+      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
+        <ProviderEnv envs={data.vars} />
+      </div>
     </div>
   )
 }
 
-export default memo(JsonReadPanel)
+export default memo(CodeEvalPanel)
