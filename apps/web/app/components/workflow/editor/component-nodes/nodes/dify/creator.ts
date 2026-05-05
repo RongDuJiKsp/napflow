@@ -37,6 +37,7 @@ export const DifyNodeCreator: ComponentCreator<DifyData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
@@ -46,6 +47,7 @@ export const DifyNodeCreator: ComponentCreator<DifyData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
   env: [{ type: VarTypes.String, name: 'output' }],
 }

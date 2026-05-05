@@ -10,6 +10,7 @@ import { IterateStartNodeCreator } from './nodes/iterate-start/creator'
 import { DifyNodeCreator } from './nodes/dify/creator'
 import { JsonReadNodeCreator } from './nodes/json-read/creator'
 import { ArrayIndexReadNodeCreator } from './nodes/array-index-read/creator'
+import { CodeEvalNodeCreator } from './nodes/code-eval/creator'
 import type { ComponentCreator } from './types'
 
 export const COMPONENT_NODE_PANEL_ID = 'component-node-panel'
@@ -26,4 +27,5 @@ export const ComponentNodeCreatorMap = {
   [ComponentNodesEnum.Dify]: DifyNodeCreator,
   [ComponentNodesEnum.JsonRead]: JsonReadNodeCreator,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadNodeCreator,
+  [ComponentNodesEnum.CodeEval]: CodeEvalNodeCreator,
 } as Record<ComponentNodesEnum, ComponentCreator<unknown>>

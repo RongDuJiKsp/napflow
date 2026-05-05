@@ -55,7 +55,9 @@ export class NcReplyNode extends ReplyNode {
           content,
         )
       }
-      else { this.logger.warn('Not Hit any reply target in reply source') }
+      else {
+        this.logger.warn('Not Hit any reply target in reply source')
+      }
     }
     else {
       this.logger.warn('Not Hit any reply target')

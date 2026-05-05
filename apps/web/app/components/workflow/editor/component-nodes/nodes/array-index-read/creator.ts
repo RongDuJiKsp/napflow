@@ -30,6 +30,7 @@ export const ArrayIndexReadNodeCreator: ComponentCreator<ArrayIndexReadData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
   nextNodes: [
     ComponentNodesEnum.Reply,
@@ -39,6 +40,7 @@ export const ArrayIndexReadNodeCreator: ComponentCreator<ArrayIndexReadData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
   env: [],
 }

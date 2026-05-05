@@ -12,6 +12,7 @@ import type { ArrayIndexReadData } from '@shared/common/workflow/node-data/array
 import type { TimerData } from '@shared/common/workflow/node-data/timer'
 import type { ComponentNode } from '../types'
 import type { WorkflowNode } from '../../types'
+import type { CodeEvalData } from '@shared/common/workflow/node-data/code-eval'
 import { safeAssertIsComponentNode } from '../../utils/node-asserts'
 
 export type NodeDataTypeForEnum = {
@@ -26,6 +27,7 @@ export type NodeDataTypeForEnum = {
   [ComponentNodesEnum.Dify]: DifyData;
   [ComponentNodesEnum.JsonRead]: JsonReadData;
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadData;
+  [ComponentNodesEnum.CodeEval]: CodeEvalData;
 }
 
 export type NodeTypeForEnum = {

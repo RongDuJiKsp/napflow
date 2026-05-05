@@ -16,6 +16,7 @@ import {
   ArrayIndexReadDataCtxSchema,
   ArrayIndexReadNode,
 } from './nodes/array-index-read-node'
+import { CodeEvalDataCtxSchema, CodeEvalNode } from './nodes/code-eval'
 import type { Class } from 'type-fest'
 import type z from 'zod'
 import { TimerDataCtxSchema, TimerNode } from './nodes/timer-node'
@@ -32,6 +33,7 @@ export const NodeKlassMap: Record<ComponentNodesEnum, Class<CommNode>> = {
   [ComponentNodesEnum.JsonRead]: JsonReadNode,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadNode,
   [ComponentNodesEnum.Timer]: TimerNode,
+  [ComponentNodesEnum.CodeEval]: CodeEvalNode,
 }
 
 export const NodeSchemaMap: Record<
@@ -49,4 +51,5 @@ export const NodeSchemaMap: Record<
   [ComponentNodesEnum.JsonRead]: JsonReadDataCtxSchema,
   [ComponentNodesEnum.ArrayIndexRead]: ArrayIndexReadDataCtxSchema,
   [ComponentNodesEnum.Timer]: TimerDataCtxSchema,
+  [ComponentNodesEnum.CodeEval]: CodeEvalDataCtxSchema,
 }

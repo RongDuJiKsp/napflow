@@ -25,6 +25,7 @@ export const IterateStartNodeCreator: ComponentCreator<IterateStartData> = {
     ComponentNodesEnum.Dify,
     ComponentNodesEnum.JsonRead,
     ComponentNodesEnum.ArrayIndexRead,
+    ComponentNodesEnum.CodeEval,
   ],
   env: [{ type: VarTypes.String, name: 'iter.item' }],
 }
