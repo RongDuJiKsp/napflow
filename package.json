@@ -36,6 +36,7 @@
   "dependencies": {
     "@langchain/core": "^1.1.36",
     "@langchain/langgraph": "^1.2.5",
+    "acorn": "^8.16.0",
     "datastructures-js": "^13.0.0",
     "dotenv": "^17.3.1",
     "json-date-parser": "^1.0.1",

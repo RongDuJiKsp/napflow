@@ -1,3 +1,4 @@
+import { defineTypedRecord } from '@shared/utils/ts-utils'
 import type z from 'zod'
 
 type MaybePromise<T> = T | Promise<T>
@@ -23,4 +24,4 @@ export type RpcRecv<PS extends RpcPS, RS extends RpcRS> = (
  */
 export const defineRpcMethod = <M extends Record<string, RPCMethodItem>>(
   methods: M,
-): M => methods
+): M => defineTypedRecord(methods)

@@ -12,8 +12,17 @@ import { BotBridgeForBotService } from './bot/bridge/bot-bridge-for-bot'
 import { BotHealthCheckService } from './bot/health-check/health-check.service'
 import { BotHealthCheckController } from './bot/health-check/health-check.controller'
 import { BotFactoryService } from './bot/core/bot-factory.service'
+import { WorkerModule } from 'nestjs-worker'
 
 @Module({
+  imports: [
+    WorkerModule.forRoot({
+      global: {
+        debug: false,
+      },
+      autoDiscovery: true,
+    }),
+  ],
   providers: [
     BotBridgeForBotService,
     CoreRuntimeService,
@@ -33,6 +42,7 @@ import { BotFactoryService } from './bot/core/bot-factory.service'
     BotManagerService,
     BotBridgeService,
     BotHealthCheckService,
+    WorkerModule,
   ],
   controllers: [
     ManagerController,

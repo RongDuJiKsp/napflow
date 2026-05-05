@@ -1,6 +1,7 @@
 import type { ZodRawShape } from 'zod'
 import z from 'zod'
 import { tryParseJson } from '@shared/utils/zod-transfer'
+import { defineTypedRecord } from '@shared/utils/ts-utils'
 // component nodes
 export enum ComponentNodesEnum {
   Trigger = 'trigger',
@@ -36,7 +37,7 @@ export const ZodCheckVar = z.object({
 })
 export type Var = z.infer<typeof ZodCheckVar>
 
-export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
+export const VarZodChecks = defineTypedRecord<Record<VarTypes, z.ZodTypeAny>>({
   [VarTypes.String]: z.string(),
   [VarTypes.Number]: z.preprocess((val) => {
     if (typeof val === 'string') {
@@ -47,7 +48,7 @@ export const VarZodChecks: Record<VarTypes, z.ZodTypeAny> = {
   }, z.number()),
   [VarTypes.StringArray]: z.preprocess(tryParseJson, z.array(z.string())),
   [VarTypes.NumberArray]: z.preprocess(tryParseJson, z.array(z.number())),
-}
+})
 
 // meta
 
