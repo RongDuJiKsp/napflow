@@ -9,7 +9,7 @@ import { twMerge } from 'tailwind-merge'
 
 const outputTypeTextStyles: Record<VarTypes, string> = {
   [VarTypes.String]: 'text-cyan-700',
-  [VarTypes.Number]: 'text-emerald-700',
+  [VarTypes.Number]: 'text-purple-700',
   [VarTypes.StringArray]: 'text-violet-700',
   [VarTypes.NumberArray]: 'text-amber-700',
 }
@@ -34,9 +34,9 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-emerald-100 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col gap-1">
-          <Label className="text-emerald-600 text-xs font-semibold tracking-wide">
+          <Label className="text-purple-600 text-xs font-semibold tracking-wide">
             JSON 字符串变量
           </Label>
           <VarSelect
@@ -47,14 +47,14 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-emerald-100 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
-          <Label className="text-emerald-600 text-xs font-semibold tracking-wide">
+          <Label className="text-purple-600 text-xs font-semibold tracking-wide">
             输出绑定
           </Label>
           <button
             onClick={handleOutputAdd}
-            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+            className="text-xs text-purple-600 hover:text-purple-700 font-medium"
           >
             + 添加
           </button>
@@ -73,7 +73,7 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                 'flex flex-col gap-1.5 p-2 rounded border bg-white',
                 type === VarTypes.String && 'border-cyan-100 bg-cyan-50/30',
                 type === VarTypes.Number
-                  && 'border-emerald-100 bg-emerald-50/30',
+                  && 'border-purple-100 bg-purple-50/30',
                 type === VarTypes.StringArray
                   && 'border-violet-100 bg-violet-50/30',
                 type === VarTypes.NumberArray
@@ -87,7 +87,7 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                     handleOutputNameChange(index, e.target.value)
                   }
                   placeholder="输出变量名"
-                  className="text-xs border border-emerald-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-emerald-400"
+                  className="text-xs border border-purple-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-purple-400"
                 />
                 <button
                   onClick={() => handleOutputRemove(index)}
@@ -104,13 +104,13 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                     handleOutputFieldChange(index, e.target.value)
                   }
                   placeholder="如 a"
-                  className="text-xs border border-emerald-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-emerald-400"
+                  className="text-xs border border-purple-200 rounded p-1.5 flex-1 min-w-0 outline-none focus:border-purple-400"
                 />
                 <Select
                   value={type}
                   onChange={v => handleOutputTypeChange(index, v as VarTypes)}
                 >
-                  <Select.Trigger className="border-emerald-200 hover:border-emerald-400 transition-colors rounded w-32 min-h-8 h-8 px-2">
+                  <Select.Trigger className="border-purple-200 hover:border-purple-400 transition-colors rounded w-32 min-h-8 h-8 px-2">
                     <span
                       className={twMerge(
                         'text-sm font-medium',
@@ -124,25 +124,25 @@ const JsonReadPanel: ComponentPanelFc<JsonReadData> = ({ id, data }) => {
                     <ListBox>
                       <ListBox.Item
                         id={VarTypes.String}
-                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                        className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                       >
                         <span className="text-sm">string</span>
                       </ListBox.Item>
                       <ListBox.Item
                         id={VarTypes.Number}
-                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                        className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                       >
                         <span className="text-sm">number</span>
                       </ListBox.Item>
                       <ListBox.Item
                         id={VarTypes.StringArray}
-                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                        className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                       >
                         <span className="text-sm">Array&lt;string&gt;</span>
                       </ListBox.Item>
                       <ListBox.Item
                         id={VarTypes.NumberArray}
-                        className="px-2 py-1.5 cursor-pointer hover:bg-emerald-50 transition-colors"
+                        className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                       >
                         <span className="text-sm">Array&lt;number&gt;</span>
                       </ListBox.Item>
