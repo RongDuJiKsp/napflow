@@ -42,7 +42,6 @@ import { WorkerModule } from 'nestjs-worker'
     BotManagerService,
     BotBridgeService,
     BotHealthCheckService,
-    WorkerModule,
   ],
   controllers: [
     ManagerController,
