@@ -1,11 +1,15 @@
 import { VM } from 'vm2'
 
 export type CodeEvalWorkerParams = {
-  declareCode: string,
-  execFuncName: string,
-  dynamicArgs: any[]
+  declareCode: string;
+  execFuncName: string;
+  dynamicArgs: any[];
 }
-export default ({ declareCode, execFuncName, dynamicArgs }: CodeEvalWorkerParams) => {
+export default ({
+  declareCode,
+  execFuncName,
+  dynamicArgs,
+}: CodeEvalWorkerParams) => {
   const codeToExec = `
             ${declareCode}
             ${execFuncName}(...dynamicArgs)

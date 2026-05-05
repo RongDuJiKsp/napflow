@@ -4,7 +4,10 @@ import type { CommNodeType } from '../node'
 import { CommNode, CommNodeRole } from '../node'
 import type { WorkflowThread } from '../pool'
 import type { WillTask } from '@/src/utils/task-pool'
-import { CodeEvalDataSchema, JsValueTransform } from '@shared/common/workflow/node-data/code-eval'
+import {
+  CodeEvalDataSchema,
+  JsValueTransform,
+} from '@shared/common/workflow/node-data/code-eval'
 import type { CodeEvalWorkerParams } from '../workers/code-eval'
 import Piscina from 'piscina'
 import path from 'node:path'
@@ -31,8 +34,16 @@ export class CodeEvalNode extends CommNode<CodeEvalDataCtx> {
     _nextTask: WillTask,
     nkv: Record<string, any>,
   ): Promise<void> {
-    const evalFuncArgs = this.data.args.map(arg => JsValueTransform[arg.transJsValueType](thread.compileEnvTemplate(arg.kvTarget)))
-    const result = await pool.run({ declareCode: this.data.code, dynamicArgs: evalFuncArgs, execFuncName: 'doit' })
+    const evalFuncArgs = this.data.args.map(arg =>
+      JsValueTransform[arg.transJsValueType](
+        thread.compileEnvTemplate(arg.kvTarget),
+      ),
+    )
+    const result = await pool.run({
+      declareCode: this.data.code,
+      dynamicArgs: evalFuncArgs,
+      execFuncName: 'doit',
+    })
     nkv.result = result
   }
 }

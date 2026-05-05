@@ -10,7 +10,17 @@ import { useBoolean } from 'ahooks'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Editor } from '@monaco-editor/react'
 import { RiCloseLine } from '@remixicon/react'
-const CodeEditorModal = ({ open, onClose, code, onCodeChange}: { open: boolean, onClose: () => void, code: string, onCodeChange: (code: string) => void }) => {
+const CodeEditorModal = ({
+  open,
+  onClose,
+  code,
+  onCodeChange,
+}: {
+  open: boolean;
+  onClose: () => void;
+  code: string;
+  onCodeChange: (code: string) => void;
+}) => {
   const handleCodeChange = useCallback(
     (value: string | undefined) => {
       onCodeChange(value || '')
@@ -22,13 +32,23 @@ const CodeEditorModal = ({ open, onClose, code, onCodeChange}: { open: boolean, 
       {/* Background */}
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden px-3 py-2
-         min-h-[45vh]  flex flex-col">
-          <div className='flex flex-row-reverse'>
-            <RiCloseLine className='text-gray-400 my-3 hover:text-gray-600' onClick={onClose}/>
+        <DialogPanel
+          className="mx-auto rounded-2xl bg-white shadow-2xl overflow-hidden px-3 py-2
+         min-h-[45vh]  flex flex-col"
+        >
+          <div className="flex flex-row-reverse">
+            <RiCloseLine
+              className="text-gray-400 my-3 hover:text-gray-600"
+              onClick={onClose}
+            />
           </div>
-          <Editor value={code} onChange={handleCodeChange} language="javascript" height={'50vh'}
-            width={'75vw'}/>
+          <Editor
+            value={code}
+            onChange={handleCodeChange}
+            language="javascript"
+            height={'50vh'}
+            width={'75vw'}
+          />
         </DialogPanel>
       </div>
     </Dialog>
@@ -49,7 +69,6 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
 
   return (
     <div className="flex flex-col gap-3">
-
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <Label className="text-purple-600 text-xs font-semibold tracking-wide">
@@ -81,7 +100,7 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
                   placeholder="输入值或 $ 引用变量"
                   className={{
                     contentEditable:
-                        'text-sm border border-purple-200 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 p-2 transition-all',
+                      'text-sm border border-purple-200 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 p-2 transition-all',
                     placeHolder: 'text-gray-300',
                   }}
                 />
@@ -140,9 +159,19 @@ const CodeEvalPanel: ComponentPanelFc<CodeEvalData> = ({ id, data }) => {
       </div>
 
       <div className="flex flex-col gap-2.5  bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
-        <h4 className="text-sm font-medium text-purple-700 my-3 text-center cursor-pointer" onClick={setIsCodeEditorOpen.setTrue}>打开代码编辑面板</h4>
+        <h4
+          className="text-sm font-medium text-purple-700 my-3 text-center cursor-pointer"
+          onClick={setIsCodeEditorOpen.setTrue}
+        >
+          打开代码编辑面板
+        </h4>
       </div>
-      <CodeEditorModal open={isCodeEditorOpen} onClose={setIsCodeEditorOpen.setFalse} code={data.code} onCodeChange={handleCodeChange} />
+      <CodeEditorModal
+        open={isCodeEditorOpen}
+        onClose={setIsCodeEditorOpen.setFalse}
+        code={data.code}
+        onCodeChange={handleCodeChange}
+      />
 
       <div className="flex flex-col gap-2.5 p-3 bg-white/90 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
         <ProviderEnv envs={data.vars} />

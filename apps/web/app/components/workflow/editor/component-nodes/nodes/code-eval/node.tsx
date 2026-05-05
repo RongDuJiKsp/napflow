@@ -52,7 +52,9 @@ const CodeEvalNode: ComponentNodeFc<CodeEvalData> = ({ id, data }) => {
               )
             })}
             {hasMoreArgs && (
-              <span className="text-gray-400 italic">… 共 {args.length} 个</span>
+              <span className="text-gray-400 italic">
+                … 共 {args.length} 个
+              </span>
             )}
           </div>
         )}

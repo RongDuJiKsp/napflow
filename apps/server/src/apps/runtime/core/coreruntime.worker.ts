@@ -9,7 +9,11 @@ export class CoreRuntimeWorker {
     retries: 2,
     priority: 'high',
   })
-  async execFunctionCodeWithArgs<Args extends any[], Ret>(execFuncName: string, declareCode: string, args: Args): Promise<Ret> {
+  async execFunctionCodeWithArgs<Args extends any[], Ret>(
+    execFuncName: string,
+    declareCode: string,
+    args: Args,
+  ): Promise<Ret> {
     const codeToExec = `
         ${declareCode}
         ${execFuncName}(...dynamicArgs)

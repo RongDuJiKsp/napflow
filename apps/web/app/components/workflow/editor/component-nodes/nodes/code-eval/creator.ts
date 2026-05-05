@@ -1,4 +1,7 @@
-import { ComponentNodesEnum, VarTypes } from '@shared/common/workflow/core/component-node'
+import {
+  ComponentNodesEnum,
+  VarTypes,
+} from '@shared/common/workflow/core/component-node'
 import type { ComponentCreator } from '../../types'
 import CodeEvalNode from './node'
 import CodeEvalPanel from './panel'
