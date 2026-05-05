@@ -20,6 +20,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './'),
       '@apps': path.resolve(__dirname, './src/apps'),
       '@runtime': path.resolve(__dirname, './src/apps/runtime'),
+      'piscina': path.resolve(__dirname, 'src/apps/runtime/tests/utils/piscina-mock.ts'),
     },
   },
   test: {
