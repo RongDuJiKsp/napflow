@@ -36,13 +36,13 @@ const TriggerPanel: ComponentPanelFc<TriggerData> = ({ id, data }) => {
                   id={TriggerOn.Friend}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">🧑 私聊触发</span>
+                  <span className="text-sm"> 私聊触发</span>
                 </ListBox.Item>
                 <ListBox.Item
                   id={TriggerOn.Group}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">👥 群聊触发</span>
+                  <span className="text-sm"> 群聊触发</span>
                 </ListBox.Item>
               </ListBox>
             </Select.Popover>
