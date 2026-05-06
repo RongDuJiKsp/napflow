@@ -41,13 +41,13 @@ const DifyPanel: ComponentPanelFc<DifyData> = ({ id, data }) => {
                   id={DifyMode.Chatflow}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">💬 Chatflow</span>
+                  <span className="text-sm">Chatflow</span>
                 </ListBox.Item>
                 <ListBox.Item
                   id={DifyMode.Workflow}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">⚙️ Workflow</span>
+                  <span className="text-sm">Workflow</span>
                 </ListBox.Item>
               </ListBox>
             </Select.Popover>

@@ -37,20 +37,20 @@ const ReplyPanel: ComponentPanelFc<ReplyData> = ({ id, data }) => {
                   id={ReplyTarget.User}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">🧑 用户（使用 UID）</span>
+                  <span className="text-sm"> 用户（使用 UID）</span>
                 </ListBox.Item>
                 <ListBox.Item
                   id={ReplyTarget.Group}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
-                  <span className="text-sm">👥 群组（使用 PID）</span>
+                  <span className="text-sm"> 群组（使用 PID）</span>
                 </ListBox.Item>
                 <ListBox.Item
                   id={ReplyTarget.triggerSource}
                   className="px-2 py-1.5 cursor-pointer hover:bg-purple-50 transition-colors"
                 >
                   <span className="text-sm">
-                    🔗 触发源上下文（使用 TriggerID）
+                     触发源上下文（使用 TriggerID）
                   </span>
                 </ListBox.Item>
               </ListBox>
