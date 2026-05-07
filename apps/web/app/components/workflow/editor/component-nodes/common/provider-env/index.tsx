@@ -22,8 +22,6 @@ type ProviderEnvsProps = {
 }
 
 const ProviderEnvs = memo(({ envs }: ProviderEnvsProps) => {
-  if (!envs || envs.length === 0) return null
-
   return (
     <div className="mb-4">
       <h4 className="text-sm font-medium text-purple-700 mb-3">输出变量</h4>
