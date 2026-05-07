@@ -34,7 +34,7 @@ const UserInfo = () => {
 
   return (
     <div>
-      <Menu>
+      <Menu as="div">
         {/* 神了 button有水合err a没有 */}
         <MenuButton as="a">
           <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 transition-colors duration-200">
