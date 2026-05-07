@@ -367,7 +367,7 @@ const AccountSettingWindow = () => {
                       </div>
                     )}
                   </div>
-                  <Menu>
+                  <Menu as="div">
                     <MenuButton>
                       <div className="p-2 rounded-full hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer group">
                         <RiMore2Fill className="w-4 h-4 text-gray-500 group-hover:text-purple-600" />
