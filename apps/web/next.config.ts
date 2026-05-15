@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next'
-
+import { codeInspectorPlugin } from 'code-inspector-plugin'
 const nextConfig: NextConfig = {
   /* config options here */
   redirects() {
@@ -23,14 +23,9 @@ const nextConfig: NextConfig = {
     browserToTerminal: true,
   },
   turbopack: {
-    rules: {
-      '**/*.{tsx,jsx}': {
-        loaders: [{
-          loader: '@locator/webpack-loader',
-          options: { env: 'development' },
-        }],
-      },
-    },
+    rules: codeInspectorPlugin({
+      bundler: 'turbopack',
+    }),
   },
 }
 
