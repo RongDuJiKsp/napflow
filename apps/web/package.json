@@ -49,6 +49,8 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@locator/babel-jsx": "^0.5.1",
+    "@locator/webpack-loader": "^0.5.1",
     "@midscene/web": "^1.4.7",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
@@ -58,7 +60,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "baseline-browser-mapping": "^2.10.0",
-    "code-inspector-plugin": "^1.5.1",
     "eslint-config-next": "16.0.3",
     "eslint-plugin-react-hooks": "^7.0.1",
     "tailwindcss": "^4",
